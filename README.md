@@ -1,5 +1,6 @@
 # VillainsBot
 
-* Install Node Modules
 * Install [Node.js](https://nodejs.org/en/)
-* Run Node .
+* Update NPM: `npm update`
+* Install Dependencies: `npm install`
+* Run `node .`
