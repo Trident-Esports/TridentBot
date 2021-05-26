@@ -14,9 +14,9 @@ module.exports =  {
         var params = {
             method: 'GET',
             protocol: 'http',
-            hostname: 'mike.mymm1.com',
+            hostname: 'villainsoce.mymm1.com',
             port: 80,
-            path: '/php/tyrantoce/tracker/wrapapi.php?game=csgo&team_id=262275',
+            path: '/team/262275.json',
         }
 
         req(params, function (err, res, data) {
@@ -27,7 +27,7 @@ module.exports =  {
             for (var key in game_details) {
                 keys.push(key);
             }
-            try{ 
+            try{
                 while (new Date(parseInt(keys[0])*1000) < new Date()) {
                     keys = keys.slice(1, keys.length);
                 }
@@ -37,17 +37,31 @@ module.exports =  {
                 useKey = parseInt(keys[0]);
                 var game_details = (json["events"][useKey])
 
+                let props = {
+                    "embedColor": "#B2EE17",
+                    "title": "***" + json["team"] + "***",
+                    "url": json["team_url"],
+                    "thumbnail": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif"
+                }
+                let channelNames = {
+                    "general": "788021898146742295"
+                }
+                let footer = {
+                    "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+                    "msg": "This bot was Created by Noongar1800#1800"
+                }
+
                 const embed = new MessageEmbed()
-                    .setColor('#23dd17')
-                    .setTitle('***Valorant BDE***')
-                    .setURL('https://letsplay.live/team/262275/')
+                    .setColor(props["embedColor"])
+                    .setTitle(props["title"])
+                    .setURL(props["url"])
                     .addField('**Match:**', `**${game_details.discord.profile}** 🆚 **${game_details.discord.opponent}**`, true)
                     .addField(`${game_details.discord.starting}AEST`, `[LPL](https://letsplay.live/match/${game_details.match_id}/)`, false)
-                    .setThumbnail('https://d1fdloi71mui9q.cloudfront.net/al4c957kR4eQffCsIv3o_N5PQkEjiGc43pxbU')
+                    .setThumbnail(props["thumbnail"])
                     .setTimestamp();
 
                 if (new Date() > new Date(new Date(parseInt(keys[0])*1000)-3600000) && new Date() <= new Date(new Date(parseInt(keys[0])*1000)-1800000)) {
-                    message.client.channels.cache.get('788021898146742295').send(embed);
+                    message.client.channels.cache.get(channelNames["general"]).send(embed);
                 }
             }
         });
