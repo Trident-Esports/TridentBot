@@ -14,13 +14,24 @@ module.exports = {
 
         const lb = leaderboard.map(e => `${e.position}.${e.username}#${e.discriminator}\nLevel: ${e.level}\nXP: ${e.xp.toLocaleString()}`); // We map the outputs.
 
+        let props = {
+            "embedColor": "#B2EE17",
+            "title": "***Leaderboard***",
+            "url": "https://discord.com/KKYdRbZcPT",
+            "thumbnail": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif"
+        }
+        let footer = {
+            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+            "msg": "This bot was Created by Noongar1800#1800"
+        }
+
         const LeaderBoardEmbed = new MessageEmbed()
-            .setColor('#23dd17')
-            .setTitle('***Leaderboard***')
-            .setURL('https://discord.gg/KKYdRbZcPT')
+            .setColor(props["embedColor"])
+            .setTitle(props["title"])
+            .setURL(props["url"])
             .setDescription(`\`${lb.join("\n\n")}\``)
-            .setThumbnail('https://d1fdloi71mui9q.cloudfront.net/al4c957kR4eQffCsIv3o_N5PQkEjiGc43pxbU')
-            .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+            .setThumbnail(props["thumbnail"])
+            .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
         message.channel.send(LeaderBoardEmbed);
     }
