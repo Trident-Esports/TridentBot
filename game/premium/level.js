@@ -12,14 +12,24 @@ module.exports = {
         const target = await Levels.fetch(mentionedMember.user.id);
         if (!target) return message.channel.send("This member doesn't have a Level.😢");
 
+        let props = {
+            "embedColor": "#B2EE17",
+            "title": "***LEVEL***",
+            "url": "https://discord.com/KKYdRbZcPT"
+        }
+        let footer = {
+            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+            "msg": "This bot was Created by Noongar1800#1800"
+        }
+
         const LevelEmbed = new MessageEmbed()
-        .setColor('#23dd17')
-        .setTitle(`***LEVEL***`)
-        .setURL('https://discord.gg/KKYdRbZcPT')
+        .setColor(props["embedColor"])
+        .setTitle(props["title"])
+        .setURL(props["url"])
         .setDescription(`This is ${mentionedMember}'s Level`)
         .addField(` ${target.level}`, 'Level', true)
         .addField(` ${target.xp}/${Levels.xpFor(target.level + 1)}`, 'XP', true)
-        .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+        .setFooter(footer["msg"], footer["image"])
         .setTimestamp();
 
         message.channel.send(LevelEmbed);
