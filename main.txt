@@ -1,0 +1,16 @@
+SENSITIVE.json
+[============]
+{
+  "client":
+  {
+    "login": "SUPER-SEKRIT"
+  }
+}
+
+main.js
+[=====]
+const http = require('http');
+const fs = require('fs');
+
+SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
+client.login(SENSITIVE.client.login);
