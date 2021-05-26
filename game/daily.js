@@ -23,11 +23,20 @@ module.exports = {
       }
     );
 
+    let props = {
+        "embedColor": "#ffff00",
+        "title": "**Daily**"
+    }
+    let footer = {
+        "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+        "msg": "This bot was Created by Noongar1800#1800"
+    }
+
     const DailyEmbed = new MessageEmbed()
-      .setColor("#ffff00")
-      .setTitle('**Daily**')
+      .setColor(props["embedColor"])
+      .setTitle(props["title"])
       .setDescription(`${message.author} has checked into the Lair for the Day.\n\nCollected ${randomNumber.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold`)
-      .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+      .setFooter(footer["msg"], footer["image"])
       .setTimestamp()
 
     console.log(this.cooldown);
