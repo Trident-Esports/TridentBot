@@ -9,16 +9,26 @@ module.exports = {
     description: "Checks the user's cooldowns",
     async execute(message, client, Discord) {
 
+        let props = {
+            "embedColor": "#B2EE17",
+            "title": "***Cooldowns***",
+            "url": "https://discord.com/KKYdRbZcPT"
+        }
+        let footer = {
+            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+            "msg": "This bot was Created by Noongar1800#1800"
+        }
+
         const cooldownEmbed = new MessageEmbed()
-            .setColor('#23dd17')
-            .setTitle('***Cooldowns***')
-            .setURL('https://discord.gg/KKYdRbZcPT')
+            .setColor(props["embedColor"])
+            .setTitle(props["title"])
+            .setURL(props["url"])
             .setDescription(`This is ${message.author}'s cooldowns`)
             .setThumbnail(message.author.avatarURL({ dynamic: true, format: 'png' }))
-            .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+            .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
-        
-            
+
+
         var daily_cooldown = await cooldownsModel.findOne({ userID: message.author.id});
         var cooldowns = (daily_cooldown["usedcooldowns"])
         console.log(cooldowns);
