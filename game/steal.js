@@ -6,7 +6,17 @@ module.exports = {
   permissions: ["ADMINISTRATOR"],
   description: "steals a players coins",
   async execute(message, args, cmd, client, discord, profileData) {
-    if (message.member.id != "532192409757679618" && message.member.id != "692180465242603591") return message.channel.send(`Sorry only **Noongar1800** and **PrimeWarGamer** can run this command 😔`);
+    let admins = {
+      "ids": [
+        "532192409757679618",
+        "692180465242603591"
+      ],
+      "names": [
+        "Noongar1800",
+        "PrimeWarGamer"
+      ]
+    }
+    if (admins["ids"].indexOf(message.member.id + "") === false) return message.channel.send(`Sorry only administrators (` + Array.prototype.map.call(admins["names"], function(x) { return "**" + x + "**"; }) + `) can run this command 😔`);
     if (!args.length) return message.channel.send("You need to mention a player to steal their coins");
     const amount = args[1];
     const target = message.mentions.users.first();

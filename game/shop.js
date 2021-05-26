@@ -26,14 +26,22 @@ module.exports = {
             }
         }
 
+        let props = {
+            "title": "***ItemShop***"
+        }
+        let footer = {
+            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+            "msg": "This bot was Created by Noongar1800#1800"
+        }
+
         const embed = new Discord.MessageEmbed()
             .setColor('RANDOM')
-            .setTitle('***ItemShop***')
+            .setTitle(props["title"])
             .setDescription('This is the ItemShop')
             .addField('***Item***', `${iName}`, true)
             .addField('***Price***', `💰${iVal.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, true)
             .addField('***Description***', `${iDesc}`, false)
-            .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+            .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
 
         message.channel.send(embed);

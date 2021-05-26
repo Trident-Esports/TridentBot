@@ -20,93 +20,49 @@ module.exports = {
 
         var bought_item = args.slice(0).join(" ").toLowerCase()
 
-        if (bought_item === 'life potion') {
-            if (gold < 200) return message.channel.send('You cannot afford to buy this item')
-            await profileModel.findOneAndUpdate(
-                {
-                    userID: user.id,
-                },
-                {
-                    $inc: {
-                        gold: -200,
-                    },
-                });
-            await inventoryModel.findOneAndUpdate(
-                {
-                    userID: user.id,
-                },
-                {
-                    $push: {
-                        consumables: '🧪',
-                    },
-                });
-            message.channel.send(`${user} just bought 1 🧪 Life Potion!`)
+        let items = {
+            "life potion": {
+                "cost": 200,
+                "icon": "🧪"
+            },
+            "bananas": {
+                "cost": 500,
+                "icon": "🍌"
+            },
+            "power potion": {
+                "cost": 2000,
+                "icon": "💉"
+            },
+            "car": {
+                "cost": 2000000,
+                "icon": "🚗"
+            }
         }
-        if (bought_item === 'power potion') {
-            if (gold < 2000) return message.channel.send('You cannot afford to buy this item')
-            await profileModel.findOneAndUpdate(
+
+        if (bought_item in items) {
+            let item = items[bought_item]
+            if (gold < item["gold"]) return message.channel.send('You cannot afford to buy this item')
+            await profileModel.findByIdAndUpdate(
                 {
-                    userID: user.id,
+                    userID: user.id
                 },
                 {
                     $inc: {
-                        gold: -2000,
-                    },
-                });
+                        gold: item["gold"] * -1
+                    }
+                }
+            );
             await inventoryModel.findOneAndUpdate(
                 {
-                    userID: user.id,
+                    userID: user.id
                 },
                 {
                     $push: {
-                        powers: '💉',
-                    },
-                });
-            message.channel.send(`${user} just bought 1 💉 Power Potion!`)
-        }
-        if (bought_item === 'car') {
-            if (gold < 2000000) return message.channel.send('You cannot afford to buy this item')
-            await profileModel.findOneAndUpdate(
-                {
-                    userID: user.id,
-                },
-                {
-                    $inc: {
-                        gold: -2000000,
-                    },
-                });
-            await inventoryModel.findOneAndUpdate(
-                {
-                    userID: user.id,
-                },
-                {
-                    $push: {
-                        items: '🚗',
-                    },
-                });
-            message.channel.send(`${user} just bought 1 🚗 Car!`)
-        }
-        if (bought_item === 'bananas') {
-            if (gold < 500) return message.channel.send('You cannot afford to buy this item')
-            await profileModel.findOneAndUpdate(
-                {
-                    userID: user.id,
-                },
-                {
-                    $inc: {
-                        gold: -500,
-                    },
-                });
-            await inventoryModel.findOneAndUpdate(
-                {
-                    userID: user.id,
-                },
-                {
-                    $push: {
-                        items: '🍌',
-                    },
-                });
-            message.channel.send(`${user} just bought 1 🍌 Bananas!`)
+                        items: item["icon"]
+                    }
+                }
+            );
+            message.channel.send(`${user} just bought 1 ${item.icon}` + bought_item.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()) + "!")
         }
 
         console.log(inventoryData.items);

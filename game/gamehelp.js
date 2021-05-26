@@ -5,10 +5,17 @@ module.exports = {
     aliases: ['gh'],
     description: "This is a help embed",
     execute(message, args, cmd, client, Discord) {
+        let props = {
+            "embedColor": "#B217EE",  // Purple; Default is B2EE17 (Green)
+            "title": "***Game Help***",
+            "url": "https://discord.com/KKYdRbZcPT",
+            "thumbnail": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif"
+        }
+
         const newEmbed = new MessageEmbed()
-            .setColor('PURPLE')
-            .setTitle('***Game Help***')
-            .setURL('https://discord.gg/KKYdRbZcPT')
+            .setColor(props["embedColor"])
+            .setTitle(props["title"])
+            .setURL(props["url"])
             .setDescription(' This is a list of commands for the VillainsBot MiniGame')
             .addFields(
                 { name: '**PERSONAL COMMANDS**', value: 'List of commands only involving you' },
@@ -37,8 +44,8 @@ module.exports = {
                 { name: '`.coinflip (amount)`', value: '_Gamble some Gold on a coinflip!_\n[Aliases: cf]' }
 
             )
-            .setThumbnail('https://d1fdloi71mui9q.cloudfront.net/al4c957kR4eQffCsIv3o_N5PQkEjiGc43pxbU')
-            .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+            .setThumbnail(props["thumbnail"])
+            .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
 
         message.channel.send("I have sent some Minions to your dm's.");

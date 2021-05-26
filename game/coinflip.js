@@ -12,7 +12,7 @@ module.exports = {
 
         const randomXP = Math.floor(Math.random() * 9) + 1;
         const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
-        
+
         var gambledAmount = args[0].toLowerCase()
 
         if (gambledAmount == 'all') gambledAmount = profileData.gold;
@@ -81,7 +81,7 @@ module.exports = {
                                 minions: 1
                             },
                         });
-        
+
                     SUCCESS_EMBED.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
                     FAIL_EMBED.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
                     SPECIAL_EMBED.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
@@ -97,11 +97,11 @@ module.exports = {
                             $inc: {
                                 gold: gambledAmount,
                             },
-                        } 
+                        }
                     );
                     console.log(number)
                     return message.channel.send(SUCCESS_EMBED)
-                    
+
                 }
                 else if (number <= Tails && m.content.toLowerCase() === 'tails') {
                     await profileModel.findOneAndUpdate(
@@ -115,7 +115,7 @@ module.exports = {
                         });
                     console.log(number)
                     return message.channel.send(SUCCESS_EMBED)
-                    
+
                 }
                 else if (number <= Side && m.content.toLowerCase() === 'side') {
                     await profileModel.findOneAndUpdate(
@@ -153,11 +153,20 @@ module.exports = {
             console.log(number)
         });
 
+        let props = {
+            "title": "**Coin Flip**",
+            "thumbnail": "https://media.tenor.com/images/60b3d58b8161ad9b03675abf301e8fb4/tenor.gif"
+        }
+        let footer = {
+            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+            "msg": "This bot was Created by Noongar1800#1800"
+        }
+
         const Choose_embed = new discord.MessageEmbed()
-            .setTitle('**Coin Flip**')
+            .setTitle(props["title"])
             .setDescription(`<@${message.author.id}>\n**Which side of the coin do you think it will land on?** 🔍\n\`${chosenVariable.join("` `")}\``)
-            .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
-            .setThumbnail('https://media.tenor.com/images/60b3d58b8161ad9b03675abf301e8fb4/tenor.gif')
+            .setThumbnail(message.author.avatarURL({ dynamic: true, format: 'png'}))
+            .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
 
         message.channel.send(Choose_embed);

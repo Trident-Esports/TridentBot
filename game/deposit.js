@@ -30,14 +30,23 @@ module.exports = {
             console.log(err);
         }
         {
+            let props = {
+                "embedColor": "#B2EE17",
+                "title": "**Deposit**"
+            }
+            let footer = {
+                "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+                "msg": "This bot was Created by Noongar1800#1800"
+            }
+
             const newEmbed = new Discord.MessageEmbed()
-            .setColor('#23dd17')
-            .setTitle('**Deposit**')
+            .setColor(props["embedColor"])
+            .setTitle(props["title"])
             .setDescription(`**${message.author} has Deposited 💰 ${amount.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold into their Bank!**\n _Check your balance using .Balance_`)
             .setThumbnail(message.author.avatarURL({ dynamic: true, format: 'png', size: 256}))
-            .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+            .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
-            
+
         return message.channel.send(newEmbed)
         }
     }

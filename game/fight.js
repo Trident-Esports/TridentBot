@@ -35,7 +35,11 @@ module.exports = {
             return message.channel.send('You cannot fight yourself wtf?!?');
         }
 
-        if (target.id === '828317713256415252' && this.cooldown === 0) {
+        let props = {
+            "botID": "828317713256415252"
+        }
+
+        if (target.id === props["botID"] && this.cooldown === 0) {
             this.cooldown = 60 * 5
             return message.channel.send("Now who's the Bot? 🤡\nGo sit in timeout for 5 minutes!");
         }
