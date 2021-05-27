@@ -1,0 +1,40 @@
+{
+  "stripe": "default",
+  "title": "VALORANT BDE Roster",
+  "aliases": ["vwr"],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235908031676436",
+  "#url": "#rosters: VALORANT lists",
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "brew",
+        "queen"
+      ]
+    },
+    "coach": {
+      "title": "Coach",
+      "users": [
+        "brew"
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "fluffy",
+        "maxxe",
+        "peachu",
+        "scarscahhh",
+        "wanrae"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+        "jinxie",
+        "olivia",
+        "phoebe"
+      ]
+    }
+  }
+}
