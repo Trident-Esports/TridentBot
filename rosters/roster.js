@@ -1,12 +1,13 @@
 const dasu = require('dasu');
 const { MessageEmbed } = require("discord.js");
 
-let defaults = require("dbs/defaults.json")
-let profile = ""
-profile = "staff/casters"
-profile = require("dbs/" + profile + ".json")
+const fs = require('fs');
 
-console.log(profile)
+let defaults = JSON.parse(fs.readFileSync("rosters/dbs/defaults.json", "utf8"))
+let profile = ""
+profile = "staff/casters" // Hard-code to .cr for now
+                          // Team is gonna have to be teams/<gameID>/<genericTeam>.json
+profile = JSON.parse(fs.readFileSync("rosters/dbs/" + profile + ".json", "utf8"))
 
 let stripe = profile["stripe"]
 switch(stripe) {
@@ -29,16 +30,17 @@ module.exports = {
             .setURL(profile.url)
             // .setDescription()
             .setThumbnail(defaults.thumbnail)
-            .setFooter(defaults.footer.msg, defaults.footer.img)
+            .setFooter(defaults.footer.msg, defaults.footer.image)
             .setTimestamp();
 
-        for(let group in profile.members) {
+        for(let [groupName, groupAttrs] of Object.entries(profile.members)) {
             let userSTR = "";
-            for(let user in group.users) {
-                userSTR += "[" + user + "]"; // + "(" + socials[user] + ")";
+            for(let user of groupAttrs.users) {
+                // userSTR += "[" + user + "]" + "(" + socials[user] + ")";
+                userSTR += "[" + user + "](http://example.com)";
                 userSTR += "\n";
             }
-            newEmbed.addField(group.title,userSTR,false);
+            newEmbed.addField(groupAttrs.title,userSTR,false);
         }
 
         message.channel.send(newEmbed);
