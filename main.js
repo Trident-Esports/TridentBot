@@ -72,20 +72,13 @@ client.on('guildMemberAdd', (member, Discord) => {
         "msg": "This bot was Created by Noongar1800#1800"
     }
 
+jsonmessage = JSON.parse(fs.readFileSync("welcomemessage.json", "utf8"))
+let message = jsonmessage.join("\n")
     try {
         const embed = new MessageEmbed()
             .setTitle(`Welcome To ${member.guild.name}`)
             .setThumbnail(thumbnail)
-            .setDescription(
-              [
-                `"Welcome <@${member.user.id}> to **${member.guild.name}**."`,
-                `"**Are you ready to become a Super Villain?**"`,
-                "",
-                `"Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}."`,
-                "",
-                `"Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}."`
-              ].join("\n")
-            )
+            .setDescription('`' + message + '`')
             .setFooter(footer["msg"], footer["image"])
             .setColor('RANDOM')
         // /embed
