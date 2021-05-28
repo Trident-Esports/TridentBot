@@ -1,7 +1,7 @@
 {
   "stripe": "default",
   "title": "Staff Roster",
-  "aliases": [""],
+  "aliases": ["staff"],
   "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235479679074314",
   "#url": "#rosters: Staff",
   "members": {
