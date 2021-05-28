@@ -1,0 +1,39 @@
+{
+  "stripe": "default",
+  "title": "Staff Roster",
+  "aliases": [""],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235479679074314",
+  "#url": "#rosters: Staff",
+  "members": {
+    "owners": {
+      "title": "Owners",
+      "users": [
+        "capther0",
+        "queen",
+        "scubasteve",
+        "ty"
+      ]
+    },
+    "socials": {
+      "title": "Social Media",
+      "users": [
+        "capther0"
+      ]
+    },
+    "code": {
+      "title": "Code Monkeys",
+      "users": [
+        "miketrethewey",
+        "noongar",
+        "prime",
+        "zenom"
+      ]
+    },
+    "gfx": {
+      "title": "GraphicsFX",
+      "users": [
+        "stubs"
+      ]
+    }
+  }
+}
