@@ -1,0 +1,37 @@
+{
+  "stripe": "default",
+  "title": "CSGO Amateur Roster",
+  "aliases": ["csar"],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/815180874739089418",
+  "#url": "#rosters: CSGO Amateur",
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "harry"
+      ]
+    },
+    "coach": {
+      "title": "Coach",
+      "users": [
+        "TBA"
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "brian",
+        "hbt",
+        "shmurda",
+        "snaggle",
+        "t3rbo"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+        "robbo"
+      ]
+    }
+  }
+}

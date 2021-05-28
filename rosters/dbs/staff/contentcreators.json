@@ -1,0 +1,25 @@
+{
+  "stripe": "default",
+  "title": "Content Creator Roster",
+  "aliases": ["cc", "ccr"],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/815180874739089418",
+  "#url": "#rosters: CSGO Amateur",
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "ace"
+      ]
+    },
+    "creator": {
+      "title": "Content Creator",
+      "users": [
+        "benstro",
+        "brew",
+        "jaidos",
+        "smokeyy",
+        "scubasteve835"
+      ]
+    }
+  }
+}
