@@ -71,7 +71,7 @@ client.on('guildMemberAdd', (member, Discord) => {
         "image": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif",
         "msg": "This bot was Created by Noongar1800#1800"
     }
-
+//FIXME
 jsonmessage = JSON.parse(fs.readFileSync("welcomemessage.json", "utf8"))
 let message = jsonmessage.join("\n")
     try {
