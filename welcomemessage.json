@@ -5,4 +5,4 @@
     "Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}.",
     "",
     "Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}."
-] //FIXME
+]
