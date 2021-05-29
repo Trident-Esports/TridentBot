@@ -134,5 +134,5 @@ client.once('ready', async () => {
 
     let time30 = 1000 * 60 * 30 // time from ms-sec-min
     setInterval(test, time30);
-
+//FIX ME Bot post but won't allow the embed to be sent only manually putting .games will allow
 });

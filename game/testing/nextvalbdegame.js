@@ -50,20 +50,24 @@ module.exports =  {
                     "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
                     "msg": "This bot was Created by Noongar1800#1800"
                 }
+                let starting_time = new Date(game_details.discord.timestampMS)
 
                 const embed = new MessageEmbed()
                     .setColor(props["embedColor"])
                     .setTitle(props["title"])
                     .setURL(props["url"])
                     .addField('**Match:**', `**${game_details.discord.profile}** 🆚 **${game_details.discord.opponent}**`, true)
-                    .addField(`${game_details.discord.starting}AEST`, `[LPL](https://letsplay.live/match/${game_details.match_id}/)`, false)
+                    .addField(`${starting_time}AEST`, `[LPL](https://letsplay.live/match/${game_details.match_id}/)`, false)
                     .setThumbnail(props["thumbnail"])
                     .setTimestamp();
 
-                if (new Date() > new Date(new Date(parseInt(keys[0])*1000)-3600000) && new Date() <= new Date(new Date(parseInt(keys[0])*1000)-1800000)) {
-                    message.client.channels.cache.get(channelNames["general"]).send(embed);
-                }
+                    message.channel.send(embed);
+                //if (new Date() > new Date(new Date(parseInt(keys[0])*1000)-3600000) && new Date() <= new Date(new Date(parseInt(keys[0])*1000)-1800000)) {
+                //    message.client.channels.cache.get(channelNames["general"]).send(embed);
+                //} 
+                
+                //This sends to general an hour before the game
             }
         });
-    }
+    } //FIX ME
 }
