@@ -1,6 +1,6 @@
 const { MessageEmbed } = require("discord.js");
 
-const cooldownsModel = require('../../models/cooldownsSchema')
+const cooldownsModel = require('../models/cooldownsSchema')
 
 module.exports = {
     name: 'cooldown',
