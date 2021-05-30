@@ -1,14 +1,17 @@
 module.exports = {
     name: 'balance',
-    aliases: ['bal'],
+    aliases: ['bal', 'coins'],
     permissions: [],
     description: "Checks the Users Balance",
     execute(message, args, cmd, client, Discord, profileData){
 
-        let mentionedMember = message.mentions.members.first() || message.guild.members.cache.get (args[0]);
-        if (!mentionedMember) mentionedMember = message.member;
+        if (args.length) {
+            var mentionedMember = message.mentions.members.first();;
+        } else {
+            var mentionedMember = message.author;
+        }
 
-        if (!mentionedMember) return message.channel.send("This member doesn't have a Level.😢");
+        if (!mentionedMember) return message.channel.send("That user does not exist");
 
         let props = {
             "embedColor": "#B2EE17",
@@ -24,7 +27,7 @@ module.exports = {
             .setColor(props["embedColor"])
             .setTitle(props["title"])
             .setURL(props["url"])
-            .setDescription(`This is ${mentionedMember}'s Balance`)
+            .setDescription(`This is ${message.author}'s Balance`)
             .addField(` 💰 ${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Gold', true)
             .addField(` 🏦 ${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Bank', true)
             .addField(` 🐵 ${profileData.minions}`, 'Minions', true)
