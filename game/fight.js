@@ -1,4 +1,6 @@
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
 
 const profileModel = require("../models/profileSchema");
 
@@ -8,7 +10,7 @@ module.exports = {
     name: "fight",
     aliases: ['battle'],
     permissions: ["SEND_MESSAGES"],
-    cooldown: 60 * 60 /** 2*/, // 2 Hours When Completed
+    cooldown: 60 * 60 /** 2*/ , // 2 Hours When Completed
     category: "Battle",
     description: "Choose your player to fight and get bragging rights",
 
@@ -18,9 +20,9 @@ module.exports = {
 
         const randomXP = Math.floor(Math.random() * 300) + 300;
 
-        if(!args.length){
+        if (!args.length) {
             this.cooldown = 0
-           return message.channel.send('Who you gonna fight?')
+            return message.channel.send('Who you gonna fight?')
         }
 
         const target = message.mentions.members.first() || message.guild.members.cache.get(args[0])
@@ -62,7 +64,10 @@ module.exports = {
             m.content.startsWith(prefix) && m.author.id === target.id ||
             m.content.startsWith(prefix) && m.author.id === message.author.id;
 
-        const COLLECTOR = message.channel.createMessageCollector(FILTER, { max: 1, time: 30000 });
+        const COLLECTOR = message.channel.createMessageCollector(FILTER, {
+            max: 1,
+            time: 30000
+        });
 
         COLLECTOR.on("collect", async (m) => {
 
@@ -82,32 +87,28 @@ module.exports = {
                 }
 
                 if (m.content.toLowerCase() === 'yes') {
-                    await profileModel.findOneAndUpdate(
-                        {
-                            userID: chosenWinner,
+                    await profileModel.findOneAndUpdate({
+                        userID: chosenWinner,
+                    }, {
+                        $inc: {
+                            gold: WinningsNUMBER,
                         },
-                        {
-                            $inc: {
-                                gold: WinningsNUMBER,
-                            },
 
-                        });
+                    });
                     this.cooldown = 60 * 60
 
                     if (hasLeveledUP) {
 
                         const user = await Levels.fetch(message.author.id);
                         const target = message.author
-                        await profileModel.findOneAndUpdate(
-                            {
-                                userID: target.id,
+                        await profileModel.findOneAndUpdate({
+                            userID: target.id,
+                        }, {
+                            $inc: {
+                                gold: 1000,
+                                minions: 1
                             },
-                            {
-                                $inc: {
-                                    gold: 1000,
-                                    minions: 1
-                                },
-                            });
+                        });
 
                         WinnerEMBED.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
                     }

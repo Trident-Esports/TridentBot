@@ -1,5 +1,5 @@
 const fs = require('fs');
-
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 const Discord = require('discord.js')
 
 module.exports = (client, Discord) => {
