@@ -57,8 +57,10 @@ module.exports = {
         },
       });
 
-      let gainedmoney = 1000 // find a way to multiply these by amount of levels gained maybe through user.level differentiation.
-      let gainedminions = 1
+      let level_gain = (user.level - (user.level + 1)); //find a way for this to find level difference before and after not just after for 1 level
+
+      let gainedmoney = level_gain *1000
+      let gainedminions = level_gain *100
 
       newEmbed.setFooter(`${target.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+${gainedmoney} , 🐵+${gainedminions}`)
     }
