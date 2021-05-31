@@ -23,7 +23,7 @@ module.exports = {
 
         var newEmbed = new MessageEmbed()
             .setColor(props["embedColor"])
-            .setTitle('***BS Roster***')
+            .setTitle('***Bot Staff Roster***')
             .setThumbnail(thumbnail)
             .setFooter(footer["msg"], footer["image"])
             .setTimestamp();

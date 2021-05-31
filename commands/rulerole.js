@@ -10,10 +10,16 @@ module.exports = {
 
         const yellowTeamEmoji = "✅";
 
+        let props = {
+            "embedColor": "#e42643",
+            "title": "***Rules***",
+            "url": "https://discord.com/channels/788021898146742292/788576321231388704/788577576385642538"
+        }
+
         let embed = new MessageEmbed()
-            .setColor('#e42643')
-            .setTitle('**RULES**')
-            .setURL('https://discord.com/channels/788021898146742292/788576321231388704/788577576385642538')
+            .setColor(props["embedColor"])
+            .setTitle(props["title"])
+            .setURL(props["url"])
             .setDescription('Accepting the rules will allow you to interact with the server')
             .addFields(
                 {name: '***ACCEPTING RULES***', value: 'By selecting the reaction below you are agreeing to Villains Rules and will be punished according to how severly the rules are broken.'}

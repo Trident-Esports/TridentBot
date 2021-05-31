@@ -2,16 +2,33 @@ const ytdl = require('ytdl-core');
 
 const ytSearch = require('yt-search');
 
-const { MessageEmbed } = require('discord.js');
+const {
+    MessageEmbed
+} = require('discord.js');
 
-var { getData, getPreview } = require("spotify-url-info");
+var {
+    getData,
+    getPreview
+} = require("spotify-url-info");
 
 const queue = new Map();
 
+let props = {
+    "embedColor": "#B2EE17",
+    "title": "***Villains Music***",
+    "url": "https://discord.com/KKYdRbZcPT"
+}
+let footer = {
+    "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+    "msg": "This bot was Created by Noongar1800#1800"
+}
+
 const embed = new MessageEmbed()
-    .setColor('#23dd17')
-    .setTitle('Villains Music')
+    .setColor(props["embedColor"])
+    .setTitle(props["title"])
+    .setURL(props["url"])
     .setThumbnail('https://d1fdloi71mui9q.cloudfront.net/al4c957kR4eQffCsIv3o_N5PQkEjiGc43pxbU')
+    .setFooter(footer["msg"], footer["image"])
     .setTimestamp()
 
 module.exports = {
@@ -51,10 +68,17 @@ module.exports = {
 
             if (ytdl.validateURL(args[0])) {
                 const song_info = await ytdl.getInfo(args[0]);
-                song = { title: song_info.videoDetails.title, url: song_info.videoDetails.video_url }
-            } if (ytdl.validateURL(args[0])) {
+                song = {
+                    title: song_info.videoDetails.title,
+                    url: song_info.videoDetails.video_url
+                }
+            }
+            if (ytdl.validateURL(args[0])) {
                 const songInfo = await ytdl.getInfo(args[0]);
-                song = { title: songInfo.videoDetails.title, url: songInfo.videoDetails.video_url };
+                song = {
+                    title: songInfo.videoDetails.title,
+                    url: songInfo.videoDetails.video_url
+                };
             } else if (args[0].includes('spotify')) {
                 const spotifyTrackInfo = await getPreview(args[0]);
 
@@ -66,7 +90,10 @@ module.exports = {
                 const video = await videoFinder(`${spotifyTrackInfo.title} ${spotifyTrackInfo.artist}`);
 
                 if (video) {
-                    song = { title: video.title, url: video.url };
+                    song = {
+                        title: video.title,
+                        url: video.url
+                    };
                 } else {
                     message.reply('Error finding song.');
                 }
@@ -78,7 +105,10 @@ module.exports = {
                 const video = await videoFinder(args.join(''));
 
                 if (video) {
-                    song = { title: video.title, url: video.url };
+                    song = {
+                        title: video.title,
+                        url: video.url
+                    };
                 } else {
                     message.reply('Error finding song.');
                 }
@@ -105,16 +135,12 @@ module.exports = {
                     throw err;
                 }
             } else {
-                server_queue.songs.push(song);
-                {
+                server_queue.songs.push(song); {
                     embed.setDescription(`**${song.title}** added to queue`)
                     return message.channel.send(embed);
                 }
             }
         }
-
-        // if (cmd === 'skip') skip_song(message, server_queue, embed);
-        // if (cmd === 'stop') stop_song(message, server_queue, embed);
     }
 
 }
@@ -128,13 +154,17 @@ const video_player = async (guild, song) => {
         queue.delete(guild.id);
         return;
     }
-    const stream = ytdl(song.url, { filter: 'audioonly' });
-    song_queue.connection.play(stream, { seek: 0, volume: 1 })
+    const stream = ytdl(song.url, {
+        filter: 'audioonly'
+    });
+    song_queue.connection.play(stream, {
+            seek: 0,
+            volume: 1
+        })
         .on('finish', () => {
             song_queue.songs.shift();
             video_player(guild, song_queue.songs[0]);
-        });
-    {
+        }); {
         embed.setDescription(`Now playing ** ${song.title} ** enjoy`)
         await song_queue.text_channel.send(embed)
     }

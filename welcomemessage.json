@@ -1,0 +1,8 @@
+[
+    "Welcome <@${member.user.id}> to **${member.guild.name}**.",
+    "**Are you ready to become a Super Villain?**",
+    "",
+    "Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}.",
+    "",
+    "Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}."
+]

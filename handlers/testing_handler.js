@@ -3,10 +3,10 @@ const fs = require('fs');
 const Discord = require('discord.js')
 
 module.exports = (client, Discord) => {
-    const testing_files = fs.readdirSync('./game/testing').filter(file => file.endsWith('.js'));
+    const testing_files = fs.readdirSync('./testing').filter(file => file.endsWith('.js'));
 
     for (const file of testing_files) {
-        const command = require(`../game/testing/${file}`);
+        const command = require(`../testing/${file}`);
 
         // if(!message.member.roleId.cache.some(r=>["833802915461988466"].includes(r.id)) ) return message.channel.send('you must be a premium member!');
 

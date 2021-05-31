@@ -1,6 +1,6 @@
 const profileModel = require("../models/profileSchema");
-
 const Levels = require('discord-xp');
+const { MessageEmbed } = require("discord.js");
 
 module.exports = {
   name: "beg",
@@ -8,41 +8,62 @@ module.exports = {
   permissions: [],
   cooldown: 60,
   description: "Begs for Coins",
-  async execute(message, args, cmd, client, discord, profileData) {
+  async execute(message) {
+
     const randomNumber = Math.floor(Math.random() * 50) + 1;
-    await profileModel.findOneAndUpdate(
-      {
-        userID: message.author.id,
-      },
-      {
-        $inc: {
-          gold: randomNumber,
-        },
-      }
-    );
-
-
     const randomXP = Math.floor(Math.random() * 50) + 15;
+
+    await profileModel.findOneAndUpdate({
+      userID: message.author.id,
+    }, {
+      $inc: {
+        gold: randomNumber,
+      },
+    });
+
+    let props = {
+      "embedColor": "#B2EE17",
+      "title": "***Beg***",
+      "url": "https://discord.com/KKYdRbZcPT"
+    }
+    let footer = {
+      "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+      "msg": "This bot was Created by Noongar1800#1800"
+    }
+    const newEmbed = new MessageEmbed()
+      .setColor(props["embedColor"])
+      .setTitle(props["title"])
+      .setURL(props["url"])
+      .addField(`${message.author.username} received ${randomNumber} **Gold**`, `Earned ${randomXP} XP`, true)
+      .setThumbnail(message.author.displayAvatarURL({
+        dynamic: true,
+        format: 'png'
+      }))
+      .setFooter(footer["msg"], footer["image"])
+      .setTimestamp();
+    
     const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
 
     if (hasLeveledUP) {
 
       const user = await Levels.fetch(message.author.id);
       const target = message.author
-      await profileModel.findOneAndUpdate(
-        {
-          userID: target.id,
+      await profileModel.findOneAndUpdate({
+        userID: target.id,
+      }, {
+        $inc: {
+          gold: 1000,
+          minions: 1
         },
-        {
-          $inc: {
-            gold: 1000,
-            minions: 1
-          },
-        });
+      });
 
+      let level_gain = (user.level - (user.level + 1)); //find a way for this to find level difference before and after not just after for 1 level
 
-      message.channel.send(`${message.member} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
+      let gainedmoney = level_gain *1000
+      let gainedminions = level_gain *100
+
+      newEmbed.setFooter(`${target.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+${gainedmoney} , 🐵+${gainedminions}`)
     }
-    return message.channel.send(`${message.author.username} received ${randomNumber} **Gold**\n\nEarned ${randomXP} XP`);
+    return message.channel.send(newEmbed);
   }
 };

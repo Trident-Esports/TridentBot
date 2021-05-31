@@ -9,10 +9,20 @@ module.exports = {
             
             return message.channel.send('You dont have the correct permissions');
 
+            let props = {
+                "embedColor": "#B2EE17",
+                "title": "***Help***",
+                "url": "https://discord.com/KKYdRbZcPT"
+            }
+            let footer = {
+                "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+                "msg": "This bot was Created by Noongar1800#1800"
+            }
+
         const newEmbed = new MessageEmbed()
-            .setColor('#23dd17')
-            .setTitle('Help')
-            .setURL('https://discord.gg/NtP24Gdbzd')
+        .setColor(props["embedColor"])
+        .setTitle(props["title"])
+        .setURL(props["url"])
             .addFields(
                 { name: 'MOD COMMANDS', value: "Commands for only Moderators to use" },
                 { name: '.purge #', value: 'Deletes the last sent messages in the channel' },
@@ -26,7 +36,7 @@ module.exports = {
                 {name: '.unmute @member', value: '_Unmutes a member._'}
             )
             .setThumbnail('https://d1fdloi71mui9q.cloudfront.net/al4c957kR4eQffCsIv3o_N5PQkEjiGc43pxbU')
-            .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+            .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
 
         message.channel.send("I have sent a list of the mod commands to your dm's")
