@@ -1,5 +1,6 @@
-const { MessageEmbed } = require("discord.js");
-
+const {
+    MessageEmbed
+} = require("discord.js");
 const cooldownsModel = require('../models/cooldownsSchema');
 
 module.exports = {
@@ -20,16 +21,21 @@ module.exports = {
         }
 
         const cooldownEmbed = new MessageEmbed()
-        .setColor(props["embedColor"])
-        .setTitle(props["title"])
-        .setURL(props["url"])
+            .setColor(props["embedColor"])
+            .setTitle(props["title"])
+            .setURL(props["url"])
             .setDescription(`This is ${message.author}'s cooldowns`)
-            .setThumbnail(message.author.avatarURL({ dynamic: true, format: 'png' }))
+            .setThumbnail(message.author.avatarURL({
+                dynamic: true,
+                format: 'png'
+            }))
             .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
-        
-            
-        var daily_cooldown = await cooldownsModel.findOne({ userID: message.author.id});
+
+
+        var daily_cooldown = await cooldownsModel.findOne({
+            userID: message.author.id
+        });
         var cooldowns = (daily_cooldown["usedcooldowns"])
         console.log(cooldowns);
 
