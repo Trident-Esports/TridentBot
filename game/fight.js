@@ -7,7 +7,7 @@ const Levels = require('discord-xp');
 module.exports = {
     name: "fight",
     aliases: ['battle'],
-    permissions: ["SEND_MESSAGES"],
+    permissions: [],
     cooldown: 60 * 60 /** 2*/ , // 2 Hours When Completed
     category: "Battle",
     description: "Choose your player to fight and get bragging rights",
