@@ -1,9 +1,4 @@
 {
-  "ace": {
-    "stylized": "AcekNg",
-    "twitch": "acekng",
-    "twitter": "acekngval"
-  },
   "aimz": {
     "twitter": "xaimmzzzzrl"
   },
@@ -52,6 +47,10 @@
     "stylized": "𝕲𝖊𝖒𝖑𝖔𝖗𝖉",
     "twitch": "gemlordtv",
     "twitter": "gemlordtv"
+  },
+  "glny": { 
+  },
+  "griteo": {
   },
   "guessmonster": {
     "stylized": "GuessMonster",
@@ -111,6 +110,7 @@
     "twitter": "nhelvyy1"
   },
   "noongar1800": {
+    "steam": "TTV_Noongar1800",
     "twitch": "noongar1800",
     "twitter": "chrisc237"
   },
@@ -212,6 +212,8 @@
     "twitch": "undreamtspoon"
   },
   "wanrae": {
+    "stylized": "bLeH",
+    "twitter": "Wanrae_"
   },
   "yung": {
     "twitch": "yungoce"

@@ -2,12 +2,14 @@ const fs = require('fs');
 const path = require("path")
 
 const Discord = require('discord.js')
-const { MessageEmbed } = require("discord.js");
+const {
+    MessageEmbed
+} = require("discord.js");
 
-let walk = function(dir) {
+let walk = function (dir) {
     let results = [];
     let list = fs.readdirSync(dir);
-    list.forEach(function(file) {
+    list.forEach(function (file) {
         file = dir + '/' + file;
         let stat = fs.statSync(file);
         if (stat && stat.isDirectory()) {
@@ -36,14 +38,14 @@ module.exports = (client, Discord) => {
 
         let stripe = profile["stripe"]
 
-        switch(stripe) {
+        switch (stripe) {
             default:
                 stripe = "#B2EE17";
                 break;
         }
 
         // Hack in my stuff to differentiate
-        if(GLOBALS.DEV) {
+        if (GLOBALS.DEV) {
             stripe = GLOBALS["stripe"]
             defaults.footer = GLOBALS.footer
         }
@@ -66,33 +68,35 @@ module.exports = (client, Discord) => {
                     .setFooter(defaults.footer.msg, defaults.footer.image)
                     .setTimestamp();
 
-                for(let [groupName, groupAttrs] of Object.entries(profile.members)) {
+                for (let [groupName, groupAttrs] of Object.entries(profile.members)) {
                     let userSTR = "";
-                    for(let user of groupAttrs.users) {
+                    for (let user of groupAttrs.users) {
                         let social = socials[user];
-                        if(!social) {
+                        if (!social) {
                             console.log(user);
                         }
                         let name = user.charAt(0).toUpperCase() + user.slice(1);
                         let userURL = "";
-                        if(social.stylized !== undefined) {
-                            name = social.stylized;
+                        if (social) {
+                            if (social.stylized !== undefined) {
+                                name = social.stylized;
+                            }
+                            if (social.twitch !== undefined) {
+                                userURL = "https://twitch.tv/" + social.twitch;
+                            } else if (social.twitter !== undefined) {
+                                userURL = "https://twitter.com/" + social.twitter;
+                            }
                         }
-                        if(social.twitch !== undefined) {
-                            userURL = "https://twitch.tv/" + social.twitch;
-                        } else if(social.twitter !== undefined) {
-                            userURL = "https://twitter.com/" + social.twitter;
-                        }
-                        if(userURL != "") {
+                        if (userURL != "") {
                             userSTR += "[";
                         }
                         userSTR += name;
-                        if(userURL != "") {
+                        if (userURL != "") {
                             userSTR += "](" + userURL + ")";
                         }
                         userSTR += "\n";
                     }
-                    newEmbed.addField(groupAttrs.title,userSTR,false);
+                    newEmbed.addField(groupAttrs.title, userSTR, false);
                 }
 
                 message.channel.send(newEmbed);
