@@ -5,10 +5,22 @@ module.exports = {
     aliases: ['h'],
     description: "This is a help embed",
     execute(message, args, cmd, client, Discord) {
+
+        let props = {
+            "embedColor": "#B2EE17",
+            "title": "***Help***",
+            "url": "https://discord.com/KKYdRbZcPT"
+        }
+        let footer = {
+            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
+            "msg": "This bot was Created by Noongar1800#1800"
+        }
+
+
         const newEmbed = new MessageEmbed()
-            .setColor('#23dd17')
-            .setTitle('***Help***')
-            .setURL('https://discord.gg/KKYdRbZcPT')
+        .setColor(props["embedColor"])
+        .setTitle(props["title"])
+        .setURL(props["url"])
             .setDescription(' This is a list of the commands and help for VillainsBot.\nIf you would like a list of commands for the MiniGame please type _.gamehelp_')
             .addFields(
                 { name: '**COMMANDS**', value: 'List of commands' },
@@ -34,7 +46,7 @@ module.exports = {
                 {name: '`.weather`', value: '_Tells you the weather for the city provided_'}
             )
             .setThumbnail('https://d1fdloi71mui9q.cloudfront.net/al4c957kR4eQffCsIv3o_N5PQkEjiGc43pxbU')
-            .setFooter('This bot was Created by Noongar1800#1800', 'https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg')
+            .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
 
         message.channel.send("I have sent some Minions to your dm's.");

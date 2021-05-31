@@ -71,21 +71,14 @@ client.on('guildMemberAdd', (member, Discord) => {
         "image": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif",
         "msg": "This bot was Created by Noongar1800#1800"
     }
-
+//FIXME
+jsonmessage = JSON.parse(fs.readFileSync("welcomemessage.json", "utf8"))
+let message = jsonmessage.join("\n")
     try {
         const embed = new MessageEmbed()
             .setTitle(`Welcome To ${member.guild.name}`)
             .setThumbnail(thumbnail)
-            .setDescription(
-              [
-                `"Welcome <@${member.user.id}> to **${member.guild.name}**."`,
-                `"**Are you ready to become a Super Villain?**"`,
-                "",
-                `"Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}."`,
-                "",
-                `"Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}."`
-              ].join("\n")
-            )
+            .setDescription('`' + message + '`')
             .setFooter(footer["msg"], footer["image"])
             .setColor('RANDOM')
         // /embed
@@ -141,5 +134,5 @@ client.once('ready', async () => {
 
     let time30 = 1000 * 60 * 30 // time from ms-sec-min
     setInterval(test, time30);
-
+//FIX ME Bot post but won't allow the embed to be sent only manually putting .games will allow
 });

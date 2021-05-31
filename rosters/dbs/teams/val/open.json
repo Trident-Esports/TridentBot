@@ -1,0 +1,36 @@
+{
+  "stripe": "default",
+  "title": "VALORANT Academy Roster",
+  "aliases": ["vor"],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235908031676436",
+  "#url": "#rosters: VALORANT listings",
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "scubasteve"
+      ]
+    },
+    "coach": {
+      "title": "Coach",
+      "users": [
+        "TBA"
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "azzy",
+        "creeky",
+        "nhelvyy",
+        "undreamtspoon"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+        "scubasteve"
+      ]
+    }
+  }
+}

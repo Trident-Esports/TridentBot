@@ -39,7 +39,7 @@ module.exports = {
             "botID": "828317713256415252",
             "embedColor": "#FF5005",
             "title": "**🛡️⚔️ BATTLE ⚔️🛡️**",
-            "thumbnail":"https://media1.tenor.com/images/2ae0b895a19beae56d67a1f88f36aecc/tenor.gif",
+            "thumbnail": "https://media1.tenor.com/images/2ae0b895a19beae56d67a1f88f36aecc/tenor.gif",
             "Winner": {
                 "title": "**WINNER WINNER CHICKEN DINNER**",
                 "url": "https://discord.com/KKYdRbZcPT"

@@ -1,0 +1,37 @@
+{
+  "stripe": "default",
+  "title": "VALORANT Challenger Roster",
+  "aliases": ["vcr"],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235908031676436",
+  "#url": "#rosters: VALORANT listings",
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "guessmonster"
+      ]
+    },
+    "coach": {
+      "title": "Coach",
+      "users": [
+        "crash"
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "marsh",
+        "myth",
+        "orangepearl",
+        "pocket",
+        "suave"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+        "TBA"
+      ]
+    }
+  }
+}

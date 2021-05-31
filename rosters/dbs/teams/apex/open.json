@@ -1,0 +1,23 @@
+{
+  "stripe": "default",
+  "title": "Apex Open Roster",
+  "aliases": ["aor"],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/844367596191350814",
+  "#url": "#rosters: Apex Open",
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "TBA"
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "gemlord",
+        "salmon",
+        "spoon"
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "stripe": "default",
+  "title": "Evil Council Roster",
+  "aliases": ["ec"],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235479679074314",
+  "#url": "#rosters: Staff",
+  "members": {
+    "evil": {
+      "title": "Evil Council",
+      "users": [
+        "brew",
+        "dazza",
+        "guessmonster",
+        "harryhaz1",
+        "kairu",
+        "noongar1800",
+        "prime",
+        "snagglefart"
+      ]
+    }
+  }
+}
