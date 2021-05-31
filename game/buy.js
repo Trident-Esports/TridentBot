@@ -8,7 +8,9 @@ module.exports = {
     async execute(message, args, profileData) {
 
         var user = message.author
-        const inventoryData = await inventoryModel.findOne({ userID: user.id });
+        const inventoryData = await inventoryModel.findOne({
+            userID: user.id
+        });
 
         if (!inventoryData) return message.channel.send("This user doesn't exist");
         if (!user.id) return message.channel.send("There was an arror finding your discord id");
@@ -42,26 +44,20 @@ module.exports = {
         if (bought_item in items) {
             let item = items[bought_item]
             if (gold < items["cost"]) return message.channel.send('You cannot afford to buy this item')
-            await profileModel.findOneAndUpdate(
-                {
-                    userID: user.id
-                },
-                {
-                    $inc: {
-                        gold: item["cost"] //Find a way to make the cost take away for amount of items not just one
-                    }
+            await profileModel.findOneAndUpdate({
+                userID: user.id
+            }, {
+                $inc: {
+                    gold: item["cost"] //Find a way to make the cost take away for amount of items not just one
                 }
-            );
-            await inventoryModel.findOneAndUpdate(
-                {
-                    userID: user.id
-                },
-                {
-                    $push: {
-                        items: item["icon"] //Find a way to push the amount of items players buy not just one
-                    }
+            });
+            await inventoryModel.findOneAndUpdate({
+                userID: user.id
+            }, {
+                $push: {
+                    items: item["icon"] //Find a way to push the amount of items players buy not just one
                 }
-            );
+            });
             message.channel.send(`${user} just bought 1 ${item.icon}` + bought_item.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()) + "!")
         }
 
