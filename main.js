@@ -71,14 +71,14 @@ client.on('guildMemberAdd', (member, Discord) => {
         "image": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif",
         "msg": "This bot was Created by Noongar1800#1800"
     }
-//FIXME
-jsonmessage = JSON.parse(fs.readFileSync("welcomemessage.json", "utf8"))
-let message = jsonmessage.join("\n")
     try {
         const embed = new MessageEmbed()
             .setTitle(`Welcome To ${member.guild.name}`)
             .setThumbnail(thumbnail)
-            .setDescription('`' + message + '`')
+            .setDescription(`Welcome <@${member.user.id}> to **${member.guild.name}**.\n
+            **Are you ready to become a Super Villain?**\n\n
+            Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}.\n\n
+            Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}.`)
             .setFooter(footer["msg"], footer["image"])
             .setColor('RANDOM')
         // /embed
