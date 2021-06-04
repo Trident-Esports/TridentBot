@@ -4,6 +4,7 @@ import json                           # json manipulation
 import os                             # for env vars
 import pytz                           # timezones
 import requests                       # http requests
+import sys                            # exit command
 from argparse import ArgumentParser   # for argument variables
 
 CI_SETTINGS = {}
@@ -183,6 +184,7 @@ DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK")
 
 if DISCORD_WEBHOOK is None:
   print("Webhook URL acquisition failed")
+  sys.exit(1)
 else:
   # send request
   r = requests.post(DISCORD_WEBHOOK, data=json.dumps(payload),
