@@ -179,7 +179,7 @@ payload = {
 }
 
 # get webhook for MegaMan.EXE
-DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK_UPDATES")
+DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK")
 
 if DISCORD_WEBHOOK is None:
   print("Webhook URL acquisition failed")
