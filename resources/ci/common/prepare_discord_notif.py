@@ -181,6 +181,9 @@ payload = {
 # get webhook for MegaMan.EXE
 DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK_UPDATES")
 
-# send request
-r = requests.post(DISCORD_WEBHOOK, data=json.dumps(payload),
-                  headers={"Content-type": "application/json"})
+if DISCORD_WEBHOOK is None:
+  print("Webhook URL acquisition failed")
+else:
+  # send request
+  r = requests.post(DISCORD_WEBHOOK, data=json.dumps(payload),
+                    headers={"Content-type": "application/json"})
