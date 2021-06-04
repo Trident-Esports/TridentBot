@@ -181,10 +181,12 @@ payload = {
 
 # get webhook for MegaMan.EXE
 DISCORD_WEBHOOK = os.environ.get("DISCORD_WEBHOOK_UPDATES")
-DISCORD_WEBHOOK = "http://example.com"
 
 if DISCORD_WEBHOOK is None:
-  print("Webhook URL acquisition failed")
+  print("Webhook URL acquisition failed.")
+  sys.exit(1)
+elif "discord" not in DISCORD_WEBHOOK:
+  print("Webhook URL seems to be malformed.")
   sys.exit(1)
 else:
   # send request
