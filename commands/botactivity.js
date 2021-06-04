@@ -4,25 +4,39 @@ module.exports = {
 
     async execute(message, args, cmd, client) {
 
-        if (message.member.id != "532192409757679618" && message.member.id != "692180465242603591") return message.channel.send(`Sorry only **Noongar1800** and **PrimeWarGamer** can run this command 😔`);
+        APPROVED_USERIDS = [
+          "263968998645956608", // Mike
+          "532192409757679618", // Noongar
+          "692180465242603591"  // PrimeWarGamer
+        ]
 
-        if (args[0] === "playing"){
-            types = 0
-        } else if (args[0] === "streaming") {
-            types = 1
-        } else if (args[0] === "listening") {
-            types = 2
-        } else if (args[0] === "watching") {
-            types = 3
-        } else if (args[0] === "competing") {
-            types = 5
-        } else if (args[0] === "reset") {
-        
+        if (APPROVED_USERIDS.indexOf(message.member.id + "") == -1) return message.channel.send(
+          `Sorry only ` +
+          `**MikeTrethewey**,` +
+          `**Noongar1800** or ` +
+          `**PrimeWarGamer**` +
+          ` can run this command 😔`
+        );
+
+        typeIndexes = [
+          "playing",    // 0
+          "streaming",  // 1
+          "listening",  // 2
+          "watching",   // 3
+          "moo",        // 4
+          "competing",  // 5
+          "reset"       // 6
+        ]
+        types = -1
+        if(typeIndexes.indexOf(args[0]) > -1) {
+          types = typeIndexes.indexOf(args[0])
+        }
+
+        if (types == 6) {
             client.user.setActivity(`.help`, {type:"LISTENING"}) //you can change that to whatever you like
-        
+
             return message.channel.send('Status changed succesfully')
-        
-        } else {
+        } else if(types == -1) {
             return message.channel.send('Invalid activity type.')
         }
         //here you tell the bot what the activity is
