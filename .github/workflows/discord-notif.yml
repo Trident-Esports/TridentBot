@@ -1,0 +1,32 @@
+# workflow name
+name: Discord Notif
+
+# fire on
+on: [push, pull_request]
+
+# stuff to do
+jobs:
+  discord-notif:
+    name: Discord Notification
+    runs-on: ${{ matrix.os-name }}
+
+    # VM settings
+    #  os & python versions
+    strategy:
+      matrix:
+        # release only on focal/bionic
+        os-name: [ubuntu-latest]
+        python-version: [3.8]
+
+    steps:
+      # checkout commit
+      - name: Checkout commit
+        uses: actions/checkout@v2
+      - name: Install Dependencies via pip
+        run: |
+          python -m pip install pytz requests
+      - name: Build Discord Notification Payload
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_UPDATES }}
+        run: |
+          python ./resources/ci/common/prepare_discord_notif.py

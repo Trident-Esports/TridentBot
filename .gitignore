@@ -2,6 +2,9 @@
 PROFILE.json
 SENSITIVE.json
 
+# no pycache
+__pycache__/
+
 # Logs
 logs
 *.log
