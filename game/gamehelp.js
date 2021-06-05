@@ -17,20 +17,22 @@ module.exports = {
             "msg": "This bot was Created by Noongar1800#1800"
           }
         let info = JSON.parse(fs.readFileSync("GAMECOMMANDS.json", "utf8"))
+        var personal_commands = Object.keys(info["personal commands"]); // list of personal command names
+        var interactive_commands = Object.keys(info["interactive commands"]); // list of interactive command names
+        var gamble_commands = Object.keys(info["gambling commands"]); // list of gambling command names
 
         const newEmbed = new MessageEmbed()
             .setColor(props["embedColor"])
             .setTitle(props["title"])
             .setURL(props["url"])
             .setDescription(' This is a list of commands for the VillainsBot MiniGame')
-            .addField('**PERSONAL COMMANDS**', info["personal commands"]["info"], true)
-            .addField('**INTERACTIVE COMMANDS**',info["interactive commands"]["info"], true)
-            .addField('**GAMBLE COMMANDS**', info["gambling commands"]["info"], true)
+            .addField('**PERSONAL COMMANDS**',`${personal_commands.join('\n')}`, true)
+            .addField('**INTERACTIVE COMMANDS**',`${interactive_commands.join('\n')}`, true)
+            .addField('**GAMBLE COMMANDS**',`${gamble_commands.join('\n')}`, true)
             .setThumbnail(props["thumbnail"])
             .setFooter(footer["msg"], footer["image"])
             .setTimestamp();
 
-            // Need to show all command names under each category
             // Access info for each command name and the aliases
         message.channel.send("I have sent some Minions to your dm's.");
         message.channel.send("https://tenor.com/view/minions-despicable-me-cheer-happy-yay-gif-3850878")
