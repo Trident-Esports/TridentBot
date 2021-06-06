@@ -24,17 +24,26 @@ module.exports = {
         var interactive_commands = Object.keys(info["interactive commands"]); // list of interactive command names
         var gamble_commands = Object.keys(info["gambling commands"]); // list of gambling command names
 
-        for (command_name in personal_commands) {
-            console.log(command_name);
+        var test = [];
+        for (key in personal_commands) {
+            test.push(Object.values(info["personal commands"][personal_commands[key]]["info"]).join(""));
         }
 
-        console.log(command_name);
+        var commandsAndInfos = [];
+        for (key in personal_commands) {
+            commandsAndInfos.push(personal_commands[key]);
+        }
+
+        for (var i = 0; i<commandsAndInfos.length; i++) {
+            commandsAndInfos[i] = commandsAndInfos[i]+"\n"+test[i]+"\n";
+        }
+
         const newEmbed = new MessageEmbed()
             .setColor(props["embedColor"])
             .setTitle(props["title"])
             .setURL(props["url"])
             .setDescription(' This is a list of commands for the VillainsBot MiniGame')
-            .addField('**PERSONAL COMMANDS**', `${personal_commands.join('\n')}`, true)
+            .addField('**PERSONAL COMMANDS**', `${commandsAndInfos.join('\n')}`, true)
             .addField('**INTERACTIVE COMMANDS**', `${interactive_commands.join('\n')}`, true)
             .addField('**GAMBLE COMMANDS**', `${gamble_commands.join('\n')}`, true)
             .setThumbnail(props["thumbnail"])
