@@ -24,9 +24,11 @@ module.exports = {
         var interactive_commands = Object.keys(info["interactive commands"]); // list of interactive command names
         var gamble_commands = Object.keys(info["gambling commands"]); // list of gambling command names
 
-        for (info in personal_commands) { //fetch each command in the list 0-12 for 13 commands
-            console.log(info);
+        for (command_name in personal_commands) {
+            console.log(command_name);
         }
+
+        console.log(command_name);
         const newEmbed = new MessageEmbed()
             .setColor(props["embedColor"])
             .setTitle(props["title"])
