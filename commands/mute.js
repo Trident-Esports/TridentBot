@@ -7,7 +7,7 @@ module.exports = {
 
         const target = message.mentions.members.first() || message.guild.members.cache.get(args[0])
 
-        if (!message.member.roles.cache.some(r => ["Overlords", "Evil Council", "Mod/Council Helper", "Mod"].includes(r.name)))
+        if (!message.member.roles.cache.some(r => ["Overlords", "Evil Council", "Mod", "MEGAMIND"].includes(r.name)))
 
             return message.channel.send("Your Kryptonite is having no power! 🤡");
 
@@ -39,4 +39,4 @@ module.exports = {
             message.channel.send('Cant find that member!');
         }
     }
-}
+}//FIXME

@@ -7,7 +7,7 @@ module.exports = {
      * @param {Message} message
      */
      async execute(message, args, client) {
-        if(!message.member.roles.cache.some(r=>["Overlords", "Evil Council", "Mod/Council Helper", "Mod"].includes(r.name))) return message.channel.send('You do not have permissions to use this command.')
+        if(!message.member.roles.cache.some(r=>["Overlords", "Evil Council", "Mod"].includes(r.name))) return message.channel.send('You do not have permissions to use this command.')
         const user = message.mentions.members.first() || message.guild.members.cache.get(args[0])
         if(!user) return message.channel.send('User not found.')
         const reason = args.slice(1).join(" ")

@@ -21,4 +21,4 @@ module.exports = {
             message.channel.send('Cant find that member!');
         }
     }
-}
+}//FIXME
