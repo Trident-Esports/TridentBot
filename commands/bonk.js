@@ -1,11 +1,9 @@
-const { Message, MessageEmbed } = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 
 module.exports = {
     name: 'bonk',
-    /** 
-     * @param {Message} message
-     */
-    async execute(message, args, cmd, client) {
+    
+    async execute(message, args) {
 
         const user = message.mentions.members.first() || message.guild.members.cache.get(args[0])
 

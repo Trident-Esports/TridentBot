@@ -3,7 +3,7 @@ module.exports = {
     aliases: [],
     permissions: [],
     description: "open a ticket!",
-    async execute(message, args, cmd, client, discord) {
+    async execute(message) {
       const channel = await message.guild.channels.create(`ticket: ${message.author.tag}`);
       
       channel.setParent("828158895024766986");
@@ -28,11 +28,11 @@ module.exports = {
       }
   
       const collector = reactionMessage.createReactionCollector(
-        (reaction, user) => message.guild.members.cache.find((member) => member.id === user.id).hasPermission("ADMINISTRATOR"),
+        (user) => message.guild.members.cache.find((member) => member.id === user.id).hasPermission("ADMINISTRATOR"),
         { dispose: true }
       );
   
-      collector.on("collect", (reaction, user) => {
+      collector.on("collect", (reaction) => {
         switch (reaction.emoji.name) {
           case "🔒":
             channel.updateOverwrite(message.author, { SEND_MESSAGES: false });

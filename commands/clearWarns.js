@@ -2,9 +2,19 @@ const db = require('../models/warns')
 
 module.exports = {
     name : 'remove-all-warns',
-    aliases: ['clearwarns', 'clrwarns', 'removewarns'],
-    async execute(message, args, cmd, client) {
-        if(!message.member.roles.cache.some(r=>["Overlords", "Evil Council", "Mod/Council Helper", "Mod"].includes(r.name))) return message.channel.send('You do not have permission to use this command.')
+    aliases: [
+      'clearwarns',
+      'clrwarns',
+      'removewarns'
+    ],
+    async execute(message, args) {
+        APPROVED_ROLES = [
+          "Overlords",
+          "Evil Council",
+          "Mod"
+        ]
+
+        if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name))) return message.channel.send('You do not have permission to use this command.')
         const user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
         if(!user) return message.channel.send('User not found.')
         db.findOne({ guildID: message.guild.id, user: user.user.id}, async(err,data) => {
