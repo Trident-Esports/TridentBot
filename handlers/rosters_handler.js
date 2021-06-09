@@ -26,7 +26,7 @@ let walk = function (dir) {
 }
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-let defaults = JSON.parse(fs.readFileSync("rosters/dbs/defaults.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 let socials = JSON.parse(fs.readFileSync("rosters/dbs/socials/users.json", "utf8"))
 
 module.exports = (client, Discord) => {

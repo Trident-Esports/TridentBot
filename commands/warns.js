@@ -1,13 +1,22 @@
 const db = require('../models/warns')
 const { Message, MessageEmbed } = require('discord.js')
 
+
 module.exports = {
     name :'warns',
     /**
      * @param {Message} message
      */
      async execute(message, args, client) {
-        if(!message.member.roles.cache.some(r=>["Overlords", "Evil Council", "Mod/Council Helper", "Mod"].includes(r.name))) return message.channel.send('You do not have permissions to use this command.')
+        APPROVED_ROLES = [
+          "Overlords",
+          "Evil Council",
+          "Mod"
+        ]
+
+        if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) )
+        return message.channel.send('You do not have permissions to use this command.')
+
         const user = message.mentions.members.first() || message.guild.members.cache.get(args[0])
         if(!user) return message.channel.send('User not found.')
         const reason = args.slice(1).join(" ")
@@ -19,7 +28,7 @@ module.exports = {
                     .setTitle(`${user.user.tag}'s warns`)
                     .setDescription(
                         data.content.map(
-                            (w, i) => 
+                            (w, i) =>
                             `\`${i + 1}\` | Moderator : ${message.guild.members.cache.get(w.moderator).user.tag}\nReason : ${w.reason}`
                         )
                     )
@@ -27,7 +36,7 @@ module.exports = {
                 )
             } else {
                 message.channel.send('User has no data')
-            } 
+            }
 
         })
     }
