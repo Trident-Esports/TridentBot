@@ -1,4 +1,10 @@
+const fs = require('fs');
+
 const { Message, MessageEmbed } = require('discord.js')
+
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
 
 module.exports = {
     name: 'rules role',
@@ -6,24 +12,47 @@ module.exports = {
     description: "Sets up a rule reaction role message!",
     async execute(message, args, cmd, client, Discord) {
         const channel = '828595312981573682';
-        const yellowTeamRole = message.guild.roles.cache.find(role => role.name === "Accepted Rules");
+        const rulesRole = "Accepted Rules";
+        const yellowTeamRole = message.guild.roles.cache.find(role => role.name === rulesRole);
 
         const yellowTeamEmoji = "✅";
 
         let props = {
-            "embedColor": "#e42643",
             "title": "***Rules***",
             "url": "https://discord.com/channels/788021898146742292/788576321231388704/788577576385642538"
         }
 
+        let stripe = defaults["stripe"]
+        switch (stripe) {
+            default:
+                stripe = "#E42643";
+                break;
+        }
+
+        // Hack in my stuff to differentiate
+        if (DEV) {
+            stripe = GLOBALS["stripe"]
+            defaults.footer = GLOBALS.footer
+        }
+
+        props["stripe"] = stripe
+
         let embed = new MessageEmbed()
-            .setColor(props["embedColor"])
-            .setTitle(props["title"])
-            .setURL(props["url"])
+            .setColor(props.stripe)
+            .setTitle(props.title)
+            .setURL(props.url)
             .setDescription('Accepting the rules will allow you to interact with the server')
             .addFields(
-                {name: '***ACCEPTING RULES***', value: 'By selecting the reaction below you are agreeing to Villains Rules and will be punished according to how severly the rules are broken.'}
+                {
+                    name: '***ACCEPTING RULES***',
+                    value: 'By selecting the reaction below you are agreeing to Villains Rules and will be punished according to how severely the rules are broken.'
+                }
             )
+
+        if(DEV) {
+            embed.setFooter(defaults.footer.msg, defaults.footer.image)
+            .setTimestamp();
+        }
 
         let messageEmbed = await message.channel.send(embed);
         messageEmbed.react(yellowTeamEmoji);
@@ -61,5 +90,4 @@ module.exports = {
             }
         });
     }
-
 }

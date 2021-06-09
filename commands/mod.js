@@ -66,7 +66,6 @@ module.exports = {
             )
         }
         newEmbed.addFields(fields)
-
         .setThumbnail(defaults.thumbnail)
         .setFooter(defaults.footer.msg, defaults.footer.image)
         .setTimestamp();

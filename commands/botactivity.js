@@ -1,3 +1,8 @@
+const fs = require('fs');
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
+
 module.exports = {
     name: 'bot activity',
     aliases: ['ba'],
@@ -18,37 +23,43 @@ module.exports = {
           ` can run this command 😔`
         );
 
-        typeIndexes = [
+        activityIndexes = [
           "playing",    // 0
-          "streaming",  // 1
+          "playing",    // 1
           "listening",  // 2
           "watching",   // 3
           "moo",        // 4
-          "competing",  // 5
-          "reset"       // 6
+          "competing"   // 5
         ]
-        types = -1
-        if(typeIndexes.indexOf(args[0]) > -1) {
-          types = typeIndexes.indexOf(args[0])
+
+        let activity = 2
+
+        if(DEV) {
+            console.log("Default activity: ",activity)
+            console.log("Sent activity:    ",args[0])
         }
 
-        if (types == 6) {
-            client.user.setActivity(`.help`, {type:"LISTENING"}) //you can change that to whatever you like
+        if(isNaN(args[0])) {
+            if(activityIndexes.indexOf(args[0]) > -1) {
+                activity = activityIndexes.indexOf(args[0])
+            }
+        } else {
+            activity = parseInt(args[0])
+            if(activityIndexes[activity] == "moo") {
+                activity = 2
+            }
+        }
+
+        if(DEV) {
+            console.log("New activity ID:  ",activity)
+            console.log("New activity:     ",activityIndexes[activity])
+            console.log()
+        }
+
+        if (activity !== "") {
+            client.user.setActivity(defaults.prefix + "help", {type:activity}) //you can change that to whatever you like
 
             return message.channel.send('Status changed succesfully')
-        } else if(types == -1) {
-            return message.channel.send('Invalid activity type.')
         }
-        //here you tell the bot what the activity is
-            args.shift()
-            content = args.join(' ')
-            client.user.setPresence({
-                activity: {
-                    name: content,
-                    type: types
-                }
-            })
-            message.channel.send('Status changed succesfully')
-
     }
 }
