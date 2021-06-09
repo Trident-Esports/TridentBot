@@ -1,0 +1,93 @@
+{
+  "commands": {
+    "section": "COMMANDS",
+    "help": "List of commands",
+    "commands": {
+      "help": {
+        "aliases": [ "h" ],
+        "help": [
+          "_Brings up this menu_."
+        ]
+      },
+      "invite": {
+        "help": [
+          "_Invite link to Villains Esports Discord_."
+        ]
+      },
+      "discord": {
+        "help": [
+          "_Invite link to VillainsBot Discord_."
+        ]
+      },
+      "socials": {
+        "help": [
+          "_Link to all Villains Esports Socials_."
+        ]
+      },
+      "rules": {
+        "help": [
+          "_List of rules for the server_."
+        ]
+      },
+      "suggest": {
+        "help": [
+          "_Make a suggestion for the server/bot/etc._"
+        ]
+      },
+      "survey": {
+        "help": [
+          "Creates a yes/no survey for whatever you specify"
+        ]
+      }
+    }
+  },
+  "music": {
+    "section": "MUSIC COMMANDS",
+    "help": "List of commands for listening to music. Must be in a Voice Channel for these to work!",
+    "commands": {
+      "play": {
+        "aliases": [ "p" ],
+        "help": [
+          "_To play a song you specify_"
+        ]
+      },
+      "skip": {
+        "aliases": [ "next" ],
+        "help": [
+          "_Skips to the next song in the queue_"
+        ]
+      },
+      "stop": {
+        "help": [
+          "_Stops the music and makes the bot leave_"
+        ]
+      },
+      "leave": {
+        "help": [
+          "_Tells the bot to leave your Voice Channel_"
+        ]
+      }
+    }
+  },
+  "other": {
+    "section": "OTHER COMMANDS",
+    "help": "Extra commands",
+    "commands": {
+      "ping": {
+        "help": [
+          "_pong!_"
+        ]
+      },
+      "image": {
+        "help": [
+          "_Searches Google for an image specified_"
+        ]
+      },
+      "weather": {
+        "help": [
+          "_Tells you the weather for the city provided_"
+        ]
+      }
+    }
+  }
+}
