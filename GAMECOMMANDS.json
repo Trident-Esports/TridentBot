@@ -1,73 +1,73 @@
 {
     "personal commands": {
-        "balance": {
+        "Balance": {
             "aliases": "bal",
             "info": "Shows player's balance"
         },
-        "beg": {
+        "Beg": {
             "info": "begs for a random amount of money"
         },
-        "buy": {
+        "Buy": {
             "info": "Allows a player to buy items from the shop"
         },
-        "daily": {
+        "Daily": {
             "info": "Recieve a daily gift"
         },
-        "deposit": {
+        "Deposit": {
             "aliases": "dep",
             "info": "Deposit gold to player's bank"
         },
-        "gamehelp": {
+        "Gamehelp": {
             "aliases": "gh",
             "info": "Brings up this menu"
         },
-        "inventory": {
+        "Inventory": {
             "aliases": "i",
             "info": "Checks users items"
         },
-        "level": {
+        "Level": {
             "aliases": "lvl",
             "info": "Shows player's Level"
         },
-        "profile": {
+        "Profile": {
             "aliases": "pr , acc",
             "info": "Shows player's Profile"
         },
-        "search": {
+        "Search": {
             "info": "Search 1 of 3 random locations for some gold"
         },
-        "shop": {
+        "Shop": {
             "info": "Allows a player to see what items are available to buy"
         },
-        "use":{
+        "Use":{
             "info": "Allows a player to use an item they have in their inventory"
         },
-        "withdraw": {
+        "Withdraw": {
             "aliases": "wd, with",
             "info": "Withdraw gold from users bank"
         }
     },
     "interactive commands": {
-        "fight": {
+        "Fight": {
             "syntax": "fight @user",
             "info": "Fight another user for bragging rights and winnings of gold"
         },
-        "give": {
+        "Give": {
             "syntax": "give @user (amount)",
             "info": "Gives the tagged player an amount of coins specified from the users wallet"
         },
-        "leaderboard": {
+        "Leaderboard": {
             "aliases": "lb",
             "info": "Shows the current top 10 players worldwide"
         },
-        "rob": {
+        "Rob": {
             "syntax": "rob @user",
             "info": "Robs another user for gold. Look out though this could backfire."
         }
         
     },
     "gambling commands": {
-        "coinflip": {
+        "Coinflip": {
             "aliases": "cf",
             "syntax": "coinflip (amount)",
             "info": "gamble some gold on a coinflip"

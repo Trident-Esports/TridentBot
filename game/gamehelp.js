@@ -24,18 +24,18 @@ module.exports = {
         var interactive_commands = Object.keys(info["interactive commands"]); // list of interactive command names
         var gamble_commands = Object.keys(info["gambling commands"]); // list of gambling command names
 
-        var test = [];
+        var pcommand = [];
         for (key in personal_commands) {
             test.push(Object.values(info["personal commands"][personal_commands[key]]["info"]).join(""));
         }
 
-        var commandsAndInfos = [];
+        var pcommandsAndInfos = [];
         for (key in personal_commands) {
-            commandsAndInfos.push(personal_commands[key]);
+            pcommandsAndInfos.push(personal_commands[key]);
         }
 
-        for (var i = 0; i<commandsAndInfos.length; i++) {
-            commandsAndInfos[i] = commandsAndInfos[i]+"\n"+test[i]+"\n";
+        for (var i = 0; i < pcommandsAndInfos.length; i++) {
+            pcommandsAndInfos[i] = "`" + pcommandsAndInfos[i] + "\n" + pcommand[i] + "\n" + "`";
         }
 
         const newEmbed = new MessageEmbed()
@@ -43,7 +43,7 @@ module.exports = {
             .setTitle(props["title"])
             .setURL(props["url"])
             .setDescription(' This is a list of commands for the VillainsBot MiniGame')
-            .addField('**PERSONAL COMMANDS**', `${commandsAndInfos.join('\n')}`, true)
+            .addField('**PERSONAL COMMANDS**', `${pcommandsAndInfos.join('\n')}`, true)
             .addField('**INTERACTIVE COMMANDS**', `${interactive_commands.join('\n')}`, true)
             .addField('**GAMBLE COMMANDS**', `${gamble_commands.join('\n')}`, true)
             .setThumbnail(props["thumbnail"])
