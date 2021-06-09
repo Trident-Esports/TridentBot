@@ -6,7 +6,7 @@ module.exports = {
   permissions: [],
   description: "refunds a player some coins",
   async execute(message, args, profileData) {
-    
+
     if (!args.length) return message.channel.send("You need to mention a player to give them coins");
 
     var amount = args[1].toLowerCase()

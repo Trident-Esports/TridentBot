@@ -1,5 +1,9 @@
 const db = require('../models/warns')
+const fs = require('fs');
 const { Message, MessageEmbed } = require('discord.js')
+
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let DEV = GLOBALS.DEV;
 
 module.exports = {
     name: 'warn',
@@ -7,7 +11,13 @@ module.exports = {
      * @param {Message} message
      */
     async execute(message, args, cmd, client) {
-        if (!message.member.roles.cache.some(r => ["Overlords", "Evil Council", "Mod/Council Helper", "Mod"].includes(r.name)))
+        APPROVED_ROLES = [
+          "Overlords",
+          "Evil Council",
+          "Mod"
+        ]
+
+        if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) )
             return message.channel.send('You do not have permissions to use this command.')
 
         const user = message.mentions.members.first() || message.guild.members.cache.get(args[0])
@@ -17,34 +27,46 @@ module.exports = {
 
         const reason = args.slice(1).join(" ")
 
+        let msg = "[]"
         db.findOne({ guildID: message.guild.id, user: user.user.id }, async (err, data) => {
             if (err) throw err;
-            if (!data) {
-                data = new db({
-                    guildID: message.guild.id,
-                    user: user.user.id,
-                    content: [
-                        {
-                            moderator: message.author.id,
-                            reason: reason
-                        }
-                    ]
-                })
+            if (DEV) {
+                msg = "!! DEV !! - Warned for " + reason
             } else {
-                const obj = {
-                    moderator: message.author.id,
-                    reason: reason
+                if (!data) {
+                    data = new db({
+                        guildID: message.guild.id,
+                        user: user.user.id,
+                        content: [
+                            {
+                                moderator: message.author.id,
+                                reason: reason
+                            }
+                        ]
+                    })
+                } else {
+                    const obj = {
+                        moderator: message.author.id,
+                        reason: reason
+                    }
+                    data.content.push(obj)
                 }
-                data.content.push(obj)
+                data.save()
+                msg = `You have been warned for ${reason}`
             }
-            data.save()
         });
+        msg = ""
+        if(DEV) {
+            msg += "!! DEV !! - "
+        }
+        msg += `Warned ${user} for ${reason}`
         user.send(new MessageEmbed()
-            .setDescription(`You have been warned for ${reason}`)
+            .setDescription(msg)
             .setColor("RED")
         )
         message.channel.send(new MessageEmbed()
-            .setDescription(`Warned ${user} for ${reason}`).setColor('RED')
+            .setDescription(msg)
+            .setColor('RED')
         )
     }
 }

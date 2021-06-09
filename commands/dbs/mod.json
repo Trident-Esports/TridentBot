@@ -1,0 +1,65 @@
+{
+  "purge": {
+    "syntax": "%% <number>",
+    "help": [
+      "Deletes the last <number> messages sent in the current channel"
+    ]
+  },
+  "warn": {
+    "syntax": "%% <@mention> <reason>",
+    "help": [
+      "_Warns a member for <reason>._"
+    ]
+  },
+  "warns": {
+    "syntax": "%% <@mention>",
+    "help": [
+      "_Lists the warns for a member._"
+    ]
+  },
+  "rmvwarn": {
+    "syntax": "%% <@mention>",
+    "aliases": [ "remove-warn" ],
+    "help": [
+      "_Removes a warn for a member._"
+    ]
+  },
+  "clrwarn": {
+    "syntax": "%% <@mention>",
+    "aliases": [
+      "clearwarns",
+      "removewarns",
+      "remove-allwarns"
+    ],
+    "help": [
+      "_Removes all warns for a member._"
+    ]
+  },
+  "kick": {
+    "syntax": "%% <@mention>",
+    "help": [
+      "_Kicks a member._"
+    ]
+  },
+  "ban": {
+    "syntax": "%% <@mention>",
+    "help": [
+      "_Bans a member._"
+    ]
+  },
+  "mute": {
+    "syntax": "%% <@mention>",
+    "aliases": [
+      "silence"
+    ],
+    "help": [
+      "_Mutes a member from sending messages._"
+    ]
+  },
+  "unmute": {
+    "syntax": "%% <@mention>",
+    "help": [
+      "_Unmutes a member._"
+    ]
+  }
+}
