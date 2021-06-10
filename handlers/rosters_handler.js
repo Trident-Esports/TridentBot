@@ -61,7 +61,10 @@ module.exports = (client, Discord) => {
             if(Object.keys(roster_aliases).indexOf(gameID) == -1) {
                 roster_aliases[gameID] = {}
             }
-            roster_aliases[gameID][profile.aliases[0]] = profile.title
+            roster_aliases[gameID][profile.aliases[0]] = {
+                name: profile.title,
+                schedule: ("team" in profile)
+            }
         }
 
         let stripe = profile["stripe"]
@@ -101,7 +104,7 @@ module.exports = (client, Discord) => {
                     for (let user of groupAttrs.users) {
                         let social = socials[user];
                         if (!social) {
-                            console.log(user);
+                            // console.log(user);
                         }
                         let name = user.charAt(0).toUpperCase() + user.slice(1);
                         let userURL = "";
@@ -234,9 +237,16 @@ module.exports = (client, Discord) => {
                     }
                     for(let teamID in teams) {
                         if(teams.hasOwnProperty(teamID)) {
-                            let teamName = teams[teamID];
+                            let teamName = teams[teamID].name;
                             desc += "<:" + emojiName + ":" + emojiIDs[message.guild.id][gameID] + ">";
-                            desc += teamName + " (`" + teamID + "`)";
+                            desc += teamName;
+                            desc += " (";
+                            desc += "`" + teamID + "`";
+                            if(teams[teamID].schedule) {
+                                desc += "/";
+                                desc += "`" + teamID + 's' + "`";
+                            }
+                            desc += ")";
                             desc += "\n";
                         }
                     }
