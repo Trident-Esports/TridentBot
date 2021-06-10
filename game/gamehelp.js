@@ -29,8 +29,8 @@ module.exports = {
 
         let helpData = JSON.parse(fs.readFileSync("game/dbs/help.json", "utf8"))
 
-        if(args && args[0] && Object.keys(helpData).indexOf(args[0]) !== -1) {
-            let key = args[0]
+        let loadSection = args && args[0] && Object.keys(helpData).indexOf(args[0]) !== -1;
+        if(loadSection) {
             helpData = {
                 key: helpData[args[0]]
             }
@@ -44,28 +44,54 @@ module.exports = {
         let fields = []
         for(let [section, sectionAttrs] of Object.entries(helpData)) {
             fields = []
+            let value = sectionAttrs?.help ? sectionAttrs.help : " "
+            if(!loadSection) {
+                values = []
+                for(let command in sectionAttrs.commands) {
+                    values.push("`" + command + "`")
+                }
+                value = values.join(", ")
+            }
             fields.push(
                 {
-                    name: "**" + sectionAttrs.section + "**",
-                    value: sectionAttrs?.help ? sectionAttrs.help : " "
+                    name: "**" + sectionAttrs.section + "**" + (section != "key" ? " (`" + section + "`)" : ""),
+                    value: value
                 }
             )
-            for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
-                let value = commandAttrs.help.join("\n")
-                if("aliases" in commandAttrs) {
-                    value += "\n"
-                    value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
-                }
-                fields.push(
-                    {
-                        name: "`" + defaults.prefix + command + "`",
-                        value: value
+            if(loadSection) {
+                let shown = false
+                for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
+                    let show = true
+                    if(args && args[1] && args[1] !== command) {
+                        show = false
                     }
-                )
+                    if(show) {
+                        shown = true
+                        let value = commandAttrs.help.join("\n")
+                        if("aliases" in commandAttrs) {
+                            value += "\n"
+                            value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
+                        }
+                        fields.push(
+                            {
+                                name: "`" + defaults.prefix + command + "`",
+                                value: value
+                            }
+                        )
+                    }
+                }
+                if(!shown && (args && args[1])) {
+                    fields.push(
+                        {
+                            name: "Error",
+                            value: "Command `" + args[1] + "` not present in `" + sectionAttrs.section + "`."
+                        }
+                    )
+                }
             }
             newEmbed.addFields(fields)
         }
-        newEmbed.setThumbnail(props["thumbnail"])
+        newEmbed.setThumbnail(defaults.thumbnail)
         .setFooter(defaults.footer.msg, defaults.footer.image)
         .setTimestamp();
 
