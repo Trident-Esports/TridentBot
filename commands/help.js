@@ -32,6 +32,13 @@ module.exports = {
 
         let helpData = JSON.parse(fs.readFileSync("commands/dbs/help.json", "utf8"))
 
+        if(args && args[0] && Object.keys(helpData).indexOf(args[0]) !== -1) {
+            let key = args[0]
+            helpData = {
+                key: helpData[args[0]]
+            }
+        }
+
         const newEmbed = new MessageEmbed()
         .setColor(props.stripe)
         .setTitle(props.title)

@@ -46,6 +46,13 @@ module.exports = {
 
         let mod_commands = JSON.parse(fs.readFileSync("commands/dbs/mod.json", "utf8"))
 
+        if(args && args[0] && Object.keys(mod_commands).indexOf(args[0]) !== -1) {
+            let key = args[0]
+            mod_commands = {
+                key: mod_commands[args[0]]
+            }
+        }
+
         let fields = [
             {
                 name: "MOD COMMANDS",

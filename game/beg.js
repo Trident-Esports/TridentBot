@@ -1,6 +1,11 @@
+const fs = require('fs');
 const profileModel = require("../models/profileSchema");
 const Levels = require('discord-xp');
 const { MessageEmbed } = require("discord.js");
+
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
 
 module.exports = {
   name: "beg",
@@ -21,27 +26,38 @@ module.exports = {
       },
     });
 
+    let stripe = defaults["stripe"]
+
     let props = {
-      "embedColor": "#B2EE17",
       "title": "***Beg***",
       "url": "https://discord.com/KKYdRbZcPT"
     }
-    let footer = {
-      "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-      "msg": "This bot was Created by Noongar1800#1800"
+    switch (stripe) {
+        default:
+            stripe = "#B2EE17";
+            break;
     }
+
+    // Hack in my stuff to differentiate
+    if (DEV) {
+        stripe = GLOBALS["stripe"]
+        defaults.footer = GLOBALS.footer
+    }
+
+    props["stripe"] = stripe
+
     const newEmbed = new MessageEmbed()
-      .setColor(props["embedColor"])
-      .setTitle(props["title"])
-      .setURL(props["url"])
+      .setColor(props.stripe)
+      .setTitle(props.title)
+      .setURL(props.url)
       .addField(`${message.author.username} received ${randomNumber} **Gold**`, `Earned ${randomXP} XP`, true)
       .setThumbnail(message.author.displayAvatarURL({
         dynamic: true,
         format: 'png'
       }))
-      .setFooter(footer["msg"], footer["image"])
+      .setFooter(defaults.footer.msg, defaults.footer.image)
       .setTimestamp();
-    
+
     const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
 
     if (hasLeveledUP) {
@@ -62,7 +78,12 @@ module.exports = {
       let gainedmoney = level_gain *1000
       let gainedminions = level_gain *100
 
-      newEmbed.setFooter(`${target.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+${gainedmoney} , 🐵+${gainedminions}`)
+      let msg = `${target.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+${gainedmoney} , 🐵+${gainedminions}`;
+      if(DEV) {
+          newEmbed.setDescription(msg);
+      } else {
+          newEmbed.setFooter(msg);
+      }
     }
     return message.channel.send(newEmbed);
   }
