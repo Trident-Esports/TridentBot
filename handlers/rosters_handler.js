@@ -190,15 +190,9 @@ module.exports = (client, Discord) => {
                                     value += "Score: " + match.discord.scoreKeys.bySide.home + " - " + match.discord.scoreKeys.bySide.opponent;
                                     value += "](" + match.discord.url + ")";
                                 }
-                                fields.push(
-                                    {
-                                        name: name,
-                                        value: value
-                                    }
-                                )
+                                newEmbed.addField(name,value)
                             }
 
-                            newEmbed.addFields(fields);
                             message.channel.send(newEmbed);
                         });
                     }
