@@ -45,29 +45,16 @@ module.exports = {
         .setURL(props.url)
         .setDescription('This is a list of the commands and help for VillainsBot.\nIf you would like a list of commands for the MiniGame please type _.gamehelp_');
 
-        let fields = []
         for(let [section, sectionAttrs] of Object.entries(helpData)) {
-            fields = []
-            fields.push(
-                {
-                    name: "**" + sectionAttrs.section + "**",
-                    value: sectionAttrs.help
-                }
-            )
+            newEmbed.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
             for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
                 let value = commandAttrs.help.join("\n")
                 if("aliases" in commandAttrs) {
                     value += "\n"
                     value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
                 }
-                fields.push(
-                    {
-                        name: "`" + defaults.prefix + command + "`",
-                        value: value
-                    }
-                )
+                newEmbed.addField("`" + defaults.prefix + command + "`", value)
             }
-            newEmbed.addFields(fields)
         }
         newEmbed.setThumbnail(defaults.thumbnail)
         .setFooter(defaults.footer.msg, defaults.footer.image)

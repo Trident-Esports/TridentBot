@@ -42,11 +42,9 @@ module.exports = {
             .setTitle(props.title)
             .setURL(props.url)
             .setDescription('Accepting the rules will allow you to interact with the server')
-            .addFields(
-                {
-                    name: '***ACCEPTING RULES***',
-                    value: 'By selecting the reaction below you are agreeing to Villains Rules and will be punished according to how severely the rules are broken.'
-                }
+            .addField(
+                '***ACCEPTING RULES***',
+                'By selecting the reaction below you are agreeing to Villains Rules and will be punished according to how severely the rules are broken.'
             )
 
         if(DEV) {

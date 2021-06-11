@@ -53,27 +53,22 @@ module.exports = {
             }
         }
 
-        let fields = [
-            {
-                name: "MOD COMMANDS",
-                value: "Commands for only Moderators to use"
-            }
-        ]
+        newEmbed.addField(
+            "MOD COMMANDS",
+            "Commands for only Moderators to use"
+        )
         for (let [command, commandAttrs] of Object.entries(mod_commands)) {
             let value = commandAttrs.help.join("\n")
             if("aliases" in commandAttrs) {
                 value += "\n"
                 value += "_[Aliases: " + commandAttrs.aliases.join(", ") + "]_"
             }
-            fields.push(
-                {
-                    name: defaults.prefix + commandAttrs.syntax.replace("%%",command),
-                    value: value
-                }
+            newEmbed.addField(
+                defaults.prefix + commandAttrs.syntax.replace("%%",command),
+                value
             )
         }
-        newEmbed.addFields(fields)
-        .setThumbnail(defaults.thumbnail)
+        newEmbed.setThumbnail(defaults.thumbnail)
         .setFooter(defaults.footer.msg, defaults.footer.image)
         .setTimestamp();
 

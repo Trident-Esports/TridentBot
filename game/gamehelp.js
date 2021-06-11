@@ -41,9 +41,7 @@ module.exports = {
         .setTitle(props.emoji + " " + props.title)
         .setURL(props.url);
 
-        let fields = []
         for(let [section, sectionAttrs] of Object.entries(helpData)) {
-            fields = []
             let value = sectionAttrs?.help ? sectionAttrs.help : " "
             if(!loadSection) {
                 values = []
@@ -52,11 +50,9 @@ module.exports = {
                 }
                 value = values.join(", ")
             }
-            fields.push(
-                {
-                    name: "**" + sectionAttrs.section + "**" + (section != "key" ? " (`" + section + "`)" : ""),
-                    value: value
-                }
+            newEmbed.addField(
+                "**" + sectionAttrs.section + "**" + (section != "key" ? " (`" + section + "`)" : ""),
+                value
             )
             if(loadSection) {
                 let shown = false
@@ -72,24 +68,19 @@ module.exports = {
                             value += "\n"
                             value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
                         }
-                        fields.push(
-                            {
-                                name: "`" + defaults.prefix + command + "`",
-                                value: value
-                            }
+                        newEmbed.addField(
+                            "`" + defaults.prefix + command + "`",
+                            value
                         )
                     }
                 }
                 if(!shown && (args && args[1])) {
-                    fields.push(
-                        {
-                            name: "Error",
-                            value: "Command `" + args[1] + "` not present in `" + sectionAttrs.section + "`."
-                        }
+                    newEmbed.addField(
+                        "Error",
+                        "Command `" + args[1] + "` not present in `" + sectionAttrs.section + "`."
                     )
                 }
             }
-            newEmbed.addFields(fields)
         }
         newEmbed.setThumbnail(defaults.thumbnail)
         .setFooter(defaults.footer.msg, defaults.footer.image)
