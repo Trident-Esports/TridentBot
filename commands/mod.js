@@ -3,6 +3,7 @@ const { Message, MessageEmbed } = require('discord.js')
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 let DEV = GLOBALS.DEV;
 
 module.exports = {
@@ -11,11 +12,7 @@ module.exports = {
     execute(message, args, cmd, client) {
         let stripe = defaults["stripe"]
 
-        APPROVED_ROLES = [
-          "Overlords",
-          "Evil Council",
-          "Mod"
-        ]
+        APPROVED_ROLES = ROLES["admin"]
 
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) )
             return message.channel.send('You dont have the correct permissions');

@@ -1,3 +1,4 @@
+const fs = require('fs');
 const db = require('../models/warns')
 
 module.exports = {
@@ -8,11 +9,9 @@ module.exports = {
       'removewarns'
     ],
     async execute(message, args, cmd, client) {
-        APPROVED_ROLES = [
-          "Overlords",
-          "Evil Council",
-          "Mod"
-        ]
+        let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+
+        APPROVED_ROLES = ROLES["admin"]
 
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name))) return message.channel.send('You do not have permission to use this command.')
         const user = message.mentions.members.first() || message.guild.members.cache.get(args[0]);
