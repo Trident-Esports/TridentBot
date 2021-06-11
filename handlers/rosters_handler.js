@@ -165,7 +165,6 @@ module.exports = (client, Discord) => {
                                 .setFooter(defaults.footer.msg, defaults.footer.image)
                                 .setTimestamp();
 
-                            let fields = []
                             for(let [timestamp,match] of Object.entries(game_details)) {
                                 let name = "";
                                 let value = "";
