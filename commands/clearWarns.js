@@ -8,7 +8,7 @@ module.exports = {
       'clrwarns',
       'removewarns'
     ],
-    async execute(message, args, cmd, client) {
+    async execute(message, args) {
         let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 
         APPROVED_ROLES = ROLES["admin"]

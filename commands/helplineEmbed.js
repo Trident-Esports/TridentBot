@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Message, MessageEmbed } = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
@@ -9,7 +9,7 @@ module.exports = {
     name: 'helpline',
     aliases: ['hl'],
     description: "This is a help embed",
-    execute(message, args, cmd, client, Discord) {
+    execute(message) {
         try {
             let stripe = defaults["stripe"]
 
@@ -42,7 +42,7 @@ module.exports = {
             )
             .addField(
                 '**Queens Babies**',
-                "This is a ticket for help with anything womens related that maybe guys might not understand or something abit personal that our selected women's helpers can help with.\n `Command = .qbticket`"
+                "This is a ticket for help with anything women related that maybe guys might not understand or something abit personal that our selected women's helpers can help with.\n `Command = .qbticket`"
             )
             .addField(
                 '**The Boys**',

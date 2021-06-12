@@ -3,7 +3,7 @@ const fs = require('fs');
 module.exports = {
     name: 'purge',
     description: "deletes last messages",
-    async execute(message, args, cmd, client) {
+    async execute(message, args) {
         try {
             let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 

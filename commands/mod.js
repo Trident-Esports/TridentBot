@@ -9,7 +9,7 @@ let DEV = GLOBALS.DEV;
 module.exports = {
     name: 'mod',
     description: 'Mod Commands!',
-    execute(message, args, cmd, client) {
+    execute(message, args) {
         let stripe = defaults["stripe"]
 
         APPROVED_ROLES = ROLES["admin"]
