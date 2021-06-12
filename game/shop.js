@@ -51,6 +51,10 @@ module.exports = {
             .setFooter(defaults.footer.msg, defaults.footer.image)
             .setTimestamp();
 
+            for(let [items, itemsAttr] of Object.entries(itemData)) {
+                let value = itemsAttr
+                console.log(value)
+            }
             //FIXME
             //Add in Itemshop
 
