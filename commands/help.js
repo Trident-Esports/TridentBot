@@ -9,7 +9,7 @@ module.exports = {
     name: 'help',
     aliases: ['h'],
     description: "This is a help embed",
-    execute(message, args, cmd, client, Discord) {
+    execute(message, args) {
         let stripe = defaults["stripe"]
 
         let props = {
