@@ -51,12 +51,35 @@ module.exports = {
             .setFooter(defaults.footer.msg, defaults.footer.image)
             .setTimestamp();
 
-            for(let [items, itemsAttr] of Object.entries(itemData)) {
-                let value = itemsAttr
-                console.log(value)
+        for (let [items, itemsAttr] of Object.entries(itemData)) {
+            let value = itemsAttr
+            for (let [item, itemAttr] of Object.entries(value)) {
+                let item = itemAttr
+
+                let names = [];
+
+                if (item.stylized) {
+                    names.push(item.stylized)
+                } else names.push(item);
+
+                let items = [];
+                items.push(item.emoji);
+
+                let values = [];
+                values.push(item.value);
+
+                let descriptions = [];
+                descriptions.push(item.description);
+
+                embed.addField(
+                    items + " " + names + "   " + "💰" + values.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                    "`" + descriptions + "`"
+                )
+
             }
-            //FIXME
-            //Add in Itemshop
+
+        }
+        //FIXME
 
         message.channel.send(embed);
     }
