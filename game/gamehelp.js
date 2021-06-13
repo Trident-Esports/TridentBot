@@ -35,10 +35,6 @@ module.exports = {
                 key: helpData[args[0]]
             }
         }
-        let footer = {
-            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-            "msg": "This bot was Created by Noongar1800#1800"
-        }
 
         const newEmbed = new MessageEmbed()
         .setColor(props.stripe)
