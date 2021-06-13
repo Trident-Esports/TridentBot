@@ -112,10 +112,12 @@ module.exports = (client, Discord) => {
                             if (social.stylized !== undefined) {
                                 name = social.stylized;
                             }
-                            if (social.twitch !== undefined) {
-                                userURL = "https://twitch.tv/" + social.twitch;
-                            } else if (social.twitter !== undefined) {
+                            if (social.twitter !== undefined) {
                                 userURL = "https://twitter.com/" + social.twitter;
+                            } else if (social.twitch !== undefined) {
+                                userURL = "https://twitch.tv/" + social.twitch;
+                            } else if (social.instagram !== undefined) {
+                                userURL = "https://instagram.com/" + social.instagram;
                             }
                         }
                         if (userURL != "") {
