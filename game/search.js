@@ -1,7 +1,9 @@
 const profileModel = require("../models/profileSchema");
 const healthModel = require('../models/healthSchema');
 const Levels = require('discord-xp');
-const { MessageEmbed } = require("discord.js");
+const {
+  MessageEmbed
+} = require("discord.js");
 
 module.exports = {
   name: "search",
@@ -9,16 +11,12 @@ module.exports = {
   permissions: [],
   cooldown: 60 * 5,
   category: "economy",
-  description: {
-    usage: ".search",
-    content: "Choose your search location and have a chance at some gold!",
-    examples: [".search"],
-  },
+  description: "Choose your search location and have a chance at some gold!",
+
   async execute(message) {
 
     const randomXP = Math.floor(Math.random() * 200) + 50;
     const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
-    const target = await Levels.fetch(message.author.id, message.guild.id);
 
     const LOCATIONS = [
       "Forest",
@@ -98,16 +96,13 @@ module.exports = {
         },
       });
 
-      let goldremove = await profileModel.findOneAndUpdate(
-        {
-          userID: message.author.id,
+      let goldremove = await profileModel.findOneAndUpdate({
+        userID: message.author.id,
+      }, {
+        $inc: {
+          gold: -RANDOM_NUMBER,
         },
-        {
-          $inc: {
-            gold: -RANDOM_NUMBER,
-          },
-        }
-      );
+      });
 
       let healthloss = await healthModel.findOneAndUpdate({
         userID: message.author.id,
@@ -126,108 +121,25 @@ module.exports = {
       });
 
       try {
-        if (m.content.toLowerCase() === 'forest') {
-
-          if (number <= success) {
-            goldincrease
-            return message.channel.send(SUCCESS_EMBED)
-          } else if (number <= fail) {
-            goldremove
-            healthloss
-            return message.channel.send(FAIL_EMBED);
-          } else if (number <= special) {
-            minions_increase
-            return message.channel.send(SPECIAL_EMBED);
+        var arrayLength = LOCATIONS.length;
+        for (var i = 0; i < arrayLength; i++) { //itterate through array LOCATIONS to find the matching Location
+          if (m.content.toLowerCase() === LOCATIONS[i].toLowerCase()) {
+            if (number <= success) {
+              goldincrease
+              return message.channel.send(SUCCESS_EMBED);
+            } else if (number <= fail) {
+              goldremove
+              healthloss
+              return message.channel.send(FAIL_EMBED);
+            } else if (number <= special) {
+              minions_increase
+              return message.channel.send(SPECIAL_EMBED);
+            }
           }
-        }
-        if (m.content.toLowerCase() === 'sewer') {
-
-          if (number <= success) {
-            goldincrease
-            return message.channel.send(SUCCESS_EMBED);
-          } else if (number <= fail) {
-            goldremove
-            healthloss
-            return message.channel.send(FAIL_EMBED);
-          } else if (number <= special) {
-            minions_increase
-            return message.channel.send(SPECIAL_EMBED);
-          }
-        }
-        if (m.content.toLowerCase() === 'cave') {
-
-          if (number <= success) {
-            goldincrease
-            return message.channel.send(SUCCESS_EMBED);
-          } else if (number <= fail) {
-            goldremove
-            healthloss
-            return message.channel.send(FAIL_EMBED);
-          } else if (number <= special) {
-            minions_increase
-            return message.channel.send(SPECIAL_EMBED);
-          }
-        }
-        if (m.content.toLowerCase() === 'mansion') {
-
-          if (number <= success) {
-            goldincrease
-            return message.channel.send(SUCCESS_EMBED);
-          } else if (number <= fail) {
-            goldremove
-            healthloss
-            return message.channel.send(FAIL_EMBED);
-          } else if (number <= special) {
-            minions_increase
-            return message.channel.send(SPECIAL_EMBED);
-          }
-        }
-        if (m.content.toLowerCase() === 'dungeon') {
-
-          if (number <= success) {
-            goldincrease
-            return message.channel.send(SUCCESS_EMBED);
-          } else if (number <= fail) {
-            goldremove
-            healthloss
-            return message.channel.send(FAIL_EMBED);
-          } else if (number <= special) {
-            minions_increase
-            return message.channel.send(SPECIAL_EMBED);
-          }
-        }
-        if (m.content.toLowerCase() === 'graveyard') {
-
-          if (number <= success) {
-            goldincrease
-            return message.channel.send(SUCCESS_EMBED);
-          } else if (number <= fail) {
-            goldremove
-            healthloss
-            return message.channel.send(FAIL_EMBED);
-          } else if (number <= special) {
-            minions_increase
-            return message.channel.send(SPECIAL_EMBED);
-          }
-        }
-        if (m.content.toLowerCase() === 'abandoned mine') {
-
-          if (number <= success) {
-            goldincrease
-            return message.channel.send(SUCCESS_EMBED);
-          } else if (number <= fail) {
-            goldremove
-            healthloss
-            return message.channel.send(FAIL_EMBED);
-          }
-        } else if (number <= special) {
-          minions_increase
-          return message.channel.send(SPECIAL_EMBED);
         }
       } catch (err) {
         console.log(err);
       }
-
     });
 
     COLLECTOR.on("end", (collected) => {
