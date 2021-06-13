@@ -1,13 +1,13 @@
+const fs = require('fs');
+
 module.exports = {
     name: 'purge',
     description: "deletes last messages",
-    async execute(message, args, cmd, client) {
+    async execute(message, args) {
         try {
-            APPROVED_ROLES = [
-              "Overlords",
-              "Evil Council",
-              "Mod"
-            ]
+            let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+
+            APPROVED_ROLES = ROLES["admin"]
 
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) )
             return message.channel.send('You dont have the correct permissions');

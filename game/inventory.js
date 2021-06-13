@@ -1,4 +1,6 @@
-const Discord = require('discord.js');
+const {
+    MessageEmbed
+} = require('discord.js');
 
 const inventoryModel = require('../models/inventorySchema')
 
@@ -7,10 +9,12 @@ module.exports = {
     aliases: ['inv', 'i'],
     description: "View the players inventory",
 
-    async execute(message, args, cmd, client) {
+    async execute(message) {
 
         var user = message.author || message.mentions.members.first();
-        const inventoryData = await inventoryModel.findOne({ userID: user.id });
+        const inventoryData = await inventoryModel.findOne({
+            userID: user.id
+        });
 
         var tempItems = [];
         var placedItems = [];
@@ -39,13 +43,13 @@ module.exports = {
 
         for (var x = 0; x < placedItems.length; x++) {
             newItems += `${placedItems[x][0]} x ${placedItems[x][1]}`;
-            if (x != placedItems.length-1) {
+            if (x != placedItems.length - 1) {
                 newItems += `\n`;
             }
         }
 
         if (newItems === ``)
-        newItems = 'Nothing'
+            newItems = 'Nothing'
 
         var tempConsumables = [];
         var placedConsumables = [];
@@ -74,13 +78,13 @@ module.exports = {
 
         for (var x = 0; x < placedConsumables.length; x++) {
             newConsumables += `${placedConsumables[x][0]} x ${placedConsumables[x][1]}`;
-            if (x != placedConsumables.length-1) {
+            if (x != placedConsumables.length - 1) {
                 newConsumables += `\n`;
             }
         }
 
         if (newConsumables === ``)
-        newConsumables = 'Nothing'
+            newConsumables = 'Nothing'
 
         var tempPowers = [];
         var placedPowers = [];
@@ -109,13 +113,13 @@ module.exports = {
 
         for (var x = 0; x < placedPowers.length; x++) {
             newPowers += `${placedPowers[x][0]} x ${placedPowers[x][1]}`;
-            if (x != placedPowers.length-1) {
+            if (x != placedPowers.length - 1) {
                 newPowers += `\n`;
             }
         }
 
         if (newPowers === ``)
-        newPowers = 'Nothing'
+            newPowers = 'Nothing'
 
         console.log(newItems, newConsumables, newPowers);
 
@@ -124,7 +128,7 @@ module.exports = {
             "msg": "This bot was Created by Noongar1800#1800"
         }
 
-        const embed = new Discord.MessageEmbed()
+        const embed = new MessageEmbed()
             .setColor('RANDOM')
             .setDescription(`***${message.author}'s Inventory***`)
             .addField('***Items***', newItems, true)

@@ -1,4 +1,5 @@
 const db = require('../models/warns')
+const fs = require('fs');
 const { Message, MessageEmbed } = require('discord.js')
 
 
@@ -8,11 +9,8 @@ module.exports = {
      * @param {Message} message
      */
      async execute(message, args, client) {
-        APPROVED_ROLES = [
-          "Overlords",
-          "Evil Council",
-          "Mod"
-        ]
+        let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+        APPROVED_ROLES = ROLES["admin"]
 
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) )
         return message.channel.send('You do not have permissions to use this command.')
