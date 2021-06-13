@@ -6,7 +6,7 @@ const XPBoostModel = require('../../models/xpboostSchema');     // XP Boost
 
 const { MessageEmbed } = require('discord.js'); // Discord Embeds
 
-const cooldowns = new Map();
+const cooldowns = new Map(); 
 
 module.exports = async (Discord, client, message) => {
 
