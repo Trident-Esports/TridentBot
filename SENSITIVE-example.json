@@ -1,0 +1,6 @@
+{
+  "client": {
+    "login": "Discord Client Secret Key",
+    "mongoDB": "mongoDB Login"
+  }
+}

@@ -1,9 +1,4 @@
 const { MessageEmbed } = require('discord.js');
-
-const db = require('mongoose');
-
-const ms = require('ms');
-
 const profileModel = require("../models/profileSchema");
 
 const Levels = require('discord-xp');
@@ -14,7 +9,7 @@ module.exports = {
     description: 'Rob SomeOne For Money', // Optional
     cooldown: 60 * 30,
 
-    async execute(message, args, client, profileData) {
+    async execute(message, profileData) {
 
         const randomXP = Math.floor(Math.random() * 120) + 30;
         const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);

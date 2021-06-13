@@ -3,13 +3,14 @@ const Levels = require('discord-xp');
 const profileModel = require('../models/profileSchema');
 const healthModel = require('../models/healthSchema');
 const XPBoostModel = require('../models/xpboostSchema');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     name: 'profile',
     aliases: ['pr', 'acc'],
     permissions: [],
     description: "Checks the Users Profile",
-    async execute(message, args, cmd, client, Discord) {
+    async execute(message, args) {
 
         if (args.length) {
             var mentionedMember = message.mentions.members.first();
@@ -37,7 +38,7 @@ module.exports = {
         }
 
         if (args.length) {
-            var newEmbed = new Discord.MessageEmbed()
+            var newEmbed = new MessageEmbed()
                 .setColor(props["embedColor"])
                 .setTitle(props["title"])
                 .setURL(props["url"])
@@ -54,7 +55,7 @@ module.exports = {
                 .setFooter(footer["msg"], footer["image"])
                 .setTimestamp();
         } else {
-            var newEmbed = new Discord.MessageEmbed()
+            var newEmbed = new MessageEmbed()
                 .setColor(props["embedColor"])
                 .setTitle(props["title"])
                 .setURL(props["url"])

@@ -3,19 +3,16 @@ const { Message, MessageEmbed } = require('discord.js')
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 let DEV = GLOBALS.DEV;
 
 module.exports = {
     name: 'mod',
     description: 'Mod Commands!',
-    execute(message, args, cmd, client) {
+    execute(message, args) {
         let stripe = defaults["stripe"]
 
-        APPROVED_ROLES = [
-          "Overlords",
-          "Evil Council",
-          "Mod"
-        ]
+        APPROVED_ROLES = ROLES["admin"]
 
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) )
             return message.channel.send('You dont have the correct permissions');
@@ -53,27 +50,22 @@ module.exports = {
             }
         }
 
-        let fields = [
-            {
-                name: "MOD COMMANDS",
-                value: "Commands for only Moderators to use"
-            }
-        ]
+        newEmbed.addField(
+            "MOD COMMANDS",
+            "Commands for only Moderators to use"
+        )
         for (let [command, commandAttrs] of Object.entries(mod_commands)) {
             let value = commandAttrs.help.join("\n")
             if("aliases" in commandAttrs) {
                 value += "\n"
                 value += "_[Aliases: " + commandAttrs.aliases.join(", ") + "]_"
             }
-            fields.push(
-                {
-                    name: defaults.prefix + commandAttrs.syntax.replace("%%",command),
-                    value: value
-                }
+            newEmbed.addField(
+                defaults.prefix + commandAttrs.syntax.replace("%%",command),
+                value
             )
         }
-        newEmbed.addFields(fields)
-        .setThumbnail(defaults.thumbnail)
+        newEmbed.setThumbnail(defaults.thumbnail)
         .setFooter(defaults.footer.msg, defaults.footer.image)
         .setTimestamp();
 

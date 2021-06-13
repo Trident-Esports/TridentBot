@@ -38,17 +38,13 @@ module.exports = {
             .setTitle(props.title)
             .setURL(props.url)
             .setDescription('Any breaking of these rules will result in consequences');
-        let fields = []
         for(let rule in rules) {
-            fields.push(
-                {
-                    name: "**Rule " + (parseInt(rule) + 1) + "**",
-                    value: "`" + rules[rule] + "`"
-                }
+            newEmbed.addField(
+                "**Rule " + (parseInt(rule) + 1) + "**",
+                "`" + rules[rule] + "`"
             )
         }
-        newEmbed.addFields(fields)
-        .setThumbnail(defaults.thumbnail)
+        newEmbed.setThumbnail(defaults.thumbnail)
         .setFooter(defaults.footer.msg, defaults.footer.image)
         .setTimestamp();
 

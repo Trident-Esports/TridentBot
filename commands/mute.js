@@ -2,6 +2,7 @@ const fs = require('fs');
 const ms = require('ms');
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 let DEV = GLOBALS.DEV;
 
 module.exports = {
@@ -12,11 +13,7 @@ module.exports = {
 
         const target = message.mentions.members.first() || message.guild.members.cache.get(args[0])
 
-        APPROVED_ROLES = [
-          "Overlords",
-          "Evil Council",
-          "Mod"
-        ]
+        APPROVED_ROLES = ROLES["admin"]
 
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) )
             return message.channel.send("Your Kryptonite is having no power! 🤡");

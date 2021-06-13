@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Message, MessageEmbed } = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
@@ -9,7 +9,7 @@ module.exports = {
     name: 'helpline',
     aliases: ['hl'],
     description: "This is a help embed",
-    execute(message, args, cmd, client, Discord) {
+    execute(message) {
         try {
             let stripe = defaults["stripe"]
 
@@ -35,20 +35,18 @@ module.exports = {
             .setColor(props.stripe)
             .setTitle(props.title)
             .setURL(props.url)
-            .setDescription(' This is a list of the commands and help for VillainsBot')
-            .addFields(
-                {
-                    name: '**General Help**',
-                    value: 'This is a ticket for general discord help.\n `Command = .ticket`'
-                },
-                {
-                    name: '**Queens Babies**',
-                    value: "This is a ticket for help with anything womens related that maybe guys might not understand or something abit personal that our selected women's helpers can help with.\n `Command = .qbticket`"
-                },
-                {
-                    name: '**The Boys**',
-                    value: 'Here at Villains we understand that sometimes guys have problems too that they might not want to confront with alone. If you would like someone to talk to then feel free to create a ticket.\n `Command = .tbticket`'
-                }
+            .setDescription('This is a list of the commands and help for VillainsBot')
+            .addField(
+                '**General Help**',
+                'This is a ticket for general discord help.\n `Command = .ticket`'
+            )
+            .addField(
+                '**Queens Babies**',
+                "This is a ticket for help with anything women related that maybe guys might not understand or something abit personal that our selected women's helpers can help with.\n `Command = .qbticket`"
+            )
+            .addField(
+                '**The Boys**',
+                'Here at Villains we understand that sometimes guys have problems too that they might not want to confront with alone. If you would like someone to talk to then feel free to create a ticket.\n `Command = .tbticket`'
             )
             .setThumbnail(defaults.thumbnail)
             .setImage('https://multiculturalmarriage.files.wordpress.com/2013/07/help-button-hi.png')

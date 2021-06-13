@@ -18,9 +18,6 @@ module.exports = {
         var gold = profileData.gold //Players gold
 
         var bought_item = args.slice(0).join(" ").toLowerCase() //Name of the item
-        var amount_item = Math.round(args[1]) //For multiple items
-
-        if (isNaN(amount_item)) return message.channel.send('Please specify a real amount of the item you would like to buy')
 
         let items = {
             "life potion": {
