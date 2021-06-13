@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const ytdl = require('ytdl-core');
 
 const ytSearch = require('yt-search');
@@ -13,22 +15,37 @@ var {
 
 const queue = new Map();
 
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
+
+let stripe = defaults["stripe"]
+
 let props = {
-    "embedColor": "#B2EE17",
     "title": "***Villains Music***",
     "url": "https://discord.com/KKYdRbZcPT"
 }
-let footer = {
-    "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-    "msg": "This bot was Created by Noongar1800#1800"
+
+switch (stripe) {
+    default:
+        stripe = "#B2EE17";
+        break;
 }
 
+// Hack in my stuff to differentiate
+if (DEV) {
+    stripe = GLOBALS["stripe"]
+    defaults.footer = GLOBALS.footer
+}
+
+props["stripe"] = stripe
+
 const embed = new MessageEmbed()
-    .setColor(props["embedColor"])
-    .setTitle(props["title"])
-    .setURL(props["url"])
-    .setThumbnail('https://d1fdloi71mui9q.cloudfront.net/al4c957kR4eQffCsIv3o_N5PQkEjiGc43pxbU')
-    .setFooter(footer["msg"], footer["image"])
+    .setColor(props.stripe)
+    .setTitle(props.title)
+    .setURL(props.url)
+    .setThumbnail(defaults.thumbnail)
+    .setFooter(defaults.footer.msg, defaults.footer.image)
     .setTimestamp()
 
 module.exports = {
@@ -43,18 +60,15 @@ module.exports = {
             return message.channel.send(embed);
         }
         const permissions = voice_channel.permissionsFor(message.client.user);
-        if (!permissions.has('CONNECT')) {
-            embed.setDescription('You dont have access to this channel')
-            return message.channel.send(embed);
-        }
-        if (!permissions.has('SPEAK')) {
+        if(
+            (!permissions.has('CONNECT')) ||
+            (!permissions.has('SPEAK'))
+          ) {
             embed.setDescription('You dont have access to this channel')
             return message.channel.send(embed);
         }
 
         const server_queue = queue.get(message.guild.id);
-
-
 
         if (cmd === 'play' || 'p') {
 

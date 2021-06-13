@@ -1,4 +1,11 @@
-const { Message, MessageEmbed } = require('discord.js')
+const {
+    MessageEmbed
+} = require('discord.js')
+const fs = require('fs')
+
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
 
 module.exports = {
     name: 'gamehelp',
@@ -6,10 +13,27 @@ module.exports = {
     description: "This is a help embed",
     execute(message, args, cmd, client, Discord) {
         let props = {
-            "embedColor": "#B217EE",  // Purple; Default is B2EE17 (Green)
+            "stripe": "#B217EE", // Purple; Default is B2EE17 (Green)
             "title": "***Game Help***",
-            "url": "https://discord.com/KKYdRbZcPT",
-            "thumbnail": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif"
+            "emoji": "<:V1LLA1N:848458548082114570>",
+            "url": "https://discord.com/KKYdRbZcPT"
+        }
+
+        // Hack in my stuff to differentiate
+        if (DEV) {
+            stripe = GLOBALS["stripe"]
+            defaults.footer = GLOBALS.footer
+        }
+
+        props["stripe"] = stripe
+
+        let helpData = JSON.parse(fs.readFileSync("game/dbs/help.json", "utf8"))
+
+        let loadSection = args && args[0] && Object.keys(helpData).indexOf(args[0]) !== -1;
+        if(loadSection) {
+            helpData = {
+                key: helpData[args[0]]
+            }
         }
         let footer = {
             "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
@@ -17,43 +41,74 @@ module.exports = {
         }
 
         const newEmbed = new MessageEmbed()
-            .setColor(props["embedColor"])
-            .setTitle(props["title"])
-            .setURL(props["url"])
-            .setDescription(' This is a list of commands for the VillainsBot MiniGame')
-            .addFields(
-                { name: '**PERSONAL COMMANDS**', value: 'List of commands only involving you' },
-                { name: '`gamehelp`', value: '_Brings up this menu\n_ [Aliases: gh]' },
-                { name: '`profile`', value: '_Shows your entire profile_\n [Aliases: pr , acc]' },
-                { name: '`level @user`', value: '_Shows your Level or the targets level_\n [Aliases: lvl]' },
-                { name: '`balance`', value: '_Shows your Balance\n_ [Aliases: bal]' },
-                { name: '`deposit`', value: '_Deposit Gold into you Bank\n_ [Aliases: dep]' },
-                { name: '`withdraw`', value: '_Make a Withdrawal from your Bank\n_ [Aliases: wd]' },
-                {name: '`beg`', value: "_Beg's for a random amount of Money_"},
-                {name: '`search`', value: "_Allows you to pick 1 of 3 random locations to search for some Gold_"},
-                {name: '`inventory`', value: "_Check the Items you have._\n[Aliases: i]"},
-                {name: '`.shop`', value: "_Allows you to see what Items are Available to Buy_"},
-                {name: '`.daily`', value: "_Recieve a Daily Gift._"},
-                {name: '`.buy (Item)`', value: "_Allows you to Buy Items_"}
-                )
-            .addFields(
-                { name: '**INTERACTIVE COMMANDS**', value: 'Extra commands involving the Villains community' },
-                { name: '`give @user (amount)`', value: '_Gives the tagged player the specified amount of Gold from your Wallet_' },
-                { name: '`fight @user`', value: "_Fight another user for Bragging Rights and Winnings of Gold!_" },
-                { name: '`rob @user`', value: "_Robs another user for Gold! Look out though this could Backfire._" },
-                {name: '`leaderboard`', value: "_Show's the current top 10 users_\n [Aliases: lb]"}
-            )
-            .addFields(
-                { name: '**GAMBLE COMMANDS**', value: "Gambling commands. Please don't become addicted!" },
-                { name: '`.coinflip (amount)`', value: '_Gamble some Gold on a coinflip!_\n[Aliases: cf]' }
+        .setColor(props.stripe)
+        .setTitle(props.emoji + " " + props.title)
+        .setURL(props.url);
 
+        let fields = []
+        for(let [section, sectionAttrs] of Object.entries(helpData)) {
+            fields = []
+            let value = sectionAttrs?.help ? sectionAttrs.help : " "
+            if(!loadSection) {
+                values = []
+                for(let command in sectionAttrs.commands) {
+                    values.push("`" + command + "`")
+                }
+                value = values.join(", ")
+            }
+            fields.push(
+                {
+                    name: "**" + sectionAttrs.section + "**" + (section != "key" ? " (`" + section + "`)" : ""),
+                    value: value
+                }
             )
-            .setThumbnail(props["thumbnail"])
-            .setFooter(footer["msg"], footer["image"])
-            .setTimestamp();
+            if(loadSection) {
+                let shown = false
+                for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
+                    let show = true
+                    if(args && args[1] && args[1] !== command) {
+                        show = false
+                    }
+                    if(show) {
+                        shown = true
+                        let value = commandAttrs.help.join("\n")
+                        if("aliases" in commandAttrs) {
+                            value += "\n"
+                            value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
+                        }
+                        fields.push(
+                            {
+                                name: "`" + defaults.prefix + command + "`",
+                                value: value
+                            }
+                        )
+                    }
+                }
+                if(!shown && (args && args[1])) {
+                    fields.push(
+                        {
+                            name: "Error",
+                            value: "Command `" + args[1] + "` not present in `" + sectionAttrs.section + "`."
+                        }
+                    )
+                }
+            }
+            newEmbed.addFields(fields)
+        }
+        newEmbed.setThumbnail(defaults.thumbnail)
+        .setFooter(defaults.footer.msg, defaults.footer.image)
+        .setTimestamp();
 
-        message.channel.send("I have sent some Minions to your dm's.");
-        message.channel.send("https://tenor.com/view/minions-despicable-me-cheer-happy-yay-gif-3850878")
-        message.author.send(newEmbed);
+        // Access info for each command name and the aliases
+        if(!DEV) {
+            message.channel.send("I have sent some Minions to your dm's.");
+            message.channel.send("https://tenor.com/view/minions-despicable-me-cheer-happy-yay-gif-3850878")
+        }
+        message.delete
+        if(DEV) {
+            message.channel.send(newEmbed);
+        } else {
+            message.author.send(newEmbed);
+        }
     }
 }

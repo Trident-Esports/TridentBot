@@ -61,15 +61,15 @@ module.exports = {
         const WinningsNUMBER = Math.floor(Math.random() * 1500) + 1200;
 
 
-        const FILTER = (m) => m.content.toLowerCase().includes('yes') && m.author.id === target.id ||
-            m.content.toLowerCase().includes('no') && m.author.id === target.id ||
-            m.content.toLowerCase().includes('no') && m.author.id === message.author.id ||
-            m.content.startsWith(prefix) && m.author.id === target.id ||
-            m.content.startsWith(prefix) && m.author.id === message.author.id;
+        const FILTER = (m) => m.content.toLowerCase().includes('yes') && m.author.id === target.id || // tagged player says yes
+            m.content.toLowerCase().includes('no') && m.author.id === target.id || // tagged player says no
+            m.content.toLowerCase().includes('no') && m.author.id === message.author.id || // fight starter says no
+            m.content.startsWith(prefix) && m.author.id === target.id || // player trys to do another command while fight is happening // needs fixing
+            m.content.startsWith(prefix) && m.author.id === message.author.id; // fight starter tries to use another command during fight // needs fixing
 
         const COLLECTOR = message.channel.createMessageCollector(FILTER, {
             max: 1,
-            time: 30000
+            time: 30 * 1000 // 30 seconds
         });
 
         COLLECTOR.on("collect", async (m) => {

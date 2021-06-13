@@ -1,8 +1,11 @@
 {
   "stripe": "default",
-  "title": "VALORANT BDE Roster",
-  "aliases": ["vwr"],
+  "title": "VALORANT Valkyries Roster",
+  "aliases": ["vvr"],
   "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235908031676436",
+  "team": {
+    "teamID": "262275"
+  },
   "#url": "#rosters: VALORANT lists",
   "members": {
     "manager": {
@@ -14,7 +17,7 @@
     "coach": {
       "title": "Coach",
       "users": [
-        "brew"
+        "marsh"
       ]
     },
     "main": {

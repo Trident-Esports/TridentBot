@@ -1,40 +1,65 @@
+const fs = require('fs');
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
+
 module.exports = {
     name: 'bot activity',
     aliases: ['ba'],
 
     async execute(message, args, cmd, client) {
 
-        if (message.member.id != "532192409757679618" && message.member.id != "692180465242603591") return message.channel.send(`Sorry only **Noongar1800** and **PrimeWarGamer** can run this command 😔`);
+        APPROVED_USERIDS = [
+          "263968998645956608", // Mike
+          "532192409757679618", // Noongar
+          "692180465242603591"  // PrimeWarGamer
+        ]
 
-        if (args[0] === "playing"){
-            types = 0
-        } else if (args[0] === "streaming") {
-            types = 1
-        } else if (args[0] === "listening") {
-            types = 2
-        } else if (args[0] === "watching") {
-            types = 3
-        } else if (args[0] === "competing") {
-            types = 5
-        } else if (args[0] === "reset") {
-        
-            client.user.setActivity(`.help`, {type:"LISTENING"}) //you can change that to whatever you like
-        
-            return message.channel.send('Status changed succesfully')
-        
-        } else {
-            return message.channel.send('Invalid activity type.')
+        if (APPROVED_USERIDS.indexOf(message.member.id + "") == -1) return message.channel.send(
+          `Sorry only ` +
+          `**MikeTrethewey**,` +
+          `**Noongar1800** or ` +
+          `**PrimeWarGamer**` +
+          ` can run this command 😔`
+        );
+
+        activityIndexes = [
+          "playing",    // 0
+          "playing",    // 1
+          "listening",  // 2
+          "watching",   // 3
+          "moo",        // 4
+          "competing"   // 5
+        ]
+
+        let activity = 2
+
+        if(DEV) {
+            console.log("Default activity: ",activity)
+            console.log("Sent activity:    ",args[0])
         }
-        //here you tell the bot what the activity is
-            args.shift()
-            content = args.join(' ')
-            client.user.setPresence({
-                activity: {
-                    name: content,
-                    type: types
-                }
-            })
-            message.channel.send('Status changed succesfully')
 
+        if(isNaN(args[0])) {
+            if(activityIndexes.indexOf(args[0]) > -1) {
+                activity = activityIndexes.indexOf(args[0])
+            }
+        } else {
+            activity = parseInt(args[0])
+            if(activityIndexes[activity] == "moo") {
+                activity = 2
+            }
+        }
+
+        if(DEV) {
+            console.log("New activity ID:  ",activity)
+            console.log("New activity:     ",activityIndexes[activity])
+            console.log()
+        }
+
+        if (activity !== "") {
+            client.user.setActivity(defaults.prefix + "help", {type:activity}) //you can change that to whatever you like
+
+            return message.channel.send('Status changed succesfully')
+        }
     }
 }
