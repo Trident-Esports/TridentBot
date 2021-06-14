@@ -105,21 +105,9 @@ module.exports = {
             }
 
             try {
-                if (number <= Heads && m.content.toLowerCase() === 'heads') {
-                    await profileModel.findOneAndUpdate({
-                        userID: message.author.id,
-                    }, {
-                        $inc: {
-                            gold: gambledAmount,
-                        },
-                    });
-                    console.log(number)
-                    COINFLIP_EMBED.setColor(props["success"]["embedColor"])
-                    COINFLIP_EMBED.setTitle(props["success"]["title"])
-                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and won 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\nEarned ${randomXP} XP`)
-                    return message.channel.send(COINFLIP_EMBED);
-                }
-                else if (number <= Tails && m.content.toLowerCase() === 'tails') {
+                let gotHeads = number <= Heads && m.content.toLowerCase() === 'heads';
+                let gotTails = number <= Tails && m.content.toLowerCase() === 'tails';
+                if (gotHeads || gotTails) {
                     await profileModel.findOneAndUpdate({
                         userID: message.author.id,
                     }, {
