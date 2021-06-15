@@ -12,9 +12,14 @@ module.exports = async (Discord, client, message) => {
 
     const prefix = '.'  // Default Prefix
 
-    if (message.author.bot) return;
+    if (message.author.bot) {
+        if(message.content.match(/(\.)(\S*)(\s)(next)/) === null) {
+            return;
+        }
+    }
+
     if (message.content == prefix) return message.channel.send("Please send a proper command");
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    if (!message.content.startsWith(prefix)) return;
 
     let profileData;
 
