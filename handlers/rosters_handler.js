@@ -141,17 +141,26 @@ module.exports = (client, Discord) => {
                 name: profile.title + " Schedule",
                 aliases: profile.aliases[0] + 's',
                 description: profile.title + " Schedule",
-                async execute(message, client, Discord) {
+                async execute(message, args, client, Discord) {
 
                     if(profile.team) {
                         let req = dasu.req
+
+                        let filepath = '/team/'
+                        filepath += profile.team.teamID
+                        if(args) {
+                            if(args[0]) {
+                                filepath += '-' + args[0]
+                            }
+                        }
+                        filepath += '.json'
 
                         let params = {
                             method: 'GET',
                             protocol: 'http',
                             hostname: 'villainsoce.mymm1.com',
                             port: 80,
-                            path: '/team/' + profile.team.teamID + '.json',
+                            path: filepath,
                         }
 
                         req(params, function (err, res, data) {
@@ -178,7 +187,16 @@ module.exports = (client, Discord) => {
                                     if(emojiName == "val") {
                                         emojiName = "valorant";
                                     }
-                                    name += "<:" + emojiName + ":" + emojiIDs[message.guild.id][match.discord.game] + ">";
+                                    let foundEmoji = false;
+                                    if(message.guild.id in emojiIDs) {
+                                        if(match.discord.game in emojiIDs[message.guild.id]) {
+                                            name += "<:" + emojiName + ":" + emojiIDs[message.guild.id][match.discord.game] + ">";
+                                            foundEmoji = true;
+                                        }
+                                    }
+                                    if(!foundEmoji) {
+                                        name += '[' + match.discord.game + "] ";
+                                    }
                                     value += "Starting";
                                 }
                                 name += match.discord.team + " <:vs:839624205766230026> " + match.discord.opponent;
