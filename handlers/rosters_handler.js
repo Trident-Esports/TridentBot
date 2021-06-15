@@ -246,14 +246,14 @@ module.exports = (client, Discord) => {
     }
 
     let allMatches = {
-        name: "All Matches / Next",
+        name: "All Matches / Incomplete",
         aliases: [ "games" ],
         description: "All Matches with optional span lengths",
         async execute(message, args) {
             if(args) {
-                if(args[0] == "next") {
+                if(args[0] == "incomplete") {
                     for(let scheduler of aliasesWithSchedules) {
-                        message.channel.send('.' + scheduler + " next")
+                        message.channel.send('.' + scheduler + " incomplete")
                     }
                 }
             }

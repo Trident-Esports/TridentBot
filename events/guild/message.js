@@ -13,7 +13,7 @@ module.exports = async (Discord, client, message) => {
     const prefix = '.'  // Default Prefix
 
     if (message.author.bot) {
-        if(message.content.match(/(\.)(\S*)(\s)(next)/) === null) {
+        if(message.content.match(/(\.)(\S*)(\s)(incomplete)/) === null) {
             return;
         }
     }
