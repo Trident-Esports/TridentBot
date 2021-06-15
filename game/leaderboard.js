@@ -14,7 +14,7 @@ module.exports = {
 
         const leaderboard = await Levels.computeLeaderboard(client, rawLeaderboard, true); // We process the leaderboard.
 
-        const lb = leaderboard.map(e => `${e.position}. \`<@${e.userID}>\n\`Level: ${e.level}\nXP: ${e.xp.toLocaleString()}`); // We map the outputs.
+        const lb = leaderboard.map(e => `${e.position}. \`<@${e.userID}>\`\nLevel: ${e.level}\nXP: ${e.xp.toLocaleString()}`); // We map the outputs.
         console.log(lb);
 
         let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
