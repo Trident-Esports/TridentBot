@@ -167,36 +167,44 @@ module.exports = (client, Discord) => {
                             let json = JSON.parse(data);
                             let game_details = json["events"];
 
+                            let emoji = ""
+                            let emojiName = json.gameID.detected;
+                            if(emojiName == "val") {
+                                emojiName = "valorant";
+                            }
+                            let foundEmoji = false;
+                            if(message.guild.id in emojiIDs) {
+                                if(json.gameID.detected in emojiIDs[message.guild.id]) {
+                                    emoji += "<:" + emojiName + ":" + emojiIDs[message.guild.id][json.gameID.detected] + ">";
+                                    foundEmoji = true;
+                                }
+                            }
+                            if(!foundEmoji) {
+                                emoji += '[' + json.gameID.detected + "] ";
+                            }
+
                             let newEmbed = new MessageEmbed()
                                 .setColor(profile.stripe)
-                                .setTitle("***" + profile.title + " Schedule***")
+                                .setTitle("***" + emoji + profile.title + " Schedule***")
                                 .setURL("http://villainsoce.mymm1.com/team/" + profile.team.teamID)
                                 // .setDescription()
                                 .setThumbnail(defaults.thumbnail)
                                 .setFooter(defaults.footer.msg, defaults.footer.image)
                                 .setTimestamp();
 
+                            let noMatches = Object.entries(game_details).length == 0;
                             for(let [timestamp,match] of Object.entries(game_details)) {
+                                if(!match) {
+                                    noMatches = true;
+                                    continue;
+                                }
                                 let name = "";
                                 let value = "";
                                 if(match.discord.status == "complete") {
                                     name += ((match.discord.winner == match.discord.team) ? "✅" : "❌");
                                     value += "Started";
                                 } else {
-                                    let emojiName = match.discord.game;
-                                    if(emojiName == "val") {
-                                        emojiName = "valorant";
-                                    }
-                                    let foundEmoji = false;
-                                    if(message.guild.id in emojiIDs) {
-                                        if(match.discord.game in emojiIDs[message.guild.id]) {
-                                            name += "<:" + emojiName + ":" + emojiIDs[message.guild.id][match.discord.game] + ">";
-                                            foundEmoji = true;
-                                        }
-                                    }
-                                    if(!foundEmoji) {
-                                        name += '[' + match.discord.game + "] ";
-                                    }
+                                    name += emoji;
                                     value += "Starting";
                                 }
                                 name += match.discord.team + " <:vs:839624205766230026> " + match.discord.opponent;
@@ -210,6 +218,12 @@ module.exports = (client, Discord) => {
                                     value += "](" + match.discord.url + ")";
                                 }
                                 newEmbed.addField(name,value)
+                            }
+
+                            if(noMatches) {
+                                newEmbed.setDescription(
+                                    "No selected matches found for [" + json["team"] + " (LPL Team #" + json["team_id"] + ")](" + json["team_url"] + ")."
+                                )
                             }
 
                             message.channel.send(newEmbed);
