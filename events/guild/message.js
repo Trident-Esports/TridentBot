@@ -13,7 +13,14 @@ module.exports = async (Discord, client, message) => {
     const prefix = '.'  // Default Prefix
 
     if (message.author.bot) {
-        if(message.content.match(/(\.)(\S*)(\s)(next)/) === null) {
+        let send = false;
+        for(let check of ["complete","incomplete","next"]) {
+            let re = new RegExp("(\\.)(\\S*)(\\s)(" + check + ")");
+            if(re.test(message.content) !== false) {
+                send = true;
+            }
+        }
+        if(!send) {
             return;
         }
     }
