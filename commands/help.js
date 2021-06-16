@@ -41,79 +41,33 @@ module.exports = {
             }
         }
 
-        const page1 = new MessageEmbed()
-        .setColor(props.stripe)
-        .setTitle(props.title)
-        .setURL(props.url)
-        .setDescription(props.description);
+        let pages = []
 
         for(let [section, sectionAttrs] of Object.entries(helpData)) {
-            page1.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
+            let thisPage = new MessageEmbed()
+                .setColor(props.stripe)
+                .setTitle(props.title)
+                .setURL(props.url)
+                .setDescription(props.description)
+                .setThumbnail(defaults.thumbnail)
+                .setFooter(defaults.footer.msg, defaults.footer.image)
+                .setTimestamp();
+            thisPage.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
             for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
                 let value = commandAttrs.help.join("\n")
                 if("aliases" in commandAttrs) {
                     value += "\n"
                     value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
                 }
-                page1.addField("`" + defaults.prefix + command + "`", value)
+                thisPage.addField("`" + defaults.prefix + command + "`", value)
             }
+            pages.push(thisPage)
         }
-        page1.setThumbnail(defaults.thumbnail)
-        .setFooter(defaults.footer.msg, defaults.footer.image)
-        .setTimestamp();
 
-        const page2 = new MessageEmbed()
-        .setColor(props.stripe)
-        .setTitle(props.title)
-        .setURL(props.url)
-        .setDescription(props.description);
-
-        for(let [section, sectionAttrs] of Object.entries(helpData)) {
-            page2.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
-            for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
-                let value = commandAttrs.help.join("\n")
-                if("aliases" in commandAttrs) {
-                    value += "\n"
-                    value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
-                }
-                page2.addField("`" + defaults.prefix + command + "`", value)
-            }
-        }
-        page2.setThumbnail(defaults.thumbnail)
-        .setFooter(defaults.footer.msg, defaults.footer.image)
-        .setTimestamp();
-
-        const page3 = new MessageEmbed()
-        .setColor(props.stripe)
-        .setTitle(props.title)
-        .setURL(props.url)
-        .setDescription(props.description);
-
-        for(let [section, sectionAttrs] of Object.entries(helpData)) {
-            page3.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
-            for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
-                let value = commandAttrs.help.join("\n")
-                if("aliases" in commandAttrs) {
-                    value += "\n"
-                    value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
-                }
-                page3.addField("`" + defaults.prefix + command + "`", value)
-            }
-        }
-        page3.setThumbnail(defaults.thumbnail)
-        .setFooter(defaults.footer.msg, defaults.footer.image)
-        .setTimestamp();
-
-        const pages = [
-            page1,
-            page2,
-            page3
-        ]
-    
         const emoji = ["◀️", "▶️"]
-    
+
         const timeout = '120000'
-    
+
         pagination(message, pages, emoji, timeout)
 
     }
