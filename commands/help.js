@@ -1,4 +1,5 @@
 const fs = require('fs');
+const pagination = require('discord.js-pagination');
 const { MessageEmbed } = require('discord.js')
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
@@ -14,7 +15,8 @@ module.exports = {
 
         let props = {
             "title": "***Help***",
-            "url": "https://discord.com/KKYdRbZcPT"
+            "url": "https://discord.com/KKYdRbZcPT",
+            "description": "This is a list of the commands and help for VillainsBot.\n If you would like a list of commands for the MiniGame please type \`.gamehelp\`"
         }
         switch (stripe) {
             default:
@@ -39,36 +41,80 @@ module.exports = {
             }
         }
 
-        const newEmbed = new MessageEmbed()
+        const page1 = new MessageEmbed()
         .setColor(props.stripe)
         .setTitle(props.title)
         .setURL(props.url)
-        .setDescription('This is a list of the commands and help for VillainsBot.\nIf you would like a list of commands for the MiniGame please type _.gamehelp_');
+        .setDescription(props.description);
 
         for(let [section, sectionAttrs] of Object.entries(helpData)) {
-            newEmbed.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
+            page1.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
             for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
                 let value = commandAttrs.help.join("\n")
                 if("aliases" in commandAttrs) {
                     value += "\n"
                     value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
                 }
-                newEmbed.addField("`" + defaults.prefix + command + "`", value)
+                page1.addField("`" + defaults.prefix + command + "`", value)
             }
         }
-        newEmbed.setThumbnail(defaults.thumbnail)
+        page1.setThumbnail(defaults.thumbnail)
         .setFooter(defaults.footer.msg, defaults.footer.image)
         .setTimestamp();
 
-        if(!DEV) {
-            message.channel.send("I have sent some Minions to your dm's.");
-            message.channel.send("https://tenor.com/view/minions-despicable-me-cheer-happy-yay-gif-3850878")
+        const page2 = new MessageEmbed()
+        .setColor(props.stripe)
+        .setTitle(props.title)
+        .setURL(props.url)
+        .setDescription(props.description);
+
+        for(let [section, sectionAttrs] of Object.entries(helpData)) {
+            page2.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
+            for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
+                let value = commandAttrs.help.join("\n")
+                if("aliases" in commandAttrs) {
+                    value += "\n"
+                    value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
+                }
+                page2.addField("`" + defaults.prefix + command + "`", value)
+            }
         }
-        message.delete
-        if(DEV) {
-            message.channel.send(newEmbed);
-        } else {
-            message.author.send(newEmbed);
+        page2.setThumbnail(defaults.thumbnail)
+        .setFooter(defaults.footer.msg, defaults.footer.image)
+        .setTimestamp();
+
+        const page3 = new MessageEmbed()
+        .setColor(props.stripe)
+        .setTitle(props.title)
+        .setURL(props.url)
+        .setDescription(props.description);
+
+        for(let [section, sectionAttrs] of Object.entries(helpData)) {
+            page3.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
+            for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
+                let value = commandAttrs.help.join("\n")
+                if("aliases" in commandAttrs) {
+                    value += "\n"
+                    value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
+                }
+                page3.addField("`" + defaults.prefix + command + "`", value)
+            }
         }
+        page3.setThumbnail(defaults.thumbnail)
+        .setFooter(defaults.footer.msg, defaults.footer.image)
+        .setTimestamp();
+
+        const pages = [
+            page1,
+            page2,
+            page3
+        ]
+    
+        const emoji = ["◀️", "▶️"]
+    
+        const timeout = '120000'
+    
+        pagination(message, pages, emoji, timeout)
+
     }
 }
