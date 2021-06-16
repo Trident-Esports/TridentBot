@@ -26,11 +26,11 @@ module.exports = {
 
         if (gambledAmount < 500) return message.channel.send('You must gamble atleast 💰500!');
 
-        if (isNaN(gambledAmount)) return message.channel.send('How much would you like to place on a coinflip? Please type a real amount.');
+        if (isNaN(gambledAmount)) return message.channel.send(`${message.author}, the correct usage of this command is \`.cf [$]\`.\nSee what you can buy with \`.shop\``);
 
         const variables = [
             "Heads",
-            "tails",
+            "Tails",
             "Side",
         ];
 
@@ -79,11 +79,11 @@ module.exports = {
             var Heads = 50;
             var Tails = 50;
             var Side = 2;
+
             const COINFLIP_EMBED = new MessageEmbed()
                 .setTimestamp();
 
             if (hasLeveledUP) {
-
                 const user = await Levels.fetch(message.author.id);
                 const target = message.author
                 await profileModel.findOneAndUpdate({
@@ -96,7 +96,6 @@ module.exports = {
                 });
 
                 let level_gain = (user.level - (user.level + 1)); //find a way for this to find level difference before and after not just after for 1 level
-
                 let gainedmoney = level_gain * 1000
                 let gainedminions = level_gain * 100
 
@@ -118,9 +117,9 @@ module.exports = {
                     COINFLIP_EMBED.setColor(props["success"]["embedColor"])
                     COINFLIP_EMBED.setTitle(props["success"]["title"])
                     COINFLIP_EMBED.setDescription(`You chose ${m.content} and won 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\nEarned ${randomXP} XP`)
-                    return message.channel.send(COINFLIP_EMBED)
-
-                } else if (number <= Tails && m.content.toLowerCase() === 'tails') {
+                    return message.channel.send(COINFLIP_EMBED);
+                }
+                else if (number <= Tails && m.content.toLowerCase() === 'tails') {
                     await profileModel.findOneAndUpdate({
                         userID: message.author.id,
                     }, {
@@ -132,9 +131,10 @@ module.exports = {
                     COINFLIP_EMBED.setColor(props["success"]["embedColor"])
                     COINFLIP_EMBED.setTitle(props["success"]["title"])
                     COINFLIP_EMBED.setDescription(`You chose ${m.content} and won 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\nEarned ${randomXP} XP`)
-                    return message.channel.send(COINFLIP_EMBED)
+                    return message.channel.send(COINFLIP_EMBED);
 
-                } else if (number <= Side && m.content.toLowerCase() === 'side') {
+                }
+                else if (number <= Side && m.content.toLowerCase() === 'side') {
                     await profileModel.findOneAndUpdate({
                         userID: message.author.id,
                     }, {
@@ -149,19 +149,12 @@ module.exports = {
                     COINFLIP_EMBED.setDescription(`You go to flip the coin and it lands on its ${m.content} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours\n\nEarned ${randomXP} XP.`)
                     return message.channel.send(COINFLIP_EMBED);
                 } else {
-                    await profileModel.findOneAndUpdate({
-                        userID: message.author.id,
-                    }, {
-                        $inc: {
-                            gold: -gambledAmount,
-                        },
-                    })
+                    winmoney
                     console.log(number)
                     COINFLIP_EMBED.setColor(props["fail"]["embedColor"])
                     COINFLIP_EMBED.setTitle(props["fail"]["title"])
                     COINFLIP_EMBED.setDescription(`You chose ${m.content} and the coin didn't land on that. this means you just lost ${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} gold.\n Maybe a bad idea or just Unlucky.\n\nOn the bright side you Earned ${randomXP} XP`)
                     message.channel.send(COINFLIP_EMBED);
-
                 }
             } catch (err) {
                 console.log(err)
@@ -178,9 +171,7 @@ module.exports = {
                         gold: -1,
                     },
                 });
-                return message.channel.send(
-                    `<@${message.author.id}> forgets to flip the coin and it falls out of their hand and rolls away. Losing 💰1.`
-                );
+                return message.channel.send(`${message.author} forgets to flip the coin and it falls out of their hand and rolls away. Losing 💰1.`);
             }
         });
 
@@ -193,5 +184,4 @@ module.exports = {
 
         message.channel.send(Choose_embed);
     }
-
 };

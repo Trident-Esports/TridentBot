@@ -1,4 +1,5 @@
 const fs = require('fs');
+const pagination = require('discord.js-pagination');
 const { MessageEmbed } = require('discord.js')
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
@@ -14,7 +15,8 @@ module.exports = {
 
         let props = {
             "title": "***Help***",
-            "url": "https://discord.com/KKYdRbZcPT"
+            "url": "https://discord.com/KKYdRbZcPT",
+            "description": "This is a list of the commands and help for VillainsBot.\n If you would like a list of commands for the MiniGame please type \`.gamehelp\`"
         }
         switch (stripe) {
             default:
@@ -39,36 +41,34 @@ module.exports = {
             }
         }
 
-        const newEmbed = new MessageEmbed()
-        .setColor(props.stripe)
-        .setTitle(props.title)
-        .setURL(props.url)
-        .setDescription('This is a list of the commands and help for VillainsBot.\nIf you would like a list of commands for the MiniGame please type _.gamehelp_');
+        let pages = []
 
         for(let [section, sectionAttrs] of Object.entries(helpData)) {
-            newEmbed.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
+            let thisPage = new MessageEmbed()
+                .setColor(props.stripe)
+                .setTitle(props.title)
+                .setURL(props.url)
+                .setDescription(props.description)
+                .setThumbnail(defaults.thumbnail)
+                .setFooter(defaults.footer.msg, defaults.footer.image)
+                .setTimestamp();
+            thisPage.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
             for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
                 let value = commandAttrs.help.join("\n")
                 if("aliases" in commandAttrs) {
                     value += "\n"
                     value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
                 }
-                newEmbed.addField("`" + defaults.prefix + command + "`", value)
+                thisPage.addField("`" + defaults.prefix + command + "`", value)
             }
+            pages.push(thisPage)
         }
-        newEmbed.setThumbnail(defaults.thumbnail)
-        .setFooter(defaults.footer.msg, defaults.footer.image)
-        .setTimestamp();
 
-        if(!DEV) {
-            message.channel.send("I have sent some Minions to your dm's.");
-            message.channel.send("https://tenor.com/view/minions-despicable-me-cheer-happy-yay-gif-3850878")
-        }
-        message.delete
-        if(DEV) {
-            message.channel.send(newEmbed);
-        } else {
-            message.author.send(newEmbed);
-        }
+        const emoji = ["◀️", "▶️"]
+
+        const timeout = '120000'
+
+        pagination(message, pages, emoji, timeout)
+
     }
 }

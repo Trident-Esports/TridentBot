@@ -14,6 +14,8 @@ module.exports = {
         const target = message.mentions.members.first() || message.guild.members.cache.get(args[0])
 
         APPROVED_ROLES = ROLES["admin"]
+        MEMBER_ROLE = ROLES["member"]
+        MUTED_ROLE = ROLES["muted"]
 
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) )
             return message.channel.send("Your Kryptonite is having no power! 🤡");
@@ -21,8 +23,8 @@ module.exports = {
 
         if (target) {
 
-            let mainRole = message.guild.roles.cache.find(role => role.name === 'Minions');
-            let muteRole = message.guild.roles.cache.find(role => role.name === 'Muted');
+            let mainRole = message.guild.roles.cache.find(role => role.name === MEMBER_ROLE);
+            let muteRole = message.guild.roles.cache.find(role => role.name === MUTED_ROLE);
 
             let memberTarget = message.guild.members.cache.get(target.id);
 

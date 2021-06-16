@@ -4,5 +4,7 @@
     "Mod",
     "Overlords",
     "Evil Council"
-  ]
+  ],
+  "member": "Minions",
+  "muted": "Muted"
 }

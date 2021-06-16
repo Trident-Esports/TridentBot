@@ -6,15 +6,27 @@ const XPBoostModel = require('../../models/xpboostSchema');     // XP Boost
 
 const { MessageEmbed } = require('discord.js'); // Discord Embeds
 
-const cooldowns = new Map();
+const cooldowns = new Map(); 
 
 module.exports = async (Discord, client, message) => {
 
     const prefix = '.'  // Default Prefix
 
-    if (message.author.bot) return;
+    if (message.author.bot) {
+        let send = false;
+        for(let check of ["complete","incomplete","next"]) {
+            let re = new RegExp("(\\.)(\\S*)(\\s)(" + check + ")");
+            if(re.test(message.content) !== false) {
+                send = true;
+            }
+        }
+        if(!send) {
+            return;
+        }
+    }
+
     if (message.content == prefix) return message.channel.send("Please send a proper command");
-    if (!message.content.startsWith(prefix) || message.author.bot) return;
+    if (!message.content.startsWith(prefix)) return;
 
     let profileData;
 

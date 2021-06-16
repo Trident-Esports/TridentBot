@@ -9,6 +9,8 @@ module.exports = {
       'removewarns'
     ],
     async execute(message, args) {
+        let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+        let DEV = GLOBALS.DEV;
         let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 
         APPROVED_ROLES = ROLES["admin"]
@@ -19,8 +21,12 @@ module.exports = {
         db.findOne({ guildID: message.guild.id, user: user.user.id}, async(err,data) => {
             if(err) throw err;
             if(data) {
-                await db.findOneAndDelete({ user : user.user.id, guildID: message.guild.id})
-                message.channel.send(`Cleared ${user.user.tag}'s warns`)
+                if(! DEV) {
+                    await db.findOneAndDelete({ user : user.user.id, guildID: message.guild.id})
+                    message.channel.send(`Cleared ${user.user.tag}'s warns`)
+                } else {
+                    message.channel.send(`${user.user.tag}'s warns *would be* cleared if this wasn't in DEV Mode`)
+                }
             } else {
                 message.channel.send('This user does not have any warns in this server!')
             }

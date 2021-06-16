@@ -53,6 +53,8 @@ module.exports = (client, Discord) => {
         }
     }
 
+    let aliasesWithSchedules = []
+
     for (const file of rosters_profiles) {
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
         if(file.indexOf("teams") != -1) {
@@ -64,6 +66,9 @@ module.exports = (client, Discord) => {
             roster_aliases[gameID][profile.aliases[0]] = {
                 name: profile.title,
                 schedule: ("team" in profile)
+            }
+            if("team" in profile) {
+                aliasesWithSchedules.push(profile.aliases[0] + 's')
             }
         }
 
@@ -139,7 +144,7 @@ module.exports = (client, Discord) => {
         if(file.indexOf("teams") !== -1) {
             schedule = {
                 name: profile.title + " Schedule",
-                aliases: profile.aliases[0] + 's',
+                aliases: [profile.aliases[0] + 's'],
                 description: profile.title + " Schedule",
                 async execute(message, args, client, Discord) {
 
@@ -234,11 +239,28 @@ module.exports = (client, Discord) => {
         }
         if (roster.name) {
             client.commands.set(roster.name, roster);
-            if(schedule) {
+            if(schedule !== null) {
                 client.commands.set(roster.name + " Schedule", schedule);
             }
         }
     }
+
+    let allMatches = {
+        name: "All Matches",
+        aliases: [ "games" ],
+        description: "All Matches with optional span lengths",
+        async execute(message, args) {
+            if(args) {
+                if(["complete","incomplete","next"].indexOf(args[0]) !== -1) {
+                    for(let scheduler of aliasesWithSchedules) {
+                        message.channel.send('.' + scheduler + " " + args[0])
+                    }
+                }
+            }
+        }
+    }
+    client.commands.set(allMatches.name, allMatches);
+
     if(roster_aliases) {
         let profile = {
           title: "Team Lists",
