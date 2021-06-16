@@ -1,5 +1,6 @@
 const fs = require('fs')
 const dasu = require('dasu')
+const pagination = require('discord.js-pagination')
 const { Message, MessageEmbed } = require('discord.js')
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
@@ -33,6 +34,27 @@ module.exports = {
             }
         }
 
+        let filepath = '/team/'
+        let profiles = {}
+        if(args) {
+            if(args[0]) {
+                filepath += args[0]
+                profile.team.teamID = args[0]
+                if(args[1]) {
+                    filepath += '-' + args[1] + ".json"
+                    profiles[args[1]] = filepath
+                } else {
+                    profiles = {
+                        "complete": filepath + '-' + "complete" + ".json",
+                        "incomplete": filepath + '-' + "incomplete" + ".json",
+                        "next": filepath + '-' + "next" + ".json"
+                    }
+                }
+            }
+        }
+
+        let pages = []
+
         let stripe = profile["stripe"]
 
         switch (stripe) {
@@ -49,100 +71,94 @@ module.exports = {
 
         profile["stripe"] = stripe
 
-        let req = dasu.req
+        for(let [span,filepath] of Object.entries(profiles)) {
+            let req = dasu.req
 
-        let filepath = '/team/'
-        if(args) {
-            if(args[0]) {
-                filepath += args[0]
-                profile.team.teamID = args[0]
-            }
-            if(args[1]) {
-                filepath += '-' + args[1]
-            }
-        }
-        filepath += '.json'
-
-        let params = {
-            method: 'GET',
-            protocol: 'http',
-            hostname: 'villainsoce.mymm1.com',
-            port: 80,
-            path: filepath,
-        }
-
-        req(params, function (err, res, data) {
-            let json = JSON.parse(data);
-            let game_details = json["events"];
-
-            let noMatches = Object.entries(game_details).length == 0;
-
-            let emoji = ""
-            let emojiName = json?.gameID?.detected ? json.gameID.detected : json.game;
-            if(emojiName == "val") {
-                emojiName = "valorant";
-            }
-
-            if(!noMatches) {
-                let foundEmoji = false;
-                if(message.guild.id in emojiIDs) {
-                    if(json.gameID.detected in emojiIDs[message.guild.id]) {
-                        emoji += "<:" + emojiName + ":" + emojiIDs[message.guild.id][json.gameID.detected] + ">";
-                        foundEmoji = true;
-                    }
-                }
-                if(!foundEmoji) {
-                    emoji += '[' + json.gameID.detected + "] ";
-                }
+            let params = {
+                method: 'GET',
+                protocol: 'http',
+                hostname: 'villainsoce.mymm1.com',
+                port: 80,
+                path: filepath,
             }
 
             let newEmbed = new MessageEmbed()
                 .setColor(profile.stripe)
-                .setTitle("***" + emoji + profile.title + " Schedule***")
                 .setURL("http://villainsoce.mymm1.com/team/" + profile.team.teamID)
-                // .setDescription()
                 .setThumbnail(defaults.thumbnail)
                 .setFooter(defaults.footer.msg, defaults.footer.image)
                 .setTimestamp();
 
-            for(let [timestamp,match] of Object.entries(game_details)) {
-                if(!match) {
-                    noMatches = true;
-                    continue;
+            await req(params, function (err, res, data) {
+                let json = JSON.parse(data);
+                let game_details = json["events"];
+
+                let noMatches = Object.entries(game_details).length == 0;
+
+                let emoji = ""
+                let emojiName = json?.gameID?.detected ? json.gameID.detected : json.game;
+                if(emojiName == "val") {
+                    emojiName = "valorant";
                 }
-                let name = "";
-                let value = "";
-                if(match.discord.status == "complete") {
-                    name += ((match.discord.winner == match.discord.team) ? "✅" : "❌");
-                    value += "Started";
-                } else {
-                    name += emoji;
-                    value += "Starting";
-                }
-                name += match.discord.team + " <:vs:839624205766230026> " + match.discord.opponent;
-                value += ": " + match.discord.starting + "\n";
-                if(match.discord.status == "incomplete" || (match.discord.scoreKeys.bySide.home != 0 || match.discord.scoreKeys.bySide.opponent != 0)) {
-                    value += '[';
-                    if(match.discord.status == "complete") {
-                        value += "Final ";
+
+                if(!noMatches) {
+                    let foundEmoji = false;
+                    if(message.guild.id in emojiIDs) {
+                        if(json.gameID.detected in emojiIDs[message.guild.id]) {
+                            emoji += "<:" + emojiName + ":" + emojiIDs[message.guild.id][json.gameID.detected] + ">";
+                            foundEmoji = true;
+                        }
                     }
-                    value += "Score: " + match.discord.scoreKeys.bySide.home + " - " + match.discord.scoreKeys.bySide.opponent;
-                    value += "](" + match.discord.url + ")";
+                    if(!foundEmoji) {
+                        emoji += '[' + json.gameID.detected + "] ";
+                    }
                 }
-                newEmbed.addField(name,value)
-            }
 
-            if(noMatches) {
-                let teamName = "LPL Team #" + json["team_id"]
-                if(json["team"]) {
-                    teamName = json["team"] + " (" + teamName + ")"
+                newEmbed.setTitle("***" + emoji + span.substr(0,1).toUpperCase() + span.slice(1) + " " + profile.title + " Schedule***");
+
+                for(let [timestamp,match] of Object.entries(game_details)) {
+                    if(!match) {
+                        noMatches = true;
+                        continue;
+                    }
+                    let name = "";
+                    let value = "";
+                    if(match.discord.status == "complete") {
+                        name += ((match.discord.winner == match.discord.team) ? "✅" : "❌");
+                        value += "Started";
+                    } else {
+                        name += emoji;
+                        value += "Starting";
+                    }
+                    name += match.discord.team + " <:vs:839624205766230026> " + match.discord.opponent;
+                    value += ": " + match.discord.starting + "\n";
+                    if(match.discord.status == "incomplete" || (match.discord.scoreKeys.bySide.home != 0 || match.discord.scoreKeys.bySide.opponent != 0)) {
+                        value += '[';
+                        if(match.discord.status == "complete") {
+                            value += "Final ";
+                        }
+                        value += "Score: " + match.discord.scoreKeys.bySide.home + " - " + match.discord.scoreKeys.bySide.opponent;
+                        value += "](" + match.discord.url + ")";
+                    }
+                    newEmbed.addField(name,value)
                 }
-                newEmbed.setDescription(
-                    "No selected matches found for [" + teamName + "](" + json["team_url"] + ")."
-                )
-            }
 
-            message.channel.send(newEmbed);
-        });
+                if(noMatches) {
+                    let teamName = "LPL Team #" + json["team_id"]
+                    if(json["team"]) {
+                        teamName = json["team"] + " (" + teamName + ")"
+                    }
+                    newEmbed.setDescription(
+                        "No selected matches found for [" + teamName + "](" + json["team_url"] + ")."
+                    )
+                }
+            });
+            pages.push(newEmbed)
+        }
+        const emoji = ["◀️", "▶️"]
+
+        const timeout = '120000'
+
+        pagination(message, pages, emoji, timeout)
     }
 }
