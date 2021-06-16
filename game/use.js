@@ -7,7 +7,7 @@ module.exports = {
     name: "use",
     description: "Use a players Item",
 
-    async execute(message, args, cmd, client, discord, profileData, XPBoostData) {
+    async execute(message, args, profileData) {
 
         var user = message.author
         const inventoryData = await inventoryModel.findOne({ userID: user.id });

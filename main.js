@@ -81,12 +81,11 @@ client.on('guildMemberAdd', (member, Discord) => {
             Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}.`)
             .setFooter(footer["msg"], footer["image"])
             .setColor('RANDOM')
-        // /embed
-        return channel.send(embed)
+            
+        return channel.send(embed);
     }
-
-    catch (err) {
-       console.log(err);
+    catch(err) {
+       throw(err);
     }
 });
 

@@ -75,7 +75,6 @@ module.exports = {
                     items + " " + names + "   " + "💰" + values.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
                     "`" + descriptions + "`"
                 )
-
             }
 
         }

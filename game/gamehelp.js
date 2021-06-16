@@ -11,12 +11,20 @@ module.exports = {
     name: 'gamehelp',
     aliases: ['gh'],
     description: "This is a help embed",
-    execute(message, args, cmd, client, Discord) {
+    execute(message, args) {
+
+        let stripe = defaults["stripe"]
+
         let props = {
             "stripe": "#B217EE", // Purple; Default is B2EE17 (Green)
             "title": "***Game Help***",
             "emoji": "<:V1LLA1N:848458548082114570>",
             "url": "https://discord.com/KKYdRbZcPT"
+        }
+        switch (stripe) {
+            default:
+                stripe = "#B217EE";
+                break;
         }
 
         // Hack in my stuff to differentiate
@@ -30,22 +38,25 @@ module.exports = {
         let helpData = JSON.parse(fs.readFileSync("game/dbs/help.json", "utf8"))
 
         let loadSection = args && args[0] && Object.keys(helpData).indexOf(args[0]) !== -1;
-        if(loadSection) {
+        if (loadSection) {
             helpData = {
                 key: helpData[args[0]]
             }
         }
 
         const newEmbed = new MessageEmbed()
-        .setColor(props.stripe)
-        .setTitle(props.emoji + " " + props.title)
-        .setURL(props.url);
+            .setColor(props.stripe)
+            .setTitle(props.emoji + " " + props.title)
+            .setURL(props.url)
+            .setThumbnail(defaults.thumbnail)
+            .setFooter(defaults.footer.msg, defaults.footer.image)
+            .setTimestamp();
 
-        for(let [section, sectionAttrs] of Object.entries(helpData)) {
+        for (let [section, sectionAttrs] of Object.entries(helpData)) {
             let value = sectionAttrs?.help ? sectionAttrs.help : " "
-            if(!loadSection) {
+            if (!loadSection) {
                 values = []
-                for(let command in sectionAttrs.commands) {
+                for (let command in sectionAttrs.commands) {
                     values.push("`" + command + "`")
                 }
                 value = values.join(", ")
@@ -54,17 +65,17 @@ module.exports = {
                 "**" + sectionAttrs.section + "**" + (section != "key" ? " (`" + section + "`)" : ""),
                 value
             )
-            if(loadSection) {
+            if (loadSection) {
                 let shown = false
-                for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
+                for (let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
                     let show = true
-                    if(args && args[1] && args[1] !== command) {
+                    if (args && args[1] && args[1] !== command) {
                         show = false
                     }
-                    if(show) {
+                    if (show) {
                         shown = true
                         let value = commandAttrs.help.join("\n")
-                        if("aliases" in commandAttrs) {
+                        if ("aliases" in commandAttrs) {
                             value += "\n"
                             value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
                         }
@@ -74,7 +85,7 @@ module.exports = {
                         )
                     }
                 }
-                if(!shown && (args && args[1])) {
+                if (!shown && (args && args[1])) {
                     newEmbed.addField(
                         "Error",
                         "Command `" + args[1] + "` not present in `" + sectionAttrs.section + "`."
@@ -82,20 +93,6 @@ module.exports = {
                 }
             }
         }
-        newEmbed.setThumbnail(defaults.thumbnail)
-        .setFooter(defaults.footer.msg, defaults.footer.image)
-        .setTimestamp();
-
-        // Access info for each command name and the aliases
-        if(!DEV) {
-            message.channel.send("I have sent some Minions to your dm's.");
-            message.channel.send("https://tenor.com/view/minions-despicable-me-cheer-happy-yay-gif-3850878")
-        }
-        message.delete
-        if(DEV) {
-            message.channel.send(newEmbed);
-        } else {
-            message.author.send(newEmbed);
-        }
+        message.channel.send(newEmbed);
     }
 }

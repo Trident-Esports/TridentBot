@@ -8,7 +8,7 @@ module.exports = {
     aliases: ['cd'],
     permissions: [],
     description: "Checks the user's cooldowns",
-    async execute(message, client, Discord) {
+    async execute(message) {
 
         let props = {
             "embedColor": "#B2EE17",
