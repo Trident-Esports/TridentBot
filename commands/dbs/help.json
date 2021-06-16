@@ -78,11 +78,6 @@
           "_pong!_"
         ]
       },
-      "image": {
-        "help": [
-          "_Searches Google for an image specified_"
-        ]
-      },
       "weather": {
         "help": [
           "_Tells you the weather for the city provided_"

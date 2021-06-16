@@ -6,6 +6,7 @@
   "dependencies": {
     "discord-xp": "^1.1.14",
     "discord.js": "^12.5.3",
+    "discord.js-pagination": "^1.0.3",
     "fs": "0.0.1-security",
     "mongoose": "^5.12.13",
     "ms": "^2.1.3",
