@@ -1,12 +1,12 @@
 {
   "stripe": "default",
-  "title": "R6S Open Roster",
-  "aliases": ["r6or"],
+  "title": "R6S Amateur Roster",
+  "aliases": ["r6ar"],
   "url": "https://discord.com/channels/788021898146742292/788558005917450251/815180306952880158",
   "team": {
     "teamID": "262468"
   },
-  "#url": "#rosters: R6S Open",
+  "#url": "#rosters: R6S Amateur",
   "members": {
     "manager": {
       "title": "Manager",
