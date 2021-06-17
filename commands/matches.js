@@ -155,10 +155,15 @@ module.exports = {
             });
             pages.push(newEmbed)
         }
-        const emoji = ["◀️", "▶️"]
 
-        const timeout = '120000'
+        if(pages.length <= 1) {
+            message.channel.send(pages[0])
+        } else {
+            const emoji = ["◀️", "▶️"]
 
-        pagination(message, pages, emoji, timeout)
+            const timeout = '120000'
+
+            pagination(message, pages, emoji, timeout)
+        }
     }
 }
