@@ -1,0 +1,24 @@
+{
+  "stripe": "default",
+  "title": "VALORANT Open Roster",
+  "aliases": ["vor"],
+  "team": {
+    "tourneyID": "18177",
+    "teamID": "120267"
+  },
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "guessmonster"
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "marsh",
+        "suave"
+      ]
+    }
+  }
+}

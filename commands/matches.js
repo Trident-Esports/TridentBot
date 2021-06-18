@@ -54,38 +54,54 @@ module.exports = {
             }
         }
 
-        let filepath = '/team/'
+        let handlerpath = '/team/'
+        let filepath = ""
         let profiles = {}
-        if(args) {
-            if(args[0]) {
-                if(!isNaN(args[0])) {
+
+        if(args) {                            // args passed
+            if(args[0]) {                     // first arg passed
+                if(!isNaN(args[0])) {         // first arg is a number (could be team ID or tourney ID)
                     filepath += args[0]
-                    profile.team.teamID = args[0]
-                    if(args[1]) {
-                        filepath += '-' + args[1] + ".json"
-                        profiles[args[1]] = filepath
-                    } else {
+                    if(args[1]) {             // second arg passed
+                        if(!isNaN(args[1])) { // second arg is a number (first was tourney ID, this is team ID)
+                            handlerpath = '/tourney/'
+                            profile.team.tourneyID = args[0]
+                            profile.team.teamID = args[1]
+                        } else {              // second arg is text (first was team ID, this is matches span)
+                            profile.team.teamID = args[0]
+                            profile.span = args[1]
+                            filepath += '-' + profile.span + ".json"
+                            profiles[profile.span] = handlerpath + filepath
+                        }
+                    } else {                  // no second arg passed, process for all matches spans
                         profiles = {
-                            "complete": [ filepath + '-' + "complete" + ".json" ],
-                            "incomplete": [ filepath + '-' + "incomplete" + ".json" ],
-                            "next": [ filepath + '-' + "next" + ".json" ]
+                            "complete":   [ handlerpath + filepath + '-' + "complete"   + "json" ],
+                            "incomplete": [ handlerpath + filepath + '-' + "incomplete" + "json" ],
+                            "next":       [ handlerpath + filepath + '-' + "next"       + "json" ]
                         }
                     }
-                } else {
-                    if(["complete","completed","incomplete","next"].indexOf(args[0]) > -1) {
-                        if(args[0] == "completed") {
-                            args[0] = "complete"
-                        }
-                        if(!profiles[args[0]]) {
-                            profiles[args[0]] = []
+                } else {                      // first arg is text (this is matches span), process for all available teams
+                    profile.span = args[0]
+                    if(profile.span == "completed") {
+                        profile.span = "complete"
+                    }
+                    if(["complete","incomplete","next"].indexOf(profile.span) > -1) {
+                        if(!profiles[profile.span]) {
+                            profiles[profile.span] = []
                         }
                         let locPath = "./rosters/dbs/teams"
                         let files = walk(locPath)
                         for(let file of files) {
                             let fData = JSON.parse(fs.readFileSync(file, "utf8"))
                             if(fData?.team?.teamID) {
-                                profiles[args[0]].push(
-                                    filepath + fData.team.teamID + '-' + args[0] + ".json"
+                                let handlerpath = "/team/"
+                                let filepath = fData.team.teamID
+                                if(fData?.team?.tourneyID) {
+                                    handlerpath = "/tourney/"
+                                    filepath = fData.team.tourneyID + '/' + filepath
+                                }
+                                profiles[profile.span].push(
+                                    handlerpath + filepath + '-' + profile.span + ".json"
                                 )
                             }
                         }
@@ -152,13 +168,15 @@ module.exports = {
 
                     let foundEmoji = false;
                     if(message.guild.id in emojiIDs) {
-                        if(json.gameID.detected in emojiIDs[message.guild.id]) {
+                        if(json?.gameID?.detected in emojiIDs[message.guild.id]) {
                             emoji += "<:" + emojiName + ":" + emojiIDs[message.guild.id][json.gameID.detected] + ">";
                             foundEmoji = true;
                         }
                     }
                     if(!foundEmoji) {
-                        emoji += '[' + json.gameID.detected + "] ";
+                        if(json?.gameID?.detected) {
+                            emoji += '[' + json.gameID.detected + "] ";
+                        }
                     }
 
                     if(!noMatches) {
@@ -201,16 +219,25 @@ module.exports = {
                     }
 
                     if(noMatches) {
-                        let teamName = "LPL Team #" + json["team_id"]
-                        if(json["team"]) {
-                            teamName = json["team"] + " (" + teamName + ")"
+                        let teamName = "LPL Team #"
+                        let teamURL = "https://letsplay.live/"
+                        if(json?.tournament_id) {
+                            teamName += json.tournament_id + '/'
+                            teamURL += "tournaments/" + json.tournament_id + '/'
                         }
-                        newEmbed.setDescription("__***" + emoji + json.team + "***__")
+                        if(json?.team_id) {
+                            teamName += json.team_id
+                            teamURL += "team/" + json.team_id
+                        }
+                        let title = emoji
+                        if(json?.team) {
+                            teamName = json.team + " (" + teamName + ")"
+                        }
 
                         newEmbed.setDescription(
                             [
-                                "__***" + emoji + json.team + "***__",
-                                "No selected matches found for [" + teamName + "](" + json["team_url"] + ")."
+                                "__***" + emoji + teamName + "***__",
+                                "No selected matches found for [" + teamName + "](" + teamURL + ")."
                             ].join("\n")
                         )
                     }

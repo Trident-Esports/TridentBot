@@ -6,7 +6,7 @@ const XPBoostModel = require('../../models/xpboostSchema');     // XP Boost
 
 const { MessageEmbed } = require('discord.js'); // Discord Embeds
 
-const cooldowns = new Map(); 
+const cooldowns = new Map();
 
 module.exports = async (Discord, client, message) => {
 
@@ -115,17 +115,23 @@ module.exports = async (Discord, client, message) => {
 
     const command = client.commands.get(cmd) || client.commands.find(a => a.aliases && a.aliases.includes(cmd));
 
-    if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Discord.Collection());
-        await cooldownsModel.findOneAndUpdate(
-            {
-                userID: message.author.id,
-            },
-            {
-                $push: {
-                    usedcooldowns: command.name,
+    if (command?.name) {
+        if (!cooldowns.has(command.name)) {
+            cooldowns.set(command.name, new Discord.Collection());
+            await cooldownsModel.findOneAndUpdate(
+                {
+                    userID: message.author.id,
                 },
-            });
+                {
+                    $push: {
+                        usedcooldowns: command.name,
+                    },
+                });
+        }
+    } else {
+        console.log("No name found for command (" + cmd + ")!")
+        console.log(command)
+        return
     }
 
     const current_time = Date.now();
