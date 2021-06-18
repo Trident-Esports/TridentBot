@@ -81,7 +81,7 @@ client.on('guildMemberAdd', (member, Discord) => {
             Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}.`)
             .setFooter(footer["msg"], footer["image"])
             .setColor('RANDOM')
-            
+
         return channel.send(embed);
     }
     catch(err) {
@@ -119,19 +119,3 @@ client.on('message', message => {
 });
 
 client.login(SENSITIVE.client.login);
-
-
-client.once('ready', async () => {
-
-    let channelnames = {
-        "villainsbotspam": "846409424792846346"
-    }
-    const channel = await client.channels.fetch(channelnames["villainsbotspam"]);
-    function test() {
-        channel.send(".games");
-    }
-
-    let time30 = 1000 * 60 * 30 // time from ms-sec-min
-    setInterval(test, time30);
-//FIX ME Bot post but won't allow the embed to be sent only manually putting .games will allow
-});
