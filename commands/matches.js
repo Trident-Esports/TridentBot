@@ -33,7 +33,7 @@ let profile = {
 }
 
 module.exports = {
-    name: profile.title + " Schedule",
+    name: profile.aliases[0],
     aliases: [ profile.aliases[0] ],
     description: profile.title + " Schedule",
     async execute(message, args, client, Discord) {

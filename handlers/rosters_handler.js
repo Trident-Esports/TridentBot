@@ -56,6 +56,9 @@ module.exports = (client, Discord) => {
     let aliasesWithSchedules = []
 
     for (const file of rosters_profiles) {
+        if(file.indexOf("socials") > -1) {
+            continue;
+        }
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
         if(file.indexOf("teams") != -1) {
             let parts = file.split("/")
@@ -89,7 +92,7 @@ module.exports = (client, Discord) => {
         profile["stripe"] = stripe
 
         let roster = {
-            name: profile.title,
+            name: profile.aliases[0],
             aliases: profile.aliases,
             permissions: [],
             description: profile.title,
@@ -134,7 +137,11 @@ module.exports = (client, Discord) => {
                         }
                         userSTR += "\n";
                     }
-                    newEmbed.addField(groupAttrs.title, userSTR, false);
+                    if(userSTR != "") {
+                        newEmbed.addField(groupAttrs.title, userSTR, false);
+                    } else {
+                        console.log(groupAttrs.title + " has empty value!")
+                    }
                 }
 
                 message.channel.send(newEmbed);
@@ -267,15 +274,26 @@ module.exports = (client, Discord) => {
             }
         }
         if (roster.name) {
-            client.commands.set(roster.name, roster);
+            client.commands.set(roster.aliases[0], roster);
             if(schedule !== null) {
-                client.commands.set(roster.name + " Schedule", schedule);
+                let newCommand = {
+                    name: roster.aliases[0] + 's',
+                    aliases: [ roster.aliases[0] + 's' ],
+                    description: roster.description,
+                    async execute(message, args, Discord) {
+                        command = "matches"
+                        args = profile?.team?.teamID ? profile.team.teamID : ""
+                        client.commands.get(command).execute(message, args)
+                        //FIXME: Cannot send an empty message
+                    }
+                }
+                client.commands.set(roster.aliases[0] + 's', newCommand);
             }
         }
     }
 
     let allMatches = {
-        name: "All Matches",
+        name: "games",
         aliases: [ "games" ],
         description: "All Matches with optional span lengths",
         async execute(message, args) {
@@ -296,7 +314,7 @@ module.exports = (client, Discord) => {
           aliases: [ "teams" ]
         }
         let teams = {
-            name: profile.title,
+            name: profile.aliases[0],
             aliases: profile.aliases,
             description: profile.title,
             async execute(message, client, Discord) {
@@ -334,6 +352,6 @@ module.exports = (client, Discord) => {
                 message.channel.send(newEmbed);
             }
         }
-        client.commands.set(profile.title, teams);
+        client.commands.set(profile.aliases[0], teams);
     }
 }
