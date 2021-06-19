@@ -152,6 +152,10 @@ module.exports = (client, Discord) => {
                         let req = dasu.req
 
                         let filepath = '/team/'
+                        if(profile?.team?.tourneyID) {
+                            filepath = "/tourney/"
+                            filepath += profile.team.tourneyID + '/'
+                        }
                         filepath += profile.team.teamID
                         if(args) {
                             if(args[0]) {
@@ -173,19 +177,26 @@ module.exports = (client, Discord) => {
                             let game_details = json["events"];
 
                             let emoji = ""
-                            let emojiName = json.gameID.detected;
+                            let emojiName = "";
+                            let detectedGame = "";
+                            if(json?.gameID?.detected) {
+                                detectedGame = json.gameID.detected
+                                emojiName = detectedGame
+                            }
                             if(emojiName == "val") {
                                 emojiName = "valorant";
                             }
                             let foundEmoji = false;
                             if(message.guild.id in emojiIDs) {
-                                if(json.gameID.detected in emojiIDs[message.guild.id]) {
-                                    emoji += "<:" + emojiName + ":" + emojiIDs[message.guild.id][json.gameID.detected] + ">";
-                                    foundEmoji = true;
+                                if(detectedGame != "") {
+                                    if(detectedGame in emojiIDs[message.guild.id]) {
+                                        emoji += "<:" + emojiName + ":" + emojiIDs[message.guild.id][detectedGame] + ">";
+                                        foundEmoji = true;
+                                    }
                                 }
                             }
-                            if(!foundEmoji) {
-                                emoji += '[' + json.gameID.detected + "] ";
+                            if(!foundEmoji && detectedGame != "") {
+                                emoji += '[' + detectedGame + "] ";
                             }
 
                             let newEmbed = new MessageEmbed()
@@ -226,8 +237,26 @@ module.exports = (client, Discord) => {
                             }
 
                             if(noMatches) {
+                                let teamName = "LPL Team #"
+                                let teamURL = "https://letsplay.live/"
+                                if(json?.tournament_id) {
+                                    teamName += json.tournament_id + '/'
+                                    teamURL += "tournaments/" + json.tournament_id + '/'
+                                }
+                                if(json?.team_id) {
+                                    teamName += json.team_id
+                                    teamURL += "team/" + json.team_id
+                                }
+                                let title = emoji
+                                if(json?.team) {
+                                    teamName = json.team + " (" + teamName + ")"
+                                }
+
                                 newEmbed.setDescription(
-                                    "No selected matches found for [" + json["team"] + " (LPL Team #" + json["team_id"] + ")](" + json["team_url"] + ")."
+                                    [
+                                        "__***" + emoji + teamName + "***__",
+                                        "No selected matches found for [" + teamName + "](" + teamURL + ")."
+                                    ].join("\n")
                                 )
                             }
 

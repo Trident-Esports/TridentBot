@@ -4,7 +4,8 @@
   "aliases": ["vvr"],
   "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235908031676436",
   "team": {
-    "teamID": "262275"
+    "teamID": "262275",
+    "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/320439_t1_cgau-10k-AM-Female-logorld-thumb.png"
   },
   "#url": "#rosters: VALORANT lists",
   "members": {
@@ -34,8 +35,6 @@
       "title": "Sub",
       "users": [
         "jinxie",
-        "justwilf",
-        "olivia",
         "phoebe"
       ]
     }

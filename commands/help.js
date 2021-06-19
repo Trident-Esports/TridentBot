@@ -64,11 +64,14 @@ module.exports = {
             pages.push(thisPage)
         }
 
-        const emoji = ["◀️", "▶️"]
+        if(pages.length <= 1) {
+            message.channel.send(pages[0])
+        } else {
+            const emoji = ["◀️", "▶️"]
 
-        const timeout = '120000'
+            const timeout = '120000'
 
-        pagination(message, pages, emoji, timeout)
-
+            pagination(message, pages, emoji, timeout)
+        }
     }
 }

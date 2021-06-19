@@ -27,7 +27,7 @@ let socials = JSON.parse(fs.readFileSync("rosters/dbs/socials/users.json", "utf8
 
 let profile = {
     "title": "Roster",
-    "aliases": [ "roster" ]
+    "aliases": [ "roster", "rosters" ]
 }
 
 module.exports = {
@@ -90,54 +90,71 @@ module.exports = {
 
             profile["stripe"] = stripe
 
+            let title = profile.title
+
             let newEmbed = new MessageEmbed()
                 .setColor(profile.stripe)
-                .setTitle("***" + profile.title + "***")
-                .setURL(profile.url)
-                // .setDescription()
                 .setThumbnail(defaults.thumbnail)
                 .setFooter(defaults.footer.msg, defaults.footer.image)
                 .setTimestamp();
 
+            if(profile?.team?.teamID) {
+                profile["url"] = "http://villainsoce.mymm1.com/team/" + profile.team.teamID
+                newEmbed.setURL(profile.url)
+            }
+
+            if(profile?.team?.avatar && profile?.team?.avatar !== "") {
+                newEmbed.setAuthor(title, defaults.thumbnail, profile.url);
+                newEmbed.setThumbnail(profile.team.avatar);
+            } else {
+                newEmbed.setTitle("***" + title + "***");
+            }
+
             for (let [groupName, groupAttrs] of Object.entries(profile.members)) {
                 let userSTR = "";
-                for (let user of groupAttrs.users) {
-                    let social = socials[user];
-                    if (!social) {
-                        // console.log(user);
-                    }
-                    let name = user.charAt(0).toUpperCase() + user.slice(1);
-                    let userURL = "";
-                    if (social) {
-                        if (social.stylized !== undefined) {
-                            name = social.stylized;
+                if(groupAttrs.users.length) {
+                    for (let user of groupAttrs.users) {
+                        let social = socials[user];
+                        if (!social) {
+                            // console.log(user);
                         }
-                        if (social.twitter !== undefined) {
-                            userURL = "https://twitter.com/" + social.twitter;
-                        } else if (social.twitch !== undefined) {
-                            userURL = "https://twitch.tv/" + social.twitch;
-                        } else if (social.instagram !== undefined) {
-                            userURL = "https://instagram.com/" + social.instagram;
+                        let name = user.charAt(0).toUpperCase() + user.slice(1);
+                        let userURL = "";
+                        if (social) {
+                            if (social.stylized !== undefined) {
+                                name = social.stylized;
+                            }
+                            if (social.twitter !== undefined) {
+                                userURL = "https://twitter.com/" + social.twitter;
+                            } else if (social.twitch !== undefined) {
+                                userURL = "https://twitch.tv/" + social.twitch;
+                            } else if (social.instagram !== undefined) {
+                                userURL = "https://instagram.com/" + social.instagram;
+                            }
                         }
+                        if (userURL != "") {
+                            userSTR += "[";
+                        }
+                        userSTR += name;
+                        if (userURL != "") {
+                            userSTR += "](" + userURL + ")";
+                        }
+                        userSTR += "\n";
                     }
-                    if (userURL != "") {
-                        userSTR += "[";
-                    }
-                    userSTR += name;
-                    if (userURL != "") {
-                        userSTR += "](" + userURL + ")";
-                    }
-                    userSTR += "\n";
+                    newEmbed.addField(groupAttrs.title, userSTR, false);
                 }
-                newEmbed.addField(groupAttrs.title, userSTR, false);
             }
 
             pages.push(newEmbed)
         }
-        const emoji = ["◀️", "▶️"]
+        if(pages.length <= 1) {
+            message.channel.send(pages[0])
+        } else {
+            const emoji = ["◀️", "▶️"]
 
-        const timeout = '120000'
+            const timeout = '120000'
 
-        pagination(message, pages, emoji, timeout)
+            pagination(message, pages, emoji, timeout)
+        }
     }
 }
