@@ -8,6 +8,7 @@ const Levels = require('discord-xp')  // Discord Game XP
 
 const { MessageEmbed } = require("discord.js")  // Discord Embeds
 
+require('discord-buttons')(client); // Discord Buttons
 const http = require('http');
 //Login Tokens
 const fs = require('fs');
@@ -117,5 +118,15 @@ client.on('message', message => {
     if (message.author.bot || message.guild.id === '788021898146742292') return;
     else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
 });
+
+client.on('clickButton', async(button) => {
+    if(button.id == 'NextM') {
+
+        button.defer()
+        button.channel.send('.vvrs next')
+    }
+}
+
+);
 
 client.login(SENSITIVE.client.login);
