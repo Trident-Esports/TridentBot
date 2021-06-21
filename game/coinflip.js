@@ -124,7 +124,7 @@ module.exports = {
                     console.log(number)
                     COINFLIP_EMBED.setColor(props["fail"]["embedColor"])
                     COINFLIP_EMBED.setTitle(props["fail"]["title"])
-                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and the coin didn't land on that. this means you just lost ${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} gold.\n Maybe a bad idea or just Unlucky.`)
+                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and the coin didn't land on that. this means you just lost 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n Maybe a bad idea or just Unlucky.`)
                     message.channel.send(COINFLIP_EMBED);
                 }
             } catch (err) {

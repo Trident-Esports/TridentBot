@@ -9,8 +9,6 @@ module.exports = {
     async execute(message, args, profileData) {
         let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
 
-        let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
-
         var user = message.author
         const inventoryData = await inventoryModel.findOne({
             userID: user.id

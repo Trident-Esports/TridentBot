@@ -23,19 +23,9 @@ module.exports = {
     let stripe = defaults["stripe"]
 
     let props = {
-      "stripe": {
-        "success": "#00FF00",
-        "fail": "#FF0000",
-        "special": "#0000FF"
-      },
       "title": "***Game Help***",
       "emoji": "<:V1LLA1N:848458548082114570>",
       "url": "https://discord.com/KKYdRbZcPT"
-    }
-    switch (stripe) {
-      default:
-        stripe = "#B217EE";
-        break;
     }
 
     // Hack in my stuff to differentiate
