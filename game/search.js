@@ -4,6 +4,11 @@ const Levels = require('discord-xp');
 const {
   MessageEmbed
 } = require("discord.js");
+const fs = require('fs');
+
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
 
 module.exports = {
   name: "search",
@@ -14,6 +19,32 @@ module.exports = {
   description: "Choose your search location and have a chance at some gold!",
 
   async execute(message) {
+
+    let stripe = defaults["stripe"]
+
+    let props = {
+      "stripe": {
+        "success": "#00FF00",
+        "fail": "#FF0000",
+        "special": "#0000FF"
+      },
+      "title": "***Game Help***",
+      "emoji": "<:V1LLA1N:848458548082114570>",
+      "url": "https://discord.com/KKYdRbZcPT"
+    }
+    switch (stripe) {
+      default:
+        stripe = "#B217EE";
+        break;
+    }
+
+    // Hack in my stuff to differentiate
+    if (DEV) {
+      stripe = GLOBALS["stripe"]
+      defaults.footer = GLOBALS.footer
+    }
+
+    props["stripe"] = stripe
 
     const randomXP = Math.floor(Math.random() * 200) + 50;
     const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
@@ -112,7 +143,7 @@ module.exports = {
               goldincrease
 
               sendEmbed.setColor("GREEN")
-                  .setDescription(`You searched the ${m.content} and found 💰${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold\n\nEarned ${randomXP} XP`)
+                .setDescription(`You searched the ${m.content} and found 💰${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold\n\nEarned ${randomXP} XP`)
 
               return message.channel.send(sendEmbed);
             } else if (number <= fail) {
@@ -120,14 +151,14 @@ module.exports = {
               healthloss
 
               sendEmbed.setColor("RED")
-                  .setDescription(`You searched the ${m.content} and got injured! This causes you to drop ${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold.\n Maybe a bad idea or just Unlucky.\n\nEarned ${randomXP} XP and even more experience of not to do it again xD`)
+                .setDescription(`You searched the ${m.content} and got injured! This causes you to drop ${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold.\n Maybe a bad idea or just Unlucky.\n\nEarned ${randomXP} XP and even more experience of not to do it again xD`)
 
               return message.channel.send(sendEmbed);
             } else if (number <= special) {
               minions_increase
 
               sendEmbed.setColor("BLUE")
-                  .setDescription(`You go to search the ${m.content} and for some reason find ${RANDOM_MINIONS} Minions following you home.\n\nEarned ${randomXP} XP`)
+                .setDescription(`You go to search the ${m.content} and for some reason find ${RANDOM_MINIONS} Minions following you home.\n\nEarned ${randomXP} XP`)
 
               return message.channel.send(sendEmbed);
             }
