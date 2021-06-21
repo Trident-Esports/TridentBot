@@ -1,6 +1,6 @@
 const fs = require('fs')
 const pagination = require('discord.js-pagination')
-const { Message, MessageEmbed } = require('discord.js')
+const { MessageEmbed } = require('discord.js');
 
 let walk = function (dir) {
     let results = [];

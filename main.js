@@ -8,6 +8,7 @@ const Levels = require('discord-xp')  // Discord Game XP
 
 const { MessageEmbed } = require("discord.js")  // Discord Embeds
 
+require('discord-buttons')(client); // Discord Buttons
 const http = require('http');
 //Login Tokens
 const fs = require('fs');
@@ -119,5 +120,15 @@ client.on('message', message => {
 });
 
 console.log(client);
+
+client.on('clickButton', async(button) => {
+    if(button.id == 'NextM') {
+
+        button.defer()
+        button.channel.send('.vvrs next')
+    }
+}
+
+);
 
 client.login(SENSITIVE.client.login);
