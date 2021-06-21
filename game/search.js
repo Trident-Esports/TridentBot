@@ -53,23 +53,9 @@ module.exports = {
 
       console.log(number);
 
-      const SUCCESS_EMBED = new MessageEmbed()
-        .setColor("GREEN")
+      let sendEmbed = new MessageEmbed()
         .setTitle(`${message.author.username} searched the ${m.content} 🕵️`)
-        .setDescription(`You searched the ${m.content} and found 💰${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold\n\nEarned ${randomXP} XP`)
         .setTimestamp();
-
-      const FAIL_EMBED = new MessageEmbed()
-        .setColor("RED")
-        .setTitle(`${message.author.username} searched the ${m.content} 🕵️`)
-        .setDescription(`You searched the ${m.content} and got injured! This causes you to drop ${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold.\n Maybe a bad idea or just Unlucky.\n\nEarned ${randomXP} XP and even more experience of not to do it again xD`)
-        .setTimestamp();
-
-      const SPECIAL_EMBED = new MessageEmbed()
-        .setColor("BLUE")
-        .setTitle(`${message.author.username} searched the ${m.content} 🕵️`)
-        .setDescription(`You go to search the ${m.content} and for some reason find ${RANDOM_MINIONS} Minions following you home.\n\nEarned ${randomXP} XP`)
-        .setTimestamp()
 
       if (hasLeveledUP) {
 
@@ -83,9 +69,7 @@ module.exports = {
             minions: 1
           },
         });
-        SUCCESS_EMBED.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
-        FAIL_EMBED.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
-        SPECIAL_EMBED.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
+        sendEmbed.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
       }
 
       let goldincrease = await profileModel.findOneAndUpdate({
@@ -126,14 +110,26 @@ module.exports = {
           if (m.content.toLowerCase() === LOCATIONS[i].toLowerCase()) {
             if (number <= success) {
               goldincrease
-              return message.channel.send(SUCCESS_EMBED);
+
+              sendEmbed.setColor("GREEN")
+                  .setDescription(`You searched the ${m.content} and found 💰${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold\n\nEarned ${randomXP} XP`)
+
+              return message.channel.send(sendEmbed);
             } else if (number <= fail) {
               goldremove
               healthloss
-              return message.channel.send(FAIL_EMBED);
+
+              sendEmbed.setColor("RED")
+                  .setDescription(`You searched the ${m.content} and got injured! This causes you to drop ${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold.\n Maybe a bad idea or just Unlucky.\n\nEarned ${randomXP} XP and even more experience of not to do it again xD`)
+
+              return message.channel.send(sendEmbed);
             } else if (number <= special) {
               minions_increase
-              return message.channel.send(SPECIAL_EMBED);
+
+              sendEmbed.setColor("BLUE")
+                  .setDescription(`You go to search the ${m.content} and for some reason find ${RANDOM_MINIONS} Minions following you home.\n\nEarned ${randomXP} XP`)
+
+              return message.channel.send(sendEmbed);
             }
           }
         }

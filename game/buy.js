@@ -7,6 +7,7 @@ module.exports = {
     description: "Buy an item from the store",
 
     async execute(message, args, profileData) {
+        let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
 
         let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
 
@@ -22,8 +23,8 @@ module.exports = {
 
         var bought_item = args.slice(0).join(" ").toLowerCase() //Name of the item
 
-        for (let [cat, items] in Object.entries(STOCKDATA)) {
-            if (bought_item in items) {
+        for(let [cat,items] in Object.entries(STOCKDATA)) {
+            if(bought_item in items) {
                 let item = items[bought_item]
                 if (gold < items["value"]) return message.channel.send('You cannot afford to buy this item')
                 await profileModel.findOneAndUpdate({

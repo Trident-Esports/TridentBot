@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const Levels = require('discord-xp');
 
 const profileModel = require('../models/profileSchema');
@@ -12,10 +14,11 @@ module.exports = {
     description: "Checks the Users Profile",
     async execute(message, args) {
 
+        let mentionedMember = null;
         if (args.length) {
-            var mentionedMember = message.mentions.members.first();
+            mentionedMember = message.mentions.members.first().user;
         } else {
-            var mentionedMember = message.author;
+            mentionedMember = message.author;
         }
 
         if (!mentionedMember) return message.channel.send("That user does not exist");
@@ -27,51 +30,46 @@ module.exports = {
 
         if (!profileData) return message.channel.send("That user does not have a profile");
 
+        let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+        let DEV = GLOBALS.DEV;
+
+        let stripe = defaults["stripe"]
+
         let props = {
-            "embedColor": "#B2EE17",
             "title": "***Balance***",
             "url": "https://discord.com/KKYdRbZcPT"
         }
-        let footer = {
-            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-            "msg": "This bot was Created by Noongar1800#1800"
+        switch (stripe) {
+            default:
+                stripe = "#B2EE17";
+                break;
         }
 
-        if (args.length) {
-            var newEmbed = new MessageEmbed()
-                .setColor(props["embedColor"])
-                .setTitle(props["title"])
-                .setURL(props["url"])
-                .setDescription(`This is ${mentionedMember}'s Profile`)
-                .addField('Title', `Beta Tester`, false)
-                .addField(` ${target.level}`, 'Level', true)
-                .addField(` ${target.xp.toLocaleString()} / ${Levels.xpFor(target.level + 1).toLocaleString()}`, 'XP', true)
-                .addField(` 💚 ${healthData.health}%`, 'Life', true)
-                .addField(` 💰 ${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Gold', true)
-                .addField(` 🏦 ${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Bank', true)
-                .addField(` 🐵 ${profileData.minions}`, 'Minions', true)
-                .addField(` ${XPBoostData.xpboost}%`, 'XPBoost', true)
-                .setThumbnail(mentionedMember.user.displayAvatarURL({ dynamic: true, format: 'png' }))
-                .setFooter(footer["msg"], footer["image"])
-                .setTimestamp();
-        } else {
-            var newEmbed = new MessageEmbed()
-                .setColor(props["embedColor"])
-                .setTitle(props["title"])
-                .setURL(props["url"])
-                .setDescription(`This is ${mentionedMember}'s Profile`)
-                .addField('Title', `Beta Tester`, false)
-                .addField(` ${target.level}`, 'Level', true)
-                .addField(` ${target.xp.toLocaleString()}/${Levels.xpFor(target.level + 1).toLocaleString()}`, 'XP', true)
-                .addField(` 💚 ${healthData.health}%`, 'Life', true)
-                .addField(` 💰 ${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Gold', true)
-                .addField(` 🏦 ${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Bank', true)
-                .addField(` 🐵 ${profileData.minions}`, 'Minions', true)
-                .addField(` ${XPBoostData.xpboost}%`, 'XPBoost', true)
-                .setThumbnail(mentionedMember.displayAvatarURL({ dynamic: true, format: 'png' }))
-                .setFooter(footer["msg"], footer["image"])
-                .setTimestamp();
+        // Hack in my stuff to differentiate
+        if (DEV) {
+            stripe = GLOBALS["stripe"]
+            defaults.footer = GLOBALS.footer
         }
+
+        props["stripe"] = stripe
+
+        var newEmbed = new MessageEmbed()
+            .setColor(props.stripe)
+            .setTitle(props.title)
+            .setURL(props.url)
+            .setDescription(`This is ${mentionedMember}'s Profile`)
+            .addField('Title', `Beta Tester`, false)
+            .addField(` ${target.level}`, 'Level', true)
+            .addField(` ${target.xp.toLocaleString()} / ${Levels.xpFor(target.level + 1).toLocaleString()}`, 'XP', true)
+            .addField(` 💚 ${healthData.health}%`, 'Life', true)
+            .addField(` 💰 ${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Gold', true)
+            .addField(` 🏦 ${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Bank', true)
+            .addField(` 🐵 ${profileData.minions}`, 'Minions', true)
+            .addField(` ${XPBoostData.xpboost}%`, 'XPBoost', true)
+            .setThumbnail(mentionedMember.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setFooter(defaults.footer.msg, defaults.footer.image)
+            .setTimestamp();
 
         message.channel.send(newEmbed);
     }
