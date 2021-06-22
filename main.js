@@ -8,6 +8,7 @@ const Levels = require('discord-xp')  // Discord Game XP
 
 const { MessageEmbed } = require("discord.js")  // Discord Embeds
 
+require('discord-buttons')(client); // Discord Buttons
 const http = require('http');
 //Login Tokens
 const fs = require('fs');
@@ -66,9 +67,9 @@ client.on('guildMemberAdd', (member, Discord) => {
     console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
     const channel = member.guild.channels.cache.get(channelIDs["welcome"])
-    let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif"
+    let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif"
     let footer = {
-        "image": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif",
+        "image": "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif",
         "msg": "This bot was Created by Noongar1800#1800"
     }
     try {
@@ -117,5 +118,15 @@ client.on('message', message => {
     if (message.author.bot || message.guild.id === '788021898146742292') return;
     else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
 });
+
+client.on('clickButton', async(button) => {
+    if(button.id == 'NextM') {
+
+        button.defer()
+        button.channel.send('.vvrs next')
+    }
+}
+
+);
 
 client.login(SENSITIVE.client.login);

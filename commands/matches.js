@@ -107,7 +107,9 @@ module.exports = {
                         }
                     }
                 }
-            }
+            } else {
+                return message.channel.send(`${message.author}, the correct usage of this command is \`.matches [next/complete/incomplete]\`.`);
+             }
         }
 
         let pages = []
@@ -146,6 +148,7 @@ module.exports = {
                     span = "completed"
                 }
                 let title = span.substr(0,1).toUpperCase() + span.slice(1) + " " + profile.title + " Schedule"
+                
 
                 let newEmbed = new MessageEmbed()
                     .setColor(profile.stripe)
@@ -153,7 +156,7 @@ module.exports = {
                     .setThumbnail(defaults.thumbnail)
                     .setFooter(defaults.footer.msg, defaults.footer.image)
                     .setTimestamp();
-
+                
                 await req(params, function (err, res, data) {
                     let json = JSON.parse(data);
                     let game_details = json["events"];
