@@ -1,5 +1,4 @@
 const profileModel = require("../models/profileSchema");
-const Levels = require('discord-xp');
 const {
     MessageEmbed
 } = require("discord.js");
@@ -12,21 +11,20 @@ module.exports = {
     description: "Coinflip for coins",
     async execute(message, args, profileData) {
 
-        const randomXP = Math.floor(Math.random() * 9) + 1;
-        const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
+        var gambledAmount = args[0].toLowerCase() || args[0]
 
-        var gambledAmount = args[0].toLowerCase()
-
-        //if command is just .cf comes up with tolowercase of undefined need to send a message saying type an amount to gamble.
-
-        if (gambledAmount == 'all') gambledAmount = profileData.gold;
-        if (gambledAmount == 'half') gambledAmount = profileData.gold / 2;
+        if (gambledAmount == 'all') {
+            gambledAmount = profileData.gold
+        }
+        if (gambledAmount == 'half') {
+            gambledAmount = profileData.gold / 2
+        }
 
         if (gambledAmount > profileData.gold) return message.channel.send('You seem to be abit short on money there');
 
         if (gambledAmount < 500) return message.channel.send('You must gamble atleast 💰500!');
 
-        if (isNaN(gambledAmount)) return message.channel.send(`${message.author}, the correct usage of this command is \`.cf [$]\`.\nSee what you can buy with \`.shop\``);
+        if (isNaN(gambledAmount) || undefined) return message.channel.send(`${message.author}, the correct usage of this command is \`.cf [$]\`.\nSee what you can buy with \`.shop\``);
 
         const variables = [
             "Heads",
@@ -83,29 +81,10 @@ module.exports = {
             const COINFLIP_EMBED = new MessageEmbed()
                 .setTimestamp();
 
-            if (hasLeveledUP) {
-                const user = await Levels.fetch(message.author.id);
-                const target = message.author
-                await profileModel.findOneAndUpdate({
-                    userID: target.id,
-                }, {
-                    $inc: {
-                        gold: 1000,
-                        minions: 1
-                    },
-                });
-
-                let level_gain = (user.level - (user.level + 1)); //find a way for this to find level difference before and after not just after for 1 level
-                let gainedmoney = level_gain * 1000
-                let gainedminions = level_gain * 100
-
-                SUCCESS_EMBED.setFooter(`${target.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+${gainedmoney} , 🐵+${gainedminions}`)
-                FAIL_EMBED.setFooter(`${target.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+${gainedmoney} , 🐵+${gainedminions}`)
-                SPECIAL_EMBED.setFooter(`${target.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+${gainedmoney} , 🐵+${gainedminions}`)
-            }
-
             try {
-                if (number <= Heads && m.content.toLowerCase() === 'heads') {
+                let gotHeads = number <= Heads && m.content.toLowerCase() === 'heads';
+                let gotTails = number <= Tails && m.content.toLowerCase() === 'tails';
+                if (gotHeads || gotTails) {
                     await profileModel.findOneAndUpdate({
                         userID: message.author.id,
                     }, {
@@ -116,21 +95,7 @@ module.exports = {
                     console.log(number)
                     COINFLIP_EMBED.setColor(props["success"]["embedColor"])
                     COINFLIP_EMBED.setTitle(props["success"]["title"])
-                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and won 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\nEarned ${randomXP} XP`)
-                    return message.channel.send(COINFLIP_EMBED);
-                }
-                else if (number <= Tails && m.content.toLowerCase() === 'tails') {
-                    await profileModel.findOneAndUpdate({
-                        userID: message.author.id,
-                    }, {
-                        $inc: {
-                            gold: gambledAmount,
-                        },
-                    });
-                    console.log(number)
-                    COINFLIP_EMBED.setColor(props["success"]["embedColor"])
-                    COINFLIP_EMBED.setTitle(props["success"]["title"])
-                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and won 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n\nEarned ${randomXP} XP`)
+                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and won 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.`)
                     return message.channel.send(COINFLIP_EMBED);
 
                 }
@@ -146,14 +111,20 @@ module.exports = {
                     console.log(number)
                     COINFLIP_EMBED.setColor(props["special"]["embedColor"])
                     COINFLIP_EMBED.setTitle(props["special"]["title"])
-                    COINFLIP_EMBED.setDescription(`You go to flip the coin and it lands on its ${m.content} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours\n\nEarned ${randomXP} XP.`)
+                    COINFLIP_EMBED.setDescription(`You go to flip the coin and it lands on its ${m.content} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours!`)
                     return message.channel.send(COINFLIP_EMBED);
                 } else {
-                    winmoney
+                    await profileModel.findOneAndUpdate({
+                        userID: message.author.id,
+                    }, {
+                        $inc: {
+                            gold: -gambledAmount,
+                        },
+                    });
                     console.log(number)
                     COINFLIP_EMBED.setColor(props["fail"]["embedColor"])
                     COINFLIP_EMBED.setTitle(props["fail"]["title"])
-                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and the coin didn't land on that. this means you just lost ${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} gold.\n Maybe a bad idea or just Unlucky.\n\nOn the bright side you Earned ${randomXP} XP`)
+                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and the coin didn't land on that. this means you just lost 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n Maybe a bad idea or just Unlucky.`)
                     message.channel.send(COINFLIP_EMBED);
                 }
             } catch (err) {

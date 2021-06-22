@@ -1,3 +1,5 @@
+// Obsolete?
+
 module.exports = [
     {
         item: 'car',

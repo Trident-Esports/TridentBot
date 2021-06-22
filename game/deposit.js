@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const {
     MessageEmbed
 } = require("discord.js");
@@ -31,24 +33,38 @@ module.exports = {
         } catch (err) {
             console.log(err);
         } {
+
+            let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+            let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+            let DEV = GLOBALS.DEV;
+
+            let stripe = defaults["stripe"]
+
             let props = {
-                "embedColor": "#B2EE17",
                 "title": "**Deposit**"
             }
-            let footer = {
-                "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-                "msg": "This bot was Created by Noongar1800#1800"
+            switch (stripe) {
+                default:
+                    stripe = "#B2EE17";
+                    break;
             }
 
+            // Hack in my stuff to differentiate
+            if (DEV) {
+                stripe = GLOBALS["stripe"]
+                defaults.footer = GLOBALS.footer
+            }
+
+            props["stripe"] = stripe
             const newEmbed = new MessageEmbed()
-                .setColor(props["embedColor"])
-                .setTitle(props["title"])
+                .setColor(props.stripe)
+                .setTitle(props.title)
                 .setDescription(`**${message.author} has Deposited 💰 ${amount.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold into their Bank!**\n _Check your balance using .Balance_`)
                 .setThumbnail(message.author.displayAvatarURL({
                     dynamic: true,
                     format: 'png'
                 }))
-                .setFooter(footer["msg"], footer["image"])
+                .setFooter(defaults.footer.msg, defaults.footer.image)
                 .setTimestamp();
 
             return message.channel.send(newEmbed)
