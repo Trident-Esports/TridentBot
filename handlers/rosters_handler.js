@@ -143,7 +143,7 @@ module.exports = (client, Discord) => {
                     }
                     newEmbed.addField(groupAttrs.title, userSTR, false);
                 }
-                // message.channel.send({embed: newEmbed, buttons: btnNext});
+                message.channel.send(newEmbed);
             }
         }
         let schedule = null
