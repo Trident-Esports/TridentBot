@@ -45,6 +45,9 @@ module.exports = {
 
         else {
             try {
+                let sendEmbed = new MessageEmbed()
+                    .setTimestamp()
+                    .setColor("RANDOM")
                 if (final === 'Success') {
 
                     const amount = Math.floor(Math.random() * 1400) + 100 // Min Is 100 And Max Is 1500(100+1400)
@@ -53,11 +56,8 @@ module.exports = {
                         let(amount === mentionmoney.gold)
                     }
 
-                    const embed = new MessageEmbed()
-                        .setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
+                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
                         .setTitle(`You try to rob them.`)
-                        .setTimestamp()
-                        .setColor('RANDOM')
                         .setDescription(`<@${user.id}> Robbed <@${mention.id}> And Got Away With **$${amount}**\nEarned ${randomXP} XP`)
 
                     await profileModel.findOneAndUpdate(
@@ -78,63 +78,18 @@ module.exports = {
                                 gold: -amount,
                             },
                         });// Substract Money From Mention(Robbed) User's Wallet
-                    if (hasLeveledUP) {
-
-                        const user = await Levels.fetch(message.author.id);
-                        const target = message.author
-                        await profileModel.findOneAndUpdate(
-                            {
-                                userID: target.id,
-                            },
-                            {
-                                $inc: {
-                                    gold: 1000,
-                                    minions: 1
-                                },
-                            });
-
-                        embed.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
-                    }
-                    return message.channel.send(embed);
                 }
                 else if (final === 'Failed') {
-
-                    const embed1 = new MessageEmbed()
-                        .setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
+                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
                         .setTitle(`You try to rob them.`)
-                        .setTimestamp()
-                        .setColor('RANDOM')
                         .setDescription(`<@${user.id}> tried To Rob <@${mention.id}>. You realise they are poor.\nEarned ${randomXP} XP`)
-
-                    if (hasLeveledUP) {
-
-                        const user = await Levels.fetch(message.author.id);
-                        const target = message.author
-                        await profileModel.findOneAndUpdate(
-                            {
-                                userID: target.id,
-                            },
-                            {
-                                $inc: {
-                                    gold: 1000,
-                                    minions: 1
-                                },
-                            });
-
-                        embed1.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
-                    }
-                    message.channel.send(embed1)
-
                 }
                 else if (final === 'Paid') {
 
                     const amount = Math.floor(Math.random() * 1400) + 100 // Min Is 100 And Max Is 1500(100+1400)
 
-                    const embed2 = new MessageEmbed()
-                        .setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
+                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
                         .setTitle(`You try to rob them.`)
-                        .setTimestamp()
-                        .setColor('RANDOM')
                         .setDescription(`<@${user.id}> tried to rob <@${mention.id}>. You were Caught and instead <@${mention.id}> stole your gun and robbed you of **$${amount}**.\nWHAT A FAIL!\n\n<@${user.id}> Earned ${randomXP} XP`)
 
                     await profileModel.findOneAndUpdate(
@@ -155,27 +110,26 @@ module.exports = {
                                 gold: -amount,
                             },
                         }); // Substract Money From User's Wallet
-
-                    if (hasLeveledUP) {
-
-                        const user = await Levels.fetch(message.author.id);
-                        const target = message.author
-                        await profileModel.findOneAndUpdate(
-                            {
-                                userID: target.id,
-                            },
-                            {
-                                $inc: {
-                                    gold: 1000,
-                                    minions: 1
-                                },
-                            });
-
-                        embed2.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
-                    }
-
-                    return message.channel.send(embed2);
                 }
+
+                if (hasLeveledUP) {
+
+                    const user = await Levels.fetch(message.author.id);
+                    const target = message.author
+                    await profileModel.findOneAndUpdate(
+                        {
+                            userID: target.id,
+                        },
+                        {
+                            $inc: {
+                                gold: 1000,
+                                minions: 1
+                            },
+                        });
+
+                    sendEmbed.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
+                }
+                return message.channel.send(sendEmbed);
             } catch (err) {
                 console.log(err)
             }

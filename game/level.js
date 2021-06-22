@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const Levels = require('discord-xp');
 const { MessageEmbed } = require('discord.js');
 
@@ -12,24 +14,38 @@ module.exports = {
         const target = await Levels.fetch(mentionedMember.user.id);
         if (!target) return message.channel.send("This member doesn't have a Level.😢");
 
+        let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+        let DEV = GLOBALS.DEV;
+
+        let stripe = defaults["stripe"]
+
         let props = {
-            "embedColor": "#B2EE17",
             "title": "***LEVEL***",
             "url": "https://discord.com/KKYdRbZcPT"
         }
-        let footer = {
-            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-            "msg": "This bot was Created by Noongar1800#1800"
+        switch (stripe) {
+            default:
+                stripe = "#B2EE17";
+                break;
         }
 
+        // Hack in my stuff to differentiate
+        if (DEV) {
+            stripe = GLOBALS["stripe"]
+            defaults.footer = GLOBALS.footer
+        }
+
+        props["stripe"] = stripe
+
         const LevelEmbed = new MessageEmbed()
-        .setColor(props["embedColor"])
-        .setTitle(props["title"])
-        .setURL(props["url"])
+        .setColor(props.stripe)
+        .setTitle(props.title)
+        .setURL(props.url)
         .setDescription(`This is ${mentionedMember}'s Level`)
         .addField(` ${target.level}`, 'Level', true)
         .addField(` ${target.xp}/${Levels.xpFor(target.level + 1)}`, 'XP', true)
-        .setFooter(footer["msg"], footer["image"])
+        .setFooter(defaults.footer.msg, defaults.footer.image)
         .setTimestamp();
 
         message.channel.send(LevelEmbed);

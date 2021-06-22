@@ -6,17 +6,20 @@ module.exports = {
   permissions: ["ADMINISTRATOR"],
   description: "refunds a player some coins",
   async execute(message, args, cmd, client, discord, profileData) {
-    let admins = {
-      "ids": [
-        "532192409757679618",
-        "692180465242603591"
-      ],
-      "names": [
-        "Noongar1800",
-        "PrimeWarGamer"
-      ]
-    }
-    if (admins["ids"].indexOf(message.member.id + "") === false) return message.channel.send(`Sorry only administrators (` + Array.prototype.map.call(admins["names"], function(x) { return "**" + x + "**"; }) + `) can run this command 😔`);
+    APPROVED_USERIDS = [
+      "263968998645956608", // Mike
+      "532192409757679618", // Noongar
+      "692180465242603591"  // PrimeWarGamer
+    ]
+
+    if (APPROVED_USERIDS.indexOf(message.member.id + "") == -1) return message.channel.send(
+      `Sorry only ` +
+      `**MikeTrethewey**,` +
+      `**Noongar1800** or ` +
+      `**PrimeWarGamer**` +
+      ` can run this command 😔`
+    );
+
     if (!args.length) return message.channel.send("You need to mention a player to refund them Gold");
     const amount = args[1];
     const target = message.mentions.users.first();
