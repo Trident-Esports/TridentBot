@@ -120,8 +120,6 @@ client.on('message', message => {
         else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
 });
 
-console.log(client);
-
 // client.on('clickButton', async(button) => {
 //     if(button.id == 'NextM') {
 
