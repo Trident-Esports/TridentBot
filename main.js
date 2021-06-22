@@ -67,9 +67,9 @@ client.on('guildMemberAdd', (member, Discord) => {
     console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
     const channel = member.guild.channels.cache.get(channelIDs["welcome"])
-    let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif"
+    let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif"
     let footer = {
-        "image": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif",
+        "image": "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif",
         "msg": "This bot was Created by Noongar1800#1800"
     }
     try {
