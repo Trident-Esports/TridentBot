@@ -106,10 +106,10 @@ module.exports = (client, Discord) => {
                     .setFooter(defaults.footer.msg, defaults.footer.image)
                     .setTimestamp();
                 
-                const btnNext = new MessageButton()
-                    .setStyle('green')
-                    .setLabel('Next Match')
-                    .setID('NextM')
+                // const btnNext = new MessageButton()
+                //     .setStyle('green')
+                //     .setLabel('Next Match')
+                //     .setID('NextM')
 
                 for (let [groupName, groupAttrs] of Object.entries(profile.members)) {
                     let userSTR = "";
@@ -143,8 +143,7 @@ module.exports = (client, Discord) => {
                     }
                     newEmbed.addField(groupAttrs.title, userSTR, false);
                 }
-
-                message.channel.send({embed: newEmbed, buttons: btnNext});
+                // message.channel.send({embed: newEmbed, buttons: btnNext});
             }
         }
         let schedule = null
