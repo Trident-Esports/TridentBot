@@ -1,12 +1,16 @@
-const Discord = require('discord.js');  // Base Discord module
+const Discord = require('discord.js'); // Base Discord module
 
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"] });  // Discord Client object
+const client = new Discord.Client({
+    partials: ["MESSAGE", "CHANNEL", "REACTION"]
+}); // Discord Client object
 
 const mongoose = require('mongoose'); // Mongoose
 
-const Levels = require('discord-xp')  // Discord Game XP
+const Levels = require('discord-xp') // Discord Game XP
 
-const { MessageEmbed } = require("discord.js")  // Discord Embeds
+const {
+    MessageEmbed
+} = require("discord.js") // Discord Embeds
 
 require('discord-buttons')(client); // Discord Buttons
 const http = require('http');
@@ -16,7 +20,7 @@ SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
 
 const UsedCommand = new Set();
 
-const prefix = '.'  // Default prefix
+const prefix = '.' // Default prefix
 
 Levels.setURL(SENSITIVE.client.mongoDB);
 client.commands = new Discord.Collection();
@@ -37,12 +41,11 @@ client.events = new Discord.Collection();
 
 // Connect to DB
 mongoose.connect(
-    SENSITIVE.client.mongoDB,
-    {
-        useNewURLParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
-    })
+        SENSITIVE.client.mongoDB, {
+            useNewURLParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false
+        })
     .then(() => {
         console.log("Connected to the Database!");
     })
@@ -84,9 +87,8 @@ client.on('guildMemberAdd', (member, Discord) => {
             .setColor('RANDOM')
 
         return channel.send(embed);
-    }
-    catch(err) {
-       throw(err);
+    } catch (err) {
+        throw (err);
     }
 });
 
@@ -100,14 +102,14 @@ client.on('guildMemberRemove', (member) => {
 });
 
 client.on('message', message => {
-    for(let check of [
-      "hello",
-      "hi",
-      "hey"
-    ]) {
-        if(message.content.toLowerCase() === check) {
-            if(message.author.bot) return;
-                else message.channel.send(`Hello there ${message.author}!`);
+    for (let check of [
+            "hello",
+            "hi",
+            "hey"
+        ]) {
+        if (message.content.toLowerCase() === check) {
+            if (message.author.bot) return;
+            else message.channel.send(`Hello there ${message.author}!`);
         }
     }
 });
@@ -115,20 +117,20 @@ client.on('message', message => {
 client.on('message', message => {
 
     if (message.content.toLowerCase().includes('lol'))
-    if (message.author.bot || message.guild.id === '788021898146742292') return;
-    else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
+        if (message.author.bot || message.guild.id === '788021898146742292') return;
+        else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
 });
 
 console.log(client);
 
-client.on('clickButton', async(button) => {
-    if(button.id == 'NextM') {
+// client.on('clickButton', async(button) => {
+//     if(button.id == 'NextM') {
 
-        button.defer()
-        button.channel.send('.vvrs next')
-    }
-}
+//        button.defer()
+//        button.channel.send(`.vvrs next`)
+//    }
+// }
 
-);
+// );
 
 client.login(SENSITIVE.client.login);
