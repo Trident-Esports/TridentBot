@@ -109,6 +109,9 @@ module.exports = (client, Discord) => {
 
                 for (let [groupName, groupAttrs] of Object.entries(profile.members)) {
                     let userSTR = "";
+                    if (groupAttrs.users.length == 0) {
+                        groupAttrs.users.push("TBA")
+                    }
                     for (let user of groupAttrs.users) {
                         let social = socials[user];
                         if (!social) {

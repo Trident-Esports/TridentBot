@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const { Message, MessageEmbed } = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
@@ -9,7 +9,7 @@ let DEV = GLOBALS.DEV;
 module.exports = {
     name: 'rules',
     description: "Rules to follow!",
-    execute(message, args, cmd, client, Discord) {
+    execute(message) {
 
         let props = {
             "title": "***Rules***",

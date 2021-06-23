@@ -107,6 +107,12 @@ module.exports = {
                         }
                     }
                 }
+            } else {
+                let msg = `${message.author}, the correct usage is` + "\n"
+                msg += "`.matches [incomplete|complete|next]`" + "\n"
+                msg += "`.matches <LPL teamID> [incomplete|complete|next]`" + "\n"
+                msg += "`.matches <LPL tourneyID> <LPL teamID> [incomplete|complete|next]`" + "\n"
+                return message.channel.send(msg)
             }
         }
 

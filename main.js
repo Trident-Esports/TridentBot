@@ -1,12 +1,16 @@
 const Discord = require('discord.js');  // Base Discord module
 
-const client = new Discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"] });  // Discord Client object
+const client = new Discord.Client({
+    partials: ["MESSAGE", "CHANNEL", "REACTION"]
+});  // Discord Client object
 
 const mongoose = require('mongoose'); // Mongoose
 
 const Levels = require('discord-xp')  // Discord Game XP
 
-const { MessageEmbed } = require("discord.js")  // Discord Embeds
+const {
+    MessageEmbed
+} = require("discord.js")  // Discord Embeds
 
 const http = require('http');
 //Login Tokens
@@ -65,26 +69,31 @@ client.on('guildMemberAdd', (member, Discord) => {
     console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
     const channel = member.guild.channels.cache.get(channelIDs["welcome"])
-    let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif"
+    let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif"
     let footer = {
-        "image": "https://cdn.discordapp.com/icons/788021898146742292/a_cc4d6460f0b5cc5f77d65aa198609843.gif",
+        "image": "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif",
         "msg": "This bot was Created by Noongar1800#1800"
     }
     try {
+        let rules = [
+            `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
+            "**Are you ready to become a Super Villain?**",
+            "",
+            `Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}.`,
+            "",
+            `Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}.`
+        ]
         const embed = new MessageEmbed()
             .setTitle(`Welcome To ${member.guild.name}`)
             .setThumbnail(thumbnail)
-            .setDescription(`Welcome <@${member.user.id}> to **${member.guild.name}**.\n
-            **Are you ready to become a Super Villain?**\n\n
-            Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}.\n\n
-            Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}.`)
+            .setDescription(rules.join("\n"))
             .setFooter(footer["msg"], footer["image"])
             .setColor('RANDOM')
 
         return channel.send(embed);
     }
-    catch(err) {
-       throw(err);
+    catch (err) {
+       throw (err);
     }
 });
 
@@ -98,13 +107,13 @@ client.on('guildMemberRemove', (member) => {
 });
 
 client.on('message', message => {
-    for(let check of [
+    for (let check of [
       "hello",
       "hi",
       "hey"
     ]) {
-        if(message.content.toLowerCase() === check) {
-            if(message.author.bot) return;
+        if (message.content.toLowerCase() === check) {
+            if (message.author.bot) return;
                 else message.channel.send(`Hello there ${message.author}!`);
         }
     }
@@ -112,8 +121,14 @@ client.on('message', message => {
 
 client.on('message', message => {
 
+    let blacklist = {
+        guildIDs: [
+            "788021898146742292"  // Villains Esports
+        ]
+    }
+
     if (message.content.toLowerCase().includes('lol'))
-    if (message.author.bot || message.guild.id === '788021898146742292') return;
+    if (message.author.bot || blacklist.guildIDs.indexOf(message.guild.id) > -1) return;
     else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
 });
 

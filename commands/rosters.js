@@ -1,6 +1,6 @@
 const fs = require('fs')
 const pagination = require('discord.js-pagination')
-const { Message, MessageEmbed } = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 
 let walk = function (dir) {
     let results = [];
@@ -32,7 +32,7 @@ let profile = {
 
 module.exports = {
     name: profile.aliases[0],
-    aliases: [ profile.aliases[0] ],
+    aliases: profile.aliases,
     description: profile.title,
     async execute(message, args, client, Discord) {
         let emojiIDs = {
@@ -58,6 +58,9 @@ module.exports = {
         let profiles = []
 
         if(gameID != "") {
+            if(gameID.startsWith("val")) {
+                gameID = "val"
+            }
             filepath += '/' + gameID
             if(teamType != "") {
                 filepath += '/' + teamType + ".json"
@@ -112,37 +115,38 @@ module.exports = {
 
             for (let [groupName, groupAttrs] of Object.entries(profile.members)) {
                 let userSTR = "";
-                if(groupAttrs.users.length) {
-                    for (let user of groupAttrs.users) {
-                        let social = socials[user];
-                        if (!social) {
-                            // console.log(user);
-                        }
-                        let name = user.charAt(0).toUpperCase() + user.slice(1);
-                        let userURL = "";
-                        if (social) {
-                            if (social.stylized !== undefined) {
-                                name = social.stylized;
-                            }
-                            if (social.twitter !== undefined) {
-                                userURL = "https://twitter.com/" + social.twitter;
-                            } else if (social.twitch !== undefined) {
-                                userURL = "https://twitch.tv/" + social.twitch;
-                            } else if (social.instagram !== undefined) {
-                                userURL = "https://instagram.com/" + social.instagram;
-                            }
-                        }
-                        if (userURL != "") {
-                            userSTR += "[";
-                        }
-                        userSTR += name;
-                        if (userURL != "") {
-                            userSTR += "](" + userURL + ")";
-                        }
-                        userSTR += "\n";
-                    }
-                    newEmbed.addField(groupAttrs.title, userSTR, false);
+                if (groupAttrs.users.length == 0) {
+                    groupAttrs.users.push("TBA")
                 }
+                for (let user of groupAttrs.users) {
+                    let social = socials[user];
+                    if (!social) {
+                        // console.log(user);
+                    }
+                    let name = user.charAt(0).toUpperCase() + user.slice(1);
+                    let userURL = "";
+                    if (social) {
+                        if (social.stylized !== undefined) {
+                            name = social.stylized;
+                        }
+                        if (social.twitter !== undefined) {
+                            userURL = "https://twitter.com/" + social.twitter;
+                        } else if (social.twitch !== undefined) {
+                            userURL = "https://twitch.tv/" + social.twitch;
+                        } else if (social.instagram !== undefined) {
+                            userURL = "https://instagram.com/" + social.instagram;
+                        }
+                    }
+                    if (userURL != "") {
+                        userSTR += "[";
+                    }
+                    userSTR += name;
+                    if (userURL != "") {
+                        userSTR += "](" + userURL + ")";
+                    }
+                    userSTR += "\n";
+                }
+                newEmbed.addField(groupAttrs.title, userSTR, false);
             }
 
             pages.push(newEmbed)
