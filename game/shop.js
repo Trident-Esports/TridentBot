@@ -27,11 +27,6 @@ module.exports = {
                 break;
         }
 
-        let footer = {
-            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-            "msg": "This bot was Created by Noongar1800#1800"
-        }
-
         let itemData = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
 
         // Hack in my stuff to differentiate

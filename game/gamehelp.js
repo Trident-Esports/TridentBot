@@ -1,7 +1,7 @@
 const {
     MessageEmbed
-} = require('discord.js')
-const fs = require('fs')
+} = require('discord.js');
+const fs = require('fs');
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
@@ -15,6 +15,7 @@ module.exports = {
 
         let stripe = defaults["stripe"]
 
+        //FIXME: Emoji IDs
         let props = {
             "stripe": "#B217EE", // Purple; Default is B2EE17 (Green)
             "title": "***Game Help***",

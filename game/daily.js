@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const profileModel = require("../models/profileSchema");
 const {
   MessageEmbed
@@ -11,6 +13,12 @@ module.exports = {
   description: "Used as a Daily amount of Gold",
   async execute(message) {
 
+    let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+    let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+    let DEV = GLOBALS.DEV;
+
+    let stripe = defaults["stripe"]
+
     const randomNumber = Math.floor(Math.random() * 0) + 30000;
 
     await profileModel.findOneAndUpdate({
@@ -22,19 +30,27 @@ module.exports = {
     });
 
     let props = {
-      "embedColor": "#FFFF00",
       "title": "**Daily**"
     }
-    let footer = {
-      "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-      "msg": "This bot was Created by Noongar1800#1800"
+    switch (stripe) {
+        default:
+            stripe = "#FFFF00"; // Yellow
+            break;
     }
 
+    // Hack in my stuff to differentiate
+    if (DEV) {
+        stripe = GLOBALS["stripe"]
+        defaults.footer = GLOBALS.footer
+    }
+
+    props["stripe"] = stripe
+
     const DailyEmbed = new MessageEmbed()
-      .setColor(props["embedColor"])
-      .setTitle(props["title"])
+      .setColor(props.stripe)
+      .setTitle(props.title)
       .setDescription(`${message.author} has checked into the Lair for the Day.\n\nCollected ${randomNumber.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold`)
-      .setFooter(footer["msg"], footer["image"])
+      .setFooter(defaults.footer.msg, defaults.footer.image)
       .setTimestamp()
 
     return message.channel.send(DailyEmbed);
