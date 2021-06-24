@@ -19,16 +19,15 @@ module.exports = class BotActivityCommand extends BaseCommand {
 
     async run(client, message, args) {
         let props = {
+            title: {},
             description: ""
         }
 
         let APPROVED_ROLES = ROLES["admin"]
 
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
-            props.description = [
-                "***Error***",
-                "Sorry, only admins can run this command. 😔"
-            ].join("\n")
+            props.title.text = "Error"
+            props.description = "Sorry, only admins can run this command. 😔"
         } else {
             let activityIndexes = [
               "playing",    // 0

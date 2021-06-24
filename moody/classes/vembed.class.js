@@ -36,10 +36,15 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             props.color = defaults.stripe;
         }
 
+        super({
+            description: "Something got stuffed up here..."
+        })
+
         // Hack in my stuff to differentiate
         if (DEV) {
             props.color = GLOBALS["stripe"]
             props.footer = GLOBALS.footer
+            this.setTimestamp()
         } else if(!props?.footer) {
             props.footer = defaults.footer
         }
@@ -52,10 +57,8 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             props.color = "#ff0000" // RED
         }
 
-        super({
-            color: props.color,
-            description: "Something got stuffed up here..."
-        })
+        // Color
+        this.setColor(props.color)
 
         // Footer
         if(props?.footer?.msg && props.footer.msg != "<NONE>") {

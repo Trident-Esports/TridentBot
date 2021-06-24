@@ -12,16 +12,15 @@ module.exports = class BonkCommand extends BaseCommand {
 
     async run(client, message, args) {
         let props = {
+            title: {},
             description: ""
         }
 
         //FIXME: getTarget()
         const user = message.mentions.members.first() || message.guild.members.cache.get(args[0])
         if(!user) {
-            props.description = [
-                "***Error***",
-                `User not found. '${args.join(" ")}' given.`
-            ].join("\n")
+            props.title.text = "Error"
+            props.description = `User not found. '${args.join(" ")}' given.`
         } else {
             props.description = `${message.author} just bonked ${user}🔨`
         }
