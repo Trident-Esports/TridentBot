@@ -272,7 +272,7 @@ module.exports = {
                             )
                         }
                     } catch(e) {
-                        console.log("Malformed JSON: " + filepath)
+                        console.log("Malformed JSON: " + url)
                     }
                 });
                 pages.push(newEmbed)
