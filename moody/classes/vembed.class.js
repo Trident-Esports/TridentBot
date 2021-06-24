@@ -22,6 +22,9 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         if ((!props?.description) || (props?.description && props.description.trim() == "")) {
             props.description = "** **"
         }
+        if (typeof props.timestamp === undefined) {
+            props.timestamp = true
+        }
 
         if ((!props?.color) || (props?.color && props.color.trim() == "")) {
             switch (props.color) {
@@ -42,7 +45,10 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // ERROR
-        if (props?.title?.text && props.title.text.toLowerCase().indexOf("error") > -1) {
+        if (
+          (props?.title?.text && props.title.text.toLowerCase().indexOf("error") > -1) ||
+          (props?.description && props.description.toLowerCase().indexOf("***error***") > -1)
+        ) {
             props.color = "#ff0000" // RED
         }
 
@@ -52,20 +58,22 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         })
 
         // Footer
-        if((!props?.pages) || (!props.pages)) {
-            this.setFooter(props.footer.msg, props.footer.image)
-        } else {
-            if(props.description != "") {
-                props.description += "\n\n"
+        if(props?.footer?.msg && props.footer.msg != "<NONE>") {
+            if((!props?.pages) || (!props.pages)) {
+                this.setFooter(props.footer.msg, props.footer.image)
+            } else {
+                if(props.description != "") {
+                    props.description += "\n\n"
+                }
+                props.description += props.footer.msg
             }
-            props.description += props.footer.msg
         }
 
         // Stripe
         this.setColor(props.color)
 
         // Author
-        if(props.thumbnail != defaults.thumbnail) {
+        if((props.thumbnail != defaults.thumbnail) && (props.thumbnail != "<NONE>")) {
             // Author:    NO
             // Title:     Y/N
             // URL:       Y/N
@@ -83,7 +91,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             }
             // Title:  Y/N
             // URL:    Y/N
-            if(props?.title?.text && props.title.text.trim() != "") {
+            if(props?.title?.text && props.title.text.trim() != "" && props.title.text.trim() != "<NONE>") {
                 this.setTitle("***" + props.title.text + "***")
             }
             if(props?.title?.url && props.title.url.trim() != "") {
@@ -92,7 +100,9 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // Thumbnail
-        this.setThumbnail(props.thumbnail)
+        if(props.thumbnail != "<NONE>") {
+            this.setThumbnail(props.thumbnail)
+        }
 
         // Body Description
         this.setDescription(props.description)
@@ -113,6 +123,8 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // Timestamp
-        this.setTimestamp()
+        if(props?.timestamp && props.timestamp) {
+            this.setTimestamp()
+        }
     }
 }
