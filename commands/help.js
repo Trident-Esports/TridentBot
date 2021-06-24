@@ -1,6 +1,7 @@
 const fs = require('fs');
 const pagination = require('discord.js-pagination');
-const { MessageEmbed } = require('discord.js')
+const { MessageEmbed } = require('discord.js');
+const { search } = require('yt-search');
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
@@ -34,10 +35,39 @@ module.exports = {
 
         let helpData = JSON.parse(fs.readFileSync("commands/dbs/help.json", "utf8"))
 
-        if(args && args[0] && Object.keys(helpData).indexOf(args[0]) !== -1) {
-            let key = args[0]
-            helpData = {
-                key: helpData[args[0]]
+        let scope = "all"
+        let search = {
+            "term": null,
+            "single": null
+        }
+
+        if(args) {
+            if(args[0]) {
+                search["term"] = args[0]
+                if(args[1]) {
+                    search["term"] = args[1]
+                    search["single"] = args[1]
+                }
+            }
+        }
+
+        if(search.term) {
+            if(Object.keys(helpData).indexOf(search.term) !== -1) {
+                let key = search.term
+                helpData = {
+                    key: helpData[key]
+                }
+                scope = "section"
+            } else {
+                for(let [section, commands] of Object.entries(helpData)) {
+                    if(Object.keys(commands.commands).indexOf(search.term) !== -1) {
+                        let key = section
+                        helpData = {
+                            key: helpData[key]
+                        }
+                        scope = "single"
+                    }
+                }
             }
         }
 
@@ -54,12 +84,14 @@ module.exports = {
                 .setTimestamp();
             thisPage.addField("**" + sectionAttrs.section + "**", sectionAttrs.help)
             for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
-                let value = commandAttrs.help.join("\n")
-                if("aliases" in commandAttrs) {
-                    value += "\n"
-                    value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
+                if((["all", "section"].indexOf(scope) > -1) || (scope == "single" && command == search.term)) {
+                    let value = commandAttrs.help.join("\n")
+                    if("aliases" in commandAttrs) {
+                        value += "\n"
+                        value += "[Aliases: " + commandAttrs.aliases.join(", ") + "]"
+                    }
+                    thisPage.addField("`" + defaults.prefix + command + "`", value)
                 }
-                thisPage.addField("`" + defaults.prefix + command + "`", value)
             }
             pages.push(thisPage)
         }

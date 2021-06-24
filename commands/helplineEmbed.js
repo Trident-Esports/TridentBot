@@ -41,7 +41,7 @@ module.exports = {
                 'This is a ticket for general discord help.\n `Command = .ticket`'
             )
             .addField(
-                '**Queens Babies**',
+                '**Queen\'s Babies**',
                 "This is a ticket for help with anything women related that maybe guys might not understand or something abit personal that our selected women's helpers can help with.\n `Command = .qbticket`"
             )
             .addField(

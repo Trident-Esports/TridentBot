@@ -45,9 +45,9 @@ module.exports = {
 
         if(args && args[0] && Object.keys(mod_commands).indexOf(args[0]) !== -1) {
             let key = args[0]
-            mod_commands = {
-                key: mod_commands[args[0]]
-            }
+            let tmp = mod_commands[key]
+            mod_commands = {}
+            mod_commands[key] = tmp
         }
 
         newEmbed.addField(

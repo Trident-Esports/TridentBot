@@ -35,6 +35,7 @@ module.exports = {
     aliases: profile.aliases,
     description: profile.title,
     async execute(message, args, client, Discord) {
+        //FIXME: EmojiIDs
         let emojiIDs = {
             "745409743593406634": { // VillainsBot
                 "apex":         "852638910751309865",
@@ -60,6 +61,8 @@ module.exports = {
         if(gameID != "") {
             if(gameID.startsWith("val")) {
                 gameID = "val"
+            } else if(gameID == "rl") {
+                gameID = "rocketleague"
             }
             filepath += '/' + gameID
             if(teamType != "") {

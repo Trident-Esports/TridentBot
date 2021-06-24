@@ -44,6 +44,9 @@ module.exports = {
                 activity = activityIndexes.indexOf(args[0])
             }
         } else {
+            if((parseInt(args[0]) < 0) || (parseInt(args[0]) >= activityIndexes.length)) {
+                args[0] = activity
+            }
             activity = parseInt(args[0])
             if(activityIndexes[activity] == "moo") {
                 activity = 2
@@ -59,7 +62,7 @@ module.exports = {
         if (activity !== "") {
             client.user.setActivity(defaults.prefix + "help", {type:activity}) //you can change that to whatever you like
 
-            return message.channel.send('Status changed succesfully')
+            return message.channel.send('Status changed succesfully: ' + activityIndexes[activity])
         }
     }
 }

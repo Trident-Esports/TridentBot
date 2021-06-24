@@ -36,6 +36,7 @@ module.exports = (client, Discord) => {
 
     let roster_aliases = {}
 
+    //FIXME: EmojiIDs
     let emojiIDs = {
         "745409743593406634": { // VillainsBot
             "apex":         "852638910751309865",
