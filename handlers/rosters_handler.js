@@ -6,8 +6,6 @@ const Discord = require('discord.js')
 const {
     MessageEmbed
 } = require("discord.js");
-const { MessageButton } = require('discord-buttons');
-const { clear } = require('console');
 
 let walk = function (dir) {
     let results = [];
@@ -108,11 +106,6 @@ module.exports = (client, Discord) => {
                     .setThumbnail(defaults.thumbnail)
                     .setFooter(defaults.footer.msg, defaults.footer.image)
                     .setTimestamp();
-                
-                // const btnNext = new MessageButton()
-                //     .setStyle('green')
-                //     .setLabel('Next Match')
-                //     .setID('NextM')
 
                 for (let [groupName, groupAttrs] of Object.entries(profile.members)) {
                     let userSTR = "";
@@ -296,7 +289,8 @@ module.exports = (client, Discord) => {
                         //FIXME: Cannot send an empty message
                     }
                 }
-                client.commands.set(roster.aliases[0] + 's', newCommand);
+                // client.commands.set(roster.aliases[0] + 's', newCommand);
+                client.commands.set(roster.aliases[0] + 's', schedule);
             }
         }
     }

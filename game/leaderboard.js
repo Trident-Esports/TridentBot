@@ -23,14 +23,6 @@ module.exports = {
 
         let stripe = defaults["stripe"]
 
-        console.log(lb);
-
-        let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-        let DEV = GLOBALS.DEV;
-
-        let stripe = defaults["stripe"]
-
         let props = {
             "title": "***Leaderboard***",
             "url": "https://discord.com/KKYdRbZcPT"
