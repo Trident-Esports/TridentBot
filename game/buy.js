@@ -1,3 +1,4 @@
+const fs = require('fs');
 const inventoryModel = require('../models/inventorySchema');
 const profileModel = require('../models/profileSchema');
 

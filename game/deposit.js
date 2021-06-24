@@ -54,6 +54,7 @@ module.exports = {
                 defaults.footer = GLOBALS.footer
             }
 
+            props["stripe"] = stripe
             const newEmbed = new MessageEmbed()
                 .setColor(props.stripe)
                 .setTitle(props.title)

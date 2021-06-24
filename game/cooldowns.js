@@ -28,6 +28,14 @@ module.exports = {
                 break;
         }
 
+        // Hack in my stuff to differentiate
+        if (DEV) {
+            stripe = GLOBALS["stripe"]
+            defaults.footer = GLOBALS.footer
+        }
+
+        props["stripe"] = stripe
+
         const cooldownEmbed = new MessageEmbed()
             .setColor(props.stripe)
             .setTitle(props.title)
@@ -71,7 +79,6 @@ module.exports = {
         //     )
         //     console.log(cd)
         // }
-
 
         message.channel.send(cooldownEmbed);
     }

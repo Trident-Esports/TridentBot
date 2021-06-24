@@ -1,4 +1,4 @@
-const Discord = require('discord.js');  // Base Discord module
+const Discord = require('discord.js'); // Base Discord module
 
 const client = new Discord.Client({
     partials: ["MESSAGE", "CHANNEL", "REACTION"]
@@ -6,7 +6,7 @@ const client = new Discord.Client({
 
 const mongoose = require('mongoose'); // Mongoose
 
-const Levels = require('discord-xp')  // Discord Game XP
+const Levels = require('discord-xp') // Discord Game XP
 
 const {
     MessageEmbed
@@ -19,7 +19,7 @@ SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
 
 const UsedCommand = new Set();
 
-const prefix = '.'  // Default prefix
+const prefix = '.' // Default prefix
 
 Levels.setURL(SENSITIVE.client.mongoDB);
 client.commands = new Discord.Collection();
@@ -39,12 +39,12 @@ client.events = new Discord.Collection();
 
 // Connect to DB
 mongoose.connect(
-    SENSITIVE.client.mongoDB,
-    {
-        useNewURLParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false
-    })
+        SENSITIVE.client.mongoDB,
+        {
+            useNewURLParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false
+        })
     .then(() => {
         console.log("Connected to the Database!");
     })
@@ -128,8 +128,8 @@ client.on('message', message => {
     }
 
     if (message.content.toLowerCase().includes('lol'))
-    if (message.author.bot || blacklist.guildIDs.indexOf(message.guild.id) > -1) return;
-    else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
+        if (message.author.bot || message.guild.id === '788021898146742292') return;
+        else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
 });
 
 client.login(SENSITIVE.client.login);

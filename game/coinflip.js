@@ -1,5 +1,4 @@
 const profileModel = require("../models/profileSchema");
-const Levels = require('discord-xp');
 const {
     MessageEmbed
 } = require("discord.js");

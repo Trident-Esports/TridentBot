@@ -153,6 +153,7 @@ module.exports = {
                 }
                 let title = span.substr(0,1).toUpperCase() + span.slice(1) + " " + profile.title + " Schedule"
 
+
                 let newEmbed = new MessageEmbed()
                     .setColor(profile.stripe)
                     .setURL(profile.url)

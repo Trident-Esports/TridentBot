@@ -148,7 +148,6 @@ module.exports = {
             } else if (number <= special) {
               minions_increase
 
-
               sendEmbed.setColor("BLUE")
                 .setDescription(`You go to search the ${m.content} and for some reason find ${RANDOM_MINIONS} Minions following you home.\n\nEarned ${randomXP} XP`)
 
