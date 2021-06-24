@@ -25,13 +25,11 @@ module.exports = {
 
         const target = message.mentions.members.first() || message.guild.members.cache.get(args[0])
 
-        if (!target && this.cooldown === 0) {
-            // this.cooldown = 0;
+        if (!target) {
             return message.channel.send('Bruh, you can\'t fight no one.');
         }
 
-        if (target.id === message.author.id && this.cooldown === 0) {
-            // this.cooldown = 0
+        if (target.id === message.author.id) {
             return message.channel.send('You cannot fight yourself wtf?!?');
         }
 
@@ -46,9 +44,8 @@ module.exports = {
             }
         }
 
-        if (target.id === props["botID"] && this.cooldown === 0) {
-            this.cooldown = 60 * 5
-            return message.channel.send("Now who's the Bot? 🤡\nGo sit in timeout for 5 minutes!");
+        if (mention.user.bot) {
+            return message.channel.send("Now who's the Bot?🤡\nFight someone who isn't a bot dummy!");
         }
 
         const Contestants = [

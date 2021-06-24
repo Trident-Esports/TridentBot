@@ -1,5 +1,4 @@
 const fs = require('fs');
-
 const {
     MessageEmbed
 } = require("discord.js");
@@ -13,10 +12,11 @@ module.exports = {
     async execute(message, args, profileData) {
         var amount = args[0].toLowerCase()
 
-        if (amount == 'all') amount = profileData.gold;
-        if (amount == 'half') amount = profileData.gold / 2;
+        if (amount == 'all') amount = parseInt(profileData.gold);
+        if (amount == 'half') amount = parseInt(profileData.gold / 2);
 
-        if (amount % 1 != 0 || amount <= 0) return message.channel.send('Deposit amount must be a whole number');
+        if (amount % 1 != 0 || amount <= 0) return message.channel.send(`Deposit amount must be a whole number (${amount} given)`);
+
         try {
             if (amount > profileData.gold) return message.channel.send(`You only have 💰 ${profileData.gold}`)
             await profileModel.findOneAndUpdate({

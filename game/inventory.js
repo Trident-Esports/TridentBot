@@ -1,19 +1,48 @@
 const {
     MessageEmbed
 } = require('discord.js');
+const fs = require('fs');
+const inventoryModel = require('../models/inventorySchema');
 
-const inventoryModel = require('../models/inventorySchema')
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
 
 module.exports = {
     name: "inventory",
     aliases: ['inv', 'i'],
     description: "View the players inventory",
 
-    async execute(message) {
+    async execute(message,args) {
 
-        var user = message.author || message.mentions.members.first();
+        let stripe = defaults["stripe"]
+
+        let props = {}
+        
+        switch (stripe) {
+            default:
+                stripe = "RANDOM";
+                break;
+        }
+    
+        // Hack in my stuff to differentiate
+        if (DEV) {
+            stripe = GLOBALS["stripe"]
+            defaults.footer = GLOBALS.footer
+        }
+    
+        props["stripe"] = stripe
+
+        let mentionedMember = null;
+        if (args.length) {
+            mentionedMember = message.mentions.members.first().user;
+        } else {
+            mentionedMember = message.author;
+        }
+
+        if (!mentionedMember) return message.channel.send("That user does not exist");
         const inventoryData = await inventoryModel.findOne({
-            userID: user.id
+            userID: mentionedMember.id
         });
 
         var tempItems = [];
@@ -22,8 +51,6 @@ module.exports = {
         for (var x = 0; x < inventoryData.items.length; x++) {
             tempItems.push(inventoryData.items[x]);
         }
-
-        console.log(inventoryData.items);
 
         var placed = false;
         for (var x = 0; x < tempItems.length; x++) {
@@ -58,8 +85,6 @@ module.exports = {
             tempConsumables.push(inventoryData.consumables[x]);
         }
 
-        console.log(inventoryData.consumables);
-
         var placed = false;
         for (var x = 0; x < tempConsumables.length; x++) {
             placed = false;
@@ -93,8 +118,6 @@ module.exports = {
             tempPowers.push(inventoryData.powers[x]);
         }
 
-        console.log(inventoryData.powers);
-
         var placed = false;
         for (var x = 0; x < tempPowers.length; x++) {
             placed = false;
@@ -123,18 +146,15 @@ module.exports = {
 
         console.log(newItems, newConsumables, newPowers);
 
-        let footer = {
-            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-            "msg": "This bot was Created by Noongar1800#1800"
-        }
+        let msg = `***${mentionedMember}'s Inventory***`
 
         const embed = new MessageEmbed()
-            .setColor('RANDOM')
-            .setDescription(`***${message.author}'s Inventory***`)
+            .setColor(props.stripe)
+            .setDescription(msg)
             .addField('***Items***', newItems, true)
             .addField('***Consumables***', newConsumables, true)
             .addField('***Powers***', newPowers, true)
-            .setFooter(footer["msg"], footer["image"])
+            .setFooter(defaults.footer.msg, defaults.footer.image)
             .setTimestamp();
 
         message.channel.send(embed);

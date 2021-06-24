@@ -1,7 +1,13 @@
-const { MessageEmbed } = require('discord.js');
+const {
+    MessageEmbed
+} = require('discord.js');
 const profileModel = require("../models/profileSchema");
-
 const Levels = require('discord-xp');
+const fs = require('fs');
+
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
 
 module.exports = {
     name: 'rob',
@@ -11,21 +17,50 @@ module.exports = {
 
     async execute(message, profileData) {
 
+
+        let stripe = defaults["stripe"]
+
+        let props = {}
+
+        switch (stripe) {
+            default:
+                stripe = "RANDOM";
+                break;
+        }
+
+        // Hack in my stuff to differentiate
+        if (DEV) {
+            stripe = GLOBALS["stripe"]
+            defaults.footer = GLOBALS.footer
+        }
+
+        props["stripe"] = stripe
+
         const randomXP = Math.floor(Math.random() * 120) + 30;
         const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
 
         const user = message.author
         const mention = message.mentions.members.first();
+        
         if (!mention) {
             this.cooldown = 0;
             return message.reply('Whom Do You Want Rob?');
+        }
+        if (mention.user.bot) {
+            return message.channel.send("Now who's the Bot?🤡\nRob someone who isn't a bot dummy!");
         }
         if (user.id === mention.id) {
             this.cooldown = 0;
             return message.reply("You can't rob yourself dummy");
         }
-        const usermoney = profileModel.findOne({ userID: user.id, gold: profileData.gold }) // Same As balance.js // Get User Money
-        const mentionmoney = profileModel.findOne({ userID: mention.id, gold: profileData.gold }) // Same As balance.js // Get Mentioned User Money
+        const usermoney = profileModel.findOne({
+            userID: user.id,
+            gold: profileData.gold
+        }) // Same As balance.js // Get User Money
+        const mentionmoney = profileModel.findOne({
+            userID: mention.id,
+            gold: profileData.gold
+        }) // Same As balance.js // Get Mentioned User Money
 
         const random = (min, max) => {
             return Math.floor(Math.random() * (max - min)) + min
@@ -47,87 +82,84 @@ module.exports = {
             try {
                 let sendEmbed = new MessageEmbed()
                     .setTimestamp()
-                    .setColor("RANDOM")
+                    .setColor(props.stripe)
                 if (final === 'Success') {
 
                     const amount = Math.floor(Math.random() * 1400) + 100 // Min Is 100 And Max Is 1500(100+1400)
 
                     if (mentionmoney.gold < amount) {
-                        let(amount === mentionmoney.gold)
+                        let (amount === mentionmoney.gold)
                     }
 
-                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
+                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({
+                            dynamic: true
+                        }))
                         .setTitle(`You try to rob them.`)
                         .setDescription(`<@${user.id}> Robbed <@${mention.id}> And Got Away With **$${amount}**\nEarned ${randomXP} XP`)
+                        .setFooter(defaults.footer.msg, defaults.footer.image)
 
-                    await profileModel.findOneAndUpdate(
-                        {
-                            userID: user.id
+                    await profileModel.findOneAndUpdate({
+                        userID: user.id
+                    }, {
+                        $inc: {
+                            gold: amount,
                         },
-                        {
-                            $inc: {
-                                gold: amount,
-                            },
-                        }); // Add Money To User's Wallet
-                    await profileModel.findOneAndUpdate(
-                        {
-                            userID: mention.id
+                    }); // Add Money To User's Wallet
+                    await profileModel.findOneAndUpdate({
+                        userID: mention.id
+                    }, {
+                        $inc: {
+                            gold: -amount,
                         },
-                        {
-                            $inc: {
-                                gold: -amount,
-                            },
-                        });// Substract Money From Mention(Robbed) User's Wallet
-                    return message.channel.send(embed);
-                }
-                else if (final === 'Failed') {
-                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
+                    }); // Substract Money From Mention(Robbed) User's Wallet
+                    return message.channel.send(sendEmbed);
+                } else if (final === 'Failed') {
+                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({
+                            dynamic: true
+                        }))
                         .setTitle(`You try to rob them.`)
                         .setDescription(`<@${user.id}> tried To Rob <@${mention.id}>. You realise they are poor.\nEarned ${randomXP} XP`)
-                }
-                else if (final === 'Paid') {
+                        .setFooter(defaults.footer.msg, defaults.footer.image)
+                    } else if (final === 'Paid') {
 
                     const amount = Math.floor(Math.random() * 1400) + 100 // Min Is 100 And Max Is 1500(100+1400)
 
-                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({ dynamic: true }))
+                    sendEmbed.setAuthor(`Holding your hostage at Gunpoint.`, user.displayAvatarURL({
+                            dynamic: true
+                        }))
                         .setTitle(`You try to rob them.`)
                         .setDescription(`<@${user.id}> tried to rob <@${mention.id}>. You were Caught and instead <@${mention.id}> stole your gun and robbed you of **$${amount}**.\nWHAT A FAIL!\n\n<@${user.id}> Earned ${randomXP} XP`)
+                        .setFooter(defaults.footer.msg, defaults.footer.image)
 
-                    await profileModel.findOneAndUpdate(
-                        {
-                            userID: mention.id
+                    await profileModel.findOneAndUpdate({
+                        userID: mention.id
+                    }, {
+                        $inc: {
+                            gold: amount,
                         },
-                        {
-                            $inc: {
-                                gold: amount,
-                            },
-                        }); // Add Money Mentioned(Robbed) User's Wallet
-                    await profileModel.findOneAndUpdate(
-                        {
-                            userID: user.id
+                    }); // Add Money Mentioned(Robbed) User's Wallet
+                    await profileModel.findOneAndUpdate({
+                        userID: user.id
+                    }, {
+                        $inc: {
+                            gold: -amount,
                         },
-                        {
-                            $inc: {
-                                gold: -amount,
-                            },
-                        }); // Substract Money From User's Wallet
+                    }); // Substract Money From User's Wallet
                 }
 
                 if (hasLeveledUP) {
 
                     const user = await Levels.fetch(message.author.id);
                     const target = message.author
-                    await profileModel.findOneAndUpdate(
-                        {
-                            userID: target.id,
-                        },
-                        {
-                            $inc: {
-                                gold: 1000,
-                                minions: 1
-                            }
-                        });
-                        sendEmbed.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
+                    await profileModel.findOneAndUpdate({
+                        userID: target.id,
+                    }, {
+                        $inc: {
+                            gold: 1000,
+                            minions: 1
+                        }
+                    });
+                    sendEmbed.setFooter(`${message.author.username} You just Advanced to Level ${user.level}!\nYou have gained: 💰+1000 , 🐵+1`)
                 }
 
                 return message.channel.send(sendEmbed);

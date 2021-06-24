@@ -55,30 +55,25 @@ module.exports = {
         var cooldowns = (daily_cooldown["usedcooldowns"])
         console.log(cooldowns);
 
-        // if (daily_cooldown === 0) {
-        //     cooldownEmbed.addField('🕐', '**DAILY**', true)
-        // } else {
-        //     cooldownEmbed.addField('✅', '**DAILY**', true)
-        // }
-
-        // for(let cdType in [
-        //     "beg",
-        //     "search",
-        //     "fight",
-        //     "rob"
-        // ]) {
-        //     let cd = await cooldownsModel.find({
-        //         userID: message.author.id,
-        //         usedcooldowns: cdType
-        //     })
-        //     let icon = ((cd === 0) ? "🕐" : "✅")
-        //     cooldownEmbed.addField(
-        //         icon,
-        //         "**" + cdType + "**",
-        //         true
-        //     )
-        //     console.log(cd)
-        // }
+        for(let cdType of [
+            "daily",
+            "beg",
+            "search",
+            "fight",
+            "rob"
+        ]) {
+            let cd = await cooldownsModel.find({
+                userID: message.author.id,
+                usedcooldowns: cdType
+            })
+            let icon = ((cd === 0) ? "🕐" : "✅")
+            cooldownEmbed.addField(
+                icon,
+                "**" + cdType + "**",
+                true
+            )
+            console.log(cd)
+        }
 
         message.channel.send(cooldownEmbed);
     }

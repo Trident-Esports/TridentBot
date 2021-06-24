@@ -77,6 +77,7 @@ module.exports = {
 
       let sendEmbed = new MessageEmbed()
         .setTitle(`${message.author.username} searched the ${m.content} 🕵️`)
+        .setFooter(defaults.footer.msg, defaults.footer.image)
         .setTimestamp();
 
       if (hasLeveledUP) {

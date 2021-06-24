@@ -42,7 +42,7 @@ module.exports = {
         }
       );
 
-      return message.channel.send(`This player has mysteriously lost ${amount} Gold!`);
+      return message.channel.send(`${target} has mysteriously lost ${amount} Gold!`);
     } catch (err) {
       console.log(err);
     }

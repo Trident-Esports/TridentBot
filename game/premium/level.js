@@ -1,21 +1,22 @@
 const fs = require('fs');
+
 const Levels = require('discord-xp');
 const { MessageEmbed } = require('discord.js');
-
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-let DEV = GLOBALS.DEV;
 
 module.exports = {
     name: 'level',
     aliases: ['lvl'],
     description: "This is a command to check your level progress",
-    async execute(message, args, cmd, client) {
+    async execute(message, args) {
         let mentionedMember = message.mentions.members.first() || message.guild.members.cache.get (args[0]);
         if (!mentionedMember) mentionedMember = message.member;
 
-        const target = await Levels.fetch(mentionedMember.user.id, message.guild.id);
+        const target = await Levels.fetch(mentionedMember.user.id);
         if (!target) return message.channel.send("This member doesn't have a Level.😢");
+
+        let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+        let DEV = GLOBALS.DEV;
 
         let stripe = defaults["stripe"]
 

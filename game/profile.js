@@ -67,7 +67,7 @@ module.exports = {
             .addField(` 🏦 ${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`, 'Bank', true)
             .addField(` 🐵 ${profileData.minions}`, 'Minions', true)
             .addField(` ${XPBoostData.xpboost}%`, 'XPBoost', true)
-            .setThumbnail(mentionedMember.user.displayAvatarURL({ dynamic: true, format: 'png' }))
+            .setThumbnail(mentionedMember.displayAvatarURL({ dynamic: true, format: 'png' }))
             .setFooter(defaults.footer.msg, defaults.footer.image)
             .setTimestamp();
 

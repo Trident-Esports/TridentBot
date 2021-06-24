@@ -3,9 +3,10 @@ const profileModel = require("../models/profileSchema");
 module.exports = {
   name: "refund",
   aliases: [],
-  permissions: ["ADMINISTRATOR"],
+  permissions: [],
   description: "refunds a player some coins",
-  async execute(message, args, cmd, client, discord, profileData) {
+  async execute(message, args) {
+
     APPROVED_USERIDS = [
       "263968998645956608", // Mike
       "532192409757679618", // Noongar
@@ -42,7 +43,7 @@ module.exports = {
         }
       );
 
-      return message.channel.send(`This player has been given ${amount} Gold!`);
+      return message.channel.send(`This player has been given ${amount.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold!`);
     } catch (err) {
       console.log(err);
     }

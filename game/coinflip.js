@@ -2,6 +2,11 @@ const profileModel = require("../models/profileSchema");
 const {
     MessageEmbed
 } = require("discord.js");
+const fs = require('fs');
+
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let DEV = GLOBALS.DEV;
 
 module.exports = {
     name: "coinflip",
@@ -26,7 +31,7 @@ module.exports = {
 
         if (gambledAmount < 500) return message.channel.send('You must gamble atleast 💰500!');
 
-        if (isNaN(gambledAmount) || undefined) return message.channel.send(`${message.author}, the correct usage of this command is \`.cf [$]\`.\nSee what you can buy with \`.shop\``);
+        if (isNaN(gambledAmount) || undefined) return message.channel.send(`${message.author}, the correct usage of this command is \`.cf [$]\`.`);
 
         const variables = [
             "Heads",
@@ -47,6 +52,8 @@ module.exports = {
             time: 15000
         });
 
+        let stripe = defaults["stripe"]
+
         let props = {
             "title": "**Coin Flip**",
             "thumbnail": "https://media.tenor.com/images/60b3d58b8161ad9b03675abf301e8fb4/tenor.gif",
@@ -64,13 +71,24 @@ module.exports = {
                 "title": "**OMG**",
             },
         }
-        let footer = {
-            "image": "https://cdn.discordapp.com/avatars/532192409757679618/73a8596ec59eaaad46f561b4c684564e.png",
-            "msg": "This bot was Created by Noongar1800#1800"
-        }
+        
         let thumbnail = {
             "image": "https://media.tenor.com/images/60b3d58b8161ad9b03675abf301e8fb4/tenor.gif"
         }
+
+        switch (stripe) {
+            default:
+                stripe = "#B2EE17";
+                break;
+        }
+
+        // Hack in my stuff to differentiate
+        if (DEV) {
+            stripe = GLOBALS["stripe"]
+            defaults.footer = GLOBALS.footer
+        }
+
+        props["stripe"] = stripe
 
         COLLECTOR.on("collect", async (m) => {
 
@@ -100,8 +118,7 @@ module.exports = {
                     COINFLIP_EMBED.setDescription(`You chose ${m.content} and won 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.`)
                     return message.channel.send(COINFLIP_EMBED);
 
-                }
-                else if (number <= Side && m.content.toLowerCase() === 'side') {
+                } else if (number <= Side && m.content.toLowerCase() === 'side') {
                     await profileModel.findOneAndUpdate({
                         userID: message.author.id,
                     }, {
@@ -112,8 +129,9 @@ module.exports = {
                     });
                     console.log(number)
                     COINFLIP_EMBED.setColor(props["special"]["embedColor"])
-                    COINFLIP_EMBED.setTitle(props["special"]["title"])
-                    COINFLIP_EMBED.setDescription(`You go to flip the coin and it lands on its ${m.content} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours!`)
+                    .setTitle(props["special"]["title"])
+                    .setDescription(`You go to flip the coin and it lands on its ${m.content} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours!`)
+                    .setFooter(defaults.footer.msg, defaults.footer.image)
                     return message.channel.send(COINFLIP_EMBED);
                 } else {
                     await profileModel.findOneAndUpdate({
@@ -125,8 +143,9 @@ module.exports = {
                     });
                     console.log(number)
                     COINFLIP_EMBED.setColor(props["fail"]["embedColor"])
-                    COINFLIP_EMBED.setTitle(props["fail"]["title"])
-                    COINFLIP_EMBED.setDescription(`You chose ${m.content} and the coin didn't land on that. this means you just lost 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n Maybe a bad idea or just Unlucky.`)
+                    .setTitle(props["fail"]["title"])
+                    .setDescription(`You chose ${m.content} and the coin didn't land on that. this means you just lost 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n Maybe a bad idea or just Unlucky.`)
+                    .setFooter(defaults.footer.msg, defaults.footer.image)
                     message.channel.send(COINFLIP_EMBED);
                 }
             } catch (err) {
@@ -149,10 +168,11 @@ module.exports = {
         });
 
         const Choose_embed = new MessageEmbed()
+            .setColor(props["stripe"])
             .setTitle(props["title"])
             .setDescription(`<@${message.author.id}>\n${props["coinflip"]}\n\`${chosenVariable.join("` `")}\``)
             .setThumbnail(thumbnail["image"])
-            .setFooter(footer["msg"], footer["image"])
+            .setFooter(defaults.footer.msg, defaults.footer.image)
             .setTimestamp();
 
         message.channel.send(Choose_embed);

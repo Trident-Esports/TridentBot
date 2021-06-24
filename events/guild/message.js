@@ -85,8 +85,6 @@ module.exports = async (Discord, client, message) => {
             powers: ['💉']
         });
         inventory.save();
-
-
     }
 
     let cooldownsData;
