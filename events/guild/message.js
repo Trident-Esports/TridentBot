@@ -176,7 +176,10 @@ module.exports = async (Discord, client, message) => {
     setTimeout(() => time_stamps.delete(message.author.id), cooldown_amount);
 
     if (command) {
-
-        command.execute(message, args, cmd, client, Discord, profileData);
+        if (typeof command.execute === "function") {
+            command.execute(message, args, cmd, client, Discord, profileData);
+        } else if (typeof command.run === "function") {
+            command.run(client, message, args);
+        }
     }
 }

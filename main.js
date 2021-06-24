@@ -1,6 +1,7 @@
 const Discord = require('discord.js'); // Base Discord module
+const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
 
-const client = new Discord.Client({
+const client = new MoodyClient({
     partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });  // Discord Client object
 
@@ -35,7 +36,6 @@ client.events = new Discord.Collection();
 ].forEach(handler => {
     require(`./handlers/${handler}`)(client, Discord);
 })
-
 
 // Connect to DB
 mongoose.connect(
@@ -131,5 +131,18 @@ client.on('message', message => {
         if (message.author.bot || message.guild.id === '788021898146742292') return;
         else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
 });
+
+const handler = new Handler(client, {
+    prefix: prefix,
+    token: SENSITIVE.client.login,
+    commandsPath: __dirname + "/moody/commands",
+    owners: [
+        532192409757679618, // Noongar
+        263968998645956608  // Mike
+    ]
+});
+(async () => {
+    await handler.start();
+})();
 
 client.login(SENSITIVE.client.login);
