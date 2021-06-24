@@ -14,15 +14,7 @@ module.exports = class WeatherCommand extends BaseCommand {
 
     async run(client, message, args) {
         let props = {
-            color:        "",
-            author:       {},
-            thumbnail:    "",
-            title:        { text: "Weather" },
-            description:  "",
-            fields:       {},
-            image:        "",
-            footer:       {},
-            pages:        false
+            title: { text: "Weather" }
         }
 
         let degreeType = "C"
@@ -81,17 +73,7 @@ module.exports = class WeatherCommand extends BaseCommand {
                     }
                 ]
             }
-            let embed = new VillainsEmbed(
-                props.color,
-                props.author,
-                props.thumbnail,
-                props.title,
-                props.description,
-                props.fields,
-                props.image,
-                props.footer,
-                props.pages
-            )
+            let embed = new VillainsEmbed(props)
             message.channel.send(embed)
         })
     }

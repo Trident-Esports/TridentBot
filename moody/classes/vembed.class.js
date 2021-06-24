@@ -6,107 +6,100 @@ let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 let DEV = GLOBALS.DEV
 
 module.exports = class VillainsEmbed extends MessageEmbed {
-    constructor(
-        color = "",
-        author = {
-            name: "",
-            avatar: "",
-            url: ""
-        },
-        thumbnail = "",
-        title = {
-            text: "",
-            url: ""
-        },
-        description = "",
-        fields = {},
-        image = "",
-        footer = defaults.footer,
-        pages = false
-    ) {
-        if (title?.text && title.text.trim() == "" && title?.url && title.url.trim() != "") {
-            title.text = "Source"
+    constructor(props = {}) {
+        if (
+          (
+            (!props?.title?.text) ||
+            (props?.title?.text && props.title.text.trim() == "")
+          ) &&
+          (props?.title?.url && props.title.url.trim() != "")
+        ) {
+            props.title.text = "Source"
         }
-        if (thumbnail.trim() == "") {
-            thumbnail = defaults.thumbnail
+        if ((!props?.thumbnail) || (props?.thumbnail && props.thumbnail.trim() == "")) {
+            props.thumbnail = defaults.thumbnail
         }
-        if (description.trim() == "") {
-            description = "** **"
+        if ((!props?.description) || (props?.description && props.description.trim() == "")) {
+            props.description = "** **"
         }
 
-        if (color.trim() == "") {
-            switch (color) {
+        if ((!props?.color) || (props?.color && props.color.trim() == "")) {
+            switch (props.color) {
                 default:
-                    color = defaults.stripe;
+                    props.color = defaults.stripe;
                     break;
             }
+        } else {
+            props.color = defaults.stripe;
         }
 
         // Hack in my stuff to differentiate
         if (DEV) {
-            color = GLOBALS["stripe"]
-            footer = GLOBALS.footer
+            props.color = GLOBALS["stripe"]
+            props.footer = GLOBALS.footer
+        } else if(!props?.footer) {
+            props.footer = defaults.footer
         }
 
         // ERROR
-        if (title?.text && title.text.toLowerCase().indexOf("error") > -1) {
-            color = "#ff0000" // RED
+        if (props?.title?.text && props.title.text.toLowerCase().indexOf("error") > -1) {
+            props.color = "#ff0000" // RED
         }
 
         super({
-            color: color,
+            color: props.color,
             description: "Something got stuffed up here..."
         })
 
         // Footer
-        if(!pages) {
-            this.setFooter(footer.msg, footer.image)
+        if((!props?.pages) || (!props.pages)) {
+            this.setFooter(props.footer.msg, props.footer.image)
         } else {
-            if(description != "") {
-                description += "\n\n"
+            if(props.description != "") {
+                props.description += "\n\n"
             }
-            description += footer.msg
+            props.description += props.footer.msg
         }
 
         // Stripe
-        this.setColor(color)
+        this.setColor(props.color)
 
         // Author
-        if(thumbnail != defaults.thumbnail) {
+        if(props.thumbnail != defaults.thumbnail) {
             // Author:    NO
             // Title:     Y/N
             // URL:       Y/N
             // Thumbnail: YES
             // Hijack author spot to have default Thumbnail
             this.setAuthor(
-                title?.text && title.text.trim() != "" ? title.text : "",
+                props?.title?.text && props.title.text.trim() != "" ? props.title.text : "",
                 defaults.thumbnail,
-                title?.url && title.url.trim() != "" ? title.url : ""
+                props?.title?.url && props.title.url.trim() != "" ? props.title.url : ""
             )
         } else {
-            if(author?.name && author.name.trim() != "") {
+            if(props?.author?.name && props.author.name.trim() != "") {
                 // Author: YES
-                this.setAuthor(author.name, author.avatar, author.url)
+                this.setAuthor(props.author.name, props.author.avatar, props.author.url)
             }
             // Title:  Y/N
             // URL:    Y/N
-            if(title?.text && title.text.trim() != "") {
-                this.setTitle("***" + title.text + "***")
+            if(props?.title?.text && props.title.text.trim() != "") {
+                this.setTitle("***" + props.title.text + "***")
             }
-            if(title?.url && title.url.trim() != "") {
-                this.setURL(title.url)
+            if(props?.title?.url && props.title.url.trim() != "") {
+                this.setURL(props.title.url)
             }
         }
 
         // Thumbnail
-        this.setThumbnail(thumbnail)
+        this.setThumbnail(props.thumbnail)
 
         // Body Description
-        this.setDescription(description)
+        this.setDescription(props.description)
 
         // Fields
-        if (fields.length) {
-            for (let field of fields) {
+        if (props?.fields?.length) {
+            for (let field of props.fields) {
                 let fName = field?.name ? field.name : ""
                 let fVal = field?.value ? field.value : ""
                 let fInl = field?.inline ? field.inline : false
@@ -115,8 +108,8 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // Body Image
-        if (image != "") {
-            this.setImage(image)
+        if (props?.image != "") {
+            this.setImage(props.image)
         }
 
         // Timestamp
