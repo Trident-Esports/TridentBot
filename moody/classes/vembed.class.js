@@ -48,6 +48,11 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             footer = GLOBALS.footer
         }
 
+        // ERROR
+        if (title?.text && title.text.toLowerCase().indexOf("error") > -1) {
+            color = "#ff0000" // RED
+        }
+
         super({
             color: color,
             description: "Something got stuffed up here..."
