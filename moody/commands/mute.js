@@ -11,6 +11,7 @@ module.exports = class MuteCommand extends BaseCommand {
     constructor() {
         super({
             name: "mute",
+            aliases: [ "silence" ],
             category: "admin",
             description: "Mute user"
         })
