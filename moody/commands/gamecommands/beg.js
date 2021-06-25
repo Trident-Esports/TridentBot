@@ -29,6 +29,16 @@ module.exports = class BegCommand extends GameCommand {
             $inc: inc,
         });
 
+        let emojis = {
+            "level":    "🏆",
+            "xp":       "✨",
+            "life":     "💚",
+            "gold":     "💰",
+            "bank":     "🏦",
+            "minions":  "🐵",
+            "xpboost":  "💫"
+        }
+
         const hasLeveledUP = await this.Levels.appendXp(message.author.id, message.guild.id, randomXP);
 
         if (hasLeveledUP) {
@@ -49,7 +59,7 @@ module.exports = class BegCommand extends GameCommand {
 
             let msg = [
                 `You just Advanced to Level ${user.level.toLocaleString()}!`,
-                `You have gained: 💰${gainedmoney.toLocaleString()}, 🐵${gainedminions.toLocaleString()}`
+                `You have gained: ${emojis.gold}${gainedmoney.toLocaleString()}, ${emojis.minions}${gainedminions.toLocaleString()}`
             ].join(" · ")
 
             props.footer.msg = msg
@@ -58,12 +68,12 @@ module.exports = class BegCommand extends GameCommand {
         props.description = `*${message.author} begs...*`
         props.fields = [
             {
-                name: `💰${randomNumber.toLocaleString()}`,
+                name: `${emojis.gold}${randomNumber.toLocaleString()}`,
                 value: "Gold",
                 inline: true
             },
             {
-                name: `✨${randomXP.toLocaleString()}`,
+                name: `${emojis.xp}${randomXP.toLocaleString()}`,
                 value: "XP",
                 inline: true
             }
