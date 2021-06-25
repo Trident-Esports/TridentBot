@@ -16,7 +16,7 @@ module.exports = class SurveyCommand extends BaseCommand {
             title: { text: "Survey" }
         }
         let emoji = {
-            "yes": "✔️",
+            "yes": "✅",
             "no": "❌"
         }
         let channelName = "survey"
@@ -25,7 +25,7 @@ module.exports = class SurveyCommand extends BaseCommand {
             props.description = "Survey channel doesn't exist!"
         } else {
             props.author = {
-                text: message.author.tag,
+                name: message.author.tag,
                 avatar: message.author.displayAvatarURL({ dynamic: true })
             }
             props.description = args.join(" ")
@@ -38,7 +38,6 @@ module.exports = class SurveyCommand extends BaseCommand {
                 .then((msg) => {
                     msg.react(emoji.yes)
                     msg.react(emoji.no)
-                    message.delete()
                 })
         }
     }
