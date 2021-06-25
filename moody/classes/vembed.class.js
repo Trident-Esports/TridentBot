@@ -40,6 +40,19 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             description: "Something got stuffed up here..."
         })
 
+        let haveFooterMsg = props?.footer?.msg
+        let footerMsgNotNone = haveFooterMsg && props.footer.msg != "<NONE>"
+        let havePages = props?.pages
+
+        // Footer
+        if(footerMsgNotNone) {
+            if(DEV || havePages) {
+                if(props.description != "") {
+                    props.description += "\n\n"
+                }
+                props.description += ">>" + props.footer.msg
+            }
+        }
         // Hack in my stuff to differentiate
         if (DEV) {
             props.color = GLOBALS["stripe"]
@@ -48,6 +61,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         } else if(!props?.footer) {
             props.footer = defaults.footer
         }
+        this.setFooter(props.footer.msg, props.footer.image)
 
         // ERROR
         if (
@@ -59,18 +73,6 @@ module.exports = class VillainsEmbed extends MessageEmbed {
 
         // Color
         this.setColor(props.color)
-
-        // Footer
-        if(props?.footer?.msg && props.footer.msg != "<NONE>") {
-            if((!props?.pages) || (!props.pages)) {
-                this.setFooter(props.footer.msg, props.footer.image)
-            } else {
-                if(props.description != "") {
-                    props.description += "\n\n"
-                }
-                props.description += props.footer.msg
-            }
-        }
 
         // Stripe
         this.setColor(props.color)

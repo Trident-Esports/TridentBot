@@ -1,11 +1,7 @@
-const {
-    BaseCommand
-} = require('a-djs-handler');
-const GameEmbed = require('../../classes/gameembed.class');
-const profileModel = require("../../../models/profileSchema");
-const Levels = require('discord-xp');
+const GameCommand = require('../../classes/gamecommand.class');
+const VillainsEmbed = require('../../classes/vembed.class');
 
-module.exports = class BegCommand extends BaseCommand {
+module.exports = class BegCommand extends GameCommand {
     constructor() {
         super({
             name: 'beg',
@@ -16,48 +12,64 @@ module.exports = class BegCommand extends BaseCommand {
 
     async run(client, message, args) {
         let props = {
-            title: {},
+            title: { text: "Beg" },
             description: "",
-            footer: ""
+            footer: { msg: "" }
         }
 
         const randomNumber = Math.floor(Math.random() * 50) + 1;
         const randomXP = Math.floor(Math.random() * 50) + 15;
 
-        await profileModel.findOneAndUpdate({
+        let inc = {
+            gold: randomNumber
+        }
+        await this.profileModel.findOneAndUpdate({
             userID: message.author.id,
         }, {
-            $inc: {
-                gold: randomNumber,
-            },
+            $inc: inc,
         });
 
-        const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
+        const hasLeveledUP = await this.Levels.appendXp(message.author.id, message.guild.id, randomXP);
 
         if (hasLeveledUP) {
 
-            const user = await Levels.fetch(message.author.id);
+            const user = await this.Levels.fetch(message.author.id, message.guild.id);
             const target = message.author
-            await profileModel.findOneAndUpdate({
+            let gainedmoney = 1000
+            let gainedminions = 1
+            let inc = {
+                gold: gainedmoney,
+                minions: gainedminions
+            }
+            await this.profileModel.findOneAndUpdate({
                 userID: target.id,
             }, {
-                $inc: {
-                    gold: 1000,
-                    minions: 1
-                },
+                $inc: inc,
             });
 
-            let msg = `${target.username} You just Advanced to Level ${user.level}!\n
-            You have gained: 💰+${gainedmoney} , 🐵+${gainedminions}`
+            let msg = [
+                `You just Advanced to Level ${user.level.toLocaleString()}!`,
+                `You have gained: 💰${gainedmoney.toLocaleString()}, 🐵${gainedminions.toLocaleString()}`
+            ].join(" · ")
 
-            props.footer = msg
-
+            props.footer.msg = msg
         }
-        props.title.text = "[Beg](https://discord.gg/KKYdRbZcPT)"
-        props.description = `${message.author.username} recieved ${randomNumber} Gold
-        Earned ${randomXP} XP`
+        props.thumbnail = message.author.avatarURL({ dynamic: true })
+        props.description = `*${message.author} begs...*`
+        props.fields = [
+            {
+                name: `💰${randomNumber.toLocaleString()}`,
+                value: "Gold",
+                inline: true
+            },
+            {
+                name: `✨${randomXP.toLocaleString()}`,
+                value: "XP",
+                inline: true
+            }
+        ]
 
-        let begembed = new GameEmbed(props)
-        await message.channel.send(begembed);
+        let embed = new VillainsEmbed(props)
+        await message.channel.send(embed);
     }
 }
