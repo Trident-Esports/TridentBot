@@ -53,7 +53,7 @@ module.exports = class BegCommand extends BaseCommand {
             props.footer = msg
 
         }
-        props.title.text = "[Beg](https://discord.com/KKYdRbZcPT)"
+        props.title.text = "[Beg](https://discord.gg/KKYdRbZcPT)"
         props.description = `${message.author.username} recieved ${randomNumber} Gold
         Earned ${randomXP} XP`
 
