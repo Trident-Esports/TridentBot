@@ -7,6 +7,7 @@ let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let DEV = GLOBALS.DEV;
 let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 
+// ModCommand
 module.exports = class MuteCommand extends BaseCommand {
     constructor() {
         super({

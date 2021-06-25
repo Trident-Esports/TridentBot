@@ -1,34 +1,28 @@
 const { BaseCommand } = require('a-djs-handler');
 const VillainsEmbed = require('../classes/vembed.class');
 
-const fs = require('fs');
-
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-let DEV = GLOBALS.DEV;
-
 // Suggestions/Survey
-module.exports = class SuggestionsCommand extends BaseCommand {
+module.exports = class SurveyCommand extends BaseCommand {
     constructor() {
         super({
-            name: "suggestions",
-            aliases: [ "suggest", "suggestion" ],
+            name: "survey",
             category: "meta",
-            description: "Suggestions"
+            description: "Survey"
         })
     }
 
     async run(client, message, args) {
         let props = {
-            title: { text: "Suggestions" }
+            title: { text: "Survey" }
         }
         let emoji = {
-            "thumbsup": "👍",
-            "thumbsdown": "👎"
+            "yes": "✔️",
+            "no": "❌"
         }
-        let channelName = DEV ? "suggestions" : "❓suggestions❓"
+        let channelName = "survey"
         const channel = message.guild.channels.cache.find(c => c.name === channelName);
         if(!channel) {
-            props.description = "Suggestions channel doesn't exist!"
+            props.description = "Survey channel doesn't exist!"
         } else {
             props.author = {
                 text: message.author.tag,
@@ -42,8 +36,8 @@ module.exports = class SuggestionsCommand extends BaseCommand {
         } else {
             channel.send(embed)
                 .then((msg) => {
-                    msg.react(emoji.thumbsup)
-                    msg.react(emoji.thumbsdown)
+                    msg.react(emoji.yes)
+                    msg.react(emoji.no)
                     message.delete()
                 })
         }

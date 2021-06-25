@@ -7,6 +7,7 @@ let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 let DEV = GLOBALS.DEV;
 let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 
+// ModCommand
 module.exports = class BotActivityCommand extends BaseCommand {
     constructor() {
         super({

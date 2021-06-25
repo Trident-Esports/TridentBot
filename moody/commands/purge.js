@@ -4,6 +4,7 @@ const SlimEmbed = require('../classes/vslimbed.class');
 const fs = require('fs');
 const ms = require('ms');
 
+// ModCommand
 module.exports = class PurgeCommand extends BaseCommand {
     constructor() {
         super({
