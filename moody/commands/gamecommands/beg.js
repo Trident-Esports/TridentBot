@@ -1,6 +1,8 @@
 const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
+const fs = require('fs');
+
 module.exports = class BegCommand extends GameCommand {
     constructor() {
         super({
@@ -29,15 +31,7 @@ module.exports = class BegCommand extends GameCommand {
             $inc: inc,
         });
 
-        let emojis = {
-            "level":    "🏆",
-            "xp":       "✨",
-            "life":     "💚",
-            "gold":     "💰",
-            "bank":     "🏦",
-            "minions":  "🐵",
-            "xpboost":  "💫"
-        }
+        let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
 
         const hasLeveledUP = await this.Levels.appendXp(message.author.id, message.guild.id, randomXP);
 
