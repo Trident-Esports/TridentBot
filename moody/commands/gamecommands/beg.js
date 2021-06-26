@@ -33,11 +33,11 @@ module.exports = class BegCommand extends GameCommand {
 
         let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
 
-        const hasLeveledUP = await this.Levels.appendXp(message.author.id, message.guild.id, randomXP);
+        const hasLeveledUP = await this.Levels.appendXp(message.author.id, randomXP);
 
         if (hasLeveledUP) {
 
-            const user = await this.Levels.fetch(message.author.id, message.guild.id);
+            const user = await this.Levels.fetch(message.author.id);
             const target = message.author
             let gainedmoney = 1000
             let gainedminions = 1
