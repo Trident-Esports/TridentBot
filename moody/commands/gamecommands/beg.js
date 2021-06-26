@@ -14,9 +14,13 @@ module.exports = class BegCommand extends GameCommand {
 
     async run(client, message, args) {
         let props = {
-            title: { text: "Beg" },
+            title: {
+                text: "Beg"
+            },
             description: "",
-            footer: { msg: "" }
+            footer: {
+                msg: ""
+            }
         }
 
         const randomNumber = Math.floor(Math.random() * 50) + 1;
@@ -58,10 +62,11 @@ module.exports = class BegCommand extends GameCommand {
 
             props.footer.msg = msg
         }
-        props.thumbnail = message.author.avatarURL({ dynamic: true })
+        props.thumbnail = message.author.avatarURL({
+            dynamic: true
+        })
         props.description = `*${message.author} begs...*`
-        props.fields = [
-            {
+        props.fields = [{
                 name: `${emojis.gold}${randomNumber.toLocaleString()}`,
                 value: "Gold",
                 inline: true

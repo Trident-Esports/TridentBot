@@ -1,14 +1,13 @@
 const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
-const healthModel = require('../../../models/healthSchema');
-const XPBoostModel = require('../../../models/xpboostSchema');
+const fs = require('fs')
 
 module.exports = class ProfileCommand extends GameCommand {
     constructor() {
         super({
             name: 'profile',
-            aliases: [ "pr", "acc" ],
+            aliases: ["pr", "acc"],
             category: 'game',
             description: 'Check the User\'s Profile',
         });
@@ -16,45 +15,49 @@ module.exports = class ProfileCommand extends GameCommand {
 
     async run(client, message, args) {
         let props = {
-            title: { text: "Profile" },
+            title: {
+                text: "Profile"
+            },
             description: "",
-            footer: { msg: "" }
+            footer: {
+                msg: ""
+            }
         }
 
         let mentionedMember = null
-        if(args.length) {
+        if (args.length) {
             mentionedMember = message.mentions.members.first().user
         } else {
             mentionedMember = message.author
         }
 
-        if(!mentionedMember) {
+        if (!mentionedMember) {
             props.title.text = "Error"
             props.description = `That user does not exist. '${args.join(" ")}' given.`
         } else {
-            props.thumbnail = mentionedMember.avatarURL({ dynamic: true })
+            props.thumbnail = mentionedMember.avatarURL({
+                dynamic: true
+            })
 
-            const profileData = await this.profileModel.findOne({ userID: mentionedMember.id })
-            const healthData = await healthModel.findOne({ userID: mentionedMember.id })
-            const XPBoostData = await XPBoostModel.findOne({ userID: mentionedMember.id })
+            const profileData = await this.profileModel.findOne({
+                userID: mentionedMember.id
+            })
+            const healthData = await this.healthModel.findOne({
+                userID: mentionedMember.id
+            })
+            const XPBoostData = await this.XPBoostModel.findOne({
+                userID: mentionedMember.id
+            })
             const target = await this.Levels.fetch(mentionedMember.id, message.guild.id)
 
-            if(!profileData) {
+            if (!profileData) {
                 props.title.text = "Error"
                 props.description = `That user does not have a profile. '${args.join(" ")}' given.`
             } else {
-                let emojis = {
-                    "level":    "🏆",
-                    "xp":       "✨",
-                    "life":     "💚",
-                    "gold":     "💰",
-                    "bank":     "🏦",
-                    "minions":  "🐵",
-                    "xpboost":  "💫"
-                }
+                let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
+
                 props.description = `This is ${mentionedMember}'s Profile`
-                props.fields = [
-                    {
+                props.fields = [{
                         name: "Title",
                         value: "Beta Tester"
                     },
@@ -94,7 +97,9 @@ module.exports = class ProfileCommand extends GameCommand {
                         inline: true
                     }
                 ]
-                props.thumbnail = mentionedMember.displayAvatarURL({ dynamic: true })
+                props.thumbnail = mentionedMember.displayAvatarURL({
+                    dynamic: true
+                })
             }
         }
 
