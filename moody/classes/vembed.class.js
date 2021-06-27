@@ -41,7 +41,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         })
 
         let haveFooterMsg = props?.footer?.msg
-        let footerMsgNotNone = haveFooterMsg && props.footer.msg != "<NONE>"
+        let footerMsgNotNone = haveFooterMsg && (props.footer.msg.trim() != "") && (props.footer.msg != "<NONE>")
         let havePages = props?.pages
 
         // Footer
