@@ -37,11 +37,11 @@ module.exports = {
         props["stripe"] = stripe
 
         const randomXP = Math.floor(Math.random() * 120) + 30;
-        const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
+        const hasLeveledUP = await Levels.appendXp(message.author.id, 1, randomXP);
 
         const user = message.author
         const mention = message.mentions.members.first();
-        
+
         if (!mention) {
             this.cooldown = 0;
             return message.reply('Whom Do You Want Rob?');
@@ -149,7 +149,7 @@ module.exports = {
 
                 if (hasLeveledUP) {
 
-                    const user = await Levels.fetch(message.author.id);
+                    const user = await Levels.fetch(message.author.id, 1);
                     const target = message.author
                     await profileModel.findOneAndUpdate({
                         userID: target.id,

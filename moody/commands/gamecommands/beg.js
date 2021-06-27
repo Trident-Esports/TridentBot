@@ -9,6 +9,7 @@ module.exports = class BegCommand extends GameCommand {
             name: 'beg',
             category: 'game',
             description: 'beg for gold',
+            extensions: [ "levels", "profile" ]
         });
     }
 
@@ -37,11 +38,11 @@ module.exports = class BegCommand extends GameCommand {
 
         let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
 
-        const hasLeveledUP = await this.Levels.appendXp(message.author.id, randomXP);
+        const hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
 
         if (hasLeveledUP) {
 
-            const user = await this.Levels.fetch(message.author.id);
+            const user = await this.Levels.fetch(message.author.id, 1);
             const target = message.author
             let gainedmoney = 1000
             let gainedminions = 1

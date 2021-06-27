@@ -9,12 +9,19 @@ module.exports = class BuyCommand extends GameCommand {
             name: 'buy',
             category: 'game',
             description: 'Buy an Item from the Store',
+            extensions: [ "inventory", "profile" ]
         });
     }
 
     async run(client, message, args) {
 
         let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
+        let emojiItems = {}
+        for (let [cat, items] of Object.entries(STOCKDATA)) {
+            for (let [itemName, itemData] of Object.entries(items)) {
+                emojiItems[itemData.emoji] = itemName
+            }
+        }
 
         let props = {
             title: {
@@ -35,15 +42,35 @@ module.exports = class BuyCommand extends GameCommand {
             userID: message.author.id
         });
 
-        if (!inventoryData) return message.channel.send("This user doesn't exist");
-        if (!user.id) return message.channel.send("There was an arror finding your discord id");
+        if (!inventoryData) {
+            props.title.text = "Error"
+            props.description = "This user doesn't exist."
+        }
+        if (!user.id) {
+            props.title.text = "Error"
+            props.description = "There was an error finding your Discord ID."
+        }
 
         var gold = profileData.gold //Players gold
 
         let re = /^([a-z ]*)([\d]*)$/
         let matches = args.join(" ").toLowerCase().match(re)
-        let bought_item = matches[1].trim().replace(/\s/g, '')
-        let quantity = !isNaN(matches[2]) ? parseInt(matches[2]) : 1
+        let bought_item = ""
+        let quantity = -1
+        if (matches) {
+            bought_item = matches[1].trim().replace(/\s/g, '')
+            quantity = ((!isNaN(matches[2])) && (matches[2] != "")) ? parseInt(matches[2]) : 1
+        } else if (args[0] in emojiItems) {
+            bought_item = emojiItems[args[0]]
+            re = /([\d]*)/
+            matches = args.join(" ").toLowerCase().match(re)
+            quantity = ((!isNaN(matches[2])) && (matches[2] != "")) ? parseInt(matches[2]) : 1
+        }
+
+        if (bought_item == "") {
+            props.title.text = "Error"
+            props.description = "No item name given."
+        }
 
         for (let [cat, items] of Object.entries(STOCKDATA)) {
             if (bought_item in items) {
@@ -67,8 +94,17 @@ module.exports = class BuyCommand extends GameCommand {
                     }
                 });
 
-                props.description = `${user} just bought ${quantity} ${item.emoji}` + bought_item.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()) + "!"
+                props.description = `${user} just bought `
+                props.description += `${quantity} `
+                props.description += `${item.emoji}`
+                props.description += (item?.stylized ? item.stylized : (bought_item.slice(0,1).toUpperCase() + bought_item.slice(1)))
+                props.description += "!"
             }
+        }
+
+        if (props.description == "") {
+            props.title.text = "Error"
+            props.description = `Item doesn't exist. ${bought_item} given.`
         }
 
         let embed = new VillainsEmbed(props)

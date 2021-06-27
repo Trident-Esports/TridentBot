@@ -49,22 +49,22 @@ module.exports = {
         for (let [items, itemsAttr] of Object.entries(itemData)) {
             let value = itemsAttr
             for (let [item, itemAttr] of Object.entries(value)) {
-                let item = itemAttr
-
                 let names = [];
 
-                if (item.stylized) {
-                    names.push(item.stylized)
-                } else names.push(item);
+                if (itemAttr?.stylized) {
+                    names.push(itemAttr.stylized)
+                } else {
+                    names.push(item.slice(0,1).toUpperCase() + item.slice(1))
+                }
 
                 let items = [];
-                items.push(item.emoji);
+                items.push(itemAttr.emoji);
 
                 let values = [];
-                values.push(item.value);
+                values.push(itemAttr.value);
 
                 let descriptions = [];
-                descriptions.push(item.description);
+                descriptions.push(itemAttr.description);
 
                 embed.addField(
                     items + " " + names + "   " + "💰" + values.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),

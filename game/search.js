@@ -38,7 +38,7 @@ module.exports = {
     props["stripe"] = stripe
 
     const randomXP = Math.floor(Math.random() * 200) + 50;
-    const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
+    const hasLeveledUP = await Levels.appendXp(message.author.id, 1, randomXP);
 
     const LOCATIONS = [
       "Forest",
@@ -82,7 +82,7 @@ module.exports = {
 
       if (hasLeveledUP) {
 
-        const user = await Levels.fetch(message.author.id);
+        const user = await Levels.fetch(message.author.id, 1);
         const target = message.author
         await profileModel.findOneAndUpdate({
           userID: target.id,

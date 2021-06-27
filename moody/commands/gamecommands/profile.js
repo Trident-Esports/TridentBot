@@ -10,6 +10,7 @@ module.exports = class ProfileCommand extends GameCommand {
             aliases: ["pr", "acc"],
             category: 'game',
             description: 'Check the User\'s Profile',
+            extensions: [ "profile", "health", "xpboost", "levels" ]
         });
     }
 
@@ -48,7 +49,7 @@ module.exports = class ProfileCommand extends GameCommand {
             const XPBoostData = await this.XPBoostModel.findOne({
                 userID: mentionedMember.id
             })
-            const target = await this.Levels.fetch(mentionedMember.id, message.guild.id)
+            const target = await this.Levels.fetch(mentionedMember.id, 1)
 
             if (!profileData) {
                 props.title.text = "Error"

@@ -10,6 +10,7 @@ module.exports = class BalanceCommand extends GameCommand {
             aliases: ['bal'],
             category: 'premium',
             description: 'Checks the Users Balance',
+            extensions: [ "profile" ]
         });
     }
 

@@ -44,7 +44,7 @@ module.exports = {
             }
         }
 
-        if (mention.user.bot) {
+        if (target.user.bot) {
             return message.channel.send("Now who's the Bot?🤡\nFight someone who isn't a bot dummy!");
         }
 
@@ -71,7 +71,7 @@ module.exports = {
 
         COLLECTOR.on("collect", async (m) => {
 
-            const hasLeveledUP = await Levels.appendXp(message.author.id, randomXP);
+            const hasLeveledUP = await Levels.appendXp(message.author.id, 1, randomXP);
 
             const WinnerEMBED = new MessageEmbed()
                 .setColor(props["Winner"]["embedColor"])
@@ -99,7 +99,7 @@ module.exports = {
 
                     if (hasLeveledUP) {
 
-                        const user = await Levels.fetch(message.author.id);
+                        const user = await Levels.fetch(message.author.id, 1);
                         const target = message.author
                         await profileModel.findOneAndUpdate({
                             userID: target.id,

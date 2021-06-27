@@ -10,6 +10,7 @@ module.exports = class LevelCommand extends GameCommand {
             aliases: ['lvl'],
             category: 'premium',
             description: 'Checks the Users Level',
+            extensions: [ "levels", "xpboost" ]
         });
     }
 
@@ -31,7 +32,7 @@ module.exports = class LevelCommand extends GameCommand {
             mentionedMember = message.author
         }
 
-        const target = await this.Levels.fetch(mentionedMember.id);
+        const target = await this.Levels.fetch(mentionedMember.id, 1);
         if (!target) return message.channel.send("This member doesn't have a Level.😢");
 
         const XPBoostData = await this.XPBoostModel.findOne({
