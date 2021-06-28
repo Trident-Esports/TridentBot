@@ -1,7 +1,7 @@
-const GameCommand = require('../../classes/gamecommand.class');
+const BotDevCommand = require('../../classes/botdevcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
-module.exports = class StealCommand extends GameCommand {
+module.exports = class StealCommand extends BotDevCommand {
     constructor() {
         super({
             name: 'steal',
@@ -22,21 +22,21 @@ module.exports = class StealCommand extends GameCommand {
             }
         }
 
-        let APPROVED_USERIDS = [
-            "263968998645956608", // Mike
-            "532192409757679618", // Noongar
-            "692180465242603591" // PrimeWarGamer
-        ]
+        // let APPROVED_USERIDS = [
+        //     "263968998645956608", // Mike
+        //     "532192409757679618", // Noongar
+        //     "692180465242603591" // PrimeWarGamer
+        // ]
 
-        if (APPROVED_USERIDS.indexOf(message.member.id + "") == -1) {
-            return message.reply(
-                `Sorry only ` +
-                `**MikeTrethewey**,` +
-                `**Noongar1800** or ` +
-                `**PrimeWarGamer**` +
-                ` can run this command 😔`
-            )
-        }
+        // if (APPROVED_USERIDS.indexOf(message.member.id + "") == -1) {
+        //     return message.reply(
+        //         `Sorry only ` +
+        //         `**MikeTrethewey**,` +
+        //         `**Noongar1800** or ` +
+        //         `**PrimeWarGamer**` +
+        //         ` can run this command 😔`
+        //     )
+        // }
 
         if (!args.length) {
             return message.reply("You need to mention a player to steal their coins");
