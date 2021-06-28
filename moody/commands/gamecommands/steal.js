@@ -7,7 +7,7 @@ module.exports = class StealCommand extends BotDevCommand {
             name: 'steal',
             category: 'game',
             description: 'steals a players coins',
-            extensions: ["levels", "profile"]
+            extensions: ["profile"]
         });
     }
 
