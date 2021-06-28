@@ -48,6 +48,6 @@ module.exports = class DailyCommand extends GameCommand {
         ]
 
         let embed = new VillainsEmbed(props)
-        await message.channel.send(embed);
+        await this.send(message, embed);
     }
 }

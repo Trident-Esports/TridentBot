@@ -140,7 +140,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                 props.description = `<@${message.author.id}>` + "\n" + props.description
 
                 let embed = new VillainsEmbed(props)
-                message.channel.send(embed)
+                await this.send(message, embed)
             } catch (err) {
                 console.log("Error:",err)
                 console.log("Number:",number)
@@ -160,13 +160,13 @@ module.exports = class CoinFlipCommand extends GameCommand {
                 props.description = `<@${message.author.id}>` + "\n" + props.description
 
                 let embed = new VillainsEmbed(props)
-                message.channel.send(embed)
+                await this.send(message, embed)
             }
         });
 
         props.description = `<@${message.author.id}>` + "\n" + props.description
 
         let embed = new VillainsEmbed(props)
-        await message.channel.send(embed);
+        await this.send(message, embed);
     }
 }
