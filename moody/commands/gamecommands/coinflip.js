@@ -137,8 +137,6 @@ module.exports = class CoinFlipCommand extends GameCommand {
                     props.description = `You chose ${m.content} and the coin didn't land on that. this means you just lost 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n Maybe a bad idea or just Unlucky.`
                 }
 
-                props.description = `<@${message.author.id}>` + "\n" + props.description
-
                 let embed = new VillainsEmbed(props)
                 await this.send(message, embed)
             } catch (err) {
