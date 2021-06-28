@@ -184,7 +184,11 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
 
                         if (!noMatches) {
-                            embed.setDescription("__***" + emoji + json.team + "***__")
+                            props.description = "__***" + emoji + json.team + "***__"
+                            if (json?.team_url) {
+                                props.description = '[' + props.description + "](" + json.team_url + ')'
+                            }
+                            embed.setDescription(props.description)
                         }
 
                         if (json?.team_avatar && json.team_avatar != "") {
