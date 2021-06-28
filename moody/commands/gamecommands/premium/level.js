@@ -39,22 +39,20 @@ module.exports = class LevelCommand extends GameCommand {
             userID: mentionedMember.id
         });
 
-        let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
-
         props.description = `This is ${mentionedMember}'s Level`
         props.fields = props.fields = [
         {
-            name: `${emojis.level}${target.level}`,
+            name: `${this.emojis.level}${target.level}`,
             value: "Level",
             inline: true
         },
         {
-            name: `${emojis.xp}${target.xp.toLocaleString()} / ${this.Levels.xpFor(target.level + 1).toLocaleString()}`,
+            name: `${this.emojis.xp}${target.xp.toLocaleString()} / ${this.Levels.xpFor(target.level + 1).toLocaleString()}`,
             value: "XP",
             inline: true
         },
         {
-            name: `${emojis.xpboost}${XPBoostData.xpboost}%`,
+            name: `${this.emojis.xpboost}${XPBoostData.xpboost}%`,
             value: "XPBoost",
             inline: false
         }

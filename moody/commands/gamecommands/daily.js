@@ -24,7 +24,6 @@ module.exports = class DailyCommand extends GameCommand {
             }
         }
 
-        let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
         const randomNumber = Math.floor(Math.random() * 0) + 30000;
 
         let inc = {
@@ -42,7 +41,7 @@ module.exports = class DailyCommand extends GameCommand {
         props.description = `${message.author} has checked into the Lair for the Day and received`
         props.fields = [
             {
-                name: `${emojis.gold}${randomNumber.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                name: `${this.emojis.gold}${randomNumber.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                 value: "Gold"
             }
         ]

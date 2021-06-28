@@ -55,45 +55,43 @@ module.exports = class ProfileCommand extends GameCommand {
                 props.title.text = "Error"
                 props.description = `That user does not have a profile. '${args.join(" ")}' given.`
             } else {
-                let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
-
                 props.description = `This is ${mentionedMember}'s Profile`
                 props.fields = [{
                         name: "Title",
                         value: "Beta Tester"
                     },
                     {
-                        name: `${emojis.level}${target.level}`,
+                        name: `${this.emojis.level}${target.level}`,
                         value: "Level",
                         inline: true
                     },
                     {
-                        name: `${emojis.xp}${target.xp.toLocaleString()} / ${this.Levels.xpFor(target.level + 1).toLocaleString()}`,
+                        name: `${this.emojis.xp}${target.xp.toLocaleString()} / ${this.Levels.xpFor(target.level + 1).toLocaleString()}`,
                         value: "XP",
                         inline: true
                     },
                     {
-                        name: `${emojis.life}${healthData.health}%`,
+                        name: `${this.emojis.life}${healthData.health}%`,
                         value: "Life",
                         inline: true
                     },
                     {
-                        name: `${emojis.gold}${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                        name: `${this.emojis.gold}${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                         value: "Gold",
                         inline: true
                     },
                     {
-                        name: `${emojis.bank}${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                        name: `${this.emojis.bank}${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                         value: "Bank",
                         inline: true
                     },
                     {
-                        name: `${emojis.minions}${profileData.minions}`,
+                        name: `${this.emojis.minions}${profileData.minions}`,
                         value: "Minions",
                         inline: true
                     },
                     {
-                        name: `${emojis.xpboost}${XPBoostData.xpboost}%`,
+                        name: `${this.emojis.xpboost}${XPBoostData.xpboost}%`,
                         value: "XPBoost",
                         inline: true
                     }

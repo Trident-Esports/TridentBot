@@ -29,8 +29,6 @@ module.exports = class BuyCommand extends GameCommand {
             }
         }
 
-        let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
-
         const randomXP = Math.floor(Math.random() * 120) + 30;
         const hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
 
@@ -74,10 +72,10 @@ module.exports = class BuyCommand extends GameCommand {
         let final = options[robbed]
 
         if (usermoney < 500) {
-            return message.reply(`You Need Atleast ${emojis.gold}500 In Your Wallet To Rob Someone`)
+            return message.reply(`You Need Atleast ${this.emojis.gold}500 In Your Wallet To Rob Someone`)
         } // If User Money In Wallet Is Less Then 2000
         if (mentionmoney < 500) {
-            return message.reply(`Mentioned User Should Have Atleast ${emojis.gold}500 In Wallet To Rob`)
+            return message.reply(`Mentioned User Should Have Atleast ${this.emojis.gold}500 In Wallet To Rob`)
         } // If Mentioned User Money In Wallet Is Less Then 2000
 
         if (final === 'Success') {
@@ -93,8 +91,8 @@ module.exports = class BuyCommand extends GameCommand {
                 dynamic: true
             })
                 props.title.text = `You try to rob them.`
-                props.description = `<@${user.id}> Robbed <@${mention.id}> And Got Away With ${emojis.gold}**$${amount}**
-                
+                props.description = `<@${user.id}> Robbed <@${mention.id}> And Got Away With ${this.emojis.gold}**$${amount}**
+
                 Earned ${randomXP} XP`
 
             await this.profileModel.findOneAndUpdate({
@@ -111,7 +109,7 @@ module.exports = class BuyCommand extends GameCommand {
                     gold: -amount,
                 },
             }); // Substract Money From Mention(Robbed) User's Wallet
-            
+
         } else if (final === 'Failed') {
             props.author.name = `Holding your hostage at Gunpoint.`
             props.author.avatar = user.displayAvatarURL({
@@ -121,7 +119,7 @@ module.exports = class BuyCommand extends GameCommand {
                 props.description = `<@${user.id}> tried To Rob <@${mention.id}>. You realise they are poor.
 
                 Earned ${randomXP} XP`
-                
+
         } else if (final === 'Paid') {
 
             const amount = Math.floor(Math.random() * 1400) + 100 // Min Is 100 And Max Is 1500(100+1400)
@@ -131,9 +129,9 @@ module.exports = class BuyCommand extends GameCommand {
                     dynamic: true
                 })
             props.title.text = `You try to rob them.`
-            props.description = `<@${user.id}> tried to rob <@${mention.id}>. You were Caught and instead <@${mention.id}> stole your gun and robbed you of ${emojis.gold}**${amount}**.
+            props.description = `<@${user.id}> tried to rob <@${mention.id}>. You were Caught and instead <@${mention.id}> stole your gun and robbed you of ${this.emojis.gold}**${amount}**.
             WHAT A FAIL!
-            
+
             <@${user.id}> Earned ${randomXP} XP`
 
             await this.profileModel.findOneAndUpdate({

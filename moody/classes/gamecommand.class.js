@@ -1,4 +1,5 @@
 const VillainsCommand = require('./vcommand.class');
+const fs = require('fs');
 
 module.exports = class GameCommand extends VillainsCommand {
     constructor(comprops = {}) {
@@ -16,5 +17,6 @@ module.exports = class GameCommand extends VillainsCommand {
                 this[key] = require(inc)
             }
         }
+        this.emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
     }
 }

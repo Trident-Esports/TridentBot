@@ -36,8 +36,6 @@ module.exports = class BegCommand extends GameCommand {
             $inc: inc,
         });
 
-        let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
-
         const hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
 
         if (hasLeveledUP) {
@@ -58,7 +56,7 @@ module.exports = class BegCommand extends GameCommand {
 
             let msg = [
                 `You just Advanced to Level ${user.level.toLocaleString()}!`,
-                `You have gained: ${emojis.gold}${gainedmoney.toLocaleString()}, ${emojis.minions}${gainedminions.toLocaleString()}`
+                `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString()}, ${this.emojis.minions}${gainedminions.toLocaleString()}`
             ].join(" · ")
 
             props.footer.msg = msg
@@ -68,12 +66,12 @@ module.exports = class BegCommand extends GameCommand {
         })
         props.description = `*${message.author} begs and receives...*`
         props.fields = [{
-                name: `${emojis.gold}${randomNumber.toLocaleString()}`,
+                name: `${this.emojis.gold}${randomNumber.toLocaleString()}`,
                 value: "Gold",
                 inline: true
             },
             {
-                name: `${emojis.xp}${randomXP.toLocaleString()}`,
+                name: `${this.emojis.xp}${randomXP.toLocaleString()}`,
                 value: "XP",
                 inline: true
             }

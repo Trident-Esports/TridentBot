@@ -1,7 +1,7 @@
 const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
-const fs = require('fs');
+// Combine with Deposit via ATMCommand
 
 module.exports = class WithdrawCommand extends GameCommand {
     constructor() {
@@ -17,7 +17,7 @@ module.exports = class WithdrawCommand extends GameCommand {
     async run(client, message, args) {
         let props = {
             title: {
-                text: "Deposit"
+                text: "Withdraw"
             },
             description: "",
             footer: {
@@ -25,9 +25,7 @@ module.exports = class WithdrawCommand extends GameCommand {
             }
         }
 
-        let emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
-
-        var amount = args[0].toLowerCase() || args[0]
+        var amount = args && args[0] ? args[0].toLowerCase() : -1
 
         const profileData = await this.profileModel.findOne({
             userID: message.author.id
@@ -37,15 +35,17 @@ module.exports = class WithdrawCommand extends GameCommand {
             amount = profileData.bank
         }
         if (amount == 'half') {
-            amount = profileData.bank / 2
+            amount = parseInt(profileData.bank / 2)
         }
 
-        if (amount % 1 != 0 || amount <= 0) {
-            return message.reply(`Deposit amount must be a whole number (${amount} given)`);
+        if (isNaN(amount) || amount <= 0) {
+            props.title.text = "Error"
+            props.description = `Withdrawal amount must be a positive whole number, "all" or "half". '${amount}' given.`
         }
 
         if (amount > profileData.bank) {
-            return message.reply(`You only have 💰 ${profileData.gold}`)
+            props.title.text = "Error"
+            props.description = `You only have ${this.emojis.gold}${profileData.bank}. '${amount}' given.`
         }
 
         await this.profileModel.findOneAndUpdate({
@@ -60,9 +60,13 @@ module.exports = class WithdrawCommand extends GameCommand {
 
         );
 
-        props.description = `**${message.author} Withdrew ${emojis.gold}${amount.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold into their Wallet!**
-        
-            _Check your balance using .Balance_`
+        if (props.title.text != "Error") {
+            props.description = [
+                `**${message.author} has Withdrawn ${this.emojis.gold}${amount.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold from their Bank!**`,
+                `_Check your balance using .balance_`
+            ].join("\n")
+        }
+
         props.thumbnail = message.author.displayAvatarURL({
             dynamic: true,
             format: 'png'
