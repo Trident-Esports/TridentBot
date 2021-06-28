@@ -1,0 +1,38 @@
+{
+  "stripe": "default",
+  "title": "VALORANT VOT 2021 Stage 3 Roster",
+  "aliases": ["votr"],
+  "url": "https://letsplay.live/event/142/",
+  "team": {
+    "teamID": ""
+  },
+  "#url": "LPL VOT 2021 Stage 3 Event Page",
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "guessmonster"
+      ]
+    },
+    "coach": {
+      "title": "Coach",
+      "users": [
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "marsh",
+        "myth",
+        "pocket",
+        "prophet",
+        "suave"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+      ]
+    }
+  }
+}
