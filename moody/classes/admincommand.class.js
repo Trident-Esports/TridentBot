@@ -1,4 +1,4 @@
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('./vembed.class');
 const SlimEmbed = require('./vslimbed.class');
 
@@ -8,7 +8,7 @@ let DEFAULTS = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 let DEV = GLOBALS.DEV;
 let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 
-module.exports = class AdminCommand extends BaseCommand {
+module.exports = class AdminCommand extends VillainsCommand {
     constructor(comprops = {}, props = { title: {}, description: "" }) {
         super(comprops)
         this.GLOBALS = GLOBALS

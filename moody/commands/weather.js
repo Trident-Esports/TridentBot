@@ -1,9 +1,9 @@
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('../classes/vcommand.class');
 const VillainsEmbed = require('../classes/vembed.class');
 
 const weather = require('weather-js');
 
-module.exports = class WeatherCommand extends BaseCommand {
+module.exports = class WeatherCommand extends VillainsCommand {
     constructor() {
         super({
             name: "weather",
@@ -18,10 +18,14 @@ module.exports = class WeatherCommand extends BaseCommand {
         }
 
         let degreeType = "C"
+        if (["C","F"].indexOf(args[args.length - 1].toUpperCase()) > -1) {
+            degreeType = args.pop().toUpperCase()
+        }
+        let search = args.join(" ")
         weather.find({
-            search: args.join(" "),
+            search: search,
             degreeType: degreeType
-        }, function(error, result) {
+        }, await function(error, result) {
             if(error || !args[0] || result === undefined || result.length === 0) {
                 props.title.text = "Error"
                 props.color = "RED"

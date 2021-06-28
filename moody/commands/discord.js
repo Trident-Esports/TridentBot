@@ -1,10 +1,10 @@
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('../classes/vcommand.class');
 const VillainsEmbed = require('../classes/vembed.class');
 
 const fs = require('fs');
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 
-module.exports = class DiscordInviteCommand extends BaseCommand {
+module.exports = class DiscordInviteCommand extends VillainsCommand {
     constructor() {
         super({
             name: "discord",
@@ -28,6 +28,6 @@ module.exports = class DiscordInviteCommand extends BaseCommand {
             props.description = "No invite code found in profile."
         }
         let embed = new VillainsEmbed(props)
-        await message.channel.send({embed: embed, content: url})
+        await super.send(message, {embed: embed, content: url})
     }
 }

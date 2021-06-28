@@ -1,7 +1,7 @@
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('../classes/vcommand.class');
 const SlimEmbed = require('../classes/vslimbed.class');
 
-module.exports = class BonkCommand extends BaseCommand {
+module.exports = class BonkCommand extends VillainsCommand {
     constructor() {
         super({
             name: "bonk",
@@ -26,6 +26,6 @@ module.exports = class BonkCommand extends BaseCommand {
         }
 
         let embed = new SlimEmbed(props)
-        await message.channel.send(embed)
+        await super.send(message, embed)
     }
 }

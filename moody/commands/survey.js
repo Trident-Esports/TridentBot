@@ -1,8 +1,9 @@
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('../classes/vcommand.class');
 const VillainsEmbed = require('../classes/vembed.class');
 
 // Suggestions/Survey
-module.exports = class SurveyCommand extends BaseCommand {
+//FIXME: Make inheritable?
+module.exports = class SurveyCommand extends VillainsCommand {
     constructor() {
         super({
             name: "survey",
@@ -32,7 +33,7 @@ module.exports = class SurveyCommand extends BaseCommand {
         }
         let embed = new VillainsEmbed(props)
         if(!channel) {
-            await message.channel.send(embed)
+            await super.send(message, embed)
         } else {
             channel.send(embed)
                 .then((msg) => {

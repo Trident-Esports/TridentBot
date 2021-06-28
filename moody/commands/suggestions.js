@@ -1,4 +1,4 @@
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('../classes/vcommand.class');
 const VillainsEmbed = require('../classes/vembed.class');
 
 const fs = require('fs');
@@ -7,7 +7,8 @@ let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let DEV = GLOBALS.DEV;
 
 // Suggestions/Survey
-module.exports = class SuggestionsCommand extends BaseCommand {
+//FIXME: Make inheritable?
+module.exports = class SuggestionsCommand extends VillainsCommand {
     constructor() {
         super({
             name: "suggestions",
@@ -22,8 +23,8 @@ module.exports = class SuggestionsCommand extends BaseCommand {
             title: { text: "Suggestions" }
         }
         let emoji = {
-            "thumbsup": "👍",
-            "thumbsdown": "👎"
+            "yes": "👍",
+            "no": "👎"
         }
         let channelName = DEV ? "suggestions" : "❓suggestions❓"
         const channel = message.guild.channels.cache.find(c => c.name === channelName);
@@ -31,20 +32,19 @@ module.exports = class SuggestionsCommand extends BaseCommand {
             props.description = "Suggestions channel doesn't exist!"
         } else {
             props.author = {
-                text: message.author.tag,
+                name: message.author.tag,
                 avatar: message.author.displayAvatarURL({ dynamic: true })
             }
             props.description = args.join(" ")
         }
         let embed = new VillainsEmbed(props)
         if(!channel) {
-            await message.channel.send(embed)
+            await super.send(message, embed)
         } else {
             channel.send(embed)
                 .then((msg) => {
-                    msg.react(emoji.thumbsup)
-                    msg.react(emoji.thumbsdown)
-                    message.delete()
+                    msg.react(emoji.yes)
+                    msg.react(emoji.no)
                 })
         }
     }

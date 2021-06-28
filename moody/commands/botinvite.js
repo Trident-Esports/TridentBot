@@ -1,10 +1,10 @@
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('../classes/vcommand.class');
 const VillainsEmbed = require('../classes/vembed.class');
 
 const fs = require('fs');
 let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 
-module.exports = class BotInviteCommand extends BaseCommand {
+module.exports = class BotInviteCommand extends VillainsCommand {
     constructor() {
         super({
             name: "botinvite",
@@ -33,6 +33,6 @@ module.exports = class BotInviteCommand extends BaseCommand {
             props.description = "No invite link found in defaults."
         }
         let embed = new VillainsEmbed(props)
-        await message.channel.send(embed)
+        await super.send(message, embed)
     }
 }
