@@ -2,7 +2,7 @@ const { BaseCommand } = require('a-djs-handler');
 const pagination = require('discord.js-pagination');
 
 module.exports = class VillainsCommand extends BaseCommand {
-    async send(message, pages, emoji = ["◀️", "▶️"], timeout = "120000") {
+    async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000") {
         if (Array.isArray(pages)) {
             if (pages.length <= 1) {
                 message.channel.send(pages[0])
