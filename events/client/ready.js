@@ -11,7 +11,6 @@ module.exports = () => {
         console.log(`!!! DEV MODE (${GLOBALS.name}) ENABLED !!!`);
     }
     console.log('Mongoose warning about collection.ensureIndex will be thrown.');
-    console.log('MongoDB warning about collection.findOneAndUpdate will be thrown.');
     console.log('Ready!');
     console.log();
 }
