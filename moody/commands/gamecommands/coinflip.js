@@ -14,7 +14,6 @@ module.exports = class CoinFlipCommand extends GameCommand {
 
     async run(client, message, args) {
         let msg = [
-            `<@${message.author.id}>`,
             "**Which side of the coin do you think it will land on?** 🔍",
             "`Heads` `Side` `Tails`"
         ]
@@ -137,6 +136,9 @@ module.exports = class CoinFlipCommand extends GameCommand {
                     props.title.text = props.fail.title
                     props.description = `You chose ${m.content} and the coin didn't land on that. this means you just lost 💰${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n Maybe a bad idea or just Unlucky.`
                 }
+
+                props.description = `<@${message.author.id}>` + "\n" + props.description
+
                 let embed = new VillainsEmbed(props)
                 message.channel.send(embed)
             } catch (err) {
@@ -154,9 +156,15 @@ module.exports = class CoinFlipCommand extends GameCommand {
                         gold: -1,
                     },
                 });
-                props.description = `${message.author} forgets to flip the coin and it falls out of their hand and rolls away. Losing 💰1.`
+                props.description = `You forgot to flip the coin and it fell out of your hand and rolled away. You lost 💰1.`
+                props.description = `<@${message.author.id}>` + "\n" + props.description
+
+                let embed = new VillainsEmbed(props)
+                message.channel.send(embed)
             }
         });
+
+        props.description = `<@${message.author.id}>` + "\n" + props.description
 
         let embed = new VillainsEmbed(props)
         await message.channel.send(embed);

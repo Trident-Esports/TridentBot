@@ -66,7 +66,7 @@ module.exports = class BegCommand extends GameCommand {
         props.thumbnail = message.author.avatarURL({
             dynamic: true
         })
-        props.description = `*${message.author} begs...*`
+        props.description = `*${message.author} begs and receives...*`
         props.fields = [{
                 name: `${emojis.gold}${randomNumber.toLocaleString()}`,
                 value: "Gold",

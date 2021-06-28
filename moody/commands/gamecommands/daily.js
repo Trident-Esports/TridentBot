@@ -39,7 +39,7 @@ module.exports = class DailyCommand extends GameCommand {
         props.thumbnail = message.author.avatarURL({
             dynamic: true
         })
-        props.description = `${message.author} has checked into the Lair for the Day.`
+        props.description = `${message.author} has checked into the Lair for the Day and received`
         props.fields = [
             {
                 name: `${emojis.gold}${randomNumber.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,

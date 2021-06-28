@@ -1,6 +1,6 @@
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('./vcommand.class');
 
-module.exports = class GameCommand extends BaseCommand {
+module.exports = class GameCommand extends VillainsCommand {
     constructor(comprops = {}) {
         super(comprops)
         if (comprops?.extensions) {
