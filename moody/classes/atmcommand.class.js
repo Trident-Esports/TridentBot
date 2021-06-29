@@ -1,6 +1,9 @@
 const GameCommand = require('./gamecommand.class');
 const VillainsEmbed = require('./vembed.class');
 
+const fs = require('fs');
+let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 module.exports = class ATMCommand extends GameCommand {
     constructor(comprops = {}) {
         super({
@@ -38,6 +41,15 @@ module.exports = class ATMCommand extends GameCommand {
             props.description = this.errors.cantActionBot.join("\n")
         }
 
+        if (["Refund", "Steal"].indexOf(props.caption.text) > -1) {
+            let APPROVED_ROLES = ROLES["admin"]
+
+            if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
+                props.title.text = "Error"
+                props.description = "Sorry, only admins can run this command. 😔"
+            }
+        }
+
         var amount = (args && args[0]) ? args[0].toLowerCase() : -1
 
         if (isNaN(amount) || (parseInt(amount) <= 0)) {
@@ -56,11 +68,12 @@ module.exports = class ATMCommand extends GameCommand {
             }
 
             let targetData = null
-            if (props.caption.text == "Give") {
+            let needTarget = ["Give", "Refund", "Steal"].indexOf(props.caption.text) > -1
+            if (needTarget) {
                 if (target) {
-                    if (user.id === target.id) {
+                    if ((["Give", "Steal"].indexOf(props.caption.text) > -1) && (user.id === target.id)) {
                         props.title.text = "Error"
-                        props.description = "You can't give Gold to yourself!"
+                        props.description = `You can't ${props.caption.text} Gold to/from yourself!`
                     }
                     if (target?.user?.bot && target.user.bot) {
                         props.title.text = "Error"
@@ -83,7 +96,7 @@ module.exports = class ATMCommand extends GameCommand {
                     }
                 } else {
                     props.title.text = "Error"
-                    props.description = "You need to mention a player to give them Gold."
+                    props.description = `You need to mention a player to ${props.caption.text} Gold.`
                 }
             }
 
@@ -108,39 +121,57 @@ module.exports = class ATMCommand extends GameCommand {
                 } else {
                     amount = parseInt(amount)
                 }
-                if (parseInt(amount) > parseInt(reserve)) {
-                    props.title.text = "Error"
-                    props.description = `You only have ${this.emojis.gold}${reserve}. '${amount}' given.`
+                if (["Refund", "Steal"].indexOf(props.caption.text) == -1) {
+                    if (parseInt(amount) > parseInt(reserve)) {
+                        props.title.text = "Error"
+                        props.description = `You only have ${this.emojis.gold}${reserve}. '${amount}' given.`
+                    }
                 }
 
                 if (props.title.text != "Error") {
-                    let inc = {}
-                    let targetInc = {}
+                    let inc = { gold: 0 }
+                    let targetInc = { gold: 0 }
                     let [verb, direction, container] = ["", "", ""]
                     switch (props.caption.text) {
                         case "Deposit":
+                            // User to User
                             inc = { gold: -amount, bank: amount };
                             [verb, direction, container] = ["Deposited", "into", "their Bank"];
                             break;
                         case "Give":
+                            // User to Target
                             inc = { gold: -amount };
                             targetInc = { gold: amount };
                             [verb, direction, container] = ["Given", "to", `<@${target.id}>'s Wallet`];
                             break;
                         case "Withdraw":
+                            // User to User
                             inc = { gold: amount, bank: -amount };
                             [verb, direction, container] = ["Withdrawn", "into", "their Wallet"];
+                            break;
+                        case "Refund":
+                            // Ether to Target
+                            targetInc = { gold: amount };
+                            [verb, direction, container] = ["Refunded", "into", `<@${target.id}>'s Wallet`];
+                            break;
+                        case "Steal":
+                            // Target to User
+                            inc = { gold: amount };
+                            targetInc = { gold: -amount };
+                            [verb, direction, container] = ["Stole", "from", `<@${target.id}>'s Wallet`];
                             break;
                         default:
                             break;
                     }
-                    await this.profileModel.findOneAndUpdate({
-                            userID: user.id
-                        }, {
-                            $inc: inc
-                        }
-                    );
-                    if (props.caption.text == "Give" && target) {
+                    if (inc.gold !== 0) {
+                        await this.profileModel.findOneAndUpdate({
+                                userID: user.id
+                            }, {
+                                $inc: inc
+                            }
+                        );
+                    }
+                    if (target && targetInc.gold !== 0) {
                         await this.profileModel.findOneAndUpdate({
                                 userID: target.id
                             }, {
