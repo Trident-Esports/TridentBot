@@ -36,7 +36,7 @@ module.exports = class BalanceCommand extends GameCommand {
             avatar: user.displayAvatarURL({ format: "png", dynamic: true })
         }
 
-        if (target?.user?.bot && target.user.bot) {
+        if (loaded?.bot && loaded.bot) {
             props.title.text = "Error"
             props.description = this.errors.cantActionBot.join("\n")
         }

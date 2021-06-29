@@ -15,67 +15,90 @@ module.exports = class BegCommand extends GameCommand {
 
     async run(client, message, args) {
         let props = {
-            title: {
+            caption: {
                 text: "Beg"
             },
+            title: {},
             description: "",
             footer: {
                 msg: ""
+            },
+            players: {
+                user: {},
+                target: {}
             }
         }
 
-        const randomNumber = Math.floor(Math.random() * 50) + 1;
-        const randomXP = Math.floor(Math.random() * 50) + 15;
+        const user = message.author
+        const loaded = user
 
-        let inc = {
-            gold: randomNumber
+        props.players.user = {
+            name: user.username,
+            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
         }
-        await this.profileModel.findOneAndUpdate({
-            userID: message.author.id,
-        }, {
-            $inc: inc,
-        });
 
-        const hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
+        if (loaded?.bot && loaded.bot) {
+            props.title.text = "Error"
+            props.description = this.errors.cantActionBot.join("\n")
+        }
 
-        if (hasLeveledUP) {
+        if (props.title.text != "Error") {
+            // Gold Reward: 1 - 50
+            let [minReward, maxReward] = [1, 50]
+            const randomNumber = Math.floor(Math.random() * (maxReward - minReward)) + minReward;
 
-            const user = await this.Levels.fetch(message.author.id, 1);
-            const target = message.author
-            let gainedmoney = 1000
-            let gainedminions = 1
+            // XP Reward: 15 - 50
+            let [minXP, maxXP] = [15, 50]
+            const randomXP = Math.floor(Math.random() * (maxXP - minXP)) + minXP;
+
             let inc = {
-                gold: gainedmoney,
-                minions: gainedminions
+                gold: randomNumber
             }
             await this.profileModel.findOneAndUpdate({
-                userID: target.id,
+                userID: loaded.id,
             }, {
                 $inc: inc,
             });
 
-            let msg = [
-                `You just Advanced to Level ${user.level.toLocaleString()}!`,
-                `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString()}, ${this.emojis.minions}${gainedminions.toLocaleString()}`
-            ].join(" · ")
+            const hasLeveledUP = await this.Levels.appendXp(loaded.id, 1, randomXP);
 
-            props.footer.msg = msg
-        }
-        props.thumbnail = message.author.avatarURL({
-            dynamic: true
-        })
-        props.description = `*${message.author} begs and receives...*`
-        props.fields = [{
-                name: `${this.emojis.gold}${randomNumber.toLocaleString()}`,
-                value: "Gold",
-                inline: true
-            },
-            {
-                name: `${this.emojis.xp}${randomXP.toLocaleString()}`,
-                value: "XP",
-                inline: true
+            if (hasLeveledUP) {
+
+                const levelData = await this.Levels.fetch(loaded.id, 1);
+                let gainedmoney = 1000
+                let gainedminions = 1
+                let inc = {
+                    gold: gainedmoney,
+                    minions: gainedminions
+                }
+                await this.profileModel.findOneAndUpdate({
+                    userID: loaded.id,
+                }, {
+                    $inc: inc,
+                });
+
+                let msg = [
+                    `You just Advanced to Level ${levelData.level.toLocaleString()}!`,
+                    `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString()}, ${this.emojis.minions}${gainedminions.toLocaleString()}`
+                ].join(" · ")
+
+                props.footer.msg = msg
             }
-        ]
+
+            props.description = `*${message.author} begs and receives...*`
+            props.fields = [
+                {
+                    name: `${this.emojis.gold}${randomNumber.toLocaleString()}`,
+                    value: "Gold",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.xp}${randomXP.toLocaleString()}`,
+                    value: "XP",
+                    inline: true
+                }
+            ]
+        }
 
         let embed = new VillainsEmbed(props)
         await this.send(message, embed);
