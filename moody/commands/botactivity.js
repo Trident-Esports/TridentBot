@@ -68,7 +68,7 @@ module.exports = class BotActivityCommand extends BaseCommand {
             if (activity !== "") {
                 let msg = defaults.prefix + "help"
                 client.user.setActivity(msg, {type:activity}) //you can change that to whatever you like
-                props.description = 'Status changed succesfully: ' + activityIndexes[activity].slice(0,1).toUpperCase() + activityIndexes[activity].slice(1) + " **" + msg + "**"
+                props.description = 'Status changed succesfully: ' + activityIndexes[activity].charAt(0).toUpperCase() + activityIndexes[activity].slice(1) + " **" + msg + "**"
             }
         }
 

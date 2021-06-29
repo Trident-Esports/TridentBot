@@ -38,7 +38,7 @@ module.exports = class ShopCommand extends GameCommand {
                 if (itemAttr?.stylized) {
                     names.push(itemAttr.stylized)
                 } else {
-                    names.push(item.slice(0,1).toUpperCase() + item.slice(1))
+                    names.push(item.charAt(0).toUpperCase() + item.slice(1))
                 }
 
                 let items = [];
