@@ -42,7 +42,7 @@ module.exports = class LeaderboardCommand extends GameCommand {
             props.fields.push(
                 {
                     name: ordinal(player.position) + " Place",
-                    value: '*' + player.username + '*',
+                    value: `<@${player.userID}>`,
                     inline: true
                 },
                 {
