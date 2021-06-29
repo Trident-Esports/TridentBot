@@ -149,8 +149,6 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         // Thumbnail
         this.setThumbnail(avatars.thumbnail.avatar)
 
-        console.log(avatars)
-
         // Body Description
         this.setDescription(props.description)
 

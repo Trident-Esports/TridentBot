@@ -1,8 +1,6 @@
 const GameCommand = require('../../../classes/gamecommand.class');
 const VillainsEmbed = require('../../../classes/vembed.class');
 
-const fs = require('fs');
-
 module.exports = class LevelCommand extends GameCommand {
     constructor() {
         super({
@@ -16,50 +14,69 @@ module.exports = class LevelCommand extends GameCommand {
 
     async run(client, message, args) {
         let props = {
-            title: {
+            caption: {
                 text: "Level"
             },
+            title: {},
             description: "",
             footer: {
                 msg: ""
+            },
+            players: {
+                user: {},
+                target: {}
             }
         }
 
-        let mentionedMember = null
-        if (args.length) {
-            mentionedMember = message.mentions.members.first().user
-        } else {
-            mentionedMember = message.author
+        const user = message.author
+        const target = message.mentions.members.first()
+        const loaded = target ? target.user : user
+        props.players.user = {
+            name: user.username,
+            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
         }
 
-        const target = await this.Levels.fetch(mentionedMember.id, 1);
-        if (!target) return message.channel.send("This member doesn't have a Level.😢");
-
-        const XPBoostData = await this.XPBoostModel.findOne({
-            userID: mentionedMember.id
-        });
-
-        props.description = `This is ${mentionedMember}'s Level`
-        props.fields = props.fields = [
-        {
-            name: `${this.emojis.level}${target.level}`,
-            value: "Level",
-            inline: true
-        },
-        {
-            name: `${this.emojis.xp}${target.xp.toLocaleString()} / ${this.Levels.xpFor(target.level + 1).toLocaleString()}`,
-            value: "XP",
-            inline: true
-        },
-        {
-            name: `${this.emojis.xpboost}${XPBoostData.xpboost}%`,
-            value: "XPBoost",
-            inline: false
+        const levelData = await this.Levels.fetch(loaded.id, 1);
+        if (!levelData) {
+            props.title.text = "Error"
+            props.description = "This user doesn't have a Level.😢"
         }
-    ]
-        props.thumbnail = mentionedMember.displayAvatarURL({
-            dynamic: true
-        })
+
+        if (loaded?.bot && loaded.bot) {
+            props.title.text = "Error"
+            props.description = this.errors.cantActionBot.join("\n")
+        }
+
+        if (props.title.text != "Error") {
+            if (target) {
+                props.players.target = {
+                    name: target.username,
+                    avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
+                }
+            }
+            const XPBoostData = await this.XPBoostModel.findOne({
+                userID: loaded.id
+            });
+
+            props.description = `This is <@${loaded.id}>'s Level`
+            props.fields = [
+                {
+                    name: `${this.emojis.level}${levelData.level}`,
+                    value: "Level",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.xp}${levelData.xp.toLocaleString()} / ${this.Levels.xpFor(levelData.level + 1).toLocaleString()}`,
+                    value: "XP",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.xpboost}${XPBoostData.xpboost}%`,
+                    value: "XPBoost",
+                    inline: false
+                }
+            ]
+        }
 
         let embed = new VillainsEmbed(props)
         await message.channel.send(embed);

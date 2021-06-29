@@ -1,8 +1,6 @@
 const GameCommand = require('../../../classes/gamecommand.class');
 const VillainsEmbed = require('../../../classes/vembed.class');
 
-const fs = require('fs');
-
 module.exports = class BalanceCommand extends GameCommand {
     constructor() {
         super({
@@ -31,7 +29,8 @@ module.exports = class BalanceCommand extends GameCommand {
         }
 
         const user = message.author
-        const target = message.mentions.members.first();
+        const target = message.mentions.members.first()
+        const loaded = target ? target.user : user
         props.players.user = {
             name: user.username,
             avatar: user.displayAvatarURL({ format: "png", dynamic: true })
@@ -51,11 +50,12 @@ module.exports = class BalanceCommand extends GameCommand {
             }
 
             const profileData = await this.profileModel.findOne({
-                userID: target ? target.user.id : user.id
+                userID: loaded.id
             });
 
-            props.description = `This is <@${target ? target.user.id : user.id}>'s Balance`
-            props.fields = [{
+            props.description = `This is <@${loaded.id}>'s Balance`
+            props.fields = [
+                {
                     name: ` ${this.emojis.gold}${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
                     value: 'Gold',
                     inline: true
