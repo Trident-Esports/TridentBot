@@ -1,9 +1,12 @@
 const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
-const fs = require('fs');
-
-module.exports = class BegCommand extends GameCommand {
+function ordinal(n) {
+  var s = ["th", "st", "nd", "rd"];
+  var v = n%100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+}
+module.exports = class LeaderboardCommand extends GameCommand {
     constructor() {
         super({
             name: 'leaderboard',
@@ -31,11 +34,37 @@ module.exports = class BegCommand extends GameCommand {
         }
 
         const leaderboard = await this.Levels.computeLeaderboard(client, rawLeaderboard, true); // We process the leaderboard.
-        const lb = leaderboard.map(e => `${e.position}. \`<@${e.userID}>\`\nLevel: ${e.level}\nXP: ${e.xp.toLocaleString()}`); // We map the outputs.
 
-        props.description = `\`${lb.join("\n\n")}\``
+        let pages = []
+        props.fields = []
 
-        let embed = new VillainsEmbed(props)
-        await this.send(message, embed);
+        for (let [slot, player] of Object.entries(leaderboard)) {
+            props.fields.push(
+                {
+                    name: ordinal(player.position) + " Place",
+                    value: '*' + player.username + '*',
+                    inline: true
+                },
+                {
+                    name: this.emojis.level + player.level,
+                    value: "Level",
+                    inline: true
+                },
+                {
+                    name: this.emojis.xp + player.xp.toLocaleString(),
+                    value: "XP",
+                    inline: true
+                }
+            )
+            if ((parseInt(slot) + 1) % 8 == 0) {
+                pages.push(new VillainsEmbed(props))
+                props.fields = []
+            }
+        }
+        if (props.fields.length > 0) {
+            pages.push(new VillainsEmbed(props))
+        }
+
+        await this.send(message, pages);
     }
 }
