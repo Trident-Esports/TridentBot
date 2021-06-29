@@ -18,17 +18,29 @@ module.exports = class ShopCommand extends GameCommand {
     async run(client, message) {
 
         let props = {
-            title: {
-                text: "ItemShop"
+            caption: {
+                text: "Shop"
             },
-            description: "This is the ItemShop",
-            thumbnail: "",
+            title: {},
+            description: "",
             footer: {
                 msg: ""
+            },
+            players: {
+                user: {},
+                target: {}
             }
         }
 
+        const user = message.author
+        props.players.user = {
+            name: user.username,
+            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
+        }
+
         let itemData = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
+
+        props.fields = []
 
         for (let [items, itemsAttr] of Object.entries(itemData)) {
             let value = itemsAttr
@@ -50,14 +62,16 @@ module.exports = class ShopCommand extends GameCommand {
                 let descriptions = [];
                 descriptions.push(itemAttr.description);
 
-                props.fields = [{
-                    name: items + " " + names + "   " + "💰" + values.toLocaleString("en-AU"),
-                    value: "`" + descriptions + "`",
-                    inline: false
-                }]
+                props.fields.push(
+                    {
+                        name: items + " " + names + "   " + "💰" + values.toLocaleString("en-AU"),
+                        value: "`" + descriptions + "`",
+                        inline: false
+                    }
+                )
             }
         }
         let embed = new VillainsEmbed(props)
         await this.send(message, embed);
     }
-} //FIX ME: Only shows the last item in the shop
+}
