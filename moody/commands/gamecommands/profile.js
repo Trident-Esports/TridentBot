@@ -16,90 +16,94 @@ module.exports = class ProfileCommand extends GameCommand {
 
     async run(client, message, args) {
         let props = {
-            title: {
+            caption: {
                 text: "Profile"
             },
+            title: {},
             description: "",
             footer: {
                 msg: ""
+            },
+            players: {
+                user: {},
+                target: {}
             }
         }
 
-        let mentionedMember = null
-        if (args.length) {
-            mentionedMember = message.mentions.members.first().user
-        } else {
-            mentionedMember = message.author
+        const user = message.author
+        const target = message.mentions.members.first()
+        const loaded = target ? target.user : user
+        props.players.user = {
+            name: user.username,
+            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
         }
 
-        if (!mentionedMember) {
+        if (loaded?.bot && loaded.bot) {
             props.title.text = "Error"
-            props.description = `That user does not exist. '${args.join(" ")}' given.`
-        } else {
-            props.thumbnail = mentionedMember.avatarURL({
-                dynamic: true
-            })
+            props.description = this.errors.cantActionBot.join("\n")
+        }
+
+        if (props.title.text != "Error") {
+            if (target) {
+                props.players.target = {
+                    name: target.username,
+                    avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
+                }
+            }
 
             const profileData = await this.profileModel.findOne({
-                userID: mentionedMember.id
+                userID: loaded.id
             })
             const healthData = await this.healthModel.findOne({
-                userID: mentionedMember.id
+                userID: loaded.id
             })
             const XPBoostData = await this.XPBoostModel.findOne({
-                userID: mentionedMember.id
+                userID: loaded.id
             })
-            const target = await this.Levels.fetch(mentionedMember.id, 1)
+            const levelData = await this.Levels.fetch(loaded.id, 1)
 
-            if (!profileData) {
-                props.title.text = "Error"
-                props.description = `That user does not have a profile. '${args.join(" ")}' given.`
-            } else {
-                props.description = `This is ${mentionedMember}'s Profile`
-                props.fields = [{
-                        name: "Title",
-                        value: "Beta Tester"
-                    },
-                    {
-                        name: `${this.emojis.level}${target.level}`,
-                        value: "Level",
-                        inline: true
-                    },
-                    {
-                        name: `${this.emojis.xp}${target.xp.toLocaleString("en-AU")} / ${this.Levels.xpFor(target.level + 1).toLocaleString("en-AU")}`,
-                        value: "XP",
-                        inline: true
-                    },
-                    {
-                        name: `${this.emojis.life}${healthData.health}%`,
-                        value: "Life",
-                        inline: true
-                    },
-                    {
-                        name: `${this.emojis.gold}${profileData.gold.toLocaleString("en-AU")}`,
-                        value: "Gold",
-                        inline: true
-                    },
-                    {
-                        name: `${this.emojis.bank}${profileData.bank.toLocaleString("en-AU")}`,
-                        value: "Bank",
-                        inline: true
-                    },
-                    {
-                        name: `${this.emojis.minions}${profileData.minions}`,
-                        value: "Minions",
-                        inline: true
-                    },
-                    {
-                        name: `${this.emojis.xpboost}${XPBoostData.xpboost}%`,
-                        value: "XPBoost",
-                        inline: true
-                    }
-                ]
-                props.thumbnail = mentionedMember.displayAvatarURL({
-                    dynamic: true
-                })
-            }
+            props.description = `This is <@${loaded.id}>'s Profile`
+            props.fields = [
+                {
+                    name: "Title",
+                    value: "Beta Tester"
+                },
+                {
+                    name: `${this.emojis.level}${levelData.level}`,
+                    value: "Level",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.xp}${levelData.xp.toLocaleString("en-AU")} / ${this.Levels.xpFor(levelData.level + 1).toLocaleString("en-AU")}`,
+                    value: "XP",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.life}${healthData.health}%`,
+                    value: "Life",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.gold}${profileData.gold.toLocaleString("en-AU")}`,
+                    value: "Gold",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.bank}${profileData.bank.toLocaleString("en-AU")}`,
+                    value: "Bank",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.minions}${profileData.minions}`,
+                    value: "Minions",
+                    inline: true
+                },
+                {
+                    name: `${this.emojis.xpboost}${XPBoostData.xpboost}%`,
+                    value: "XPBoost",
+                    inline: true
+                }
+            ]
         }
 
         let embed = new VillainsEmbed(props)
