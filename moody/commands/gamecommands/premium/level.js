@@ -66,7 +66,7 @@ module.exports = class LevelCommand extends GameCommand {
                     inline: true
                 },
                 {
-                    name: `${this.emojis.xp}${levelData.xp.toLocaleString()} / ${this.Levels.xpFor(levelData.level + 1).toLocaleString()}`,
+                    name: `${this.emojis.xp}${levelData.xp.toLocaleString("en-AU")} / ${this.Levels.xpFor(levelData.level + 1).toLocaleString("en-AU")}`,
                     value: "XP",
                     inline: true
                 },

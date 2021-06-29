@@ -56,7 +56,7 @@ module.exports = class ATMCommand extends GameCommand {
             props.description = []
 
             let [verb, direction] = ((props.title.text == "Deposit") ? [ "Deposited", "into" ] : [ "Withdrawn", "from" ])
-            props.description.push(`**${message.author} has ${verb} ${this.emojis.gold}${amount.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Gold ${direction} their Bank!**`)
+            props.description.push(`**${message.author} has ${verb} ${this.emojis.gold}${amount.toLocaleString("en-AU")} Gold ${direction} their Bank!**`)
             props.description.push("_Check your balance using `.balance`_")
 
             props.description = props.description.join("\n")

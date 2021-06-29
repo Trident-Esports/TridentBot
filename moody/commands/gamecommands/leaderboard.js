@@ -51,7 +51,7 @@ module.exports = class LeaderboardCommand extends GameCommand {
                     inline: true
                 },
                 {
-                    name: this.emojis.xp + player.xp.toLocaleString(),
+                    name: this.emojis.xp + player.xp.toLocaleString("en-AU"),
                     value: "XP",
                     inline: true
                 }

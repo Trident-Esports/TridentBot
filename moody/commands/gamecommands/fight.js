@@ -74,8 +74,8 @@ module.exports = class BuyCommand extends GameCommand {
 
             props.color = "#FF5000"
             props.title = "WINNER WINNER CHICKEN DINNER"
-            props.description = `<@${chosenWinner}> Won the Fight. Recieving 💰${WinningsNUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} in Winnings!
-                
+            props.description = `<@${chosenWinner}> Won the Fight. Recieving 💰${WinningsNUMBER.toString()} in Winnings!
+
                 ${message.author} Earned ${randomXP} XP`
 
             if (m.content.startsWith(prefix)) {

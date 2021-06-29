@@ -51,7 +51,7 @@ module.exports = class ShopCommand extends GameCommand {
                 descriptions.push(itemAttr.description);
 
                 props.fields = [{
-                    name: items + " " + names + "   " + "💰" + values.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ","),
+                    name: items + " " + names + "   " + "💰" + values.toLocaleString("en-AU"),
                     value: "`" + descriptions + "`",
                     inline: false
                 }]

@@ -132,7 +132,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                 console.log((gotHeads ? "Heads" : "Tails" + ':'),number)
                                 props.color = props.success.color
                                 props.title.text = props.success.title
-                                props.description = `You chose ${m.content} and won ${this.emojis.gold}${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.`
+                                props.description = `You chose ${m.content} and won ${this.emojis.gold}${gambledAmount.toString()}.`
                             } else if (number <= Side && m.content.toLowerCase() === 'side') {
                                 await this.profileModel.findOneAndUpdate({
                                     userID: loaded.id,
@@ -157,7 +157,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                 console.log("Fail:",number)
                                 props.color = props.fail.color
                                 props.title.text = props.fail.title
-                                props.description = `You chose ${m.content} and the coin didn't land on that. this means you just lost ${this.emojis.gold}${gambledAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}\n Maybe a bad idea or just Unlucky.`
+                                props.description = `You chose ${m.content} and the coin didn't land on that. this means you just lost ${this.emojis.gold}${gambledAmount.toString()}\n Maybe a bad idea or just Unlucky.`
                             }
 
                             let embed = new VillainsEmbed(props)

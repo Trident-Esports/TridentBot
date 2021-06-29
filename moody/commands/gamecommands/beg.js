@@ -76,8 +76,8 @@ module.exports = class BegCommand extends GameCommand {
                 });
 
                 let msg = [
-                    `You just Advanced to Level ${levelData.level.toLocaleString()}!`,
-                    `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString()}, ${this.emojis.minions}${gainedminions.toLocaleString()}`
+                    `You just Advanced to Level ${levelData.level.toLocaleString("en-AU")}!`,
+                    `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString("en-AU")}, ${this.emojis.minions}${gainedminions.toLocaleString("en-AU")}`
                 ].join(" · ")
 
                 props.footer.msg = msg
@@ -86,12 +86,12 @@ module.exports = class BegCommand extends GameCommand {
             props.description = `*${message.author} begs and receives...*`
             props.fields = [
                 {
-                    name: `${this.emojis.gold}${randomNumber.toLocaleString()}`,
+                    name: `${this.emojis.gold}${randomNumber.toLocaleString("en-AU")}`,
                     value: "Gold",
                     inline: true
                 },
                 {
-                    name: `${this.emojis.xp}${randomXP.toLocaleString()}`,
+                    name: `${this.emojis.xp}${randomXP.toLocaleString("en-AU")}`,
                     value: "XP",
                     inline: true
                 }

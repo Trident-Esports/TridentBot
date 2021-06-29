@@ -58,7 +58,7 @@ module.exports = class DailyCommand extends GameCommand {
             props.description = `*<@${loaded.id}> has checked into the Lair for the Day and received...*`
             props.fields = [
                 {
-                    name: `${this.emojis.gold}${randomNumber.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    name: `${this.emojis.gold}${randomNumber.toLocaleString("en-AU")}`,
                     value: "Gold"
                 }
             ]

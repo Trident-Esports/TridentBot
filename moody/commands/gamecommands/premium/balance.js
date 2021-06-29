@@ -56,12 +56,12 @@ module.exports = class BalanceCommand extends GameCommand {
             props.description = `This is <@${loaded.id}>'s Balance`
             props.fields = [
                 {
-                    name: ` ${this.emojis.gold}${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    name: ` ${this.emojis.gold}${profileData.gold.toLocaleString("en-AU")}`,
                     value: 'Gold',
                     inline: true
                 },
                 {
-                    name: ` ${this.emojis.bank}${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    name: ` ${this.emojis.bank}${profileData.bank.toLocaleString("en-AU")}`,
                     value: 'Bank',
                     inline: true
                 },

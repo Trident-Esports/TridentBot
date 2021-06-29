@@ -130,24 +130,24 @@ module.exports = class CoinFlipCommand extends GameCommand {
                         goldincrease
 
                         props.color = props.success.color
-                        props.description = `You searched the ${m.content} and found 💰${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-               
+                        props.description = `You searched the ${m.content} and found 💰${RANDOM_NUMBER.toString()}
+
                         Earned ${randomXP} XP`
                     } else if (number <= fail) {
                         goldremove
                         healthloss
 
                         props.color = props.fail.color
-                        props.description = `You searched the ${m.content} and got injured! This causes you to drop ${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                        props.description = `You searched the ${m.content} and got injured! This causes you to drop ${RANDOM_NUMBER.toString()}
                         Maybe a bad idea or just Unlucky.
-                            
+
                         Earned ${randomXP} XP and even more experience of not to do it again xD`
                     } else if (number <= special) {
                         minions_increase
 
                         props.color = props.special.color
                         props.desscription = `You go to search the ${m.content} and for some reason find ${RANDOM_MINIONS} Minions following you home.
-                            
+
                         Earned ${randomXP} XP`
                     }
 
@@ -161,7 +161,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
         COLLECTOR.on("end", (collected) => {
             if (collected.size == 0) {
                 return message.reply(
-                    `What are you doing <@${message.author.id}>?! There was 💰${RANDOM_NUMBER.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} hidden inside the ${chosenLocations[0]} 😭\n Luckily you atleast Earned ${randomXP} XP`
+                    `What are you doing <@${message.author.id}>?! There was 💰${RANDOM_NUMBER.toString()} hidden inside the ${chosenLocations[0]} 😭\n Luckily you atleast Earned ${randomXP} XP`
                 );
             }
         });

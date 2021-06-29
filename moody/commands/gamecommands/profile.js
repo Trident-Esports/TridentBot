@@ -66,7 +66,7 @@ module.exports = class ProfileCommand extends GameCommand {
                         inline: true
                     },
                     {
-                        name: `${this.emojis.xp}${target.xp.toLocaleString()} / ${this.Levels.xpFor(target.level + 1).toLocaleString()}`,
+                        name: `${this.emojis.xp}${target.xp.toLocaleString("en-AU")} / ${this.Levels.xpFor(target.level + 1).toLocaleString("en-AU")}`,
                         value: "XP",
                         inline: true
                     },
@@ -76,12 +76,12 @@ module.exports = class ProfileCommand extends GameCommand {
                         inline: true
                     },
                     {
-                        name: `${this.emojis.gold}${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                        name: `${this.emojis.gold}${profileData.gold.toLocaleString("en-AU")}`,
                         value: "Gold",
                         inline: true
                     },
                     {
-                        name: `${this.emojis.bank}${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                        name: `${this.emojis.bank}${profileData.bank.toLocaleString("en-AU")}`,
                         value: "Bank",
                         inline: true
                     },
