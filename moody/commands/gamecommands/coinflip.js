@@ -82,14 +82,13 @@ module.exports = class CoinFlipCommand extends GameCommand {
                         "Tails",
                         "Side",
                     ];
-
-                    let chosenVariable = variables.sort(() => Math.random() - Math.random()).slice(0, 3);
+                    const shortvars = variables.map((e) => e.charAt(0))
 
                     let [minMinions, maxMinions] = [1, 3]
                     const RANDOM_MINIONS = Math.floor(Math.random() * (maxMinions - minMinions)) + minMinions;
 
                     const FILTER = (m) => {
-                        return chosenVariable.some((answer) => answer.toLowerCase() === m.content.toLowerCase()) && m.author.id === loaded.id;
+                        return shortvars.some((answer) => answer.charAt(0).toLowerCase() === m.content.charAt(0).toLowerCase()) && m.author.id === loaded.id;
                     };
 
                     const COLLECTOR = message.channel.createMessageCollector(FILTER, {
@@ -119,8 +118,20 @@ module.exports = class CoinFlipCommand extends GameCommand {
                         var Side = 2;
 
                         try {
-                            let gotHeads = number <= Heads && m.content.toLowerCase() === 'heads';
-                            let gotTails = number <= Tails && m.content.toLowerCase() === 'tails';
+                            let gotHeads = number <= Heads && m.content.charAt(0).toLowerCase() === 'h';
+                            let gotTails = number <= Tails && m.content.charAt(0).toLowerCase() === 't';
+                            let choice = ""
+                            switch(m.content.charAt(0).toLowerCase()) {
+                                case 'h':
+                                    choice = "Heads"
+                                    break
+                                case 't':
+                                    choice = "Tails"
+                                    break
+                                case 's':
+                                    choice = "Side"
+                                    break
+                            }
                             if (gotHeads || gotTails) {
                                 await this.profileModel.findOneAndUpdate({
                                     userID: loaded.id,
@@ -132,8 +143,8 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                 console.log((gotHeads ? "Heads" : "Tails" + ':'),number)
                                 props.color = props.success.color
                                 props.title.text = props.success.title
-                                props.description = `You chose ${m.content} and won ${this.emojis.gold}${gambledAmount.toString()}.`
-                            } else if (number <= Side && m.content.toLowerCase() === 'side') {
+                                props.description = `You chose ${choice} and won ${this.emojis.gold}${gambledAmount.toString()}.`
+                            } else if (number <= Side && m.content.charAt(0).toLowerCase() === 's') {
                                 await this.profileModel.findOneAndUpdate({
                                     userID: loaded.id,
                                 }, {
@@ -145,7 +156,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                 console.log("Side:",number)
                                 props.color = props.special.color
                                 props.title.text = props.special.title
-                                props.description = `You go to flip the coin and it lands on its ${m.content} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours!`
+                                props.description = `You go to flip the coin and it lands on its ${choice} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours!`
                             } else {
                                 await this.profileModel.findOneAndUpdate({
                                     userID: loaded.id,
@@ -157,7 +168,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                 console.log("Fail:",number)
                                 props.color = props.fail.color
                                 props.title.text = props.fail.title
-                                props.description = `You chose ${m.content} and the coin didn't land on that. this means you just lost ${this.emojis.gold}${gambledAmount.toString()}\n Maybe a bad idea or just Unlucky.`
+                                props.description = `You chose ${choice} and the coin didn't land on that. this means you just lost ${this.emojis.gold}${gambledAmount.toString()}\n Maybe a bad idea or just Unlucky.`
                             }
 
                             let embed = new VillainsEmbed(props)
