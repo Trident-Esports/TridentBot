@@ -1,8 +1,6 @@
 const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
-const fs = require('fs');
-
 module.exports = class DailyCommand extends GameCommand {
     constructor() {
         super({
@@ -15,36 +13,56 @@ module.exports = class DailyCommand extends GameCommand {
 
     async run(client, message, args) {
         let props = {
-            title: {
+            caption: {
                 text: "Daily"
             },
+            title: {},
             description: "",
             footer: {
                 msg: ""
+            },
+            players: {
+                user: {},
+                target: {}
             }
         }
 
-        const randomNumber = Math.floor(Math.random() * 0) + 30000;
+        const user = message.author
+        const loaded = user
 
-        let inc = {
-            gold: randomNumber
+        props.players.user = {
+            name: user.username,
+            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
         }
-        await this.profileModel.findOneAndUpdate({
-            userID: message.author.id,
-        }, {
-            $inc: inc,
-        });
 
-        props.thumbnail = message.author.avatarURL({
-            dynamic: true
-        })
-        props.description = `${message.author} has checked into the Lair for the Day and received`
-        props.fields = [
-            {
-                name: `${this.emojis.gold}${randomNumber.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                value: "Gold"
+        if (loaded?.bot && loaded.bot) {
+            props.title.text = "Error"
+            props.description = this.errors.cantActionBot.join("\n")
+        }
+
+        if (props.title.text != "Error") {
+
+            // Gold Reward: 30000 - 30000
+            let [minReward, maxReward] = [30000, 30000]
+            const randomNumber = Math.floor(Math.random() * (maxReward - minReward)) + minReward;
+
+            let inc = {
+                gold: randomNumber
             }
-        ]
+            await this.profileModel.findOneAndUpdate({
+                userID: loaded.id,
+            }, {
+                $inc: inc,
+            });
+
+            props.description = `*<@${loaded.id}> has checked into the Lair for the Day and received...*`
+            props.fields = [
+                {
+                    name: `${this.emojis.gold}${randomNumber.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    value: "Gold"
+                }
+            ]
+        }
 
         let embed = new VillainsEmbed(props)
         await this.send(message, embed);
