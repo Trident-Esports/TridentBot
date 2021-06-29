@@ -18,5 +18,6 @@ module.exports = class GameCommand extends VillainsCommand {
             }
         }
         this.emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
+        this.errors = JSON.parse(fs.readFileSync("game/dbs/errors.json", "utf8"))
     }
 }

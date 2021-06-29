@@ -16,46 +16,62 @@ module.exports = class BalanceCommand extends GameCommand {
 
     async run(client, message, args) {
         let props = {
-            title: {
+            caption: {
                 text: "Balance"
             },
+            title: {},
             description: "",
             footer: {
                 msg: ""
+            },
+            players: {
+                user: {},
+                target: {}
             }
         }
 
-        let mentionedMember = null
-        if (args.length) {
-            mentionedMember = message.mentions.members.first().user
-        } else {
-            mentionedMember = message.author
+        const user = message.author
+        const target = message.mentions.members.first();
+        props.players.user = {
+            name: user.username,
+            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
         }
 
-        const profileData = await this.profileModel.findOne({
-            userID: mentionedMember.id
-        });
+        if (target?.user?.bot && target.user.bot) {
+            props.title.text = "Error"
+            props.description = this.errors.cantActionBot.join("\n")
+        }
 
-        props.description = `This is ${mentionedMember}'s Balance`
-        props.fields = [{
-                name: ` ${this.emojis.gold}${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                value: 'Gold',
-                inline: true
-            },
-            {
-                name: ` ${this.emojis.bank}${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
-                value: 'Bank',
-                inline: true
-            },
-            {
-                name: ` ${this.emojis.minions}${profileData.minions}`,
-                value: 'Minions',
-                inline: true
+        if (props.title.text != "Error") {
+            if (target) {
+                props.players.target = {
+                    name: target.username,
+                    avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
+                }
             }
-        ]
-        props.thumbnail = mentionedMember.displayAvatarURL({
-            dynamic: true
-        })
+
+            const profileData = await this.profileModel.findOne({
+                userID: target ? target.user.id : user.id
+            });
+
+            props.description = `This is <@${target ? target.user.id : user.id}>'s Balance`
+            props.fields = [{
+                    name: ` ${this.emojis.gold}${profileData.gold.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    value: 'Gold',
+                    inline: true
+                },
+                {
+                    name: ` ${this.emojis.bank}${profileData.bank.toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
+                    value: 'Bank',
+                    inline: true
+                },
+                {
+                    name: ` ${this.emojis.minions}${profileData.minions}`,
+                    value: 'Minions',
+                    inline: true
+                }
+            ]
+        }
 
         let embed = new VillainsEmbed(props)
         await message.channel.send(embed);

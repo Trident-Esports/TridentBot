@@ -16,9 +16,6 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         ) {
             props.title.text = "Source"
         }
-        if ((!props?.thumbnail) || (props?.thumbnail && props.thumbnail.trim() == "")) {
-            props.thumbnail = defaults.thumbnail
-        }
         if ((!props?.description) || (props?.description && props.description.trim() == "")) {
             props.description = "** **"
         }
@@ -77,37 +74,82 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         // Stripe
         this.setColor(props.color)
 
-        // Author
-        if((props.thumbnail != defaults.thumbnail) && (props.thumbnail != "<NONE>")) {
-            // Author:    NO
-            // Title:     Y/N
-            // URL:       Y/N
-            // Thumbnail: YES
-            // Hijack author spot to have default Thumbnail
-            this.setAuthor(
-                props?.title?.text && props.title.text.trim() != "" ? props.title.text : "",
-                defaults.thumbnail,
-                props?.title?.url && props.title.url.trim() != "" ? props.title.url : ""
-            )
-        } else {
-            if(props?.author?.name && props.author.name.trim() != "") {
-                // Author: YES
-                this.setAuthor(props.author.name, props.author.avatar, props.author.url)
+        // Avatars
+        //  Default: Bot as Thumbnail
+        //  Custom Thumbnail: Bot as Author
+        //  Custom Thumbnail & Custom Author: No Bot
+
+        let bot = { name: "Bot", avatar: defaults.thumbnail.trim() }
+        if (!(props?.players)) {
+            props.players = {
+                bot: bot
             }
-            // Title:  Y/N
-            // URL:    Y/N
-            if(props?.title?.text && props.title.text.trim() != "" && props.title.text.trim() != "<NONE>") {
-                this.setTitle("***" + props.title.text + "***")
-            }
-            if(props?.title?.url && props.title.url.trim() != "") {
-                this.setURL(props.title.url)
+        } else if (!(props?.players?.bot)) {
+            props.players.bot = bot
+        }
+
+        let avatars = {
+            caption: { text: props?.caption?.text && props.caption.text.trim() != "" ? props.caption.text.trim() : "" },
+            title: props.title,
+            bot: {
+                type: "bot",
+                name: props.players.bot.name,
+                url: "http://example.com/bot",
+                avatar: props.players.bot.avatar
+            },
+            user: {
+                type: "user",
+                name: props?.players?.user?.name && props.players.user.name.trim() != "" ? props.players.user.name.trim() : "",
+                url: "http://example.com/user",
+                avatar: props?.players?.user?.avatar && props.players.user.avatar.trim() != "" ? props.players.user.avatar.trim() : ""
+            },
+            target: {
+                type: "target",
+                name: props?.players?.target?.name && props.players.target.name.trim() != "" ? props.players.target.name.trim() : "",
+                url: "http://example.com/target",
+                avatar: props?.players?.target?.avatar && props.players.target.avatar.trim() != "" ? props.players.target.avatar.trim() : ""
+            },
+            thumbnail: {},
+            author: {}
+        }
+
+        // Default; put Bot in Thumbnail
+        avatars.thumbnail = avatars.bot
+
+        // Have a User, move Bot to Author
+        if(avatars.user.avatar != "") {
+            avatars.author = avatars.bot
+            avatars.thumbnail = avatars.user
+
+            if(avatars.target.avatar != "") {
+                // Have a Target, move User to Author
+                avatars.author = avatars.user
+                avatars.thumbnail = avatars.target
             }
         }
 
-        // Thumbnail
-        if(props.thumbnail != "<NONE>") {
-            this.setThumbnail(props.thumbnail)
+        // Title
+        if(props?.title?.text && props.title.text.trim() != "") {
+            this.setTitle(props.title.text)
+            if (props?.title?.url && props.title.url.trim() != "") {
+                this.setURL(props.title.url.trim())
+            }
         }
+
+        // Author
+        let author = props?.caption?.text && props.caption.text.trim() != "" ? props.caption.text.trim() : avatars.author.name
+        if (author) {
+            this.setAuthor(
+                author,
+                avatars.author.avatar,
+                avatars.author.url
+            )
+        }
+
+        // Thumbnail
+        this.setThumbnail(avatars.thumbnail.avatar)
+
+        console.log(avatars)
 
         // Body Description
         this.setDescription(props.description)

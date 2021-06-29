@@ -1,9 +1,9 @@
 const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
-const fs = require('fs');
+// ATMCommand: User to User, like Give
 
-module.exports = class BuyCommand extends GameCommand {
+module.exports = class RobCommand extends GameCommand {
     constructor() {
         super({
             name: 'rob',
@@ -20,150 +20,211 @@ module.exports = class BuyCommand extends GameCommand {
                 name: "",
                 avatar: ""
             },
-            title: {
-                text: ""
+            caption: {
+                text: "Rob",
+                avatar: "",
+                url: ""
             },
+            title: {},
             description: "",
             footer: {
                 msg: ""
+            },
+            players: {
+                user: {},
+                target: {}
             }
         }
-
-        const randomXP = Math.floor(Math.random() * 120) + 30;
-        const hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
 
         const user = message.author
-        const mention = message.mentions.members.first();
+        const target = message.mentions.members.first();
 
-        const profileData = await this.profileModel.findOne({
-            userID: mention.id
-        })
-
-        if (!mention) {
-            this.cooldown = 0;
-            return message.reply('Whom Do You Want Rob?');
-        }
-        if (mention.user.bot) {
-            return message.reply("Now who's the Bot?🤡\nRob someone who isn't a bot next time dummy!");
-        }
-        if (user.id === mention.id) {
-            this.cooldown = 0;
-            return message.reply("You can't rob yourself dummy");
-        }
-        const usermoney = this.profileModel.findOne({
-            userID: user.id,
-            gold: profileData.gold
-        }) // Same As balance.js // Get User Money
-        const mentionmoney = this.profileModel.findOne({
-            userID: mention.id,
-            gold: profileData.gold
-        }) // Same As balance.js // Get Mentioned User Money
-
-        const random = (min, max) => {
-            return Math.floor(Math.random() * (max - min)) + min
+        if (user) {
+            props.players.user = {
+                name: user.username,
+                avatar: user.displayAvatarURL({ format: "png", dynamic: true })
+            }
         }
 
-        let options = [
-            'Success',
-            'Failed',
-            'Paid'
-        ]
-        let robbed = random(0, parseInt(options.length))
-        let final = options[robbed]
+        if (!target) {
+            //FIXME: Cooldown
+            // this.cooldown = 0;
+            props.title.text = "Error"
+            props.description = "You gotta choose someone to rob."
+        }
+        if (target?.user?.bot && target.user.bot) {
+            props.title.text = "Error"
+            props.description = this.errors.cantActionBot.join("\n")
+        }
+        if (target?.id && (user.id === target.id)) {
+            //FIXME: Cooldown
+            // this.cooldown = 0;
+            props.title.text = "Error"
+            props.description = "You can't rob yourself, dummy!"
+        }
 
-        if (usermoney < 500) {
-            return message.reply(`You Need Atleast ${this.emojis.gold}500 In Your Wallet To Rob Someone`)
-        } // If User Money In Wallet Is Less Then 2000
-        if (mentionmoney < 500) {
-            return message.reply(`Mentioned User Should Have Atleast ${this.emojis.gold}500 In Wallet To Rob`)
-        } // If Mentioned User Money In Wallet Is Less Then 2000
-
-        if (final === 'Success') {
-
-            const amount = Math.floor(Math.random() * 1400) + 100 // Min Is 100 And Max Is 1500(100+1400)
-
-            if (mentionmoney.gold < amount) {
-                amount = mentionmoney.gold
+        if (props.title.text != "Error") {
+            const profileData = await this.profileModel.findOne({
+                userID: target.id
+            })
+            const usermoney = this.profileModel.findOne({
+                userID: user.id,
+                gold: profileData.gold
+            })
+            const targetmoney = this.profileModel.findOne({
+                userID: target.id,
+                gold: profileData.gold
+            })
+            props.players.target = {
+                name: target.user.username,
+                avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
             }
 
-            props.author.name = `Holding your hostage at Gunpoint.`
-            props.author.avatar = user.displayAvatarURL({
-                dynamic: true
-            })
+            let options = [
+                'Success',
+                'Failed',
+                'Paid'
+            ]
+            let final = options[
+                Math.floor(
+                    Math.random() * parseInt(options.length)
+                )
+            ]
+
+            let minSteal = 500
+
+            if (usermoney < minSteal) {
+                // You need >= $minSteal
+                props.title.text = "Error"
+                props.description = `You need at least ${this.emojis.gold}${minSteal} in your wallet to rob someone!`
+            }
+            if (targetmoney < minSteal) {
+                // Target needs >= $minSteal
+                props.title.text = "Error"
+                props.description = `Mentioned user needs to have at least ${this.emojis.gold}${minSteal} in their wallet to rob!`
+            }
+
+            if (props.title.text != "Error") {
+                props.caption.text = `Holding your hostage at Gunpoint.`
                 props.title.text = `You try to rob them.`
-                props.description = `<@${user.id}> Robbed <@${mention.id}> And Got Away With ${this.emojis.gold}**$${amount}**
 
-                Earned ${randomXP} XP`
+                // XP Reward 30 - 150
+                let [minXP, maxXP] = [30, 150]
+                const randomXP = Math.floor(Math.random() * (maxXP - minXP)) + minXP;
 
-            await this.profileModel.findOneAndUpdate({
-                userID: user.id
-            }, {
-                $inc: {
-                    gold: amount,
-                },
-            }); // Add Money To User's Wallet
-            await this.profileModel.findOneAndUpdate({
-                userID: mention.id
-            }, {
-                $inc: {
-                    gold: -amount,
-                },
-            }); // Substract Money From Mention(Robbed) User's Wallet
+                // Gold Reward: 100 - 1500
+                let [minReward, maxReward] = [100, 1500]
+                const amount = Math.floor(Math.random() * (maxReward - minReward)) + minReward
 
-        } else if (final === 'Failed') {
-            props.author.name = `Holding your hostage at Gunpoint.`
-            props.author.avatar = user.displayAvatarURL({
-                dynamic: true
-            })
-                props.title.text = `You try to rob them.`
-                props.description = `<@${user.id}> tried To Rob <@${mention.id}>. You realise they are poor.
+                // Ding?
+                let hasLeveledUP = false
 
-                Earned ${randomXP} XP`
+                if (final === 'Success') {
+                    hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
 
-        } else if (final === 'Paid') {
+                    if (targetmoney.gold < amount) {
+                        amount = targetmoney.gold
+                    }
 
-            const amount = Math.floor(Math.random() * 1400) + 100 // Min Is 100 And Max Is 1500(100+1400)
+                    props.description = `<@${user.id}> robbed <@${target.id}> and got away with...`
+                    props.fields = [
+                        {
+                            name: `${this.emojis.gold}${amount}`,
+                            value: "Gold",
+                            inline: true
+                        },
+                        {
+                            name: `${this.emojis.xp}${randomXP}`,
+                            value: "XP",
+                            inline: true
+                        }
+                    ]
 
-            props.author.name = `Holding your hostage at Gunpoint.`
-            props.author.avatar = user.displayAvatarURL({
-                    dynamic: true
-                })
-            props.title.text = `You try to rob them.`
-            props.description = `<@${user.id}> tried to rob <@${mention.id}>. You were Caught and instead <@${mention.id}> stole your gun and robbed you of ${this.emojis.gold}**${amount}**.
-            WHAT A FAIL!
+                    // Add $minSteal to User
+                    let inc = { gold: amount }
+                    await this.profileModel.findOneAndUpdate({
+                        userID: user.id
+                    }, {
+                        $inc: inc
+                    });
 
-            <@${user.id}> Earned ${randomXP} XP`
+                    // Remove $minSteal from Target
+                    inc = { gold: -amount }
+                    await this.profileModel.findOneAndUpdate({
+                        userID: target.id
+                    }, {
+                        $inc: inc
+                    });
 
-            await this.profileModel.findOneAndUpdate({
-                userID: mention.id
-            }, {
-                $inc: {
-                    gold: amount,
-                },
-            }); // Add Money Mentioned(Robbed) User's Wallet
-            await this.profileModel.findOneAndUpdate({
-                userID: user.id
-            }, {
-                $inc: {
-                    gold: -amount,
-                },
-            }); // Substract Money From User's Wallet
-        }
+                } else if (final === 'Failed') {
+                    hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
 
-        if (hasLeveledUP) {
+                    props.description = [
+                        `<@${user.id}> tried to rob <@${target.id}>. You realise they are poor.`,
+                        `You **earned**...`
+                    ].join("\n")
+                    props.fields = [
+                        {
+                            name: `${this.emojis.xp}${randomXP}`,
+                            value: "XP",
+                            inline: true
+                        }
+                    ]
 
-            const user = await this.Levels.fetch(message.author.id, 1);
-            const target = message.author
-            await this.profileModel.findOneAndUpdate({
-                userID: target.id,
-            }, {
-                $inc: {
-                    gold: 1000,
-                    minions: 1
+                } else if (final === 'Paid') {
+                    hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
+
+                    props.description = [
+                        `<@${user.id}> tried to rob <@${target.id}>. You were caught and instead <@${target.id}> stole your gun and robbed you of **${this.emojis.gold}${amount}**.`,
+                        "WHAT A FAIL!",
+                        "",
+                        `You **earned**...`
+                    ].join("\n")
+                    props.fields = [
+                        {
+                            name: `__**${this.emojis.gold}-${amount}**__`,
+                            value: "~~Gold~~",
+                            inline: true
+                        },
+                        {
+                            name: `${this.emojis.xp}${randomXP}`,
+                            value: "XP",
+                            inline: true
+                        }
+                    ]
+
+                    // Add $minSteal to Target
+                    let inc = { gold: amount }
+                    await this.profileModel.findOneAndUpdate({
+                        userID: target.id
+                    }, {
+                        $inc: inc
+                    });
+
+                    // Remove $minSteal from User
+                    inc = { gold: -amount }
+                    await this.profileModel.findOneAndUpdate({
+                        userID: user.id
+                    }, {
+                        $inc: inc
+                    });
                 }
-            });
-            props.footer.msg = `${message.author.username} You just Advanced to Level ${user.level}!
-            You have gained: 💰+1000 , 🐵+1`
+
+                if (hasLeveledUP) {
+                    const user = await this.Levels.fetch(message.author.id, 1);
+                    const target = message.author
+                    let inc = { gold: 1000, minions: 1 }
+                    await this.profileModel.findOneAndUpdate({
+                        userID: target.id,
+                    }, {
+                        $inc: inc
+                    });
+                    props.footer.msg = [
+                        `${message.author.username} You just Advanced to Level ${user.level}!`,
+                        `You have gained: ${this.emojis.gold}${inc.gold}, ${this.emojis.minions}${inc.minions}`
+                    ].join(" · ")
+                }
+            }
         }
 
         let embed = new VillainsEmbed(props)
