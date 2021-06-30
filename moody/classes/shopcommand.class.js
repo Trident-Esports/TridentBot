@@ -62,10 +62,27 @@ module.exports = class ShopCommand extends GameCommand {
 
             if (props.title.text != "Error") {
                 let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
+
+                let inventorySorts = {
+                    fromDB: {},
+                    toDB: {},
+                    flat: {},
+                    conversions: {
+                        emojiToKey: {},
+                        emojiToCat: {},
+                        keyToEmoji: {},
+                        keyToCat: {}
+                    }
+                }
+
                 let emojiItems = {}
                 for (let [cat, items] of Object.entries(STOCKDATA)) {
                     for (let [itemName, itemData] of Object.entries(items)) {
                         emojiItems[itemData.emoji] = itemName
+                        inventorySorts.conversions.emojiToKey[itemData.emoji] = itemName
+                        inventorySorts.conversions.emojiToCat[itemData.emoji] = cat
+                        inventorySorts.conversions.keyToEmoji[itemName] = itemData.emoji
+                        inventorySorts.conversions.keyToCat[itemName] = cat
                     }
                 }
 
@@ -102,6 +119,31 @@ module.exports = class ShopCommand extends GameCommand {
                         break
                     }
                 }
+
+                for (let cat of ["items","consumables","powers"]) {
+                    if (!(cat in inventorySorts.fromDB)) {
+                        inventorySorts.fromDB[cat] = {}
+                    }
+                    for(let item of inventoryData[cat]) {
+                        let properCat = inventorySorts.conversions.emojiToCat[item]
+                        if (!(item in inventorySorts.fromDB[cat])) {
+                            inventorySorts.fromDB[cat][item] = 0
+                        }
+                        if (!(properCat in inventorySorts.toDB)) {
+                            inventorySorts.toDB[properCat] = {}
+                        }
+                        if (!(item in inventorySorts.toDB[properCat])) {
+                            inventorySorts.toDB[properCat][item] = 0
+                        }
+                        if (!(item in inventorySorts.flat)) {
+                            inventorySorts.flat[item] = 0
+                        }
+                        inventorySorts.fromDB[cat][item] += 1
+                        inventorySorts.toDB[properCat][item] += 1
+                        inventorySorts.flat[item] += 1
+                    }
+                }
+                console.log(inventorySorts)
 
                 if (item) {
                     if (["Buy"].indexOf(props.caption.text) > -1) {
@@ -143,13 +185,25 @@ module.exports = class ShopCommand extends GameCommand {
                             if (item.name == "bananas") {
                                 // Bananas
                                 let q = 1
+
+                                // Pull All
+                                let pull = {}
+                                pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
                                 await this.inventoryModel.findOneAndUpdate({
                                     userID: loaded.id
                                 }, {
-                                    $pull: {
-                                        items: [item.emoji] * q
-                                    }
+                                    $pull: pull
                                 })
+
+                                // Put back minus q
+                                let push = {}
+                                push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
+                                await this.inventoryModel.findOneAndUpdate({
+                                    userID: loaded.id
+                                }, {
+                                    $push: push
+                                })
+
                                 props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
                                     "Their minions are now happily satisfied."
@@ -195,13 +249,26 @@ module.exports = class ShopCommand extends GameCommand {
                             } else if (item.name == "lifepotion") {
                                 // Life Potion
                                 let q = 1
+
+                                // Pull All
+                                let pull = {}
+                                pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
                                 await this.inventoryModel.findOneAndUpdate({
                                     userID: loaded.id
                                 }, {
-                                    $pull: {
-                                        consumables: [item.emoji] * q
-                                    }
+                                    $pull: pull
                                 })
+
+                                // Put back minus q
+                                let push = {}
+                                push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
+                                await this.inventoryModel.findOneAndUpdate({
+                                    userID: loaded.id
+                                }, {
+                                    $push: push
+                                })
+
+                                // Restore Health
                                 await this.healthModel.findOneAndUpdate({
                                     userID: loaded.id,
                                 }, {

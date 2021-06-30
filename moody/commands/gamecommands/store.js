@@ -4,11 +4,11 @@ const VillainsEmbed = require('../../classes/vembed.class');
 const fs = require('fs');
 
 
-module.exports = class ShopCommand extends GameCommand {
+module.exports = class StoreCommand extends GameCommand {
     constructor() {
         super({
-            name: 'shop',
-            aliases: ["store"],
+            name: 'store',
+            aliases: ["shop"],
             category: 'game',
             description: 'View the store',
             extensions: ["profile", "levels", "health"]
