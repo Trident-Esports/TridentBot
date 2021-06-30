@@ -67,21 +67,67 @@ module.exports = class RosterCommand extends VillainsCommand {
         let pages = []
 
         for (filepath of profiles) {
-            let props = { title: {}, author: {} }
+            let props = { caption: {}, author: {}, players: {} }
             let profile = JSON.parse(fs.readFileSync(filepath, "utf8"))
+            let emojiIDs = JSON.parse(fs.readFileSync("dbs/emojis.json","utf8"))
+            let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 
             // Title
-            props.title.text = profile.title
+            props.caption.text = profile.title
+
+            let emoji = ""
+            let emojiKey = filepath.match(/(?:\.\/rosters\/dbs\/teams\/)([^\/]*)(.*)/)[1]
+            let emojiName = emojiKey
+            if (emojiName == "val") {
+                emojiName = "valorant"
+            }
+
+            let foundEmoji = false
+            if (message.guild.id in emojiIDs) {
+                if (emojiKey in emojiIDs[message.guild.id]) {
+                    emoji += "<:" + emojiName + ':' + emojiIDs[message.guild.id][emojiKey] + ">"
+                    foundEmoji = true
+                }
+            }
+            if (!foundEmoji) {
+                if (emojiKey) {
+                    emoji += '[' + emojiKey + "] "
+                }
+            }
+
+            props.description = emoji
 
             // Team URL
+            if (profile?.url && profile.url != "") {
+                props.caption.url = profile.url
+            }
             if (profile?.team?.teamID) {
-                //FIXME: Doesn't work for Tourney handler
-                props.title.url = "http://villainsoce.mymm1.com/team/" + profile.team.teamID
+                let url = "http://villainsoce.mymm1.com/"
+                let name = "LPL Team #"
+                if(profile?.team?.tourneyID) {
+                    url += "tourney/" + profile.team.tourneyID + '/'
+                    name += profile.team.tourneyID + '/'
+                }
+                url += "team/" + profile.team.teamID
+                name += profile.team.teamID
+                props.description += `*[${name}](${url} '${url}')*`
+                props.caption.url = url
+            }
+
+            let tmp = {
+                name: props.caption.text,
+                url: props.caption.url,
+                avatar: defaults.thumbnail
+            }
+            props.players = {
+                bot: {...tmp},
+                user: {...tmp}
             }
 
             // Team Avatar
             if (profile?.team?.avatar && profile.team.avatar != "") {
-                props.thumbnail = profile.team.avatar
+                props.players.target = {...props.players.user}
+                props.players.target.avatar = profile.team.avatar
             }
 
             let rosterEmbed = new VillainsEmbed(props)

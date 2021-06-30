@@ -92,19 +92,19 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             bot: {
                 type: "bot",
                 name: props.players.bot.name,
-                url: "http://example.com/bot",
+                url: props?.players?.bot?.url && props.players.bot.url.trim() != "" ? props.players.bot.url.trim() : "http://example.com/bot",
                 avatar: props.players.bot.avatar
             },
             user: {
                 type: "user",
                 name: props?.players?.user?.name && props.players.user.name.trim() != "" ? props.players.user.name.trim() : "",
-                url: "http://example.com/user",
+                url: props?.players?.user?.url && props.players.user.url.trim() != "" ? props.players.user.url.trim() : "http://example.com/user",
                 avatar: props?.players?.user?.avatar && props.players.user.avatar.trim() != "" ? props.players.user.avatar.trim() : ""
             },
             target: {
                 type: "target",
                 name: props?.players?.target?.name && props.players.target.name.trim() != "" ? props.players.target.name.trim() : "",
-                url: "http://example.com/target",
+                url: props?.players?.target?.url && props.players.target.url.trim() != "" ? props.players.target.url.trim() : "http://example.com/target",
                 avatar: props?.players?.target?.avatar && props.players.target.avatar.trim() != "" ? props.players.target.avatar.trim() : ""
             },
             thumbnail: {},

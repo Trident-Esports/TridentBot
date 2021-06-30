@@ -51,7 +51,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             // third arg passed
                             // third arg is not a number
                             // this is a valid span
-                            if (args[2] && isNaN(args[2]) && (["complete","completed","incomplete","next"].indexOf(args[2]) > -1)) {
+                            if (args[2] && isNaN(args[2]) && (["all","complete","completed","incomplete","next"].indexOf(args[2]) > -1)) {
                                 let span = args[2]
                                 if (span == "completed") {
                                     span = "complete"
@@ -64,7 +64,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             }
                         } else {  // second arg is text (first was teamID, this is span)
                             profile.team.teamID = args[0]
-                            if (args[1] && isNaN(args[1]) && (["complete","completed","incomplete","next"].indexOf(args[1]) > -1)) {
+                            if (args[1] && isNaN(args[1]) && (["all","complete","completed","incomplete","next"].indexOf(args[1]) > -1)) {
                                 // this is a valid span
                                 let span = args[1]
                                 if (span == "completed") {
@@ -83,12 +83,12 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         validSpan = false
                     }
                     if (!validSpan) {
-                        for (let span of [ "complete", "incomplete", "next" ]) {
+                        for (let span of [ "all", "complete", "incomplete", "next" ]) {
                             profiles[span] = [ handlerpath + filepath + '-' + span + ".json" ]
                         }
                     }
                 } else {  // first arg is text
-                    if (["complete","completed","incomplete","next"].indexOf(args[0]) > -1) {
+                    if (["all","complete","completed","incomplete","next"].indexOf(args[0]) > -1) {
                         // this is a valid span
                         // return all rosters for span
                         let span = args[0]
@@ -119,9 +119,9 @@ module.exports = class MatchesCommand extends VillainsCommand {
             } else {
                 // something got stuffed up
                 let msg = `${message.author}, the correct usage is` + "\n"
-                msg += "`.matches [incomplete|complete|next]`" + "\n"
-                msg += "`.matches <LPL teamID> [incomplete|complete|next]`" + "\n"
-                msg += "`.matches <LPL tourneyID> <LPL teamID> [incomplete|complete|next]`" + "\n"
+                msg += "`.matches [all|incomplete|complete|next]`" + "\n"
+                msg += "`.matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
+                msg += "`.matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
                 return message.channel.send(msg)
             }
         }
@@ -186,8 +186,22 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         if (!noMatches) {
                             props.description = "__***" + emoji + json.team + "***__"
                             if (json?.team_url) {
-                                props.description = '[' + props.description + "](" + json.team_url + ')'
+                                props.description = `[${props.description}](${json.team_url} '${json.team_url}')`
                             }
+
+                            let teamName = "LPL Team #"
+                            let teamURL = "https://letsplay.live/"
+
+                            if (json?.tournament_id) {
+                                teamName += json.tournament_id + '/'
+                                teamURL += "tournaments/" + json.tournament_id + '/'
+                            }
+                            if (json?.team_id) {
+                                teamName += json.team_id
+                                teamURL += "team/" + json.team_id
+                            }
+                            props.description += ` *([${teamName}](${teamURL}))*`
+
                             embed.setDescription(props.description)
                         }
 
@@ -207,7 +221,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             let name = ""
                             let value = ""
                             if (match.discord.status == "complete") {
-                                name += ((match.discord.winner == match.discord.team) ? "✅" : "❌");
+                                name += ((match.discord.winner == match.discord.team) ? "🟩" : "🟥");
                                 value += "Started"
                             } else {
                                 name += emoji
@@ -221,7 +235,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                     value += "Final ";
                                 }
                                 value += "Score: " + match.discord.scoreKeys.bySide.home + " - " + match.discord.scoreKeys.bySide.opponent;
-                                value += "](" + match.discord.url + ")";
+                                value += `](${match.discord.url} '${match.discord.url}')`;
                             }
                             embed.addField(name, value)
                         }
