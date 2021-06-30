@@ -139,9 +139,9 @@ module.exports = class ShopCommand extends GameCommand {
                             userID: loaded.id
                         }, search)
                         if (haveItem) {
-                            console.log(item)
                             props.description = []
                             if (item.name == "bananas") {
+                                // Bananas
                                 let q = 1
                                 await this.inventoryModel.findOneAndUpdate({
                                     userID: loaded.id
@@ -192,6 +192,31 @@ module.exports = class ShopCommand extends GameCommand {
                                         value: "Minions"
                                     })
                                 }
+                            } else if (item.name == "lifepotion") {
+                                // Life Potion
+                                let q = 1
+                                await this.inventoryModel.findOneAndUpdate({
+                                    userID: loaded.id
+                                }, {
+                                    $pull: {
+                                        consumables: [item.emoji] * q
+                                    }
+                                })
+                                await this.healthModel.findOneAndUpdate({
+                                    userID: loaded.id,
+                                }, {
+                                    $set: {
+                                        health: 100,
+                                    },
+                                })
+                                props.description = [
+                                    `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
+                                    "Their health has been restored."
+                                ]
+                            } else {
+                                props.description = [
+                                    `${item.stylized} not yet implemented.`
+                                ]
                             }
                             props.description = props.description.join("\n")
                         } else {
