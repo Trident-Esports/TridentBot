@@ -79,6 +79,7 @@ module.exports = class ShopCommand extends GameCommand {
                 for (let [cat, items] of Object.entries(STOCKDATA)) {
                     for (let [itemName, itemData] of Object.entries(items)) {
                         emojiItems[itemData.emoji] = itemName
+                        inventorySorts.flat[itemData.emoji] = 0
                         // inventorySorts.conversions.emojiToKey[itemData.emoji] = itemName
                         inventorySorts.conversions.emojiToCat[itemData.emoji] = cat
                         // inventorySorts.conversions.keyToEmoji[itemName] = itemData.emoji
@@ -98,13 +99,19 @@ module.exports = class ShopCommand extends GameCommand {
                 } else if (args[0] in emojiItems) {
                     selected_item = emojiItems[args[0]]
                     re = /([\d]*)/
-                    matches = args.join(" ").toLowerCase().match(re)
-                    quantity = ((!isNaN(matches[2])) && (matches[2] != "")) ? parseInt(matches[2]) : 1
+                    let tmp = args
+                    tmp.shift()
+                    matches = tmp.join(" ").toLowerCase().match(re)
+                    quantity = ((!isNaN(matches[1])) && (matches[1] != "")) ? parseInt(matches[1]) : 1
                 }
 
                 if (selected_item == "") {
                     props.title.text = "Error"
                     props.description = "No item name given."
+                }
+                if (quantity == -1) {
+                    props.title.text = "Error"
+                    props.description = `Invalid quantity. '${quantity}' given.`
                 }
 
                 let [cat, items] = [null, null]
@@ -174,21 +181,12 @@ module.exports = class ShopCommand extends GameCommand {
                     } else if (["Use"].indexOf(props.caption.text) > -1) {
                         // Use
                         props.fields = []
-                        let search = {}
-                        search[cat] = [item.emoji]
-                        let haveItem = await this.inventoryModel.findOne({
-                            userID: loaded.id
-                        }, search)
-                        if (haveItem) {
+                        let haveEnough = inventorySorts.flat[item.emoji] >= quantity
+                        if (haveEnough) {
                             props.description = []
                             if (item.name == "bananas") {
                                 // Bananas
-                                let q = parseInt(args[2])
-
-                                if (!isNaN(q)) {
-                                    props.title.text = "Error"
-                                    props.description = `This amount of Items is not available.(${q}) given.`
-                                }
+                                let q = quantity
 
                                 // Pull All
                                 let pull = {}
@@ -252,12 +250,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 }
                             } else if (item.name == "lifepotion") {
                                 // Life Potion
-                                let q = parseInt(args[3])
-
-                                if (!isNaN(q)) {
-                                    props.title.text = "Error"
-                                    props.description = `This amount of Items is not available.(${q}) given.`
-                                }
+                                let q = quantity
 
                                 // Pull All
                                 let pull = {}
@@ -297,7 +290,11 @@ module.exports = class ShopCommand extends GameCommand {
                             props.description = props.description.join("\n")
                         } else {
                             props.title.text = "Error"
-                            props.description = `Yes, you have no ${item.emoji}${item.stylized}.`
+                            props.description = [
+                                `Yes, you have no ${item.emoji}${item.stylized}.`,
+                                `'${inventorySorts.flat[item.emoji]}' in inventory.`,
+                                `'${quantity}' requested to use.`
+                            ].join("\n")
                         }
                     }
                 }
