@@ -14,10 +14,10 @@ module.exports = class BanCommand extends ModCommand {
     async action(client, message, args, member) {
         if(! this.DEV) {
             member.ban()
-            this.props.description = `<${member}> has been Struck with the Ban Hammer`
+            this.props.description = `<@${member.id}> has been Struck with the Ban Hammer`
             this.props.image = "https://tenor.com/view/thor-banned-ban-hammer-thor-hammer-thor-chris-hemsworth-gif-11035060"
         } else {
-            this.props.description = `<${member}> *would be* banned if this wasn't in DEV Mode`
+            this.props.description = `<@${member.id}> *would be* banned if this wasn't in DEV Mode`
         }
     }
 }

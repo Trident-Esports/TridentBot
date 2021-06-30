@@ -1,7 +1,21 @@
 const { BaseCommand } = require('a-djs-handler');
 const pagination = require('discord.js-pagination');
 
+const fs = require('fs');
+
 module.exports = class VillainsCommand extends BaseCommand {
+    constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
+        super(comprops)
+        if (!(props?.caption?.text)) {
+            if (!(props?.caption)) {
+                props.caption = {}
+            }
+            props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
+        }
+        this.props = props
+        this.errors = JSON.parse(fs.readFileSync("game/dbs/errors.json", "utf8"))
+    }
+
     async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
         if (forcepages) {
             emoji = ["◀️", "▶️"]

@@ -9,13 +9,21 @@ let DEV = GLOBALS.DEV;
 let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 
 module.exports = class AdminCommand extends VillainsCommand {
-    constructor(comprops = {}, props = { title: {}, description: "" }) {
+    constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
         super(comprops)
         this.GLOBALS = GLOBALS
         this.DEV = DEV
         this.ROLES = ROLES
         this.DEFAULTS = DEFAULTS
+
+        if (!(props?.caption?.text)) {
+            if (!(props?.caption)) {
+                props.caption = {}
+            }
+            props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
+        }
         this.props = props
+        this.errors = JSON.parse(fs.readFileSync("game/dbs/errors.json", "utf8"))
     }
 
     async action(client, message, args) {
