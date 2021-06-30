@@ -1,0 +1,39 @@
+{
+  "stripe": "default",
+  "title": "VALORANT VOT 2021 Stage 3 Closed Quals Roster",
+  "aliases": ["votr"],
+  "url": "https://letsplay.live/tournaments/18186/",
+  "#url": "LPL VOT 2021 Stage 3 Event Page",
+  "team": {
+    "teamID": "120286"
+  },
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "guessmonster"
+      ]
+    },
+    "coach": {
+      "title": "Coach",
+      "users": [
+        "crima"
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "marsh",
+        "myth",
+        "pocket",
+        "prophet",
+        "suave"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+      ]
+    }
+  }
+}
