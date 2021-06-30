@@ -10,9 +10,10 @@ module.exports = class BotActivityCommand extends AdminCommand {
             description: "Bot Activity setter"
         }
         let props = {
-            title: {
+            caption: {
                 text: "Bot Activity"
             },
+            players: {},
             full: true
         }
         super(comprops, props)

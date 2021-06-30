@@ -29,19 +29,26 @@ module.exports = class AdminCommand extends VillainsCommand {
     async action(client, message, args) {
         // do nothing; command overrides this
         if(! this.DEV) {
-            // do the action
+            // Do the thing
         } else {
-            // describe the action
+            // Describe the thing
         }
     }
 
     async build(client, message, args) {
+        const user = message.author
+        this.props.players.user = {
+            name: user.username,
+            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
+        }
+
         this.action(client, message, args)
     }
 
     async run(client, message, args) {
         let APPROVED_ROLES = this.ROLES["admin"]
 
+        // Only Approved Roles
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
             this.props.title.text = "Error"
             this.props.description = "Sorry, only admins can run this command. 😔"

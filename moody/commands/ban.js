@@ -1,6 +1,5 @@
 const ModCommand = require('../classes/modcommand.class');
 
-// ModCommand
 module.exports = class BanCommand extends ModCommand {
     constructor() {
         let comprops = {
@@ -13,11 +12,13 @@ module.exports = class BanCommand extends ModCommand {
 
     async action(client, message, args, member) {
         if(! this.DEV) {
+            // Do the thing
             member.ban()
             this.props.description = `<@${member.id}> has been Struck with the Ban Hammer`
             this.props.image = "https://tenor.com/view/thor-banned-ban-hammer-thor-hammer-thor-chris-hemsworth-gif-11035060"
         } else {
-            this.props.description = `<@${member.id}> *would be* banned if this wasn't in DEV Mode`
+            // Describe the thing
+            this.props.description = `<@${member.id}> *would be* **banned** if this wasn't in DEV Mode`
         }
     }
 }

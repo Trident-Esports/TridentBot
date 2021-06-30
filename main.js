@@ -54,11 +54,7 @@ mongoose.connect(
 // /mongoose
 
 // Message Channels
-const channelIDs = {
-    "welcome": "795820413241786398",
-    "rules": "788576321231388704",
-    "roles": "795824892863053895"
-}
+const channelIDs = JSON.parse(fs.readFileSync("dbs/channels.json", "utf8"))
 
 // User joins Server (Guild)
 client.on('guildMemberAdd', (member, Discord) => {
@@ -68,7 +64,7 @@ client.on('guildMemberAdd', (member, Discord) => {
     member.roles.add(welcomeRole);
     console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
-    const channel = member.guild.channels.cache.get(channelIDs["welcome"])
+    const channel = member.guild.channels.cache.get(channelIDs[member.guild.id].welcome)
     let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif"
     let footer = {
         "image": "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif",
@@ -79,9 +75,9 @@ client.on('guildMemberAdd', (member, Discord) => {
             `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
             "**Are you ready to become a Super Villain?**",
             "",
-            `Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}.`,
+            `Please Read ${member.guild.channels.cache.get(channelIDs[member.guild.id].rules).toString()}.`,
             "",
-            `Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}.`
+            `Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs[member.guild.id].roles).toString()}.`
         ]
         const embed = new MessageEmbed()
             .setTitle(`Welcome To ${member.guild.name}`)
@@ -99,7 +95,7 @@ client.on('guildMemberAdd', (member, Discord) => {
 
 client.on('guildMemberRemove', (member) => {
     // You Can Do The Same For Leave Message
-    const leavechannelId = channelIDs["welcome"] //Channel You Want to Send The Leave Message
+    const leavechannelId = channelIDs[member.guild.id].welcome //Channel You Want to Send The Leave Message
     const leavemessage = `<@${member.id}> **Has just become a Hero.**`
 
     const channel1 = member.guild.channels.cache.get(leavechannelId)
