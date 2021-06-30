@@ -10,7 +10,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         if (
           (
             (!props?.title?.text) ||
-            (props?.title?.text && props.title.text.trim() == "")
+            (props?.title?.text && (props.title.text.trim() == "" || props.title.text.trim() == "<NONE>"))
           ) &&
           (props?.title?.url && props.title.url.trim() != "")
         ) {
@@ -89,8 +89,6 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         let avatars = {
-            caption: { text: props?.caption?.text && props.caption.text.trim() != "" ? props.caption.text.trim() : "" },
-            title: props.title,
             bot: {
                 type: "bot",
                 name: props.players.bot.name,
@@ -129,7 +127,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // Title
-        if(props?.title?.text && props.title.text.trim() != "") {
+        if(props?.title?.text && props.title.text.trim() != "" && props.title.text.trim() != "<NONE>") {
             this.setTitle(props.title.text)
             if (props?.title?.url && props.title.url.trim() != "") {
                 this.setURL(props.title.url.trim())
