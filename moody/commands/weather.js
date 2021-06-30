@@ -7,6 +7,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
     constructor() {
         super({
             name: "weather",
+            aliases: [ "w" ],
             category: "diagnostic",
             description: "Check your weather!"
         })
@@ -14,7 +15,8 @@ module.exports = class WeatherCommand extends VillainsCommand {
 
     async run(client, message, args) {
         let props = {
-            title: { text: "Weather" }
+            caption: { text: "Weather" },
+            players: { bot:{}, user: {} }
         }
 
         let degreeType = "C"
@@ -27,7 +29,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
             degreeType: degreeType
         }, await function(error, result) {
             if(error || !args[0] || result === undefined || result.length === 0) {
-                props.title.text = "Error"
+                props.caption.text = "Error"
                 props.color = "RED"
                 if(error) {
                     props.description = error
@@ -42,8 +44,9 @@ module.exports = class WeatherCommand extends VillainsCommand {
                 let current = result[0].current;
                 let location = result[0].location;
                 props.description = `**${current.skytext}**`
-                props.title.text = `Weather forecast for ${current.observationpoint}`
-                props.thumbnail = current.imageUrl
+                props.caption.text = `Weather forecast for ${current.observationpoint}`
+                props.players.bot.url = `https://www.accuweather.com/en/search-locations?query=` + encodeURI(`${current.observationpoint}`)
+                props.players.user.avatar = current.imageUrl
                 props.fields = [
                     {
                         name: "Timezone",
