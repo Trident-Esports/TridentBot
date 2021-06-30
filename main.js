@@ -62,7 +62,17 @@ client.on('guildMemberAdd', (member, Discord) => {
     let welcomeRole = "Minions";
     welcomeRole = member.guild.roles.cache.find(role => role.name === welcomeRole);
     member.roles.add(welcomeRole);
-    console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
+    // console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
+
+    console.log("---")
+    console.log("--MEMBER JOIN--")
+    console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
+    console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
+    console.log("Have Channel IDs?",member.guild.id in channelIDs)
+
+    if (!(member.guild.id in channelIDs)) {
+        return
+    }
 
     const channel = member.guild.channels.cache.get(channelIDs[member.guild.id].welcome)
     let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif"
@@ -94,6 +104,16 @@ client.on('guildMemberAdd', (member, Discord) => {
 });
 
 client.on('guildMemberRemove', (member) => {
+    console.log("---")
+    console.log("--MEMBER LEAVE--")
+    console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
+    console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
+    console.log("Have Channel IDs?",member.guild.id in channelIDs)
+
+    if (!(member.guild.id in channelIDs)) {
+        return
+    }
+
     // You Can Do The Same For Leave Message
     const leavechannelId = channelIDs[member.guild.id].welcome //Channel You Want to Send The Leave Message
     const leavemessage = `<@${member.id}> **Has just become a Hero.**`
@@ -134,7 +154,8 @@ const handler = new Handler(client, {
     commandsPath: __dirname + "/moody/commands",
     owners: [
         532192409757679618, // Noongar
-        263968998645956608  // Mike
+        263968998645956608, // Mike
+        692180465242603591  // Prime
     ]
 });
 (async () => {
