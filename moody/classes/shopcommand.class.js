@@ -68,10 +68,10 @@ module.exports = class ShopCommand extends GameCommand {
                     toDB: {},
                     flat: {},
                     conversions: {
-                        emojiToKey: {},
-                        emojiToCat: {},
-                        keyToEmoji: {},
-                        keyToCat: {}
+                        // emojiToKey: {},
+                        emojiToCat: {}//,
+                        // keyToEmoji: {},
+                        // keyToCat: {}
                     }
                 }
 
@@ -79,10 +79,10 @@ module.exports = class ShopCommand extends GameCommand {
                 for (let [cat, items] of Object.entries(STOCKDATA)) {
                     for (let [itemName, itemData] of Object.entries(items)) {
                         emojiItems[itemData.emoji] = itemName
-                        inventorySorts.conversions.emojiToKey[itemData.emoji] = itemName
+                        // inventorySorts.conversions.emojiToKey[itemData.emoji] = itemName
                         inventorySorts.conversions.emojiToCat[itemData.emoji] = cat
-                        inventorySorts.conversions.keyToEmoji[itemName] = itemData.emoji
-                        inventorySorts.conversions.keyToCat[itemName] = cat
+                        // inventorySorts.conversions.keyToEmoji[itemName] = itemData.emoji
+                        // inventorySorts.conversions.keyToCat[itemName] = cat
                     }
                 }
 
@@ -143,7 +143,6 @@ module.exports = class ShopCommand extends GameCommand {
                         inventorySorts.flat[item] += 1
                     }
                 }
-                console.log(inventorySorts)
 
                 if (item) {
                     if (["Buy"].indexOf(props.caption.text) > -1) {
