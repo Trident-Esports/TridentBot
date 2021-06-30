@@ -183,7 +183,12 @@ module.exports = class ShopCommand extends GameCommand {
                             props.description = []
                             if (item.name == "bananas") {
                                 // Bananas
-                                let q = 1
+                                let q = parseInt(args[2])
+
+                                if (!isNaN(q)) {
+                                    props.title.text = "Error"
+                                    props.description = `This amount of Items is not available.(${q}) given.`
+                                }
 
                                 // Pull All
                                 let pull = {}
@@ -247,7 +252,12 @@ module.exports = class ShopCommand extends GameCommand {
                                 }
                             } else if (item.name == "lifepotion") {
                                 // Life Potion
-                                let q = 1
+                                let q = parseInt(args[3])
+
+                                if (!isNaN(q)) {
+                                    props.title.text = "Error"
+                                    props.description = `This amount of Items is not available.(${q}) given.`
+                                }
 
                                 // Pull All
                                 let pull = {}
