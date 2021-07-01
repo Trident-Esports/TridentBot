@@ -60,7 +60,7 @@ module.exports = class BotDevCommand extends VillainsCommand {
 
         if(USERIDS.botDevs.indexOf(message.author.id) == -1) {
             this.props.title.text = "Error"
-            this.props.description = this.errors.botDevOnly
+            this.props.description = this.errors.botDevOnly.join("\n")
         } else {
             this.build(client, message, args)
         }

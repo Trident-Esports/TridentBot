@@ -82,7 +82,7 @@ module.exports = class ATMCommand extends GameCommand {
 
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
                 props.title.text = "Error"
-                props.description = this.errors.adminOnly
+                props.description = this.errors.adminOnly.join("\n")
             }
         }
 
@@ -100,7 +100,7 @@ module.exports = class ATMCommand extends GameCommand {
 
             if (!profileData) {
                 props.title.text = "Error"
-                props.description = this.errors.game.mongoDB.noProfile
+                props.description = this.errors.game.mongoDB.noProfile.join("\n")
             }
 
             let targetData = null
@@ -119,7 +119,7 @@ module.exports = class ATMCommand extends GameCommand {
 
                         if (!targetData) {
                             props.title.text = "Error"
-                            props.description = this.errors.game.mongoDB.noProfile
+                            props.description = this.errors.game.mongoDB.noProfile.join("\n")
                         }
                     }
                 } else {

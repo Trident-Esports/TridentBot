@@ -70,11 +70,11 @@ module.exports = class ShopCommand extends GameCommand {
 
             if (!inventoryData) {
                 props.title.text = "Error"
-                props.description = this.errors.game.mongoDB.noInventory
+                props.description = this.errors.game.mongoDB.noInventory.join("\n")
             }
             if (!profileData) {
                 props.title.text = "Error"
-                props.description = this.errors.game.mongoDB.noProfile
+                props.description = this.errors.game.mongoDB.noProfile.join("\n")
             }
 
             if (props.title.text != "Error") {

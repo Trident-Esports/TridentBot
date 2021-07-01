@@ -9,19 +9,25 @@ module.exports = async (client, Discord, member) => {
     Check to see if there's already one in the DB
     Bail if there is one
     */
-    let profile = await profileModel.create({
-        userID: member.id,
-        serverID: member.guild.id,
-        gold: 1000,
-        bank: 0,
-        minions: 1
+    const hasProfile = await this.profileModel.findOne({
+        userID: member.id
     });
-    profile.save();
 
-    //FIXME: Make sure this loads schema from ./modelds/inventorySchema.js
-    let inventory = await inventoryModel.create({
-        userID: member.id,
-        items: String
-    });
-    inventory.save();
+    if (!hasProfile) {
+        let profile = await profileModel.create({
+            userID: member.id,
+            serverID: member.guild.id,
+            gold: 1000,
+            bank: 0,
+            minions: 1
+        });
+        profile.save();
+
+        //FIXME: Make sure this loads schema from ./modelds/inventorySchema.js
+        let inventory = await inventoryModel.create({
+            userID: member.id,
+            items: String
+        });
+        inventory.save();
+    }
 }
