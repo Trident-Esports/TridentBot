@@ -25,7 +25,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
     }
 
-    async getArgs(message, args, flags) {
+    async getArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid" }) {
         let foundHandles = { players: {}, invalid: false, flags: flags }
 
         let user = message.author

@@ -6,6 +6,12 @@ BaseCommand
  VillainsCommand
   GameCommand
    ATMCommand
+    Deposit
+    Give
+    Refund
+    Rob (NYI)
+    Steal
+    Withdraw
 
 */
 
@@ -38,21 +44,37 @@ module.exports = class ATMCommand extends GameCommand {
             }
         }
 
-        //FIXME: Use this.getArgs(message, args, flags)
+
+        /*
+
+        Start Setup
+
+        */
         // Use target flags conditionally based on used command
-        const user = message.author
-        const target = message.mentions.members.first()
-        const loaded = user
-
-        props.players.user = {
-            name: user.username,
-            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
+        let flags = { user: "default", target: "invalid", bot: "invalid" }
+        switch (props.caption.text) {
+            case "Give":
+            case "Refund":
+            case "Steal":
+                flags.target = "required";
+                break;
+            default:
+                flags = { user: "default", target: "invalid", bot: "invalid" };
+                break;
         }
 
-        if (loaded?.bot && loaded.bot) {
-            props.title.text = "Error"
-            props.description = this.errors.cantActionBot.join("\n")
-        }
+        const foundHandles = await this.getArgs(message, args, flags)
+
+        const user = foundHandles.user
+        const loaded = foundHandles.loaded
+        props.players = foundHandles.players
+        props.title = foundHandles?.title ? foundHandles.title : props.title
+        props.description = foundHandles?.description ? foundHandles.description : props.description
+        /*
+
+        End Setup
+
+        */
 
         // Refund & Steal are Admin-only
         if (["Refund", "Steal"].indexOf(props.caption.text) > -1) {
@@ -78,41 +100,31 @@ module.exports = class ATMCommand extends GameCommand {
 
             if (!profileData) {
                 props.title.text = "Error"
-                props.description = "User not found."
+                props.description = this.errors.game.mongoDB.noProfile
             }
 
             let targetData = null
             let needTarget = ["Give", "Refund", "Steal"].indexOf(props.caption.text) > -1
             if (needTarget) {
-                if (target) {
-                    if ((["Give", "Steal"].indexOf(props.caption.text) > -1) && (user.id === target.id)) {
+                if (loaded) {
+                    if ((["Give", "Steal"].indexOf(props.caption.text) > -1) && (user.id === loaded.id)) {
                         props.title.text = "Error"
                         props.description = `You can't ${props.caption.text} Gold to/from yourself!`
                     }
-                    //FIXME: Will be redundant
-                    if (target?.user?.bot && target.user.bot) {
-                        props.title.text = "Error"
-                        props.description = this.errors.cantActionBot.join("\n")
-                    }
 
                     if (props.title.text != "Error") {
-                        //FIXME: players.target will be redundant
-                        props.players.target = {
-                            name: target.username,
-                            avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
-                        }
                         targetData = await this.profileModel.findOne({
-                            userID: target.id
+                            userID: loaded.id
                         })
 
                         if (!targetData) {
                             props.title.text = "Error"
-                            props.description = "Target not found."
+                            props.description = this.errors.game.mongoDB.noProfile
                         }
                     }
                 } else {
                     props.title.text = "Error"
-                    props.description = `You need to mention a player to ${props.caption.text} Gold.`
+                    props.description = `You need to specify a player to ${props.caption.text} Gold.`
                 }
             }
 
@@ -158,7 +170,7 @@ module.exports = class ATMCommand extends GameCommand {
                             // User to Target
                             inc = { gold: -amount };
                             targetInc = { gold: amount };
-                            [verb, direction, container] = ["Given", "to", `<@${target.id}>'s Wallet`];
+                            [verb, direction, container] = ["Given", "to", `<@${loaded.id}>'s Wallet`];
                             break;
                         case "Withdraw":
                             // User to User
@@ -168,13 +180,13 @@ module.exports = class ATMCommand extends GameCommand {
                         case "Refund":
                             // Ether to Target
                             targetInc = { gold: amount };
-                            [verb, direction, container] = ["Refunded", "into", `<@${target.id}>'s Wallet`];
+                            [verb, direction, container] = ["Refunded", "into", `<@${loaded.id}>'s Wallet`];
                             break;
                         case "Steal":
                             // Target to User
                             inc = { gold: amount };
                             targetInc = { gold: -amount };
-                            [verb, direction, container] = ["Stole", "from", `<@${target.id}>'s Wallet`];
+                            [verb, direction, container] = ["Stole", "from", `<@${loaded.id}>'s Wallet`];
                             break;
                         default:
                             break;
@@ -187,9 +199,9 @@ module.exports = class ATMCommand extends GameCommand {
                             }
                         );
                     }
-                    if (target && targetInc.gold !== 0) {
+                    if (loaded && targetInc.gold !== 0) {
                         await this.profileModel.findOneAndUpdate({
-                                userID: target.id
+                                userID: loaded.id
                             }, {
                                 $inc: targetInc
                             }
