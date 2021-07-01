@@ -31,7 +31,6 @@ client.events = new Discord.Collection();
     'command_handler',
     'event_handler',
     'game_handler',
-    'premium_handler',
     'rosters_handler'
 ].forEach(handler => {
     require(`./handlers/${handler}`)(client, Discord);
