@@ -16,6 +16,74 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.errors = JSON.parse(fs.readFileSync("game/dbs/errors.json", "utf8"))
     }
 
+    async getArgs(message, args) {
+        let foundHandles = {}
+
+        let user = message.author
+        let mention = message.mentions.members.first()
+        let search = (args && (args.length > 0) && (!(mention))) ? await message.guild.members.fetch({ query: args.join(" "), limit: 1 }) : undefined
+        let loaded = undefined
+        let debugout = []
+
+        if (user) {
+            loaded = user
+            foundHandles.user = loaded
+            foundHandles.loadedType = "user"
+            debugout.push(`User: <@${loaded.id}>`)
+        }
+        if (mention) {
+            loaded = mention.user
+            foundHandles.mention = loaded
+            foundHandles.loadedType = "mention"
+            debugout.push(`Mention: <@${loaded.id}>`)
+        }
+        if (search) {
+            let tmp = search.size > 0
+            loaded = tmp ? search.first() : loaded
+            if (tmp && loaded) {
+                debugout.push(`Terms: [Nick:${loaded.nickname}] [UName:${loaded.user.username}]`)
+                loaded = loaded.user
+                foundHandles.search = loaded
+                foundHandles.loadedType = "search"
+                debugout.push(`Search: <@${loaded.id}>`)
+            }
+        }
+        if (loaded) {
+            foundHandles.loaded = loaded
+            debugout.push(`Loaded: <@${loaded.id}>`)
+        }
+
+        try {
+            if (args && args.length > 0) {
+                debugout.push(`Args: [${args.join(" ")}]`)
+                let re = /(?:\<)(?<PingChan>[\@\#]{1})(?<UsrRole>[\!\&]?)(?<ItemID>[\d]*)(?:\>)/
+                let matches = args.join(" ").match(re)
+                let cleansed = ""
+                // debugout.push(`Matches: ${matches}`)
+                if (matches) {
+                    matches.shift()
+                    cleansed = args.join(" ").trim().replace(`<${matches.join("")}>`,"")
+                } else {
+                    cleansed = args.join(" ").trim()
+                    for (let check of [`${loaded.username}#${loaded.discriminator}`, loaded.username]) {
+                        cleansed = cleansed.trim().replace(check,"")
+                    }
+                }
+                foundHandles.argsArr = cleansed.trim().split(" ").filter(function(e) { return e != null && e != "" })
+                cleansed = foundHandles.argsArr.join(" ")
+                foundHandles.args = cleansed.trim()
+                debugout.push(`Clean: [${cleansed.trim()}]`)
+            }
+        } catch(e) {
+            console.log("---")
+            console.log(e)
+            console.log("---")
+            console.log(debugout.join("\n"))
+        }
+
+        return foundHandles
+    }
+
     async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
         if (forcepages) {
             emoji = ["◀️", "▶️"]

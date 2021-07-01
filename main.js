@@ -58,16 +58,20 @@ const channelIDs = JSON.parse(fs.readFileSync("dbs/channels.json", "utf8"))
 
 // User joins Server (Guild)
 client.on('guildMemberAdd', (member, Discord) => {
+    let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
     // Add Minion Role
-    let welcomeRole = "Minions";
+    let welcomeRole = ROLES.member;
     welcomeRole = member.guild.roles.cache.find(role => role.name === welcomeRole);
-    member.roles.add(welcomeRole);
+    if (welcomeRole !== null) {
+        member.roles.add(welcomeRole);
+    }
     // console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
     console.log("---")
-    console.log("--MEMBER JOIN>>")
+    console.log("---MEMBER JOIN->>")
     console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
     console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
+    console.log("Member Role?",welcomeRole !== null,`(Str:${ROLES.member})`)
     console.log("Have Channel IDs?",member.guild.id in channelIDs)
 
     if (!(member.guild.id in channelIDs)) {
@@ -105,7 +109,7 @@ client.on('guildMemberAdd', (member, Discord) => {
 
 client.on('guildMemberRemove', (member) => {
     console.log("---")
-    console.log("<<MEMBER LEAVE--")
+    console.log("<<-MEMBER LEAVE---")
     console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
     console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
     console.log("Have Channel IDs?",member.guild.id in channelIDs)
