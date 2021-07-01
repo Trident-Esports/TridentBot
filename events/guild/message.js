@@ -7,12 +7,14 @@ const XPBoostModel = require('../../models/xpboostSchema');     // XP Boost
 const { MessageEmbed } = require('discord.js'); // Discord Embeds
 const VillainsEmbed = require('../../moody/classes/vembed.class'); // Villains Embed
 
+const fs = require('fs'); // File System
+
 const cooldowns = new Map();
 
 module.exports = async (Discord, client, message) => {
 
-    //FIXME: Get from ./dbs/defaults.json
-    const prefix = '.'  // Default Prefix
+    const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+    const prefix = DEFAULTS.prefix; // Default Prefix
 
     //FIXME: Obsolete?
     if (message.author.bot) {
@@ -28,7 +30,19 @@ module.exports = async (Discord, client, message) => {
         }
     }
 
-    if (message.content == prefix) return message.channel.send("Please send a proper command");
+    // If it's just the prefix, return error
+    if (message.content == prefix) {
+        let props = {
+            caption: { text: "VillainsBot" },
+            title: { text: "Error" },
+            description: "Please send a proper command."
+        }
+        let embed = new VillainsEmbed(props);
+        message.channel.send(embed)
+        return;
+    }
+
+    // If it doesn't start with our prefix, return
     if (!message.content.startsWith(prefix)) return;
 
     let profileData;
@@ -50,31 +64,26 @@ module.exports = async (Discord, client, message) => {
         });
         profile.save();
 
-        //FIXME: Load from ./dbs/defaults.json
-        let footer = {
-          "image": "https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg",
-          "msg": "This bot was Created by Noongar1800#1800"
+        let props = {
+            caption: { text: "VillainsBot" },
+            title: { text: "**WELCOME**" },
+            fields: [
+                {
+                    name: `Welcome to VillainsBot, <@${message.author.id}>!`,
+                    value: [
+                        "To start your journey, use `.beg`",
+                        "To check your profile, use `.profile`",
+                        "",
+                        "For more information, use `.help`"
+                    ].join("\n")
+                }
+            ]
         }
 
-        //FIXME: Use a VillainsEmbed
-        GameProfileEmbed = new MessageEmbed()
-            .setColor("GREEN")
-            .setTitle(`**WELCOME**`)
-            .addField(
-                `Welcome to VillainsBot ${message.author.username}.`,
-                [
-                    "To start your journey, please use _.BEG_.",
-                    "To check your profile, use _.PROFILE_.",
-                    "",
-                    "For more information, use _.HELP_."
-                ].join("\n"),
-                true
-            )
-            .setFooter(footer["msg"], footer["image"])
-            .setTimestamp();
-
-        message.channel.send(GameProfileEmbed)
+        let embed = new VillainsEmbed(props)
+        message.channel.send(embed)
     }
+
     let healthData;
 
     /*
