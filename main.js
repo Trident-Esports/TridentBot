@@ -65,7 +65,7 @@ client.on('guildMemberAdd', (member, Discord) => {
     // console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
     console.log("---")
-    console.log("--MEMBER JOIN--")
+    console.log("--MEMBER JOIN>>")
     console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
     console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
     console.log("Have Channel IDs?",member.guild.id in channelIDs)
@@ -105,7 +105,7 @@ client.on('guildMemberAdd', (member, Discord) => {
 
 client.on('guildMemberRemove', (member) => {
     console.log("---")
-    console.log("--MEMBER LEAVE--")
+    console.log("<<MEMBER LEAVE--")
     console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
     console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
     console.log("Have Channel IDs?",member.guild.id in channelIDs)
