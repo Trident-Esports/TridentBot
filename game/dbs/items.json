@@ -1,18 +1,16 @@
 {
     "items": {
         "bananas": {
-            "stylized": "Bananas",
             "emoji": "🍌",
             "value": 500,
             "description": "Feed your minions"
         },
         "car": {
-            "stylized": "Car",
             "emoji": "🚗",
             "value": 2000000,
             "description": "TOOT TOOT! Here in my garage with my new...Lamborghini"
         }
-        
+
     },
     "consumables": {
         "lifepotion": {
