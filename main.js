@@ -62,7 +62,7 @@ client.on('guildMemberAdd', (member, Discord) => {
     // Add Minion Role
     let welcomeRole = ROLES.member;
     welcomeRole = member.guild.roles.cache.find(role => role.name === welcomeRole);
-    if (welcomeRole !== null) {
+    if (welcomeRole?.id) {
         member.roles.add(welcomeRole.id);
     }
     // console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
@@ -71,7 +71,7 @@ client.on('guildMemberAdd', (member, Discord) => {
     console.log("---MEMBER JOIN->>")
     console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
     console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
-    console.log("Member Role?",welcomeRole !== null,`(Str:${ROLES.member}, ID:${welcomeRole.id})`)
+    console.log("Member Role?",welcomeRole?.id,`(Str:${ROLES.member}, ID:${welcomeRole?.id ? welcomeRole.id : "???"})`)
     console.log("Have Channel IDs?",member.guild.id in channelIDs)
 
     if (!(member.guild.id in channelIDs)) {
