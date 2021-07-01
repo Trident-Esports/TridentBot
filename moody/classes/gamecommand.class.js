@@ -12,6 +12,7 @@ const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 
 module.exports = class GameCommand extends VillainsCommand {
+    //FIXME: If this.category is "premium" do special handling
     constructor(comprops = {}) {
         super(comprops)
         if (comprops?.extensions) {
