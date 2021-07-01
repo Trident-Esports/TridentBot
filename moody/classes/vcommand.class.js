@@ -16,8 +16,8 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.errors = JSON.parse(fs.readFileSync("game/dbs/errors.json", "utf8"))
     }
 
-    async getArgs(message, args) {
-        let foundHandles = {}
+    async getArgs(message, args, flags) {
+        let foundHandles = { players: {}, invalid: false, flags: flags }
 
         let user = message.author
         let mention = message.mentions.members.first()
@@ -29,6 +29,10 @@ module.exports = class VillainsCommand extends BaseCommand {
             loaded = user
             foundHandles.user = loaded
             foundHandles.loadedType = "user"
+            foundHandles.players.user = {
+                name: loaded.username,
+                avatar: loaded.displayAvatarURL({ format: "png", dynamic: true })
+            }
             debugout.push(`User: <@${loaded.id}>`)
         }
         if (mention) {
@@ -49,7 +53,22 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
         }
         if (loaded) {
+            for (let handleType of ["user", "target"]) {
+                if ((foundHandles.loadedType == handleType) && (flags[handleType] == "invalid")) {
+                    foundHandles.invalid = handleType
+                }
+            }
+            if (["default","required","optional"].indexOf(flags.bot) > -1) {
+            } else if (loaded?.bot && loaded.bot) {
+                foundHandles.invalid = "bot"
+            }
             foundHandles.loaded = loaded
+            if (foundHandles.invalid === false) {
+                foundHandles.players.target = {
+                    name: loaded.username,
+                    avatar: loaded.displayAvatarURL({ format: "png", dynamic: true })
+                }
+            }
             debugout.push(`Loaded: <@${loaded.id}>`)
         }
 
@@ -79,6 +98,23 @@ module.exports = class VillainsCommand extends BaseCommand {
             console.log(e)
             console.log("---")
             console.log(debugout.join("\n"))
+        }
+
+        if (foundHandles?.invalid && foundHandles.invalid !== false) {
+            foundHandles.title = { text: "Error" };
+            switch (foundHandles.invalid) {
+                case "user":
+                    foundHandles.description = "You can't target yourself!";
+                    break;
+                case "target":
+                    foundHandles.description = "You can't target others!";
+                    break;
+                case "bot":
+                    foundHandles.description = this.errors.cantActionBot.join("\n");
+                    break;
+                default:
+                    break;
+            }
         }
 
         return foundHandles

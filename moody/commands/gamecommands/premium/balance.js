@@ -17,7 +17,7 @@ module.exports = class BalanceCommand extends GameCommand {
             caption: {
                 text: "Balance"
             },
-            title: {},
+            title: { text: "" },
             description: "",
             footer: {
                 msg: ""
@@ -28,27 +28,28 @@ module.exports = class BalanceCommand extends GameCommand {
             }
         }
 
-        const user = message.author
-        const target = message.mentions.members.first()
-        const loaded = target ? target.user : user
-        props.players.user = {
-            name: user.username,
-            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
-        }
+        // TODO
+        // User:    Default/Required/Optional
+        // Target:  Default/Required/Optional
+        // Bot:     Default/Required/Optional
 
-        if (loaded?.bot && loaded.bot) {
-            props.title.text = "Error"
-            props.description = this.errors.cantActionBot.join("\n")
-        }
+        const foundHandles = await this.getArgs(
+            message,
+            args,
+            {
+                user: "default",
+                target: "optional",
+                bot: "invalid"
+            }
+        )
+
+        const user = foundHandles.user
+        const loaded = foundHandles.loaded
+        props.players = foundHandles.players
+        props.title = foundHandles?.title ? foundHandles.title : props.title
+        props.description = foundHandles?.description ? foundHandles.description : props.description
 
         if (props.title.text != "Error") {
-            if (target) {
-                props.players.target = {
-                    name: target.username,
-                    avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
-                }
-            }
-
             const profileData = await this.profileModel.findOne({
                 userID: loaded.id
             });
