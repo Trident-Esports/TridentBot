@@ -50,7 +50,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
                 props.fields = [
                     {
                         name: "Timezone",
-                        value: `UTC${location.timezone}`,
+                        value: "UTC" + (parseInt(location.timezone) >= 0 ? '+' : "") + location.timezone,
                         inline: true
                     },
                     {
@@ -60,7 +60,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
                     },
                     {
                         name: "Temperature",
-                        value: `${current.temperature}°` + degreeType,
+                        value: `${current.temperature}°${degreeType}`,
                         inline: true
                     },
                     {
@@ -70,7 +70,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
                     },
                     {
                         name: "Feels Like",
-                        value: `${current.feelslike}°` + degreeType,
+                        value: `${current.feelslike}°${degreeType}`,
                         inline: true
                     },
                     {
