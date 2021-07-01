@@ -1,3 +1,14 @@
+/*
+
+Command for Shop transactions
+
+BaseCommand
+ VillainsCommand
+  GameCommand
+   ShopCommand
+
+*/
+
 const GameCommand = require('./gamecommand.class');
 const VillainsEmbed = require('./vembed.class');
 
@@ -30,6 +41,12 @@ module.exports = class ShopCommand extends GameCommand {
             }
         }
 
+        /*
+        User:   Valid
+        Target: Invalid
+        Bot:    Invalid
+        */
+        //FIXME: Use this.getArgs(message, args, flags)
         const user = message.author
         const loaded = user
 
@@ -43,6 +60,7 @@ module.exports = class ShopCommand extends GameCommand {
             props.description = this.errors.cantActionBot.join("\n")
         }
 
+        //FIXME: Move error message to this.errors
         if (props.title.text != "Error") {
             const inventoryData = await this.inventoryModel.findOne({
                 userID: loaded.id
@@ -89,6 +107,7 @@ module.exports = class ShopCommand extends GameCommand {
 
                 var gold = profileData.gold //Players gold
 
+                //FIXME: Try to parse from args returned from this.getArgs()
                 let re = /^([a-z ]*)([\d]*)$/
                 let matches = args.join(" ").toLowerCase().match(re)
                 let selected_item = ""

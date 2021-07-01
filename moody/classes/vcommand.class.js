@@ -1,3 +1,12 @@
+/*
+
+Branded Generic Command Handler
+
+BaseCommand
+ VillainsCommand
+
+*/
+
 const { BaseCommand } = require('a-djs-handler');
 const pagination = require('discord.js-pagination');
 
@@ -25,7 +34,10 @@ module.exports = class VillainsCommand extends BaseCommand {
         let loaded = undefined
         let debugout = []
 
+        // If we have a User
         if (user) {
+            // Load the User as the Target
+            // Set the User Player
             loaded = user
             foundHandles.user = loaded
             foundHandles.loadedType = "user"
@@ -35,14 +47,22 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
             debugout.push(`User: <@${loaded.id}>`)
         }
+
+        // If we have a Mention
         if (mention) {
+            // Load the Mention as the Target
             loaded = mention.user
             foundHandles.mention = loaded
             foundHandles.loadedType = "mention"
             debugout.push(`Mention: <@${loaded.id}>`)
         }
+
+        // If we got stuff to Search for
         if (search) {
+            // We already ran the search
             let tmp = search.size > 0
+            // If there's results, get the first result
+            // Otherwise, just gracefully degrade to our current Target
             loaded = tmp ? search.first() : loaded
             if (tmp && loaded) {
                 debugout.push(`Terms: [Nick:${loaded.nickname}] [UName:${loaded.user.username}]`)
@@ -52,17 +72,28 @@ module.exports = class VillainsCommand extends BaseCommand {
                 debugout.push(`Search: <@${loaded.id}>`)
             }
         }
+
+        // If we have calcualted a Target
         if (loaded) {
+            // Make sure Loaded isn't from an Invalid source
             for (let handleType of ["user", "target"]) {
                 if ((foundHandles.loadedType == handleType) && (flags[handleType] == "invalid")) {
                     foundHandles.invalid = handleType
                 }
             }
+
+            // If Loaded is a Bot
+            // If Bot has been specified as a Valid source
             if (["default","required","optional"].indexOf(flags.bot) > -1) {
+                // Do... something?
             } else if (loaded?.bot && loaded.bot) {
+                // If Bot has been specified as in Invalid source
+                // Set Invalid because Bot
                 foundHandles.invalid = "bot"
             }
             foundHandles.loaded = loaded
+
+            // Set Loaded as Target Player
             if (foundHandles.invalid === false) {
                 foundHandles.players.target = {
                     name: loaded.username,
@@ -72,6 +103,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             debugout.push(`Loaded: <@${loaded.id}>`)
         }
 
+        // If we used a Search Term, do our best to remove it from Args list
         try {
             if (args && args.length > 0) {
                 debugout.push(`Args: [${args.join(" ")}]`)
@@ -100,6 +132,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             console.log(debugout.join("\n"))
         }
 
+        // Errors based on Invalid Source
         if (foundHandles?.invalid && foundHandles.invalid !== false) {
             foundHandles.title = { text: "Error" };
             switch (foundHandles.invalid) {
@@ -121,14 +154,20 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
+        // If pages are being forced, set defaults
         if (forcepages) {
             emoji = ["◀️", "▶️"]
             timeout = "600000"
         }
+
+        // If we have an array of page(s)
         if (Array.isArray(pages)) {
+            // If it's just one and we're not forcing pages, just send the embed
             if ((pages.length <= 1) && !forcepages) {
                 message.channel.send(pages[0])
             } else {
+                // Else, set up for pagination
+                // Sanity check for emoji pageturners
                 let filler = "🤡"
                 if (emoji.length !== 2) {
                     if (emoji.length == 1) {
@@ -141,9 +180,11 @@ module.exports = class VillainsCommand extends BaseCommand {
                     emoji = emoji.slice(0,1)
                     emoji.push(filler)
                 }
+                // Send the pages
                 await pagination(message, pages, emoji, timeout)
             }
         } else {
+            // Else, it's just an embed, send it
             message.channel.send(pages)
         }
     }

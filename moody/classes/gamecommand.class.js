@@ -1,3 +1,13 @@
+/*
+
+Command that conditionally loads extensions for MongoDB
+
+BaseCommand
+ VillainsCommand
+  GameCommand
+
+*/
+
 const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 

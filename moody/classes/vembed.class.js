@@ -1,3 +1,12 @@
+/*
+
+Branded Generic Embed Handler
+
+MessageEmbed
+ VillainsEmbed
+
+*/
+
 const fs = require('fs');
 const { MessageEmbed } = require('discord.js');
 
@@ -6,6 +15,7 @@ let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 let DEV = GLOBALS.DEV
 
 module.exports = class VillainsEmbed extends MessageEmbed {
+    // Sanity checks
     constructor(props = {}) {
         if (
           (

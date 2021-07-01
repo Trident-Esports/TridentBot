@@ -25,6 +25,11 @@ module.exports = class BonkCommand extends VillainsCommand {
 
         let defaultToUser = false // true: Default to User; false: Default to Target
 
+        /*
+        User:   Invalid
+        Target: Valid
+        Bot:    Invalid
+        */
         const user = message.author
         const target = message.mentions.members.first()
 

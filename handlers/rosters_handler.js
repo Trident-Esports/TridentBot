@@ -1,8 +1,10 @@
+// Load a-djs-style Roster/Matches/Teams commands in a discord.js-style
+//FIXME: Move toward a-djs-style loading
+
 const fs = require('fs');
 const MatchesCommand = require('../moody/commands/matches')
 const RosterCommand = require('../moody/commands/roster')
 const VillainsEmbed = require('../moody/classes/vembed.class');
-const { props } = require('bluebird');
 
 let walk = function (dir) {
     let results = [];

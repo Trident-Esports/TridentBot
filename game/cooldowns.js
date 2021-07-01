@@ -1,3 +1,5 @@
+//FIXME: Convert to Class
+
 const fs = require('fs');
 
 const {

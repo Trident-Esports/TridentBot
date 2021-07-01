@@ -1,3 +1,15 @@
+//FIXME: Unused?
+
+/*
+
+Command for Bot Devs only
+
+BaseCommand
+ VillainsCommand
+  BotDevCommand
+
+*/
+
 const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('./vembed.class');
 
@@ -51,9 +63,9 @@ module.exports = class BotDevCommand extends VillainsCommand {
         } else {
             this.build(client, message, args)
         }
-        
+
         let embed = new VillainsEmbed(this.props)
-        
+
         await message.channel.send(embed)
     }
 }//FIXME: Doesn't work for only the ID's listed

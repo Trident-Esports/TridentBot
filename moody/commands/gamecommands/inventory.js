@@ -30,6 +30,11 @@ module.exports = class InventoryCommand extends GameCommand {
             }
         }
 
+        /*
+        User:   Valid
+        Target: Valid
+        Bot:    Invalid
+        */
         const user = message.author
         const target = message.mentions.members.first()
         const loaded = target ? target.user : user

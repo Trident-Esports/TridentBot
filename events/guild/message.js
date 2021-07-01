@@ -5,13 +5,16 @@ const healthModel = require('../../models/healthSchema');       // Health
 const XPBoostModel = require('../../models/xpboostSchema');     // XP Boost
 
 const { MessageEmbed } = require('discord.js'); // Discord Embeds
+const VillainsEmbed = require('../../moody/classes/vembed.class'); // Villains Embed
 
 const cooldowns = new Map();
 
 module.exports = async (Discord, client, message) => {
 
+    //FIXME: Get from ./dbs/defaults.json
     const prefix = '.'  // Default Prefix
 
+    //FIXME: Obsolete?
     if (message.author.bot) {
         let send = false;
         for(let check of ["complete","incomplete","next"]) {
@@ -30,6 +33,12 @@ module.exports = async (Discord, client, message) => {
 
     let profileData;
 
+    /*
+    FIXME: Is this just a sanity check? It should use the same logic as ./events/guild/guildMemberAdd.js
+     These defaults:
+      Gold: 1000
+      Rank: Beginner
+    */
     profileData = await profileModel.findOne({ userID: message.author.id });
     if (!profileData) {
         let profile = await profileModel.create({
@@ -41,11 +50,13 @@ module.exports = async (Discord, client, message) => {
         });
         profile.save();
 
+        //FIXME: Load from ./dbs/defaults.json
         let footer = {
           "image": "https://cdn.discordapp.com/attachments/828595312981573682/831291472698671167/Screenshot_20210310-095826_Snapchat.jpg",
           "msg": "This bot was Created by Noongar1800#1800"
         }
 
+        //FIXME: Use a VillainsEmbed
         GameProfileEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setTitle(`**WELCOME**`)
@@ -66,6 +77,11 @@ module.exports = async (Discord, client, message) => {
     }
     let healthData;
 
+    /*
+    FIXME: Is this just a sanity check? It should use the same logic as ./events/guild/guildMemberAdd.js
+     These defaults:
+      Health: 100
+    */
     healthData = await healthModel.findOne({ userID: message.author.id });
     if (!healthData) {
         let health = await healthModel.create({
@@ -76,6 +92,11 @@ module.exports = async (Discord, client, message) => {
     }
     let inventoryData;
 
+    /*
+    FIXME: Is this just a sanity check? It should use the same logic as ./events/guild/guildMemberAdd.js
+     These defaults:
+      Power Potion (💉; Health Restore): 1
+    */
     inventoryData = await inventoryModel.findOne({ userID: message.author.id })
     if (!inventoryData) {
         let inventory = await inventoryModel.create({
@@ -108,13 +129,20 @@ module.exports = async (Discord, client, message) => {
         XPBoost.save();
     }
 
+    // Get Args
     const args = message.content.slice(prefix.length).split(/ +/);
+
+    // Get Command
     const cmd = args.shift().toLowerCase();
 
+    // Search for Command
     const command = client.commands.get(cmd) || client.commands.find(a => a.aliases && a.aliases.includes(cmd));
 
+    // If we've got a Command
     if (command?.name) {
+        // If we're not on Cooldown
         if (!cooldowns.has(command.name)) {
+            // Set a Cooldown
             cooldowns.set(command.name, new Discord.Collection());
             await cooldownsModel.findOneAndUpdate(
                 {
@@ -127,13 +155,17 @@ module.exports = async (Discord, client, message) => {
                 });
         }
     } else {
-        console.log("No name found for command (" + cmd + ")!")
+        // Didn't find a name for submitted Command
+        console.log(`No name found for command! '${cmd}' given`)
         console.log(command)
         return
     }
 
+    // Get current time
     const current_time = Date.now();
+    // Get CDs for this command
     const time_stamps = cooldowns.get(command.name);
+    // Get CD amount for this command
     const cooldown_amount = (command.cooldown) * 1000;
 
     //If time_stamps has a key with the author's id then check the expiration time to send a message to a user.
@@ -175,10 +207,13 @@ module.exports = async (Discord, client, message) => {
     //Delete the user's id once the cooldown is over.
     setTimeout(() => time_stamps.delete(message.author.id), cooldown_amount);
 
+    // If we've found a Command and we're ready to use it
     if (command) {
         if (typeof command.execute === "function") {
+            // If it's a discord.js-style func, run it
             command.execute(message, args, cmd, client, Discord, profileData);
         } else if (typeof command.run === "function") {
+            // If it's a a-djs-style func, run it
             command.run(client, message, args);
         }
     }

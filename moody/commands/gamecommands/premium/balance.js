@@ -28,11 +28,24 @@ module.exports = class BalanceCommand extends GameCommand {
             }
         }
 
-        // TODO
-        // User:    Default/Required/Optional
-        // Target:  Default/Required/Optional
-        // Bot:     Default/Required/Optional
+        /*
 
+        Start Setup
+
+        */
+        /*
+        TODO
+        User:    Default/Required/Optional
+        Target:  Default/Required/Optional
+        Bot:     Default/Required/Optional
+        */
+
+
+        /*
+        User:   Valid
+        Target: Valid
+        Bot:    Invalid
+        */
         const foundHandles = await this.getArgs(
             message,
             args,
@@ -48,6 +61,11 @@ module.exports = class BalanceCommand extends GameCommand {
         props.players = foundHandles.players
         props.title = foundHandles?.title ? foundHandles.title : props.title
         props.description = foundHandles?.description ? foundHandles.description : props.description
+        /*
+
+        End Setup
+
+        */
 
         if (props.title.text != "Error") {
             const profileData = await this.profileModel.findOne({

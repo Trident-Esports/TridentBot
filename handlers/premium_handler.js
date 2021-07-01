@@ -1,3 +1,6 @@
+// Load discord.js-style Premium Game Commands from ./game/premium/*.js
+//FIXME: Obsolete!
+
 const fs = require('fs');
 
 const Discord = require('discord.js')

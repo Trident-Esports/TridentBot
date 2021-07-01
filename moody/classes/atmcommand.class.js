@@ -1,3 +1,14 @@
+/*
+
+Command for Money management
+
+BaseCommand
+ VillainsCommand
+  GameCommand
+   ATMCommand
+
+*/
+
 const GameCommand = require('./gamecommand.class');
 const VillainsEmbed = require('./vembed.class');
 
@@ -27,6 +38,8 @@ module.exports = class ATMCommand extends GameCommand {
             }
         }
 
+        //FIXME: Use this.getArgs(message, args, flags)
+        // Use target flags conditionally based on used command
         const user = message.author
         const target = message.mentions.members.first()
         const loaded = user
@@ -41,6 +54,8 @@ module.exports = class ATMCommand extends GameCommand {
             props.description = this.errors.cantActionBot.join("\n")
         }
 
+        // Refund & Steal are Admin-only
+        //FIXME: Move error message to this.errors
         if (["Refund", "Steal"].indexOf(props.caption.text) > -1) {
             let APPROVED_ROLES = ROLES["admin"]
 
@@ -75,12 +90,14 @@ module.exports = class ATMCommand extends GameCommand {
                         props.title.text = "Error"
                         props.description = `You can't ${props.caption.text} Gold to/from yourself!`
                     }
+                    //FIXME: Will be redundant
                     if (target?.user?.bot && target.user.bot) {
                         props.title.text = "Error"
                         props.description = this.errors.cantActionBot.join("\n")
                     }
 
                     if (props.title.text != "Error") {
+                        //FIXME: players.target will be redundant
                         props.players.target = {
                             name: target.username,
                             avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })

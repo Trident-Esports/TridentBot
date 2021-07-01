@@ -17,6 +17,11 @@ module.exports = class BuyCommand extends GameCommand {
 
     async run(client, message, args) {
 
+        /*
+        User:   Invalid
+        Target: Valid
+        Bot:    Invalid
+        */
         let target = message.mentions.members.first() || message.guild.members.cache.get(args[0])
 
         let props = {

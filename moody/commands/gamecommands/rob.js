@@ -36,6 +36,11 @@ module.exports = class RobCommand extends GameCommand {
             }
         }
 
+        /*
+        User:   Invalid
+        Target: Valid
+        Bot:    Invalid
+        */
         const user = message.author
         const target = message.mentions.members.first();
 

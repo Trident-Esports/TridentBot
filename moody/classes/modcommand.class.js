@@ -1,13 +1,39 @@
+/*
+
+Command for Mods-only
+
+BaseCommand
+ VillainsCommand
+  AdminCommand
+   ModCommand
+
+*/
+
 const AdminCommand = require('./admincommand.class');
 
 module.exports = class ModCommand extends AdminCommand {
+    /*
+
+    constructor(comprops = {}, props = {})
+    run()
+     build()
+      action()
+     send()
+
+    */
     constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
         super(comprops, props)
     }
 
     async build(client, message, args) {
+        //FIXME: Use this.getArgs(message, args, flags)
         let defaultToUser = false // true: Default to User; false: Default to Target
 
+        /*
+        User:   Invalid
+        Target: Valid
+        Bot:    Invalid
+        */
         const user = message.author
         const target = message.mentions.members.first()
 
@@ -43,12 +69,14 @@ module.exports = class ModCommand extends AdminCommand {
         }
 
         if (this.props.title.text != "Error") {
+            //FIXME: Will be redundant
             if (target) {
                 this.props.players.target = {
                     name: target.username,
                     avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
                 }
             }
+
             this.action(client, message, args, loaded)
         }
     }

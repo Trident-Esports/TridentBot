@@ -34,6 +34,11 @@ module.exports = class CoinFlipCommand extends GameCommand {
             }
         }
 
+        /*
+        User:   Valid
+        Target: Invalid
+        Bot:    Invalid
+        */
         const user = message.author
         const loaded = user
 

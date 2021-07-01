@@ -1,3 +1,12 @@
+/*
+
+Command for Admins-only
+
+BaseCommand
+ VillainsCommand
+  AdminCommand
+
+*/
 const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('./vembed.class');
 const SlimEmbed = require('./vslimbed.class');
@@ -9,20 +18,37 @@ let DEV = GLOBALS.DEV;
 let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 
 module.exports = class AdminCommand extends VillainsCommand {
+    /*
+
+    constructor(comprops = {}, props = {})
+    run()
+     build()
+      action()
+     send()
+
+    */
     constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
+        // Create a parent object
         super(comprops)
+
+        // Get settings
         this.GLOBALS = GLOBALS
         this.DEV = DEV
         this.ROLES = ROLES
         this.DEFAULTS = DEFAULTS
 
+        // Default a title
         if (!(props?.caption?.text)) {
             if (!(props?.caption)) {
                 props.caption = {}
             }
             props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
         }
+
+        // Set props
         this.props = props
+
+        // Set error messages
         this.errors = JSON.parse(fs.readFileSync("game/dbs/errors.json", "utf8"))
     }
 
@@ -45,10 +71,12 @@ module.exports = class AdminCommand extends VillainsCommand {
         this.action(client, message, args)
     }
 
+    // Run the command
     async run(client, message, args) {
         let APPROVED_ROLES = this.ROLES["admin"]
 
         // Only Approved Roles
+        //FIXME: Move error message to this.errors
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
             this.props.title.text = "Error"
             this.props.description = "Sorry, only admins can run this command. 😔"

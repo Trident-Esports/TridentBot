@@ -1,4 +1,13 @@
-const fs = require('fs');
+/*
+
+Branded Slim Generic Embed Handler
+
+MessageEmbed
+ VillainsEmbed
+  SlimEmbed
+
+*/
+
 const VillainsEmbed = require('./vembed.class');
 
 module.exports = class SlimEmbed extends VillainsEmbed {
