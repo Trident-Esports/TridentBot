@@ -49,7 +49,7 @@ module.exports = class AdminCommand extends VillainsCommand {
         this.props = props
 
         // Set error messages
-        this.errors = JSON.parse(fs.readFileSync("game/dbs/errors.json", "utf8"))
+        this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
     }
 
     async action(client, message, args) {
@@ -76,10 +76,9 @@ module.exports = class AdminCommand extends VillainsCommand {
         let APPROVED_ROLES = this.ROLES["admin"]
 
         // Only Approved Roles
-        //FIXME: Move error message to this.errors
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
             this.props.title.text = "Error"
-            this.props.description = "Sorry, only admins can run this command. 😔"
+            this.props.description = this.errors.adminOnly
         } else {
             this.build(client, message, args)
         }

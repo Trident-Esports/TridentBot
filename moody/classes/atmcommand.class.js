@@ -55,13 +55,12 @@ module.exports = class ATMCommand extends GameCommand {
         }
 
         // Refund & Steal are Admin-only
-        //FIXME: Move error message to this.errors
         if (["Refund", "Steal"].indexOf(props.caption.text) > -1) {
             let APPROVED_ROLES = ROLES["admin"]
 
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
                 props.title.text = "Error"
-                props.description = "Sorry, only admins can run this command. 😔"
+                props.description = this.errors.adminOnly
             }
         }
 

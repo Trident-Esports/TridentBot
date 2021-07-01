@@ -22,7 +22,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
         }
         this.props = props
-        this.errors = JSON.parse(fs.readFileSync("game/dbs/errors.json", "utf8"))
+        this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
     }
 
     async getArgs(message, args, flags) {

@@ -12,6 +12,7 @@ BaseCommand
 
 const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('./vembed.class');
+const fs = require('fs');
 
 module.exports = class BotDevCommand extends VillainsCommand {
     constructor(comprops = {}, props = { title: {}, description: "" }) {
@@ -47,19 +48,19 @@ module.exports = class BotDevCommand extends VillainsCommand {
     }
 
     async run(client, message, args) {
-        let APPROVED_USERIDS = [
-            "263968998645956608", // Mike
-            "532192409757679618", // Noongar
-            "692180465242603591" // PrimeWarGamer
-        ]
+        let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8"))
 
-        if(!APPROVED_USERIDS) {
+        /*
+
+        Mike
+        Noongar
+        Prime
+
+        */
+
+        if(USERIDS.botDevs.indexOf(message.author.id) == -1) {
             this.props.title.text = "Error"
-            this.props.description = `Sorry only ` +
-            `**MikeTrethewey**,` +
-            `**Noongar1800** or ` +
-            `**PrimeWarGamer**` +
-            ` can run this command 😔`
+            this.props.description = this.errors.botDevOnly
         } else {
             this.build(client, message, args)
         }
@@ -68,4 +69,4 @@ module.exports = class BotDevCommand extends VillainsCommand {
 
         await message.channel.send(embed)
     }
-}//FIXME: Doesn't work for only the ID's listed
+}

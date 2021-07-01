@@ -60,7 +60,6 @@ module.exports = class ShopCommand extends GameCommand {
             props.description = this.errors.cantActionBot.join("\n")
         }
 
-        //FIXME: Move error message to this.errors
         if (props.title.text != "Error") {
             const inventoryData = await this.inventoryModel.findOne({
                 userID: loaded.id
@@ -71,11 +70,11 @@ module.exports = class ShopCommand extends GameCommand {
 
             if (!inventoryData) {
                 props.title.text = "Error"
-                props.description = "This user doesn't exist."
+                props.description = this.errors.game.mongoDB.noInventory
             }
             if (!profileData) {
                 props.title.text = "Error"
-                props.description = "There was an error finding your Discord ID."
+                props.description = this.errors.game.mongoDB.noProfile
             }
 
             if (props.title.text != "Error") {
