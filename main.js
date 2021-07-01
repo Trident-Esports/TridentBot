@@ -1,6 +1,7 @@
 const Discord = require('discord.js'); // Base Discord module
+const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
 
-const client = new Discord.Client({
+const client = new MoodyClient({
     partials: ["MESSAGE", "CHANNEL", "REACTION"]
 });  // Discord Client object
 
@@ -36,7 +37,6 @@ client.events = new Discord.Collection();
     require(`./handlers/${handler}`)(client, Discord);
 })
 
-
 // Connect to DB
 mongoose.connect(
         SENSITIVE.client.mongoDB,
@@ -54,11 +54,7 @@ mongoose.connect(
 // /mongoose
 
 // Message Channels
-const channelIDs = {
-    "welcome": "795820413241786398",
-    "rules": "788576321231388704",
-    "roles": "795824892863053895"
-}
+const channelIDs = JSON.parse(fs.readFileSync("dbs/channels.json", "utf8"))
 
 // User joins Server (Guild)
 client.on('guildMemberAdd', (member, Discord) => {
@@ -66,9 +62,19 @@ client.on('guildMemberAdd', (member, Discord) => {
     let welcomeRole = "Minions";
     welcomeRole = member.guild.roles.cache.find(role => role.name === welcomeRole);
     member.roles.add(welcomeRole);
-    console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
+    // console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
-    const channel = member.guild.channels.cache.get(channelIDs["welcome"])
+    console.log("---")
+    console.log("--MEMBER JOIN>>")
+    console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
+    console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
+    console.log("Have Channel IDs?",member.guild.id in channelIDs)
+
+    if (!(member.guild.id in channelIDs)) {
+        return
+    }
+
+    const channel = member.guild.channels.cache.get(channelIDs[member.guild.id].welcome)
     let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif"
     let footer = {
         "image": "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif",
@@ -79,9 +85,9 @@ client.on('guildMemberAdd', (member, Discord) => {
             `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
             "**Are you ready to become a Super Villain?**",
             "",
-            `Please Read ${member.guild.channels.cache.get(channelIDs.rules).toString()}.`,
+            `Please Read ${member.guild.channels.cache.get(channelIDs[member.guild.id].rules).toString()}.`,
             "",
-            `Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs.roles).toString()}.`
+            `Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs[member.guild.id].roles).toString()}.`
         ]
         const embed = new MessageEmbed()
             .setTitle(`Welcome To ${member.guild.name}`)
@@ -98,8 +104,18 @@ client.on('guildMemberAdd', (member, Discord) => {
 });
 
 client.on('guildMemberRemove', (member) => {
+    console.log("---")
+    console.log("<<MEMBER LEAVE--")
+    console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
+    console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
+    console.log("Have Channel IDs?",member.guild.id in channelIDs)
+
+    if (!(member.guild.id in channelIDs)) {
+        return
+    }
+
     // You Can Do The Same For Leave Message
-    const leavechannelId = channelIDs["welcome"] //Channel You Want to Send The Leave Message
+    const leavechannelId = channelIDs[member.guild.id].welcome //Channel You Want to Send The Leave Message
     const leavemessage = `<@${member.id}> **Has just become a Hero.**`
 
     const channel1 = member.guild.channels.cache.get(leavechannelId)
@@ -131,5 +147,19 @@ client.on('message', message => {
         if (message.author.bot || message.guild.id === '788021898146742292') return;
         else message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
 });
+
+const handler = new Handler(client, {
+    prefix: prefix,
+    token: SENSITIVE.client.login,
+    commandsPath: __dirname + "/moody/commands",
+    owners: [
+        532192409757679618, // Noongar
+        263968998645956608, // Mike
+        692180465242603591  // Prime
+    ]
+});
+(async () => {
+    await handler.start();
+})();
 
 client.login(SENSITIVE.client.login);
