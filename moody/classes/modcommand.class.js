@@ -21,34 +21,37 @@ module.exports = class ModCommand extends AdminCommand {
      send()
 
     */
-    constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
+    constructor(comprops = {}, props = {}) {
+        let flags = {
+            user: "invalid",
+            target: "required",
+            bot: "invalid"
+        }
+        if (comprops?.flags) {
+            for (let [player, setting] of Object.entries(flags)) {
+                if (Object.keys(comprops.flags).indexOf(player) == -1) {
+                    comprops.flags[player] = setting
+                }
+            }
+        } else {
+            comprops.flags = flags
+        }
+
+        // Create a parent object
         super(comprops, props)
     }
 
-    async build(client, message, args) {
-        /*
+    async build(client, message) {
+        let APPROVED_ROLES = this.ROLES["admin"].concat(this.ROLES["mod"])
 
-        Start Setup
+        // Only Approved Roles
+        if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
+            this.error = true
+            this.props.description = this.errors.modOnly
+        }
 
-        */
-        // Use target flags conditionally based on used command
-        await this.processArgs(
-            message,
-            args,
-            {
-                user: "invalid",
-                target: "required",
-                bot: "invalid"
-            }
-        )
-        /*
-
-        End Setup
-
-        */
-
-        if (!(this.error)) {
-            await this.action(client, message, this.inputData.args, this.inputData.loaded)
+        if(!(this.error)) {
+            this.action(client, message)
         }
     }
 }

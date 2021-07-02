@@ -8,6 +8,8 @@ BaseCommand
 */
 
 const { BaseCommand } = require('a-djs-handler');
+const VillainsEmbed = require('../classes/vembed.class');
+const SlimEmbed = require('../classes/vslimbed.class');
 const pagination = require('discord.js-pagination');
 
 const fs = require('fs');
@@ -15,17 +17,38 @@ const fs = require('fs');
 module.exports = class VillainsCommand extends BaseCommand {
     #DEV;       // Private: DEV flag
     #props;     // Private: Props to send to VillainsEmbed
+    #flags;     // Private: Flags for user management
     #error;     // Private: Error Thrown
     #errors;    // Private: Global Error Message strings
     #inputData; // Private: Command Inputs
 
-    constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
+    constructor(comprops = {}, props = {}) {
         super(comprops)
         if (!(props?.caption?.text)) {
             if (!(props?.caption)) {
                 props.caption = {}
             }
             props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
+        }
+        if (!(props?.title)) {
+            props.title = {}
+        }
+        if (!(props?.description)) {
+            props.description = ""
+        }
+        if (!(props?.players)) {
+            props.players = {}
+        }
+        if (!(comprops?.flags)) {
+            this.flags = {}
+        } else {
+            this.flags = comprops.flags
+        }
+
+        for (let [player, setting] of Object.entries({user:"default",target:"optional",bot:"invalid"})) {
+            if (Object.keys(this.flags).indexOf(player) == -1) {
+                this.flags[player] = setting
+            }
         }
 
         const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
@@ -48,6 +71,13 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
     set props(props) {
         this.#props = props
+    }
+
+    get flags() {
+        return this.#flags
+    }
+    set flags(flags) {
+        this.#flags = flags
     }
 
     get error() {
@@ -219,8 +249,24 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.props.description = foundHandles.description
     }
 
-    async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
+    async action(client, message) {
+        // Do nothing; command overrides this
+        // If the thing doesn't modify anything, don't worry about DEV flag
+        // If the thing does modify stuff, use DEV flag to describe action instead of performing it
+        if(! this.DEV) {
+            // Do the thing
+        } else {
+            // Describe the thing
+        }
+    }
 
+    async build(client, message) {
+        if(!(this.error)) {
+            await this.action(client, message)
+        }
+    }
+
+    async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
         // If pages are being forced, set defaults
         if (forcepages) {
             emoji = ["◀️", "▶️"]
@@ -257,8 +303,17 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     async run(client, message, args) {
-        await this.processArgs(message, args)
-        let embed = new VillainsEmbed(this.props)
+        await this.processArgs(message, args, this.flags)
+
+        await this.build(client, message)
+
+        let embed = null
+        if(this.props?.full && this.props.full) {
+            embed = new VillainsEmbed(this.props)
+        } else {
+            embed = new SlimEmbed(this.props)
+        }
+
         await this.send(message, embed)
     }
 }

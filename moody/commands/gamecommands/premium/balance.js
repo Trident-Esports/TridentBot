@@ -3,96 +3,40 @@ const VillainsEmbed = require('../../../classes/vembed.class');
 
 module.exports = class BalanceCommand extends GameCommand {
     constructor() {
-        super({
+        let comprops = {
             name: 'balance',
             aliases: ['bal'],
             category: 'premium',
             description: 'Checks the Users Balance',
             extensions: [ "profile" ]
-        });
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            caption: {
-                text: "Balance"
-            },
-            title: { text: "" },
-            description: "",
-            footer: {
-                msg: ""
-            },
-            players: {
-                user: {},
-                target: {}
-            }
-        }
+    async action(client, message) {
+        const loaded = this.inputData.loaded
 
-        /*
+        const profileData = await this.profileModel.findOne({
+            userID: loaded.id
+        });
 
-        Start Setup
-
-        */
-        /*
-        TODO
-        User:    Default/Required/Optional
-        Target:  Default/Required/Optional
-        Bot:     Default/Required/Optional
-        */
-
-
-        /*
-        User:   Valid
-        Target: Valid
-        Bot:    Invalid
-        */
-        const foundHandles = await this.getArgs(
-            message,
-            args,
+        this.props.description = `This is <@${loaded.id}>'s Balance`
+        this.props.fields = [
             {
-                user: "default",
-                target: "optional",
-                bot: "invalid"
+                name: ` ${this.emojis.gold}${profileData.gold.toLocaleString("en-AU")}`,
+                value: 'Gold',
+                inline: true
+            },
+            {
+                name: ` ${this.emojis.bank}${profileData.bank.toLocaleString("en-AU")}`,
+                value: 'Bank',
+                inline: true
+            },
+            {
+                name: ` ${this.emojis.minions}${profileData.minions}`,
+                value: 'Minions',
+                inline: true
             }
-        )
-
-        const user = foundHandles.user
-        const loaded = foundHandles.loaded
-        props.players = foundHandles.players
-        props.title = foundHandles?.title ? foundHandles.title : props.title
-        props.description = foundHandles?.description ? foundHandles.description : props.description
-        /*
-
-        End Setup
-
-        */
-
-        if (props.title.text != "Error") {
-            const profileData = await this.profileModel.findOne({
-                userID: loaded.id
-            });
-
-            props.description = `This is <@${loaded.id}>'s Balance`
-            props.fields = [
-                {
-                    name: ` ${this.emojis.gold}${profileData.gold.toLocaleString("en-AU")}`,
-                    value: 'Gold',
-                    inline: true
-                },
-                {
-                    name: ` ${this.emojis.bank}${profileData.bank.toLocaleString("en-AU")}`,
-                    value: 'Bank',
-                    inline: true
-                },
-                {
-                    name: ` ${this.emojis.minions}${profileData.minions}`,
-                    value: 'Minions',
-                    inline: true
-                }
-            ]
-        }
-
-        let embed = new VillainsEmbed(props)
-        await message.channel.send(embed);
+        ]
     }
 }

@@ -25,9 +25,9 @@ module.exports = class AdminCommand extends VillainsCommand {
      send()
 
     */
-    constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
+    constructor(...args) {
         // Create a parent object
-        super(comprops, props)
+        super(...args)
 
         this.ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
     }
@@ -39,37 +39,7 @@ module.exports = class AdminCommand extends VillainsCommand {
         this.#ROLES = ROLES
     }
 
-    async action(client, message, args) {
-        // do nothing; command overrides this
-        if(! this.DEV) {
-            // Do the thing
-        } else {
-            // Describe the thing
-        }
-    }
-
-    async build(client, message, args) {
-        /*
-
-        Start Setup
-
-        */
-        // Use target flags conditionally based on used command
-        await this.processArgs(
-            message,
-            args,
-            {
-                user: "invalid",
-                target: "required",
-                bot: "invalid"
-            }
-        )
-        /*
-
-        End Setup
-
-        */
-
+    async build(client, message) {
         let APPROVED_ROLES = this.ROLES["admin"]
 
         // Only Approved Roles
@@ -79,21 +49,7 @@ module.exports = class AdminCommand extends VillainsCommand {
         }
 
         if(!(this.error)) {
-            this.action(client, message, this.inputData.args, this.inputData.loaded)
+            this.action(client, message)
         }
-    }
-
-    // Run the command
-    async run(client, message, args) {
-        await this.build(client, message, args)
-
-        let embed = null
-        if(this.props?.full && this.props.full) {
-            embed = new VillainsEmbed(this.props)
-        } else {
-            embed = new SlimEmbed(this.props)
-        }
-
-        await this.send(message, embed)
     }
 }

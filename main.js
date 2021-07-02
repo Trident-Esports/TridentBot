@@ -45,7 +45,7 @@ mongoose.connect(
             useFindAndModify: false
         })
     .then(() => {
-        console.log("Connected to the Database!");
+        console.log("MongoDB: Connected!");
     })
     .catch((err) => {
         console.log(err);

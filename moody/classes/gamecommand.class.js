@@ -12,9 +12,12 @@ const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 
 module.exports = class GameCommand extends VillainsCommand {
+    #emojis; // Private: Emojis
+
     //FIXME: If this.category is "premium" do special handling
-    constructor(comprops = {}) {
-        super(comprops)
+    constructor(comprops = {}, props = {}) {
+        // Create a parent object
+        super(comprops, props)
         if (comprops?.extensions) {
             for (let extension of comprops.extensions) {
                 let key = extension + "Model"
@@ -29,6 +32,12 @@ module.exports = class GameCommand extends VillainsCommand {
             }
         }
         this.emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
-        this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
+    }
+
+    get emojis() {
+        return this.#emojis
+    }
+    set emojis(emojis) {
+        this.#emojis = emojis
     }
 }

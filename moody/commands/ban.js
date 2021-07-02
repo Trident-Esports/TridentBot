@@ -5,12 +5,18 @@ module.exports = class BanCommand extends ModCommand {
         let comprops = {
             name: "ban",
             category: "admin",
-            description: "Ban user"
+            description: "Ban user",
+            flags: {
+                user: "invalid",
+                target: "required",
+                bot: "invalid"
+            }
         }
         super(comprops)
     }
 
-    async action(client, message, args, member) {
+    async action(client, message) {
+        const member = this.inputData.loaded
         if(! this.DEV) {
             // Do the thing
             member.ban()
