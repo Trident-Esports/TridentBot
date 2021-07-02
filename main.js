@@ -156,6 +156,7 @@ const handler = new Handler(client, {
     prefix: prefix,
     token: SENSITIVE.client.login,
     commandsPath: __dirname + "/moody/commands",
+    eventsPath: __dirname + "/moody/events",
     owners: [
         532192409757679618, // Noongar
         263968998645956608, // Mike

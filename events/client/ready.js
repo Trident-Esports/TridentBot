@@ -2,11 +2,11 @@ const fs = require('fs');
 
 module.exports = () => {
     let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+    let DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
     let DEV = GLOBALS.DEV;
 
-    VERSION = "1.1.4";
     console.log("---")
-    console.log(`VillainsBot v${VERSION} is Online!`);
+    console.log(`VillainsBot v${DEFAULTS.VERSION} is Online!`);
     if(DEV) {
         console.log(`!!! DEV MODE (${GLOBALS.name}) ENABLED !!!`);
     }

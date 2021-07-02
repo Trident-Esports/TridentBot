@@ -11,10 +11,14 @@ const { BaseCommand } = require('a-djs-handler');
 const pagination = require('discord.js-pagination');
 
 const fs = require('fs');
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-let DEV = GLOBALS.DEV;
 
 module.exports = class VillainsCommand extends BaseCommand {
+    #DEV;       // Private: DEV flag
+    #props;     // Private: Props to send to VillainsEmbed
+    #error;     // Private: Error Thrown
+    #errors;    // Private: Global Error Message strings
+    #inputData; // Private: Command Inputs
+
     constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
         super(comprops)
         if (!(props?.caption?.text)) {
@@ -23,11 +27,51 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
             props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
         }
+
+        const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        this.DEV = GLOBALS.DEV
         this.props = props
+        this.error = false
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
+        this.inputData = {}
     }
 
-    async getArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid" }) {
+    get DEV() {
+        return this.#DEV
+    }
+    set DEV(DEV) {
+        this.#DEV = DEV
+    }
+
+    get props() {
+        return this.#props
+    }
+    set props(props) {
+        this.#props = props
+    }
+
+    get error() {
+        return this.#error
+    }
+    set error(error) {
+        this.#error = error
+    }
+
+    get errors() {
+        return this.#errors
+    }
+    set errors(errors) {
+        this.#errors = errors
+    }
+
+    get inputData() {
+        return this.#inputData
+    }
+    set inputData(inputData) {
+        this.#inputData = inputData
+    }
+
+    async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid" }) {
         let foundHandles = { players: {}, invalid: false, flags: flags }
 
         let user = message.author
@@ -80,7 +124,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
         debugout.push(`Type:`.padEnd(padding) + `${foundHandles.loadedType}`)
 
-        // If we have calcualted a Target
+        // If we have calculated a Target
         if (loaded) {
             // Make sure Loaded isn't from an Invalid source
             for (let handleType of ["user", "target"]) {
@@ -88,10 +132,8 @@ module.exports = class VillainsCommand extends BaseCommand {
                     foundHandles.invalid = handleType
                 }
             }
-            if (foundHandles.loadedType == "search") {
-                if (flags.user == "invalid" && loaded.id == user.id) {
-                    foundHandles.invalid = "user"
-                }
+            if (flags.user == "invalid" && loaded.id == user.id) {
+                foundHandles.invalid = "user"
             }
 
             // If Loaded is a Bot
@@ -132,7 +174,7 @@ module.exports = class VillainsCommand extends BaseCommand {
                 } else {
                     cleansed = args.join(" ").trim()
                     for (let check of [`${loaded.username}#${loaded.discriminator}`, loaded.username]) {
-                        cleansed = cleansed.trim().replace(check,"")
+                        cleansed = cleansed.toLowerCase().trim().replace(check.toLowerCase(),"")
                     }
                 }
                 foundHandles.argsArr = cleansed.trim().split(" ").filter(function(e) { return e != null && e != "" })
@@ -147,13 +189,14 @@ module.exports = class VillainsCommand extends BaseCommand {
             console.log(debugout.join("\n"))
         }
 
-        if (DEV) {
+        if (this.DEV && false) {
             console.log("---")
             console.log(debugout.join("\n"))
         }
 
         // Errors based on Invalid Source
         if (foundHandles?.invalid && foundHandles.invalid !== false) {
+            this.error = true
             foundHandles.title = { text: "Error" };
             switch (foundHandles.invalid) {
                 case "user":
@@ -170,10 +213,14 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
         }
 
-        return foundHandles
+        this.inputData = foundHandles
+        this.props.players = foundHandles.players
+        this.props.title = foundHandles.title
+        this.props.description = foundHandles.description
     }
 
     async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
+
         // If pages are being forced, set defaults
         if (forcepages) {
             emoji = ["◀️", "▶️"]
@@ -207,5 +254,11 @@ module.exports = class VillainsCommand extends BaseCommand {
             // Else, it's just an embed, send it
             message.channel.send(pages)
         }
+    }
+
+    async run(client, message, args) {
+        await this.processArgs(message, args)
+        let embed = new VillainsEmbed(this.props)
+        await this.send(message, embed)
     }
 }

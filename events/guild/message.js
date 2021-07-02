@@ -221,9 +221,6 @@ module.exports = async (Discord, client, message) => {
         if (typeof command.execute === "function") {
             // If it's a discord.js-style func, run it
             command.execute(message, args, cmd, client, Discord, profileData);
-        } else if (typeof command.run === "function") {
-            // If it's a a-djs-style func, run it
-            command.run(client, message, args);
         }
     }
 }

@@ -12,12 +12,10 @@ const VillainsEmbed = require('./vembed.class');
 const SlimEmbed = require('./vslimbed.class');
 
 const fs = require('fs');
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-let DEFAULTS = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-let DEV = GLOBALS.DEV;
-let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
 
 module.exports = class AdminCommand extends VillainsCommand {
+    #ROLES; // Private: ROLES
+
     /*
 
     constructor(comprops = {}, props = {})
@@ -29,27 +27,16 @@ module.exports = class AdminCommand extends VillainsCommand {
     */
     constructor(comprops = {}, props = { caption: {}, title: {}, description: "", players: {} }) {
         // Create a parent object
-        super(comprops)
+        super(comprops, props)
 
-        // Get settings
-        this.GLOBALS = GLOBALS
-        this.DEV = DEV
-        this.ROLES = ROLES
-        this.DEFAULTS = DEFAULTS
+        this.ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
+    }
 
-        // Default a title
-        if (!(props?.caption?.text)) {
-            if (!(props?.caption)) {
-                props.caption = {}
-            }
-            props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
-        }
-
-        // Set props
-        this.props = props
-
-        // Set error messages
-        this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
+    get ROLES() {
+        return this.#ROLES
+    }
+    set ROLES(ROLES) {
+        this.#ROLES = ROLES
     }
 
     async action(client, message, args) {
@@ -62,26 +49,43 @@ module.exports = class AdminCommand extends VillainsCommand {
     }
 
     async build(client, message, args) {
-        const user = message.author
-        this.props.players.user = {
-            name: user.username,
-            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
-        }
+        /*
 
-        this.action(client, message, args)
-    }
+        Start Setup
 
-    // Run the command
-    async run(client, message, args) {
+        */
+        // Use target flags conditionally based on used command
+        await this.processArgs(
+            message,
+            args,
+            {
+                user: "invalid",
+                target: "required",
+                bot: "invalid"
+            }
+        )
+        /*
+
+        End Setup
+
+        */
+
         let APPROVED_ROLES = this.ROLES["admin"]
 
         // Only Approved Roles
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
-            this.props.title.text = "Error"
+            this.error = true
             this.props.description = this.errors.adminOnly
-        } else {
-            this.build(client, message, args)
         }
+
+        if(!(this.error)) {
+            this.action(client, message, this.inputData.args, this.inputData.loaded)
+        }
+    }
+
+    // Run the command
+    async run(client, message, args) {
+        await this.build(client, message, args)
 
         let embed = null
         if(this.props?.full && this.props.full) {
@@ -89,6 +93,7 @@ module.exports = class AdminCommand extends VillainsCommand {
         } else {
             embed = new SlimEmbed(this.props)
         }
-        await message.channel.send(embed)
+
+        await this.send(message, embed)
     }
 }
