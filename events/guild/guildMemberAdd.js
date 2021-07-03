@@ -9,7 +9,7 @@ module.exports = async (client, Discord, member) => {
     Check to see if there's already one in the DB
     Bail if there is one
     */
-    const hasProfile = await this.profileModel.findOne({
+    const hasProfile = await profileModel.findOne({
         userID: member.id
     });
 

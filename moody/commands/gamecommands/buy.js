@@ -2,11 +2,12 @@ const ShopCommand = require('../../classes/shopcommand.class');
 
 module.exports = class BuyCommand extends ShopCommand {
     constructor() {
-        super({
+        let comprops = {
             name: 'buy',
             category: 'game',
             description: 'Buy an Item from the Store',
             extensions: [ "inventory", "profile" ]
-        });
+        }
+        super(comprops)
     }
 }

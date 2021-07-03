@@ -24,6 +24,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
     constructor(comprops = {}, props = {}) {
         super(comprops)
+
         if (!(props?.caption?.text)) {
             if (!(props?.caption)) {
                 props.caption = {}
@@ -54,6 +55,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
         this.DEV = GLOBALS.DEV
         this.props = props
+        this.title = props.title
         this.error = false
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
         this.inputData = {}
@@ -158,17 +160,17 @@ module.exports = class VillainsCommand extends BaseCommand {
         if (loaded) {
             // Make sure Loaded isn't from an Invalid source
             for (let handleType of ["user", "target"]) {
-                if ((foundHandles.loadedType == handleType) && (flags[handleType] == "invalid")) {
+                if ((foundHandles.loadedType == handleType) && (this.flags[handleType] == "invalid")) {
                     foundHandles.invalid = handleType
                 }
             }
-            if (flags.user == "invalid" && loaded.id == user.id) {
+            if (this.flags.user == "invalid" && loaded.id == user.id) {
                 foundHandles.invalid = "user"
             }
 
             // If Loaded is a Bot
             // If Bot has been specified as a Valid source
-            if (["default","required","optional"].indexOf(flags.bot) > -1) {
+            if (["default","required","optional"].indexOf(this.flags.bot) > -1) {
                 // Do... something?
             } else if (loaded?.bot && loaded.bot) {
                 // If Bot has been specified as in Invalid source
