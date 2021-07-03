@@ -3,69 +3,51 @@ const VillainsEmbed = require('../../classes/vembed.class');
 
 module.exports = class CoinFlipCommand extends GameCommand {
     constructor() {
-        super({
+        let comprops = {
             name: 'coinflip',
             aliases: [ "cf" ],
             category: 'game',
             description: 'Flip a coin!',
             extensions: [ "profile" ]
-        });
-    }
-
-    async run(client, message, args) {
-        let msg = [
-            "**Which side of the coin do you think it will land on?** 🔍",
-            "`Heads` `Side` `Tails`"
-        ]
-
+        }
+        //FIXME: props isn't being respected?
         let props = {
             caption: {
                 text: "Coin Flip"
             },
             title: {},
-            description: msg.join("\n"),
-            thumbnail: "https://media.tenor.com/images/60b3d58b8161ad9b03675abf301e8fb4/tenor.gif",
-            footer: {
-                msg: ""
-            },
-            players: {
-                user: {},
-                target: {}
+            thumbnail: ""
+        }
+        super(comprops, props)
+    }
+
+    async action(client, message) {
+        const loaded = this.inputData.loaded
+
+        if(!(this?.props?.title?.text)) {
+            if(!(this?.props?.title)) {
+                this.props.title = { text: ""}
             }
+            this.props.title.text = ""
         }
 
-        /*
-        User:   Valid
-        Target: Invalid
-        Bot:    Invalid
-        */
-        const user = message.author
-        const loaded = user
+        this.props.description = [
+            "**Which side of the coin do you think it will land on?** 🔍",
+            "`Heads` `Side` `Tails`"
+        ].join("\n");
+        this.thumbnail = "https://media.tenor.com/images/60b3d58b8161ad9b03675abf301e8fb4/tenor.gif"
 
-        props.players.user = {
-            name: user.username,
-            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
-        }
-        props.players.target = {
-            name: props.caption.text,
-            avatar: props.thumbnail
-        }
-
-        if (loaded?.bot && loaded.bot) {
-            props.title.text = "Error"
-            props.description = this.errors.cantActionBot.join("\n")
-        }
-
-        if (props.title.text != "Error") {
-            let gambledAmount = args && args[0] && args[0].trim() != "" ? args[0].toLowerCase() : -1
+        if (!(this.error)) {
+            let gambledAmount = this.inputData.args && this.inputData.args[0] && (!(isNaN(this.inputData.args[0]))) ? parseInt(this.inputData.args[0]) : -1
             let minGamble = 500
 
             if (gambledAmount < minGamble) {
-                props.title.text = "Error"
-                props.description = `You must gamble at least ${this.emojis.gold}${minGamble}. '${gambledAmount}' given.`
+                this.error = true
+                this.props.title.text = "Error"
+                this.props.description = `You must gamble at least ${this.emojis.gold}${minGamble}. '${gambledAmount}' given.`
             }
 
-            if (props.title.text != "Error") {
+            if (!(this.error)) {
                 const profileData = await this.profileModel.findOne({
                     userID: loaded.id
                 })
@@ -77,11 +59,11 @@ module.exports = class CoinFlipCommand extends GameCommand {
                 }
 
                 if (gambledAmount > profileData.gold) {
-                    props.title.text = "Error"
-                    props.description = `You seem to be a bit short on money there. '${gambledAmount}' given and you've got ${this.emojis.gold}${profileData.gold}.`
+                    this.props.title.text = "Error"
+                    this.props.description = `You seem to be a bit short on money there. '${gambledAmount}' given and you've got ${this.emojis.gold}${profileData.gold}.`
                 }
 
-                if (props.title.text != "Error") {
+                if (!(this.error)) {
                     const variables = [
                         "Heads",
                         "Tails",
@@ -101,15 +83,15 @@ module.exports = class CoinFlipCommand extends GameCommand {
                         time: 15000
                     });
 
-                    props["success"] = {
+                    this.props["success"] = {
                         "color": "#00FF00",
                         "title": "CONGRATULATIONS"
                     }
-                    props["fail"] = {
+                    this.props["fail"] = {
                         "color": "#FF0000",
                         "title": "SADNESS"
                     }
-                    props["special"] = {
+                    this.props["special"] = {
                         "color": "#0000FF",
                         "title": "OMG"
                     }
@@ -146,9 +128,9 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                     },
                                 });
                                 console.log((gotHeads ? "Heads" : "Tails" + ':'),number)
-                                props.color = props.success.color
-                                props.title.text = props.success.title
-                                props.description = `You chose ${choice} and won ${this.emojis.gold}${gambledAmount.toString()}.`
+                                this.props.color = this.props.success.color
+                                this.props.title.text = this.props.success.title
+                                this.props.description = `You chose ${choice} and won ${this.emojis.gold}${gambledAmount.toString()}.`
                             } else if (number <= Side && m.content.charAt(0).toLowerCase() === 's') {
                                 await this.profileModel.findOneAndUpdate({
                                     userID: loaded.id,
@@ -159,9 +141,9 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                     },
                                 });
                                 console.log("Side:",number)
-                                props.color = props.special.color
-                                props.title.text = props.special.title
-                                props.description = `You go to flip the coin and it lands on its ${choice} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours!`
+                                this.props.color = this.props.special.color
+                                this.props.title.text = this.props.special.title
+                                this.props.description = `You go to flip the coin and it lands on its ${choice} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours!`
                             } else {
                                 await this.profileModel.findOneAndUpdate({
                                     userID: loaded.id,
@@ -171,12 +153,12 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                     },
                                 });
                                 console.log("Fail:",number)
-                                props.color = props.fail.color
-                                props.title.text = props.fail.title
-                                props.description = `You chose ${choice} and the coin didn't land on that. this means you just lost ${this.emojis.gold}${gambledAmount.toString()}\n Maybe a bad idea or just Unlucky.`
+                                this.props.color = this.props.fail.color
+                                this.props.title.text = this.props.fail.title
+                                this.props.description = `You chose ${choice} and the coin didn't land on that. this means you just lost ${this.emojis.gold}${gambledAmount.toString()}\n Maybe a bad idea or just Unlucky.`
                             }
 
-                            let embed = new VillainsEmbed(props)
+                            let embed = new VillainsEmbed(this.props)
                             await this.send(message, embed)
                         } catch (err) {
                             console.log("Error:",err)
@@ -193,21 +175,17 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                     gold: -1,
                                 },
                             });
-                            props.description = `You forgot to flip the coin and it fell out of your hand and rolled away. You lost 💰1.`
-                            props.description = `<@${loaded.id}>` + "\n" + props.description
+                            this.props.description = `You forgot to flip the coin and it fell out of your hand and rolled away. You lost 💰1.`
+                            this.props.description = `<@${loaded.id}>` + "\n" + this.props.description
 
-                            let embed = new VillainsEmbed(props)
+                            let embed = new VillainsEmbed(this.props)
                             await this.send(message, embed)
                         }
                     });
 
-                    props.description = `<@${loaded.id}>` + "\n" + props.description
-
+                    this.props.description = `<@${loaded.id}>` + "\n" + this.props.description
                 }
             }
         }
-
-        let embed = new VillainsEmbed(props)
-        await this.send(message, embed);
     }
 }

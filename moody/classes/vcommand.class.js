@@ -211,8 +211,8 @@ module.exports = class VillainsCommand extends BaseCommand {
                 }
                 foundHandles.argsArr = cleansed.trim().split(" ").filter(function(e) { return e != null && e != "" })
                 cleansed = foundHandles.argsArr.join(" ")
-                foundHandles.args = cleansed.trim()
-                debugout.push(`Clean:`.padEnd(padding) + `[${cleansed.trim()}]`)
+                foundHandles.args = cleansed.trim().split(" ")
+                debugout.push(`Clean:`.padEnd(padding) + `[${cleansed}]`)
             }
         } catch(e) {
             console.log("---")
