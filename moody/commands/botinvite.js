@@ -5,18 +5,18 @@ const fs = require('fs');
 let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 
 module.exports = class BotInviteCommand extends VillainsCommand {
+    //FIXME: Not setting URL
     constructor() {
-        super({
+        let comprops = {
             name: "botinvite",
             category: "meta",
             description: "Bot Invite"
-        })
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            title: { text: "Invite @VillainsBot to your Discord!" }
-        }
+    async action(client, message) {
+        this.props.title = { text: "Invite @VillainsBot to your Discord!" }
         let url = ""
         if(
           defaults?.bot?.clientID &&
@@ -27,12 +27,11 @@ module.exports = class BotInviteCommand extends VillainsCommand {
             url += "?client_id=" + defaults.bot.clientID
             url += "&scope=" + defaults.bot.scope
             url += "&permissions=" + defaults.bot.permissions
-            props.title.url = url
+            this.props.title.url = url
         } else {
-            props.title.text = "Error"
-            props.description = "No invite link found in defaults."
+            this.error = true
+            this.props.title.text = "Error"
+            this.props.description = "No invite link found in defaults."
         }
-        let embed = new VillainsEmbed(props)
-        await super.send(message, embed)
     }
 }

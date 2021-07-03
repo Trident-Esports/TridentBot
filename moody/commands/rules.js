@@ -5,28 +5,22 @@ const fs = require('fs');
 
 module.exports = class RulesCommand extends VillainsCommand {
     constructor() {
-        super({
+        let comprops = {
             name: "rules",
             category: "meta",
             description: "Rules to follow"
-        })
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            title: { text: "Rules" },
-            fields: []
-        }
-
+    async action(client, message) {
+        this.props.fields = []
         let rules = JSON.parse(fs.readFileSync("commands/dbs/rules.json", "utf8"))
         for(let rule in rules) {
-            props.fields.push({
+            this.props.fields.push({
                 name: "Rule " + (parseInt(rule) + 1),
                 value: "`" + rules[rule] + "`"
             })
         }
-
-        let embed = new VillainsEmbed(props)
-        await super.send(message, embed)
     }
 }

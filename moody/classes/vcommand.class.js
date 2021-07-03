@@ -17,6 +17,7 @@ const fs = require('fs');
 module.exports = class VillainsCommand extends BaseCommand {
     #DEV;       // Private: DEV flag
     #props;     // Private: Props to send to VillainsEmbed
+    #pages;     // Private: Pages to print
     #flags;     // Private: Flags for user management
     #error;     // Private: Error Thrown
     #errors;    // Private: Global Error Message strings
@@ -55,7 +56,8 @@ module.exports = class VillainsCommand extends BaseCommand {
         const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
         this.DEV = GLOBALS.DEV
         this.props = props
-        this.title = props.title
+        this.pages = []
+        this.props.title = props.title
         this.error = false
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
         this.inputData = {}
@@ -73,6 +75,13 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
     set props(props) {
         this.#props = props
+    }
+
+    get pages() {
+        return this.#pages
+    }
+    set pages(pages) {
+        this.#pages = pages
     }
 
     get flags() {
@@ -309,13 +318,14 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         await this.build(client, message)
 
-        let embed = null
-        if(this.props?.full && this.props.full) {
-            embed = new VillainsEmbed(this.props)
-        } else {
-            embed = new SlimEmbed(this.props)
+        if(this.pages.length == 0) {
+            if(this.props?.full && this.props.full) {
+                this.pages.push(new VillainsEmbed(this.props))
+            } else {
+                this.pages.push(new SlimEmbed(this.props))
+            }
         }
 
-        await this.send(message, embed)
+        await this.send(message, this.pages)
     }
 }

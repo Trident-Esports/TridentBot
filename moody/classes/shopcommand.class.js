@@ -21,46 +21,19 @@ module.exports = class ShopCommand extends GameCommand {
             aliases: comprops.aliases,
             category: 'game',
             description: comprops.description,
-            extensions: comprops.extensions
-        });
+            extensions: comprops.extensions,
+            flags: {
+                user: "required",
+                target: "invalid",
+                bot: "invalid"
+            }
+        })
     }
 
-    async run(client, message, args) {
-        let props = {
-            caption: {
-                text: this.name.charAt(0).toUpperCase() + this.name.slice(1)
-            },
-            title: {},
-            description: "",
-            footer: {
-                msg: ""
-            },
-            players: {
-                user: {},
-                target: {}
-            }
-        }
+    async action(client, message) {
+        const loaded = this.inputData.loaded
 
-        /*
-        User:   Valid
-        Target: Invalid
-        Bot:    Invalid
-        */
-        //FIXME: Use this.getArgs(message, args, flags)
-        const user = message.author
-        const loaded = user
-
-        props.players.user = {
-            name: user.username,
-            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
-        }
-
-        if (loaded?.bot && loaded.bot) {
-            props.title.text = "Error"
-            props.description = this.errors.cantActionBot.join("\n")
-        }
-
-        if (props.title.text != "Error") {
+        if (!(this.error)) {
             const inventoryData = await this.inventoryModel.findOne({
                 userID: loaded.id
             });
@@ -69,15 +42,17 @@ module.exports = class ShopCommand extends GameCommand {
             });
 
             if (!inventoryData) {
-                props.title.text = "Error"
-                props.description = this.errors.game.mongoDB.noInventory.join("\n")
+                this.error = true
+                this.props.title.text = "Error"
+                this.props.description = this.errors.game.mongoDB.noInventory.join("\n")
             }
             if (!profileData) {
-                props.title.text = "Error"
-                props.description = this.errors.game.mongoDB.noProfile.join("\n")
+                this.error = true
+                this.props.title.text = "Error"
+                this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
             }
 
-            if (props.title.text != "Error") {
+            if (!(this.error)) {
                 let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
 
                 let inventorySorts = {
@@ -108,28 +83,36 @@ module.exports = class ShopCommand extends GameCommand {
 
                 //FIXME: Try to parse from args returned from this.getArgs()
                 let re = /^([a-z ]*)([\d]*)$/
-                let matches = args.join(" ").toLowerCase().match(re)
                 let selected_item = ""
                 let quantity = -1
-                if (matches) {
-                    selected_item = matches[1].trim().replace(/\s/g, '')
-                    quantity = ((!isNaN(matches[2])) && (matches[2] != "")) ? parseInt(matches[2]) : 1
-                } else if (args[0] in emojiItems) {
-                    selected_item = emojiItems[args[0]]
-                    re = /([\d]*)/
-                    let tmp = args
-                    tmp.shift()
-                    matches = tmp.join(" ").toLowerCase().match(re)
-                    quantity = ((!isNaN(matches[1])) && (matches[1] != "")) ? parseInt(matches[1]) : 1
+                if (this?.inputData?.args && this.inputData.args[0] && this.inputData.args[0].trim().length > 0) {
+                    let matches = this.inputData.args.join(" ").toLowerCase().match(re)
+                    if (matches) {
+                        selected_item = matches[1].trim().replace(/\s/g, '')
+                        quantity = ((!isNaN(matches[2])) && (matches[2] != "")) ? parseInt(matches[2]) : 1
+                    } else if (this.inputData.args[0] in emojiItems) {
+                        selected_item = emojiItems[this.inputData.args[0]]
+                        re = /([\d]*)/
+                        let tmp = this.inputData.args
+                        tmp.shift()
+                        matches = tmp.join(" ").toLowerCase().match(re)
+                        quantity = ((!isNaN(matches[1])) && (matches[1] != "")) ? parseInt(matches[1]) : 1
+                    }
+                }
+
+                if (!(this?.props?.title)) {
+                    this.props.title = {}
                 }
 
                 if (selected_item == "") {
-                    props.title.text = "Error"
-                    props.description = "No item name given."
+                    this.error
+                    this.props.title.text = "Error"
+                    this.props.description = "No item name given."
                 }
                 if (quantity == -1) {
-                    props.title.text = "Error"
-                    props.description = `Invalid quantity. '${quantity}' given.`
+                    this.error
+                    this.props.title.text = "Error"
+                    this.props.description = `Invalid quantity. '${quantity}' given.`
                 }
 
                 let [cat, items] = [null, null]
@@ -170,7 +153,7 @@ module.exports = class ShopCommand extends GameCommand {
                 }
 
                 if (item) {
-                    if (["Buy"].indexOf(props.caption.text) > -1) {
+                    if (["Buy"].indexOf(this.props.caption.text) > -1) {
                         // Buy
                         let cost = parseInt(item.value) * parseInt(quantity)
                         if (gold < cost) return message.channel.send('You cannot afford to buy this item')
@@ -191,17 +174,17 @@ module.exports = class ShopCommand extends GameCommand {
                             }
                         });
 
-                        props.description = `<@${loaded.id}> just bought `
-                        props.description += `${quantity} `
-                        props.description += `${item.emoji}`
-                        props.description += (item?.stylized ? item.stylized : (selected_item.charAt(0).toUpperCase() + selected_item.slice(1)))
-                        props.description += "!"
-                    } else if (["Use"].indexOf(props.caption.text) > -1) {
+                        this.props.description = `<@${loaded.id}> just bought `
+                        this.props.description += `${quantity} `
+                        this.props.description += `${item.emoji}`
+                        this.props.description += (item?.stylized ? item.stylized : (selected_item.charAt(0).toUpperCase() + selected_item.slice(1)))
+                        this.props.description += "!"
+                    } else if (["Use"].indexOf(this.props.caption.text) > -1) {
                         // Use
-                        props.fields = []
+                        this.props.fields = []
                         let haveEnough = inventorySorts.flat[item.emoji] >= quantity
                         if (haveEnough) {
-                            props.description = []
+                            this.props.description = []
                             if (item.name == "bananas") {
                                 // Bananas
                                 let q = quantity
@@ -224,7 +207,7 @@ module.exports = class ShopCommand extends GameCommand {
                                     $push: push
                                 })
 
-                                props.description = [
+                                this.props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
                                     "Their minions are now happily satisfied."
                                 ]
@@ -245,8 +228,8 @@ module.exports = class ShopCommand extends GameCommand {
                                             xpboost: 25
                                         }
                                     })
-                                    props.description.push("You have fed your minions and they are now by your side, gaining 25% XP Boost!")
-                                    props.fields.push({
+                                    this.props.description.push("You have fed your minions and they are now by your side, gaining 25% XP Boost!")
+                                    this.props.fields.push({
                                         name: `${this.emojis.xpboost}25%`,
                                         value: "XPBoost"
                                     })
@@ -260,8 +243,8 @@ module.exports = class ShopCommand extends GameCommand {
                                             minions: minions
                                         }
                                     })
-                                    props.description.push(`Wait, what is this?!? Your minions have just multiplied. You just gained ${this.emojis.minions}${minions} Minions!`)
-                                    props.fields.push({
+                                    this.props.description.push(`Wait, what is this?!? Your minions have just multiplied. You just gained ${this.emojis.minions}${minions} Minions!`)
+                                    this.props.fields.push({
                                         name: `${this.emojis.minions}${minions}`,
                                         value: "Minions"
                                     })
@@ -296,19 +279,19 @@ module.exports = class ShopCommand extends GameCommand {
                                         health: 100,
                                     },
                                 })
-                                props.description = [
+                                this.props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
                                     "Their health has been restored."
                                 ]
                             } else {
-                                props.description = [
+                                this.props.description = [
                                     `${item.stylized} not yet implemented.`
                                 ]
                             }
-                            props.description = props.description.join("\n")
+                            this.props.description = this.props.description.join("\n")
                         } else {
-                            props.title.text = "Error"
-                            props.description = [
+                            this.props.title.text = "Error"
+                            this.props.description = [
                                 `Yes, you have no ${item.emoji}${item.stylized}.`,
                                 `'${inventorySorts.flat[item.emoji]}' in inventory.`,
                                 `'${quantity}' requested to use.`
@@ -317,14 +300,11 @@ module.exports = class ShopCommand extends GameCommand {
                     }
                 }
 
-                if (props.description == "") {
-                    props.title.text = "Error"
-                    props.description = `Item doesn't exist. '${selected_item}' given.`
+                if (this.props.description == "") {
+                    this.props.title.text = "Error"
+                    this.props.description = `Item doesn't exist. '${selected_item}' given.`
                 }
             }
         }
-
-        let embed = new VillainsEmbed(props)
-        await this.send(message, embed);
     }
 }

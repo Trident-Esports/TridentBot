@@ -5,70 +5,27 @@ const VillainsEmbed = require('../../classes/vembed.class');
 
 module.exports = class RobCommand extends GameCommand {
     constructor() {
-        super({
+        let comprops = {
             name: 'rob',
             category: 'game',
             description: 'Rob someone for Money',
-            extensions: ["levels", "profile"]
-        });
+            extensions: ["levels", "profile"],
+            flags: {
+                user: "invalid",
+                target: "required",
+                bot: "invalid"
+            }
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-
-        let props = {
-            author: {
-                name: "",
-                avatar: ""
-            },
-            caption: {
-                text: "Rob",
-                avatar: "",
-                url: ""
-            },
-            title: {},
-            description: "",
-            footer: {
-                msg: ""
-            },
-            players: {
-                user: {},
-                target: {}
-            }
-        }
-
-        /*
-        User:   Invalid
-        Target: Valid
-        Bot:    Invalid
-        */
+    async action(client, message) {
         const user = message.author
-        const target = message.mentions.members.first();
+        const target = this.inputData.loaded
 
-        if (user) {
-            props.players.user = {
-                name: user.username,
-                avatar: user.displayAvatarURL({ format: "png", dynamic: true })
-            }
-        }
+        if (!(this.error)) {
+            this.props.title = {}
 
-        if (!target) {
-            //FIXME: Cooldown
-            // this.cooldown = 0;
-            props.title.text = "Error"
-            props.description = "You gotta choose someone to rob."
-        }
-        if (target?.user?.bot && target.user.bot) {
-            props.title.text = "Error"
-            props.description = this.errors.cantActionBot.join("\n")
-        }
-        if (target?.id && (user.id === target.id)) {
-            //FIXME: Cooldown
-            // this.cooldown = 0;
-            props.title.text = "Error"
-            props.description = "You can't rob yourself, dummy!"
-        }
-
-        if (props.title.text != "Error") {
             const profileData = await this.profileModel.findOne({
                 userID: target.id
             })
@@ -80,10 +37,6 @@ module.exports = class RobCommand extends GameCommand {
                 userID: target.id,
                 gold: profileData.gold
             })
-            props.players.target = {
-                name: target.user.username,
-                avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
-            }
 
             let options = [
                 'Success',
@@ -100,18 +53,20 @@ module.exports = class RobCommand extends GameCommand {
 
             if (usermoney < minSteal) {
                 // You need >= $minSteal
-                props.title.text = "Error"
-                props.description = `You need at least ${this.emojis.gold}${minSteal} in your wallet to rob someone!`
+                this.error = true
+                this.props.title.text = "Error"
+                this.props.description = `You need at least ${this.emojis.gold}${minSteal} in your wallet to rob someone!`
             }
             if (targetmoney < minSteal) {
                 // Target needs >= $minSteal
-                props.title.text = "Error"
-                props.description = `Mentioned user needs to have at least ${this.emojis.gold}${minSteal} in their wallet to rob!`
+                this.error = true
+                this.props.title.text = "Error"
+                this.props.description = `Mentioned user needs to have at least ${this.emojis.gold}${minSteal} in their wallet to rob!`
             }
 
-            if (props.title.text != "Error") {
-                props.caption.text = `Holding your hostage at Gunpoint.`
-                props.title.text = `You try to rob them.`
+            if (!(this.error)) {
+                this.props.caption.text = `Holding your hostage at Gunpoint.`
+                this.props.title.text = `You try to rob them.`
 
                 // XP Reward 30 - 150
                 let [minXP, maxXP] = [30, 150]
@@ -131,8 +86,8 @@ module.exports = class RobCommand extends GameCommand {
                         amount = targetmoney.gold
                     }
 
-                    props.description = `<@${user.id}> robbed <@${target.id}> and got away with...`
-                    props.fields = [
+                    this.props.description = `<@${user.id}> robbed <@${target.id}> and got away with...`
+                    this.props.fields = [
                         {
                             name: `${this.emojis.gold}${amount}`,
                             value: "Gold",
@@ -164,11 +119,11 @@ module.exports = class RobCommand extends GameCommand {
                 } else if (final === 'Failed') {
                     hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
 
-                    props.description = [
+                    this.props.description = [
                         `<@${user.id}> tried to rob <@${target.id}>. You realise they are poor.`,
                         `You **earned**...`
                     ].join("\n")
-                    props.fields = [
+                    this.props.fields = [
                         {
                             name: `${this.emojis.xp}${randomXP}`,
                             value: "XP",
@@ -179,13 +134,13 @@ module.exports = class RobCommand extends GameCommand {
                 } else if (final === 'Paid') {
                     hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
 
-                    props.description = [
+                    this.props.description = [
                         `<@${user.id}> tried to rob <@${target.id}>. You were caught and instead <@${target.id}> stole your gun and robbed you of **${this.emojis.gold}${amount}**.`,
                         "WHAT A FAIL!",
                         "",
                         `You **earned**...`
                     ].join("\n")
-                    props.fields = [
+                    this.props.fields = [
                         {
                             name: `__**${this.emojis.gold}-${amount}**__`,
                             value: "~~Gold~~",
@@ -224,15 +179,12 @@ module.exports = class RobCommand extends GameCommand {
                     }, {
                         $inc: inc
                     });
-                    props.footer.msg = [
+                    this.props.footer.msg = [
                         `${message.author.username} You just Advanced to Level ${user.level}!`,
                         `You have gained: ${this.emojis.gold}${inc.gold}, ${this.emojis.minions}${inc.minions}`
                     ].join(" · ")
                 }
             }
         }
-
-        let embed = new VillainsEmbed(props)
-        await this.send(message, embed);
     }
-};
+}

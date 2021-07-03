@@ -4,26 +4,25 @@ const VillainsEmbed = require('../classes/vembed.class');
 const weather = require('weather-js');
 
 module.exports = class WeatherCommand extends VillainsCommand {
+    //FIXME: Double-posting?
     constructor() {
-        super({
+        let comprops = {
             name: "weather",
             aliases: [ "w" ],
             category: "diagnostic",
             description: "Check your weather!"
-        })
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            caption: { text: "Weather" },
-            players: { bot:{}, user: {} }
-        }
-
+    async action(client, message) {
         let degreeType = "C"
-        if (["C","F"].indexOf(args[args.length - 1].toUpperCase()) > -1) {
-            degreeType = args.pop().toUpperCase()
+        if (["C","F"].indexOf(this.inputData.args[this.inputData.args.length - 1].toUpperCase()) > -1) {
+            degreeType = this.inputData.args.pop().toUpperCase()
         }
-        let search = args.join(" ")
+        let args = this.inputData.args
+        let props = { caption: {}, players: { user: {}, bot: {} } }
+        let search = this.inputData.args.join(" ")
         weather.find({
             search: search,
             degreeType: degreeType

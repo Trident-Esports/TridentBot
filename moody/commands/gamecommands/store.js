@@ -6,41 +6,20 @@ const fs = require('fs');
 
 module.exports = class StoreCommand extends GameCommand {
     constructor() {
-        super({
+        let comprops = {
             name: 'store',
             aliases: ["shop"],
             category: 'game',
             description: 'View the store',
             extensions: ["profile", "levels", "health"]
-        });
+        }
+        super(comprops)
     }
 
-    async run(client, message) {
-
-        let props = {
-            caption: {
-                text: "Shop"
-            },
-            title: {},
-            description: "",
-            footer: {
-                msg: ""
-            },
-            players: {
-                user: {},
-                target: {}
-            }
-        }
-
-        const user = message.author
-        props.players.user = {
-            name: user.username,
-            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
-        }
-
+    async action(client, message) {
         let itemData = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
 
-        props.fields = []
+        this.props.fields = []
 
         for (let [items, itemsAttr] of Object.entries(itemData)) {
             let value = itemsAttr
@@ -62,7 +41,7 @@ module.exports = class StoreCommand extends GameCommand {
                 let descriptions = [];
                 descriptions.push(itemAttr.description);
 
-                props.fields.push(
+                this.props.fields.push(
                     {
                         name: items + " " + names + "   " + "💰" + values.toLocaleString("en-AU"),
                         value: "`" + descriptions + "`",
@@ -71,7 +50,5 @@ module.exports = class StoreCommand extends GameCommand {
                 )
             }
         }
-        let embed = new VillainsEmbed(props)
-        await this.send(message, embed);
     }
 }

@@ -5,27 +5,21 @@ const fs = require('fs');
 
 
 module.exports = class CoinFlipCommand extends GameCommand {
+    //FIXME: Double post?
     constructor() {
-        super({
+        let comprops = {
             name: 'search',
             category: 'game',
             description: 'Choose your search location and have a chance at some gold!',
             extensions: ["profile", "levels", "health"]
-        });
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
+    async action(client, message) {
 
-        let props = {
-            title: {
-                text: "Coin Flip"
-            },
-            description: "**Which location would you like to search?**🔍",
-            thumbnail: "",
-            footer: {
-                msg: ""
-            }
-        }
+        this.props.title = {}
+        this.props.description = "**Which location would you like to search?**🔍"
 
         const randomXP = Math.floor(Math.random() * 200) + 50;
         const hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
@@ -55,13 +49,13 @@ module.exports = class CoinFlipCommand extends GameCommand {
             time: 25000
         });
 
-        props["success"] = {
+        this.props["success"] = {
             "color": "#00FF00"
         }
-        props["fail"] = {
+        this.props["fail"] = {
             "color": "#FF0000"
         }
-        props["special"] = {
+        this.props["special"] = {
             "color": "#0000FF"
         }
 
@@ -73,7 +67,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
             var fail = 95;
             var special = 100;
 
-            props.title.text = `${message.author.username} searched the ${m.content} 🕵️`
+            this.props.title.text = `${message.author.username} searched the ${m.content} 🕵️`
 
             if (hasLeveledUP) {
 
@@ -87,8 +81,10 @@ module.exports = class CoinFlipCommand extends GameCommand {
                         minions: 1
                     },
                 });
-                props.footer.msg = `${message.author.username} You just Advanced to Level ${user.level}!
-                You have gained: 💰+1000 , 🐵+1`
+                this.props.footer.msg = [
+                    `${message.author.username} You just Advanced to Level ${user.level}!`,
+                    `You have gained: 💰+1000 , 🐵+1`
+                ].join(" · ")
             }
 
             let goldincrease = await this.profileModel.findOneAndUpdate({
@@ -129,46 +125,47 @@ module.exports = class CoinFlipCommand extends GameCommand {
                     if (number <= success) {
                         goldincrease
 
-                        props.color = props.success.color
-                        props.description = `You searched the ${m.content} and found 💰${RANDOM_NUMBER.toString()}
-
-                        Earned ${randomXP} XP`
+                        this.props.color = this.props.success.color
+                        this.props.description = [
+                            `You searched the ${m.content} and found ${this.emojis.gold}${RANDOM_NUMBER}`,
+                            `Earned ${this.emojis.xp}${randomXP} XP`
+                        ].join("\n")
                     } else if (number <= fail) {
                         goldremove
                         healthloss
 
-                        props.color = props.fail.color
-                        props.description = `You searched the ${m.content} and got injured! This causes you to drop ${RANDOM_NUMBER.toString()}
-                        Maybe a bad idea or just Unlucky.
+                        this.props.color = this.props.fail.color
+                        this.props.description = [
+                            `You searched the ${m.content} and got injured! This causes you to drop ${this.emojis.gold}${RANDOM_NUMBER}`,
+                            `Maybe a bad idea or just Unlucky.`,
+                            "",
+                            `Earned ${this.emojis.xp}${randomXP} XP and even more experience of not to do it again xD`
+                        ].join("\n")
 
-                        Earned ${randomXP} XP and even more experience of not to do it again xD`
                     } else if (number <= special) {
                         minions_increase
 
-                        props.color = props.special.color
-                        props.desscription = `You go to search the ${m.content} and for some reason find ${RANDOM_MINIONS} Minions following you home.
-
-                        Earned ${randomXP} XP`
+                        this.props.color = this.props.special.color
+                        this.props.desscription = [
+                            `You go to search the ${m.content} and for some reason find ${this.emojis.minions}${RANDOM_MINIONS} Minions following you home.`,
+                            "",
+                            `Earned ${this.emojis.xp}${randomXP} XP`
+                        ].join("\n")
                     }
-
-                    let embed = new VillainsEmbed(props)
-                    await this.send(message, embed);
                 }
             }
-
+            this.send(message, new VillainsEmbed(this.props))
         });
 
         COLLECTOR.on("end", (collected) => {
             if (collected.size == 0) {
                 return message.reply(
-                    `What are you doing <@${message.author.id}>?! There was 💰${RANDOM_NUMBER.toString()} hidden inside the ${chosenLocations[0]} 😭\n Luckily you atleast Earned ${randomXP} XP`
+                    `What are you doing <@${message.author.id}>?! There was ${this.emojis.gold}${RANDOM_NUMBER} hidden inside the ${chosenLocations[0]} 😭\n Luckily you atleast Earned ${this.emojis.xp}${randomXP} XP`
                 );
             }
+            this.send(message, new VillainsEmbed(this.props))
         });
 
-        props.description = `<@${message.author.id}>` + props.description + `\`${chosenLocations.join("` `")}\``
-
-        let embed = new VillainsEmbed(props)
-        await this.send(message, embed);
+        this.props.description = `<@${message.author.id}>` + this.props.description + `\`${chosenLocations.join("` `")}\``
     }
-};
+}

@@ -8,8 +8,6 @@ BaseCommand
 
 */
 const VillainsCommand = require('./vcommand.class');
-const VillainsEmbed = require('./vembed.class');
-const SlimEmbed = require('./vslimbed.class');
 
 const fs = require('fs');
 
@@ -49,7 +47,7 @@ module.exports = class AdminCommand extends VillainsCommand {
         }
 
         if(!(this.error)) {
-            this.action(client, message)
+            await this.action(client, message)
         }
     }
 }

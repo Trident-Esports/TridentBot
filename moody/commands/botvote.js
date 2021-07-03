@@ -3,25 +3,22 @@ const VillainsEmbed = require('../classes/vembed.class');
 
 
 module.exports = class BotVoteCommand extends VillainsCommand {
+    //FIXME: Not setting URL
     constructor() {
-        super({
+        let comprops = {
             name: "botvote",
             category: "meta",
             description: "Bot Vote"
-        })
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            title: { text: "Vote for @VillainsBot on Top.gg!" }
-        }
+    async action(client, message) {
+        this.props.title = { text: "Vote for @VillainsBot on Top.gg!" }
         let url = ""
         url += "https://top.gg/bot/"
         url += "828317713256415252"
         url += "/vote"
-        props.title.url = url
-
-        let embed = new VillainsEmbed(props)
-        await super.send(message, embed)
+        this.props.title.url = url
     }
 }

@@ -5,57 +5,20 @@ const fs = require('fs')
 
 module.exports = class ProfileCommand extends GameCommand {
     constructor() {
-        super({
+        let comprops = {
             name: 'profile',
             aliases: ["pr", "acc"],
             category: 'game',
             description: 'Check the User\'s Profile',
             extensions: [ "profile", "health", "xpboost", "levels" ]
-        });
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            caption: {
-                text: "Profile"
-            },
-            title: {},
-            description: "",
-            footer: {
-                msg: ""
-            },
-            players: {
-                user: {},
-                target: {}
-            }
-        }
+    async action(client, message) {
+        const loaded = this.inputData.loaded
 
-        /*
-        User:   Valid
-        Target: Valid
-        Bot:    Invalid
-        */
-        const user = message.author
-        const target = message.mentions.members.first()
-        const loaded = target ? target.user : user
-        props.players.user = {
-            name: user.username,
-            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
-        }
-
-        if (loaded?.bot && loaded.bot) {
-            props.title.text = "Error"
-            props.description = this.errors.cantActionBot.join("\n")
-        }
-
-        if (props.title.text != "Error") {
-            if (target) {
-                props.players.target = {
-                    name: target.username,
-                    avatar: target.user.displayAvatarURL({ format: "png", dynamic: true })
-                }
-            }
-
+        if (!(this.error)) {
             const profileData = await this.profileModel.findOne({
                 userID: loaded.id
             })
@@ -67,8 +30,8 @@ module.exports = class ProfileCommand extends GameCommand {
             })
             const levelData = await this.Levels.fetch(loaded.id, 1)
 
-            props.description = `This is <@${loaded.id}>'s Profile`
-            props.fields = [
+            this.props.description = `This is <@${loaded.id}>'s Profile`
+            this.props.fields = [
                 {
                     name: "Title",
                     value: "Beta Tester"
@@ -110,8 +73,5 @@ module.exports = class ProfileCommand extends GameCommand {
                 }
             ]
         }
-
-        let embed = new VillainsEmbed(props)
-        await this.send(message, embed);
     }
 }

@@ -7,26 +7,19 @@ function ordinal(n) {
   return n + (s[(v-20)%10] || s[v] || s[0]);
 }
 module.exports = class LeaderboardCommand extends GameCommand {
+    //FIXME: Title not being respected for pages?
     constructor() {
-        super({
+        let comprops = {
             name: 'leaderboard',
             aliases: ['lb', 'leader'],
             category: 'game',
             description: 'Check the Global Leaderboard',
             extensions: [ "levels" ]
-        });
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            title: {
-                text: "Leaderboard"
-            },
-            description: "",
-            footer: {
-                msg: ""
-            }
-        }
+    async action(client, message) {
         const rawLeaderboard = await this.Levels.fetchLeaderboard(1,10); // We grab top 10 users with most xp in the current server.
 
         if (rawLeaderboard.length < 1) {
@@ -35,8 +28,8 @@ module.exports = class LeaderboardCommand extends GameCommand {
 
         const leaderboard = await this.Levels.computeLeaderboard(client, rawLeaderboard, true); // We process the leaderboard.
 
-        let pages = []
-        props.fields = []
+        let props = { fields: [] }
+        this.props.title = props.caption
 
         for (let [slot, player] of Object.entries(leaderboard)) {
             props.fields.push(
@@ -57,14 +50,13 @@ module.exports = class LeaderboardCommand extends GameCommand {
                 }
             )
             if ((parseInt(slot) + 1) % 8 == 0) {
-                pages.push(new VillainsEmbed(props))
+                this.pages.push(new VillainsEmbed(props))
                 props.fields = []
             }
         }
         if (props.fields.length > 0) {
-            pages.push(new VillainsEmbed(props))
+            this.pages.push(new VillainsEmbed(props))
+            props.fields = []
         }
-
-        await this.send(message, pages);
     }
 }

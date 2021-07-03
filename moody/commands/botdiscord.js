@@ -6,28 +6,27 @@ let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 
 module.exports = class BotDiscordInviteCommand extends VillainsCommand {
     constructor() {
-        super({
+        let comprops = {
             name: "botdiscord",
             category: "meta",
             description: "Bot Discord Invite"
-        })
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            title: { text: "Join VillainsBot's Discord!" }
-        }
+    async action(client, message) {
+        this.props.title = { text: "Join VillainsBot's Discord!" }
+
         let url = ""
         if(defaults?.discord?.invites?.bot?.code) {
             url += "https://discord.gg/"
             url += defaults.discord.invites.bot.code
-            props.title.url = url
-            props.description = url
+            this.props.title.url = url
+            this.props.description = url
         } else {
-            props.title.text = "Error"
-            props.description = "No invite code found in defaults."
+            this.error = true
+            this.props.title.text = "Error"
+            this.props.description = "No invite code found in defaults."
         }
-        let embed = new VillainsEmbed(props)
-        await super.send(message, {embed: embed, content: url})
     }
 }

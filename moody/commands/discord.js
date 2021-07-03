@@ -6,28 +6,26 @@ let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 
 module.exports = class DiscordInviteCommand extends VillainsCommand {
     constructor() {
-        super({
+        let comprops = {
             name: "discord",
             category: "meta",
             description: "Discord Invite"
-        })
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            title: { text: "Join our Discord!" }
-        }
+    async action(client, message) {
+        this.props.title = { text: "Join our Discord!" }
         let url = ""
         if(GLOBALS?.discord?.invites?.home?.code) {
             url += "https://discord.gg/"
             url += GLOBALS.discord.invites.home.code
-            props.title.url = url
-            props.description = url
+            this.props.title.url = url
+            this.props.description = url
         } else {
-            props.title.text = "Error"
-            props.description = "No invite code found in profile."
+            this.error = true
+            this.props.title.text = "Error"
+            this.props.description = "No invite code found in profile."
         }
-        let embed = new VillainsEmbed(props)
-        await super.send(message, {embed: embed, content: url})
     }
 }
