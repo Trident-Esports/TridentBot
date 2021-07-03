@@ -1,51 +1,20 @@
 const GameCommand = require('../../classes/gamecommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
 
 module.exports = class BegCommand extends GameCommand {
     constructor() {
-        super({
+        let comprops = {
             name: 'beg',
             category: 'game',
             description: 'beg for gold',
             extensions: [ "levels", "profile" ]
-        });
+        }
+        super(comprops)
     }
 
-    async run(client, message, args) {
-        let props = {
-            caption: {
-                text: "Beg"
-            },
-            title: {},
-            description: "",
-            footer: {
-                msg: ""
-            },
-            players: {
-                user: {},
-                target: {}
-            }
-        }
+    async action(client, message) {
+        const loaded = this.inputData.loaded
 
-        /*
-        User:   Valid
-        Target: Invalid
-        Bot:    Invalid
-        */
-        const user = message.author
-        const loaded = user
-
-        props.players.user = {
-            name: user.username,
-            avatar: user.displayAvatarURL({ format: "png", dynamic: true })
-        }
-
-        if (loaded?.bot && loaded.bot) {
-            props.title.text = "Error"
-            props.description = this.errors.cantActionBot.join("\n")
-        }
-
-        if (props.title.text != "Error") {
+        if (!(this.error)) {
             // Gold Reward: 1 - 50
             let [minReward, maxReward] = [1, 50]
             const randomNumber = Math.floor(Math.random() * (maxReward - minReward)) + minReward;
@@ -85,11 +54,11 @@ module.exports = class BegCommand extends GameCommand {
                     `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString("en-AU")}, ${this.emojis.minions}${gainedminions.toLocaleString("en-AU")}`
                 ].join(" · ")
 
-                props.footer.msg = msg
+                this.props.footer.msg = msg
             }
 
-            props.description = `*${message.author} begs and receives...*`
-            props.fields = [
+            this.props.description = `*<@${loaded.id}> begs and receives...*`
+            this.props.fields = [
                 {
                     name: `${this.emojis.gold}${randomNumber.toLocaleString("en-AU")}`,
                     value: "Gold",
@@ -102,8 +71,5 @@ module.exports = class BegCommand extends GameCommand {
                 }
             ]
         }
-
-        let embed = new VillainsEmbed(props)
-        await this.send(message, embed);
     }
 }
