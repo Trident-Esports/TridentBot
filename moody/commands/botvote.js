@@ -14,11 +14,14 @@ module.exports = class BotVoteCommand extends VillainsCommand {
     }
 
     async action(client, message) {
-        this.props.title = { text: "Vote for @VillainsBot on Top.gg!" }
+        this.props.title = { text: "Vote for @VillainsBot!" }
+
         let url = ""
         url += "https://top.gg/bot/"
         url += "828317713256415252"
         url += "/vote"
-        this.props.title.url = url
+        this.props.description = `[CLICK HERE](${url})`
+
+        //this.props.footer.msg = "Prizes for Voting COMING SOON!" //FIXME: does not add a footer
     }
 }
