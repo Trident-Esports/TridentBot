@@ -45,12 +45,12 @@ module.exports = class ModCommand extends AdminCommand {
         let APPROVED_ROLES = this.ROLES["admin"].concat(this.ROLES["mod"])
 
         // Only Approved Roles
-        if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
+        if (!message.member.roles.cache.some(r => APPROVED_ROLES.includes(r.name))) {
             this.error = true
             this.props.description = this.errors.modOnly
         }
 
-        if(!(this.error)) {
+        if (!(this.error)) {
             this.action(client, message)
         }
     }

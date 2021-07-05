@@ -1,7 +1,6 @@
 const VillainsCommand = require('../classes/vcommand.class');
 const VillainsEmbed = require('../classes/vembed.class');
 
-
 module.exports = class BotVoteCommand extends VillainsCommand {
     //FIXME: Not setting URL
     constructor() {
@@ -14,7 +13,9 @@ module.exports = class BotVoteCommand extends VillainsCommand {
     }
 
     async action(client, message) {
-        this.props.title = { text: "Vote for @VillainsBot!" }
+        this.props.title = {
+            text: "Vote for @VillainsBot!"
+        }
 
         let url = ""
         url += "https://top.gg/bot/"
@@ -22,6 +23,8 @@ module.exports = class BotVoteCommand extends VillainsCommand {
         url += "/vote"
         this.props.description = `[CLICK HERE](${url})`
 
-        //this.props.footer.msg = "Prizes for Voting COMING SOON!" //FIXME: does not add a footer
+        // this.props.footer = {
+        //     msg: "Prizes for Voting COMING SOON!"
+        // } //FIXME: does not add a footer
     }
 }

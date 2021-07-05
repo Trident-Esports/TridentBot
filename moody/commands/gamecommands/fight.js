@@ -1,9 +1,7 @@
 const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
-const fs = require('fs');
-
-module.exports = class BuyCommand extends GameCommand {
+module.exports = class FightCommand extends GameCommand {
     constructor() {
         super({
             name: 'fight',

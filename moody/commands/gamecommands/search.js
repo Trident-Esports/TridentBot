@@ -4,7 +4,7 @@ const VillainsEmbed = require('../../classes/vembed.class');
 const fs = require('fs');
 
 
-module.exports = class CoinFlipCommand extends GameCommand {
+module.exports = class SearchCommand extends GameCommand {
     //FIXME: Double post?
     constructor() {
         let comprops = {
