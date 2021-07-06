@@ -28,11 +28,16 @@ module.exports = class ATMCommand extends GameCommand {
             description: comprops.description,
             extensions: ["profile"]
         })
-    }
 
-    async action(client, message) {
+        // Disable sources for ATMCommand and children
+        for (let source of ["search"]) {
+            if (!(this.flags)) {
+                this.flags = {}
+            }
+            this.flags[source] = "invalid"
+        }
+
         // Use target flags conditionally based on used command
-        this.flags = { user: "default", target: "invalid", bot: "invalid" }
         switch (this.props.caption.text) {
             case "Refund":
                 this.flags.user = "invalid";
@@ -40,11 +45,10 @@ module.exports = class ATMCommand extends GameCommand {
             case "Steal":
                 this.flags.target = "required";
                 break;
-            default:
-                this.flags = { user: "default", target: "invalid", bot: "invalid" };
-                break;
         }
+    }
 
+    async action(client, message) {
         const loaded = this.inputData.loaded
 
         if(!(this?.props?.title?.text)) {

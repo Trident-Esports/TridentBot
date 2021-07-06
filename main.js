@@ -66,12 +66,37 @@ client.on('guildMemberAdd', (member, Discord) => {
     }
     // console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
+    let consolePad = 20
     console.log("---")
     console.log("---MEMBER JOIN->>")
-    console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
-    console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
-    console.log("Member Role?",welcomeRole?.id,`(Str:${ROLES.member}, ID:${welcomeRole?.id ? welcomeRole.id : "???"})`)
-    console.log("Have Channel IDs?",member.guild.id in channelIDs)
+    console.log(
+        "Guild:".padEnd(consolePad),
+        `${member.guild.name} (ID:${member.guild.id})`
+    )
+    console.log(
+        "Member:".padEnd(consolePad),
+        `${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`
+    )
+    console.log(
+        "Member Role:".padEnd(consolePad),
+        (
+          welcomeRole?.id ?
+            "Exists" :
+            "Does not exist"
+        ),
+        `(Str:${ROLES.member}, ID:${welcomeRole?.id ? welcomeRole.id : "???"})`
+    )
+    console.log(
+        "Welcome Channel:".padEnd(consolePad),
+        (
+          (
+            (member.guild.id in channelIDs) &&
+            (channelIDs[member.guild.id]?.welcome)
+          ) ?
+            `Yes (ID:${channelIDs[member.guild.id].welcome})` :
+            "No"
+        )
+    )
 
     if (!(member.guild.id in channelIDs)) {
         return
@@ -107,11 +132,28 @@ client.on('guildMemberAdd', (member, Discord) => {
 });
 
 client.on('guildMemberRemove', (member) => {
+    let consolePad = 20
     console.log("---")
     console.log("<<-MEMBER LEAVE---")
-    console.log("Member:",`${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`)
-    console.log("Guild:",`${member.guild.name} (ID:${member.guild.id})`)
-    console.log("Have Channel IDs?",member.guild.id in channelIDs)
+    console.log(
+        "Guild:".padEnd(consolePad),
+        `${member.guild.name} (ID:${member.guild.id})`
+    )
+    console.log(
+        "Member:".padEnd(consolePad),
+        `${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`
+    )
+    console.log(
+        "Leave Channel:".padEnd(consolePad),
+        (
+          (
+            (member.guild.id in channelIDs) &&
+            (channelIDs[member.guild.id]?.welcome)
+          ) ?
+            `Yes (ID:${channelIDs[member.guild.id].welcome})` :
+            "No"
+        )
+    )
 
     if (!(member.guild.id in channelIDs)) {
         return

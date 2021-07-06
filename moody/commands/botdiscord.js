@@ -11,18 +11,20 @@ module.exports = class BotDiscordInviteCommand extends VillainsCommand {
             category: "meta",
             description: "Bot Discord Invite"
         }
-        super(comprops)
+        let props = {
+            caption: {
+                text: "Bot Discord"
+            }
+        }
+        super(comprops, props)
     }
 
     async action(client, message) {
-        this.props.title = { text: "Join VillainsBot's Discord!" }
-
         let url = ""
         if(defaults?.discord?.invites?.bot?.code) {
             url += "https://discord.gg/"
             url += defaults.discord.invites.bot.code
-            this.props.title.url = url
-            this.props.description = url
+            this.props.description = `***[Join VillainsBot's Discord!](${url})***`
         } else {
             this.error = true
             this.props.title.text = "Error"

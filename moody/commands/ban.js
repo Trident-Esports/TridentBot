@@ -5,12 +5,7 @@ module.exports = class BanCommand extends ModCommand {
         let comprops = {
             name: "ban",
             category: "admin",
-            description: "Ban user",
-            flags: {
-                user: "invalid",
-                target: "required",
-                bot: "invalid"
-            }
+            description: "Ban user"
         }
         super(comprops)
     }

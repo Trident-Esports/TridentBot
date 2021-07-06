@@ -11,17 +11,21 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
             category: "meta",
             description: "Discord Invite"
         }
-        super(comprops)
+        let props = {
+            caption: {
+                text: "Community Discord"
+            }
+        }
+        super(comprops, props)
     }
 
     async action(client, message) {
-        this.props.title = { text: "Join our Discord!" }
         let url = ""
         if(GLOBALS?.discord?.invites?.home?.code) {
             url += "https://discord.gg/"
             url += GLOBALS.discord.invites.home.code
-            this.props.title.url = url
             this.props.description = url
+            this.props.description = `***[Join our Discord!](${url})***`
         } else {
             this.error = true
             this.props.title.text = "Error"

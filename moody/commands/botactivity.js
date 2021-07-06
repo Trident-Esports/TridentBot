@@ -7,19 +7,20 @@ module.exports = class BotActivityCommand extends AdminCommand {
             name: "botactivity",
             aliases: [ "ba" ],
             category: "admin",
-            description: "Bot Activity setter"
+            description: "Bot Activity setter",
+            flags: {
+                user: "unapplicable"
+            }
         }
         let props = {
             caption: {
                 text: "Bot Activity"
-            },
-            players: {},
-            full: true
+            }
         }
         super(comprops, props)
     }
 
-    async action(client, message, args) {
+    async action(client, message) {
         let activityIndexes = [
           "playing",    // 0
           "playing",    // 1
@@ -33,18 +34,22 @@ module.exports = class BotActivityCommand extends AdminCommand {
 
         if(this.DEV) {
             console.log("Default activity: ",activity)
-            console.log("Sent activity:    ",args[0])
+            console.log("Sent activity:    [",this.inputData.args[0] + ']')
         }
 
-        if(isNaN(args[0])) {
-            if(activityIndexes.indexOf(args[0]) > -1) {
-                activity = activityIndexes.indexOf(args[0])
+        if(this.inputData.args[0].trim() == "") {
+            this.inputData.args[0] = activity
+        }
+
+        if(isNaN(this.inputData.args[0])) {
+            if(activityIndexes.indexOf(this.inputData.args[0]) > -1) {
+                activity = activityIndexes.indexOf(this.inputData.args[0])
             }
         } else {
-            if((parseInt(args[0]) < 0) || (parseInt(args[0]) >= activityIndexes.length)) {
-                args[0] = activity
+            if((parseInt(this.inputData.args[0]) < 0) || (parseInt(this.inputData.args[0]) >= activityIndexes.length)) {
+                this.inputData.args[0] = activity
             }
-            activity = parseInt(args[0])
+            activity = parseInt(this.inputData.args[0])
             if(activityIndexes[activity] == "moo") {
                 activity = 2
             }
@@ -57,7 +62,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
         }
 
         if (activity !== "") {
-            let msg = this.DEFAULTS.prefix + "help"
+            let msg = this.prefix + "help"
             client.user.setActivity(msg, {type:activity}) //you can change that to whatever you like
             this.props.description = 'Status changed succesfully: ' + activityIndexes[activity].slice(0,1).toUpperCase() + activityIndexes[activity].slice(1) + " **" + msg + "**"
         }

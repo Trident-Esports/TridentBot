@@ -22,21 +22,6 @@ module.exports = class ModCommand extends AdminCommand {
 
     */
     constructor(comprops = {}, props = {}) {
-        let flags = {
-            user: "invalid",
-            target: "required",
-            bot: "invalid"
-        }
-        if (comprops?.flags) {
-            for (let [player, setting] of Object.entries(flags)) {
-                if (Object.keys(comprops.flags).indexOf(player) == -1) {
-                    comprops.flags[player] = setting
-                }
-            }
-        } else {
-            comprops.flags = flags
-        }
-
         // Create a parent object
         super(comprops, props)
     }

@@ -28,8 +28,8 @@ module.exports = class LeaderboardCommand extends GameCommand {
 
         const leaderboard = await this.Levels.computeLeaderboard(client, rawLeaderboard, true); // We process the leaderboard.
 
-        let props = { fields: [] }
-        this.props.title = props.caption
+        let props = this.props
+        props.fields = []
 
         for (let [slot, player] of Object.entries(leaderboard)) {
             props.fields.push(

@@ -17,7 +17,7 @@ module.exports = class GameCommand extends VillainsCommand {
     //FIXME: If this.category is "premium" do special handling
     constructor(comprops = {}, props = {}) {
         // Create a parent object
-        super(comprops, props)
+        super({...comprops}, {...props})
         if (comprops?.extensions) {
             for (let extension of comprops.extensions) {
                 let key = extension + "Model"

@@ -300,7 +300,7 @@ module.exports = class ShopCommand extends GameCommand {
                     }
                 }
 
-                if (this.props.description == "") {
+                if ((!this.props.description) || (this.props.description == "")) {
                     this.props.title.text = "Error"
                     this.props.description = `Item doesn't exist. '${selected_item}' given.`
                 }

@@ -13,7 +13,8 @@ module.exports = class MuteCommand extends ModCommand {
         super(comprops)
     }
 
-    async action(client, message, args, member) {
+    async action(client, message) {
+        const member = this.inputData.loaded
         let MEMBER_ROLE = this.ROLES["member"]
         let MUTED_ROLE = this.ROLES["muted"]
 

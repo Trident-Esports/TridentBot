@@ -9,22 +9,23 @@ module.exports = class BotVoteCommand extends VillainsCommand {
             category: "meta",
             description: "Bot Vote"
         }
-        super(comprops)
+        let props = {
+            caption: {
+                text: "Bot Vote"
+            }
+        }
+        super(comprops, props)
     }
 
     async action(client, message) {
-        this.props.title = {
-            text: "Vote for @VillainsBot!"
-        }
-
         let url = ""
         url += "https://top.gg/bot/"
         url += "828317713256415252"
         url += "/vote"
-        this.props.description = `[CLICK HERE](${url})`
+        this.props.description = `***[Vote for @VillainsBot on top.gg!](${url})***`
 
-        // this.props.footer = {
-        //     msg: "Prizes for Voting COMING SOON!"
-        // } //FIXME: does not add a footer
+        this.props.footer = {
+            msg: "Prizes for Voting COMING SOON!"
+        } //FIXME: does not add a footer
     }
 }

@@ -10,7 +10,8 @@ module.exports = class KickCommand extends ModCommand {
         super(comprops)
     }
 
-    async action(client, message, args, member) {
+    async action(client, message) {
+        const member = this.inputData.loaded
         if(! this.DEV) {
             // Do the thing
             member.kick()

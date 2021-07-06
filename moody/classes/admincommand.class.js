@@ -27,6 +27,16 @@ module.exports = class AdminCommand extends VillainsCommand {
         // Create a parent object
         super(...args)
 
+        // Disable sources for AdminCommand and children
+        for (let source of ["user", "search"]) {
+            if (!(this.flags)) {
+                this.flags = {}
+            }
+            if ((!(source in this.flags)) || (this.flags[source] != "unapplicable")) {
+                this.flags[source] = "invalid"
+            }
+        }
+
         this.ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
     }
 

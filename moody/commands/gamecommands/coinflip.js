@@ -2,6 +2,7 @@ const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
 module.exports = class CoinFlipCommand extends GameCommand {
+    //FIXME: Footer getting smudged?
     constructor() {
         let comprops = {
             name: 'coinflip',
@@ -10,7 +11,6 @@ module.exports = class CoinFlipCommand extends GameCommand {
             description: 'Flip a coin!',
             extensions: [ "profile" ]
         }
-        //FIXME: props isn't being respected?
         let props = {
             caption: {
                 text: "Coin Flip"
@@ -164,6 +164,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                             console.log("Error:",err)
                             console.log("Number:",number)
                         }
+                        this.null = true
                     });
 
                     COLLECTOR.on("end", async (collected) => {
@@ -181,6 +182,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                             let embed = new VillainsEmbed(this.props)
                             await this.send(message, embed)
                         }
+                        this.null = true
                     });
 
                     this.props.description = `<@${loaded.id}>` + "\n" + this.props.description

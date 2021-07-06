@@ -8,16 +8,20 @@ module.exports = class ReadyEvent extends BaseEvent {
 
     async run(handler) {
         let GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json","utf8"))
-        let DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json","utf8"))
+        let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
         let DEV = GLOBALS.DEV
 
         let output = [
             "---",
-            `${handler.client.user.username} v${DEFAULTS.VERSION} is Online!`
+            `${handler.client.user.username} v${PACKAGE.version} is Online!`
         ]
         if (DEV) {
             output.push(
                 `!!! DEV MODE (${GLOBALS.name}) ENABLED !!!`
+            )
+        } else {
+            output.push(
+                `\*\*\* PRODUCTION MODE (${handler.client.user.username}) ENABLED \*\*\*`
             )
         }
         output.push(

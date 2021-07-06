@@ -12,11 +12,15 @@ module.exports = class BotInviteCommand extends VillainsCommand {
             category: "meta",
             description: "Bot Invite"
         }
-        super(comprops)
+        let props = {
+            caption: {
+                text: "Bot Invite"
+            }
+        }
+        super(comprops, props)
     }
 
     async action(client, message) {
-        this.props.title = { text: "Invite @VillainsBot to your Discord!" }
         let url = ""
         if(
           defaults?.bot?.clientID &&
@@ -27,7 +31,7 @@ module.exports = class BotInviteCommand extends VillainsCommand {
             url += "?client_id=" + defaults.bot.clientID
             url += "&scope=" + defaults.bot.scope
             url += "&permissions=" + defaults.bot.permissions
-            this.props.title.url = url
+            this.props.description = `***[Invite @VillainsBot to your Discord!](${url})***`
         } else {
             this.error = true
             this.props.title.text = "Error"

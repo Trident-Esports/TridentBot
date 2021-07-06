@@ -4,12 +4,7 @@ module.exports = class RefundCommand extends ATMCommand {
     constructor() {
         super({
             name: 'refund',
-            description: 'Refund gold to a user',
-            flags: {
-                user: "optional",
-                target: "required",
-                bot: "invalid"
-            }
+            description: 'Refund gold to a user'
         });
     }
 };
