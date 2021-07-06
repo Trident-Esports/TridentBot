@@ -1,4 +1,5 @@
 const { BaseEvent } = require('a-djs-handler')
+const VillainsEmbed = require('../../classes/vembed.class')
 
 module.exports = class MessageEvent extends BaseEvent {
     constructor() {
@@ -6,8 +7,47 @@ module.exports = class MessageEvent extends BaseEvent {
     }
 
     async run(handler, message) {
+        // Check Prefix
         if (message.content.slice(0,handler.options.prefix.length) !== handler.options.prefix) {
+            // Special Cases
+
+            // Hi
+            for (let check of [
+              "hello",
+              "hi",
+              "hey"
+            ]) {
+                if (message.content.toLowerCase() === check) {
+                    if (message.author.bot) return;
+                        else message.channel.send(`Hello there, <@${message.author.id}>!`);
+                }
+            }
+
+            // LOL
+            let blacklist = {
+                guildIDs: [
+                    "788021898146742292"  // Villains Esports
+                ]
+            }
+            if (message.content.toLowerCase().includes('lol')) {
+                if (message.author.bot || (blacklist.guildIDs.indexOf(message.guild.id) > -1)) {
+                    return
+                }
+                message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
+            }
+
+            // No Special Case
             return
+        } else if (message.content == handler.options.prefix) {
+            // Message is only prefix
+            let props = {
+                caption: { text: "VillainsBot" },
+                title: { text: "Error" },
+                description: "Please send a proper command."
+            }
+            let embed = new VillainsEmbed(props);
+            message.channel.send(embed)
+            return;
         }
 
         // Get Args

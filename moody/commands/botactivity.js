@@ -42,8 +42,8 @@ module.exports = class BotActivityCommand extends AdminCommand {
         }
 
         if(isNaN(this.inputData.args[0])) {
-            if(activityIndexes.indexOf(this.inputData.args[0]) > -1) {
-                activity = activityIndexes.indexOf(this.inputData.args[0])
+            if(activityIndexes.indexOf(this.inputData.args[0].toLowerCase()) > -1) {
+                activity = activityIndexes.indexOf(this.inputData.args[0].toLowerCase())
             }
         } else {
             if((parseInt(this.inputData.args[0]) < 0) || (parseInt(this.inputData.args[0]) >= activityIndexes.length)) {

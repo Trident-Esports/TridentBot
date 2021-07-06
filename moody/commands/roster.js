@@ -32,8 +32,8 @@ module.exports = class RosterCommand extends VillainsCommand {
     }
 
     async run(client, message, args) {
-        let gameID = args[0] ? args[0] : ""
-        let teamType = args[1] ? args[1] : ""
+        let gameID = args[0] ? args[0].toLowerCase() : ""
+        let teamType = args[1] ? args[1].toLowerCase() : ""
         let filepath = "./rosters/dbs"
         let profiles = []
         let socials = JSON.parse(fs.readFileSync("rosters/dbs/socials/users.json", "utf8"))

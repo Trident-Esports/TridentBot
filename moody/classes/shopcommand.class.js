@@ -90,8 +90,8 @@ module.exports = class ShopCommand extends GameCommand {
                     if (matches) {
                         selected_item = matches[1].trim().replace(/\s/g, '')
                         quantity = ((!isNaN(matches[2])) && (matches[2] != "")) ? parseInt(matches[2]) : 1
-                    } else if (this.inputData.args[0] in emojiItems) {
-                        selected_item = emojiItems[this.inputData.args[0]]
+                    } else if (this.inputData.args[0].toLowerCase() in emojiItems) {
+                        selected_item = emojiItems[this.inputData.args[0].toLowerCase()]
                         re = /([\d]*)/
                         let tmp = this.inputData.args
                         tmp.shift()

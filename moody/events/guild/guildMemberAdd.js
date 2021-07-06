@@ -8,6 +8,8 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
     }
 
     async run(handler, member) {
+        // Message Channels
+        const channelIDs = JSON.parse(fs.readFileSync("dbs/channels.json", "utf8"))
         let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
         // Add Minion Role
         let welcomeRole = ROLES.member;

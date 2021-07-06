@@ -51,8 +51,8 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             // third arg passed
                             // third arg is not a number
                             // this is a valid span
-                            if (args[2] && isNaN(args[2]) && (["all","complete","completed","incomplete","next"].indexOf(args[2]) > -1)) {
-                                let span = args[2]
+                            if (args[2] && isNaN(args[2]) && (["all","complete","completed","incomplete","next"].indexOf(args[2].toLowerCase()) > -1)) {
+                                let span = args[2].toLowerCase()
                                 if (span == "completed") {
                                     span = "complete"
                                 }
@@ -64,9 +64,9 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             }
                         } else {  // second arg is text (first was teamID, this is span)
                             profile.team.teamID = args[0]
-                            if (args[1] && isNaN(args[1]) && (["all","complete","completed","incomplete","next"].indexOf(args[1]) > -1)) {
+                            if (args[1] && isNaN(args[1]) && (["all","complete","completed","incomplete","next"].indexOf(args[1].toLowerCase()) > -1)) {
                                 // this is a valid span
-                                let span = args[1]
+                                let span = args[1].toLowerCase()
                                 if (span == "completed") {
                                     span = "complete"
                                 }
@@ -88,10 +88,10 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
                     }
                 } else {  // first arg is text
-                    if (["all","complete","completed","incomplete","next"].indexOf(args[0]) > -1) {
+                    if (["all","complete","completed","incomplete","next"].indexOf(args[0].toLowerCase()) > -1) {
                         // this is a valid span
                         // return all rosters for span
-                        let span = args[0]
+                        let span = args[0].toLowerCase()
                         if (span == "completed") {
                             span = "complete"
                         }

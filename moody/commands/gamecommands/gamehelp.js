@@ -27,10 +27,10 @@ module.exports = class GameHelpCommand extends GameCommand {
         let helpData = JSON.parse(fs.readFileSync("game/dbs/help.json", "utf8"))
         let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 
-        let loadSection = args && args[0] && Object.keys(helpData).indexOf(args[0]) !== -1;
+        let loadSection = args && args[0] && Object.keys(helpData).indexOf(args[0].toLowerCase()) !== -1;
         if (loadSection) {
             helpData = {
-                key: helpData[args[0]]
+                key: helpData[args[0].toLowerCase()]
             }
         }
 
@@ -53,7 +53,7 @@ module.exports = class GameHelpCommand extends GameCommand {
                 let shown = false
                 for (let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
                     let show = true
-                    if (args && args[1] && args[1] !== command) {
+                    if (args && args[1] && args[1].toLowerCase() !== command) {
                         show = false
                     }
                     if (show) {
@@ -73,7 +73,7 @@ module.exports = class GameHelpCommand extends GameCommand {
                 if (!shown && (args && args[1])) {
                     props.fields = [{
                         name: "Error",
-                        value: "Command `" + args[1] + "` not present in `" + sectionAttrs.section + "`.",
+                        value: "Command `" + args[1].toLowerCase() + "` not present in `" + sectionAttrs.section + "`.",
                         inline: false
                     }]
                 }
