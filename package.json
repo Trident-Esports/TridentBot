@@ -10,6 +10,7 @@
   "main": "main.js",
   "dependencies": {
     "a-djs-handler": "^1.0.6",
+    "async": "^3.2.0",
     "discord-xp": "^1.1.16",
     "discord.js": "^12.5.3",
     "discord.js-pagination": "^1.0.3",
