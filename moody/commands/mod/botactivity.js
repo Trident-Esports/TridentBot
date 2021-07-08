@@ -72,8 +72,8 @@ module.exports = class BotActivityCommand extends AdminCommand {
                 }
             } else if(this.inputData.args[0].trim() != "") {
                 let activityName = this.inputData.args[0].trim()
-                if(activityNames.indexOf(activityName.toLowerCase()) > -1) {
-                    activity = activityNames[activityName.toLowerCase()]
+                if(activityNames.indexOf(activityName.toLowerCase()) == -1) {
+                    activity = defaultActivity
                 }
             }
             if(activity.toLowerCase() == "moo") {
