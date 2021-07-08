@@ -34,15 +34,15 @@ module.exports = class SearchCommand extends GameCommand {
 
         let chosenLocations = LOCATIONS.sort(() => Math.random() - Math.random()).slice(0, 3);
 
-        this.props.title = { text: "Which location would you like to search?🔍" }
-        this.props.description = `\`${chosenLocations.join("` `")}\``
+        this.props.title = { text: "Which location would you like to search? 🔍" }
+        this.props.description = `\`${chosenLocations.join("`" + "\n" + "`")}\``
 
         const RANDOM_NUMBER = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
         const RANDOM_MINIONS = Math.floor(Math.random() * 10) + 1;
         var Health_Loss = Math.floor(Math.random() * 10) + 1;
 
         const FILTER = (m) => {
-            return chosenLocations.some((answer) => answer.toLowerCase() === m.content.toLowerCase()) && m.author.id === loaded.id;
+            return chosenLocations.some((answer) => answer.split(" ").pop().toLowerCase() === m.content.split(" ").pop().toLowerCase()) && m.author.id === loaded.id;
         };
 
         const COLLECTOR = message.channel.createMessageCollector(FILTER, {
@@ -68,7 +68,9 @@ module.exports = class SearchCommand extends GameCommand {
             var fail = 95;
             var special = 100;
 
-            this.props.title.text = `${loaded.username} searched the ${m.content} 🕵️`
+            let location = m.content.split(" ").map(x => x.charAt(0).toUpperCase() + x.slice(1))
+
+            this.props.title.text = `${loaded.username} searched the ${location} 🕵️`
 
             if (hasLeveledUP) {
                 const user = await this.Levels.fetch(loaded.id, 1);
@@ -90,72 +92,68 @@ module.exports = class SearchCommand extends GameCommand {
                 ].join(" · ")
             }
 
-            let goldincrease = await this.profileModel.findOneAndUpdate({
-                userID: loaded.id,
-            }, {
-                $inc: {
-                    gold: RANDOM_NUMBER,
-                },
-            });
-
-            let goldremove = await this.profileModel.findOneAndUpdate({
-                userID: loaded.id,
-            }, {
-                $inc: {
-                    gold: -RANDOM_NUMBER,
-                },
-            });
-
-            let healthloss = await this.healthModel.findOneAndUpdate({
-                userID: loaded.id,
-            }, {
-                $inc: {
-                    health: -Health_Loss,
-                },
-            });
-
-            let minions_increase = await this.profileModel.findOneAndUpdate({
-                userID: loaded.id,
-            }, {
-                $inc: {
-                    minions: RANDOM_MINIONS,
-                },
-            });
-
-            var arrayLength = LOCATIONS.length;
-            for (var i = 0; i < arrayLength; i++) { //itterate through array LOCATIONS to find the matching Location
-                if (m.content.toLowerCase() === LOCATIONS[i].toLowerCase()) {
-                    if (number <= success) {
-                        goldincrease
-
-                        this.props.color = this.props.success.color
-                        this.props.description = [
-                            `You searched the ${m.content} and found ${this.emojis.gold}${RANDOM_NUMBER}`,
-                            `Earned ${this.emojis.xp}${randomXP} XP`
-                        ].join("\n")
-                    } else if (number <= fail) {
-                        goldremove
-                        healthloss
-
-                        this.props.color = this.props.fail.color
-                        this.props.description = [
-                            `You searched the ${m.content} and got injured! This causes you to drop ${this.emojis.gold}${RANDOM_NUMBER}`,
-                            `Maybe a bad idea or just Unlucky.`,
-                            "",
-                            `Earned ${this.emojis.xp}${randomXP} XP and even more experience of not to do it again xD`
-                        ].join("\n")
-
-                    } else if (number <= special) {
-                        minions_increase
-
-                        this.props.color = this.props.special.color
-                        this.props.desscription = [
-                            `You go to search the ${m.content} and for some reason find ${this.emojis.minions}${RANDOM_MINIONS} Minions following you home.`,
-                            "",
-                            `Earned ${this.emojis.xp}${randomXP} XP`
-                        ].join("\n")
-                    }
+            if (number <= success) {
+                // Gold Increase
+                let inc = {
+                    gold: RANDOM_NUMBER
                 }
+                await this.profileModel.findOneAndUpdate({
+                    userID: loaded.id,
+                }, {
+                    $inc: inc,
+                })
+
+                this.props.color = this.props.success.color
+                this.props.description = [
+                    `You searched the ${location} and found ${this.emojis.gold}${RANDOM_NUMBER}`,
+                    `Earned ${this.emojis.xp}${randomXP} XP`
+                ].join("\n")
+            } else if (number <= fail) {
+                // Gold Decrease
+                let inc = {
+                    gold: -RANDOM_NUMBER
+                }
+                await this.profileModel.findOneAndUpdate({
+                    userID: loaded.id,
+                }, {
+                    $inc: inc,
+                })
+
+                // Health Decrease
+                inc = {
+                    health: -Health_Loss
+                }
+                await this.healthModel.findOneAndUpdate({
+                    userID: loaded.id,
+                }, {
+                    $inc: inc,
+                })
+
+                this.props.color = this.props.fail.color
+                this.props.description = [
+                    `You searched the ${location} and got injured! This causes you to drop ${this.emojis.gold}${RANDOM_NUMBER}`,
+                    `Maybe a bad idea or just Unlucky.`,
+                    "",
+                    `Earned ${this.emojis.xp}${randomXP} XP and even more experience of not to do it again xD`
+                ].join("\n")
+
+            } else if (number <= special) {
+                // Minions Increase
+                let inc = {
+                    minions: RANDOM_MINIONS
+                }
+                await this.profileModel.findOneAndUpdate({
+                    userID: loaded.id,
+                }, {
+                    $inc: inc,
+                })
+
+                this.props.color = this.props.special.color
+                this.props.description = [
+                    `You go to search the ${location} and for some reason find ${this.emojis.minions}${RANDOM_MINIONS} Minions following you home.`,
+                    "",
+                    `Earned ${this.emojis.xp}${randomXP} XP`
+                ].join("\n")
             }
             this.send(message, new VillainsEmbed(this.props))
             this.null = true
@@ -164,6 +162,7 @@ module.exports = class SearchCommand extends GameCommand {
         // Didn't get a response for Location to Search
         COLLECTOR.on("end", (collected) => {
             if (collected.size == 0) {
+                this.props.title.text = `${loaded.username} forgot to search anywhere! 🤦‍♀️`
                 this.props.description = [
                     `What are you doing <@${loaded.id}>?! There was ${this.emojis.gold}${RANDOM_NUMBER} hidden inside the ${chosenLocations[0]} 😭\n Luckily you atleast Earned ${this.emojis.xp}${randomXP} XP`
                 ].join("\n")
