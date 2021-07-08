@@ -33,6 +33,7 @@ module.exports = class VillainsCommand extends BaseCommand {
     #flags;     // Private: Flags for user management
     #error;     // Private: Error Thrown
     #errors;    // Private: Global Error Message strings
+    #channel;   // Private: Channel to send VillainsEmbed to
     #inputData; // Private: Command Inputs
 
     constructor(comprops = {}, props = {}) {
@@ -122,6 +123,13 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
     set errors(errors) {
         this.#errors = errors
+    }
+
+    get channel() {
+        return this.#channel
+    }
+    set channel(channel) {
+        this.#channel = channel
     }
 
     get inputData() {
@@ -312,6 +320,9 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
+        if (!this.channel) {
+            this.channel = message.channel
+        }
         // If pages are being forced, set defaults
         if (forcepages) {
             emoji = ["◀️", "▶️"]
@@ -322,7 +333,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         if (Array.isArray(pages)) {
             // If it's just one and we're not forcing pages, just send the embed
             if ((pages.length <= 1) && !forcepages) {
-                message.channel.send(pages[0])
+                return this.channel.send(pages[0])
             } else {
                 // Else, set up for pagination
                 // Sanity check for emoji pageturners
@@ -339,11 +350,11 @@ module.exports = class VillainsCommand extends BaseCommand {
                     emoji.push(filler)
                 }
                 // Send the pages
-                await pagination(message, pages, emoji, timeout)
+                return await pagination(message, pages, emoji, timeout)
             }
         } else {
             // Else, it's just an embed, send it
-            message.channel.send(pages)
+            return this.channel.send(pages)
         }
     }
 
