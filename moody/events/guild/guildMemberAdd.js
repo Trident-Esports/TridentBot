@@ -1,5 +1,6 @@
 const { BaseEvent } = require('a-djs-handler')
 const fs = require('fs')
+const VillainsEmbed = require('../../classes/vembed.class')
 
 // Member Join
 module.exports = class GuildMemberAddEvent extends BaseEvent {
@@ -56,11 +57,6 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
         }
 
         const channel = member.guild.channels.cache.get(channelIDs[member.guild.id].welcome)
-        let thumbnail = "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif"
-        let footer = {
-            "image": "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif",
-            "msg": "This bot was Created by Noongar1800#1800"
-        }
         try {
             let rules = [
                 `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
@@ -70,12 +66,11 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
                 "",
                 `Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs[member.guild.id].roles).toString()}.`
             ]
-            const embed = new MessageEmbed()
-                .setTitle(`Welcome To ${member.guild.name}`)
-                .setThumbnail(thumbnail)
-                .setDescription(rules.join("\n"))
-                .setFooter(footer["msg"], footer["image"])
-                .setColor('RANDOM')
+            let props = {
+                title: "Welcome to ${member.guild.name}",
+                description: rules.join("\n")
+            }
+            const embed = new VillainsEmbed(props);
 
             return channel.send(embed);
         }

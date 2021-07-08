@@ -5,7 +5,9 @@
         "Now who's the Bot? 🤡",
         "Select someone who isn't a bot next time, dummy!"
     ],
+    "cantActionMention": [ "You can't target a Mention!" ],
     "cantActionOthers": [ "You can't target others!" ],
+    "cantActionSearch": [ "You can't search for a Target!" ],
     "cantActionSelf": [ "You can't target yourself!" ],
     "game": {
         "mongoDB": {

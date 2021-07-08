@@ -69,9 +69,9 @@ module.exports = class ATMCommand extends GameCommand {
             }
         }
 
-        var amount = (this.inputData.args && this.inputData.args[0]) ? this.inputData.args[0].toLowerCase() : -1
+        var amount = (this.inputData.args && this.inputData.args[0]) ? this.inputData.args[0].replace(",","").replace(".","").toLowerCase() : -1
 
-        if (isNaN(amount) || (parseInt(amount) <= 0)) {
+        if ((isNaN(amount) && (["all","half"].indexOf(amount) == -1)) || (parseInt(amount) <= 0)) {
             this.error = true
             this.props.title.text = "Error"
             this.props.description = `Amount must be a positive whole number, "all" or "half". '${amount}' given.`
@@ -88,119 +88,123 @@ module.exports = class ATMCommand extends GameCommand {
                 this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
             }
 
-            let targetData = null
-            let needTarget = ["Give", "Refund", "Steal"].indexOf(this.props.caption.text) > -1
-            if (needTarget) {
-                if (loaded) {
-                    if ((["Give", "Steal"].indexOf(this.props.caption.text) > -1) && (this.inputData.user.id === loaded.id)) {
-                        this.error = true
-                        this.props.title.text = "Error"
-                        this.props.description = `You can't ${this.props.caption.text} Gold to/from yourself!`
-                    }
-
-                    if (!(this.error)) {
-                        targetData = await this.profileModel.findOne({
-                            userID: loaded.id
-                        })
-
-                        if (!targetData) {
+            if (!(this.error)) {
+                let targetData = null
+                let needTarget = ["Give", "Refund", "Steal"].indexOf(this.props.caption.text) > -1
+                if (needTarget) {
+                    if (loaded) {
+                        if ((["Give", "Steal"].indexOf(this.props.caption.text) > -1) && (this.inputData.user.id === loaded.id)) {
                             this.error = true
                             this.props.title.text = "Error"
-                            this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
+                            this.props.description = `You can't ${this.props.caption.text} Gold to/from yourself!`
                         }
-                    }
-                } else {
-                    this.props.title.text = "Error"
-                    this.props.description = `You need to specify a player to ${props.caption.text} Gold.`
-                }
-            }
 
-            if (!(this.error)) {
-                let reserve = 0
-                switch (this.props.caption.text) {
-                    case "Deposit":
-                    case "Give":
-                        reserve = profileData.gold
-                        break
-                    case "Withdraw":
-                        reserve = profileData.bank
-                        break
-                    default:
-                        reserve = 0
-                        break
-                }
-                if (amount == 'all') {
-                    amount = parseInt(reserve)
-                } else if (amount == 'half') {
-                    amount = parseInt(reserve / 2)
-                } else {
-                    amount = parseInt(amount)
-                }
-                if (["Refund", "Steal"].indexOf(this.props.caption.text) == -1) {
-                    if (parseInt(amount) > parseInt(reserve)) {
+                        if (!(this.error)) {
+                            targetData = await this.profileModel.findOne({
+                                userID: loaded.id
+                            })
+
+                            if (!targetData) {
+                                this.error = true
+                                this.props.title.text = "Error"
+                                this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
+                            }
+                        }
+                    } else {
+                        this.error = true
                         this.props.title.text = "Error"
-                        this.props.description = `You only have ${this.emojis.gold}${reserve}. '${amount}' given.`
+                        this.props.description = `You need to specify a player to ${props.caption.text} Gold.`
                     }
                 }
 
                 if (!(this.error)) {
-                    let inc = { gold: 0 }
-                    let targetInc = { gold: 0 }
-                    let [verb, direction, container] = ["", "", ""]
+                    let reserve = 0
                     switch (this.props.caption.text) {
                         case "Deposit":
-                            // User to User
-                            inc = { gold: -amount, bank: amount };
-                            [verb, direction, container] = ["Deposited", "into", "their Bank"];
-                            break;
                         case "Give":
-                            // User to Target
-                            inc = { gold: -amount };
-                            targetInc = { gold: amount };
-                            [verb, direction, container] = ["Given", "to", `<@${loaded.id}>'s Wallet`];
-                            break;
+                            reserve = profileData.gold
+                            break
                         case "Withdraw":
-                            // User to User
-                            inc = { gold: amount, bank: -amount };
-                            [verb, direction, container] = ["Withdrawn", "into", "their Wallet"];
-                            break;
-                        case "Refund":
-                            // Ether to Target
-                            targetInc = { gold: amount };
-                            [verb, direction, container] = ["Refunded", "into", `<@${loaded.id}>'s Wallet`];
-                            break;
-                        case "Steal":
-                            // Target to User
-                            inc = { gold: amount };
-                            targetInc = { gold: -amount };
-                            [verb, direction, container] = ["Stole", "from", `<@${loaded.id}>'s Wallet`];
-                            break;
+                            reserve = profileData.bank
+                            break
                         default:
-                            break;
+                            reserve = 0
+                            break
                     }
-                    if (inc.gold !== 0) {
-                        await this.profileModel.findOneAndUpdate({
-                                userID: this.inputData.user.id
-                            }, {
-                                $inc: inc
-                            }
-                        );
+                    if (amount == 'all') {
+                        amount = parseInt(reserve)
+                    } else if (amount == 'half') {
+                        amount = parseInt(reserve / 2)
+                    } else {
+                        amount = parseInt(amount)
                     }
-                    if (loaded && targetInc.gold !== 0) {
-                        await this.profileModel.findOneAndUpdate({
-                                userID: loaded.id
-                            }, {
-                                $inc: targetInc
-                            }
-                        );
+                    if (["Deposit","Give","Withdraw"].indexOf(this.props.caption.text) >= -1) {
+                        if (parseInt(amount) > parseInt(reserve)) {
+                            this.error = true
+                            this.props.title.text = "Error"
+                            this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
+                        }
                     }
 
-                    this.props.description = []
+                    if (!(this.error)) {
+                        let inc = { gold: 0 }
+                        let targetInc = { gold: 0 }
+                        let [verb, direction, container] = ["", "", ""]
+                        switch (this.props.caption.text) {
+                            case "Deposit":
+                                // User to User
+                                inc = { gold: -amount, bank: amount };
+                                [verb, direction, container] = ["Deposited", "into", "their Bank"];
+                                break;
+                            case "Give":
+                                // User to Target
+                                inc = { gold: -amount };
+                                targetInc = { gold: amount };
+                                [verb, direction, container] = ["Given", "to", `<@${loaded.id}>'s Wallet`];
+                                break;
+                            case "Withdraw":
+                                // User to User
+                                inc = { gold: amount, bank: -amount };
+                                [verb, direction, container] = ["Withdrawn", "into", "their Wallet"];
+                                break;
+                            case "Refund":
+                                // Ether to Target
+                                targetInc = { gold: amount };
+                                [verb, direction, container] = ["Refunded", "into", `<@${loaded.id}>'s Wallet`];
+                                break;
+                            case "Steal":
+                                // Target to User
+                                inc = { gold: amount };
+                                targetInc = { gold: -amount };
+                                [verb, direction, container] = ["Stole", "from", `<@${loaded.id}>'s Wallet`];
+                                break;
+                            default:
+                                break;
+                        }
+                        if (inc.gold !== 0) {
+                            await this.profileModel.findOneAndUpdate({
+                                    userID: this.inputData.user.id
+                                }, {
+                                    $inc: inc
+                                }
+                            );
+                        }
+                        if (loaded && targetInc.gold !== 0) {
+                            await this.profileModel.findOneAndUpdate({
+                                    userID: loaded.id
+                                }, {
+                                    $inc: targetInc
+                                }
+                            );
+                        }
 
-                    this.props.description.push(`**<@${this.inputData.user.id}> has ${verb} ${this.emojis.gold}${amount.toLocaleString("en-AU")} Gold ${direction} ${container}!**`)
-                    this.props.description.push("_Check your balance using `.balance`_")
+                        this.props.description = []
 
-                    this.props.description = this.props.description.join("\n")
+                        this.props.description.push(`**<@${this.inputData.user.id}> has ${verb} ${this.emojis.gold}${amount.toLocaleString("en-AU")} Gold ${direction} ${container}!**`)
+                        this.props.description.push("_Check your balance using `.balance`_")
+
+                        this.props.description = this.props.description.join("\n")
+                    }
                 }
             }
         }
