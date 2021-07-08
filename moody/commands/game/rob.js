@@ -1,5 +1,4 @@
 const GameCommand = require('../../classes/gamecommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
 
 // ATMCommand: User to User, like Give
 

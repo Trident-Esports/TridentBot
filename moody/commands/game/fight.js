@@ -26,7 +26,7 @@ module.exports = class FightCommand extends GameCommand {
             title: {
                 text: "🛡️⚔️ BATTLE ⚔️🛡️"
             },
-            thumbnail: "https://media1.tenor.com/images/2ae0b895a19beae56d67a1f88f36aecc/tenor.gif",
+            thumbnail: "https://gifimage.net/wp-content/uploads/2017/11/i-challenge-you-to-a-duel-gif-12.gif",
             description: `${message.author} has commenced a duel with ${target}. Do you accept?`,
             footer: {
                 msg: ""

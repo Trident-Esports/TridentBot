@@ -9,13 +9,10 @@ TODO:
  Game
   Blackjack
   Fight
-  Game Help
   Rob
  Matches
  Purge
  Roster
- Suggestions
- Survey
 
 */
 
@@ -275,7 +272,6 @@ module.exports = class VillainsCommand extends BaseCommand {
             this.error = true
             foundHandles.title = { text: "Error" };
             switch (foundHandles.invalid) {
-                //FIXME: English-stripping
                 case "user":
                     foundHandles.description = this.errors.cantActionSelf.join("\n");
                     break;
@@ -286,10 +282,10 @@ module.exports = class VillainsCommand extends BaseCommand {
                     foundHandles.description = this.errors.cantActionBot.join("\n");
                     break;
                 case "mention":
-                    foundHandles.description = "Can't target a Mention!";
+                    foundHandles.description = this.errors.cantActionMention.join("\n");
                     break;
                 case "search":
-                    foundHandles.description = "Can't search for a Target!";
+                    foundHandles.description = this.errors.cantActionSearch.join("\n");
                     break;
                 default:
                     break;

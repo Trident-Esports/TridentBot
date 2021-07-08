@@ -1,8 +1,6 @@
 const VillainsCommand = require('../../classes/vcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
 
 module.exports = class BotVoteCommand extends VillainsCommand {
-    //FIXME: Not setting URL
     constructor() {
         let comprops = {
             name: "botvote",
@@ -26,6 +24,6 @@ module.exports = class BotVoteCommand extends VillainsCommand {
 
         this.props.footer = {
             msg: "Prizes for Voting COMING SOON!"
-        } //FIXME: does not add a footer
+        }
     }
 }

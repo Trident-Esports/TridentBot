@@ -1,5 +1,4 @@
 const VillainsCommand = require('../../classes/vcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
 
 const fs = require('fs');
 let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))

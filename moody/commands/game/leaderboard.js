@@ -7,7 +7,6 @@ function ordinal(n) {
   return n + (s[(v-20)%10] || s[v] || s[0]);
 }
 module.exports = class LeaderboardCommand extends GameCommand {
-    //FIXME: Title not being respected for pages?
     constructor() {
         let comprops = {
             name: 'leaderboard',

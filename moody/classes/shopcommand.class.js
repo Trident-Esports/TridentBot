@@ -10,7 +10,6 @@ BaseCommand
 */
 
 const GameCommand = require('./gamecommand.class');
-const VillainsEmbed = require('./vembed.class');
 
 const fs = require('fs')
 
@@ -81,7 +80,6 @@ module.exports = class ShopCommand extends GameCommand {
 
                 var gold = profileData.gold //Players gold
 
-                //FIXME: Try to parse from args returned from this.getArgs()
                 let re = /^([a-z ]*)([\d]*)$/
                 let selected_item = ""
                 let quantity = -1

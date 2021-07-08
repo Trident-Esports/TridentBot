@@ -4,7 +4,6 @@ const VillainsEmbed = require('../../classes/vembed.class');
 const weather = require('weather-js');
 
 module.exports = class WeatherCommand extends VillainsCommand {
-    //FIXME: Double-posting?
     constructor() {
         let comprops = {
             name: "weather",

@@ -10,7 +10,7 @@ module.exports = class PingCommand extends VillainsCommand {
         }
         let props = {
             title: { text: "Pong!" },
-            image: "https://media.tenor.com/images/1ddabd76ee02cff6e98e7b012243ce6a/tenor.gif"
+            image: "https://thumbs.gfycat.com/VariableNervousAfricancivet-small.gif"
         }
         super(comprops, props)
     }

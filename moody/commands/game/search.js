@@ -1,8 +1,6 @@
 const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
-const fs = require('fs');
-
 
 module.exports = class SearchCommand extends GameCommand {
     //FIXME: Footer not updating?
