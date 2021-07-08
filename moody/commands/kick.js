@@ -5,7 +5,10 @@ module.exports = class KickCommand extends ModCommand {
         let comprops = {
             name: "kick",
             category: "admin",
-            description: "Kick user"
+            description: "Kick user",
+            flags: {
+                bot: "optional"
+            }
         }
         super(comprops)
     }

@@ -21,50 +21,93 @@ module.exports = class BotActivityCommand extends AdminCommand {
     }
 
     async action(client, message) {
-        let activityIndexes = [
-          "playing",    // 0
-          "playing",    // 1
-          "listening",  // 2
-          "watching",   // 3
-          "moo",        // 4
-          "competing"   // 5
+        // Default supported activities
+        let activityNames = [
+            "playing",
+            "streaming",
+            "listening",
+            "watching",
+            "moo",
+            "competing"
         ]
 
-        let activity = 2
+        // Default to listening
+        let defaultActivity = "listening"
+        let activity = defaultActivity
+        let msg = this.prefix + "help"
+        let url = ""
+
+        let padding = 20
 
         if(this.DEV) {
-            console.log("Default activity: ",activity)
-            console.log("Sent activity:    [",this.inputData.args[0] + ']')
+            console.log("Default activity:".padEnd(padding),activity)
+            console.log("Sent activity:".padEnd(padding),'[' + this.inputData.args[0] + ']')
+            if(this.inputData.args.length > 1) {
+                try {
+                    let tryURL = this.inputData.args[1].replace("<","").replace(">","")
+                    if(new URL(tryURL)) {
+                        url = tryURL
+                        if(this.inputData.args.length > 2)  {
+                            msg = this.inputData.args.slice(2).join(" ")
+                        }
+                        console.log("Sent URL:".padEnd(padding),url)
+                    }
+                } catch {
+                    msg = this.inputData.args.slice(1).join(" ")
+                }
+                console.log("Sent msg:".padEnd(padding),msg)
+            }
         }
 
-        if(this.inputData.args[0].trim() == "") {
-            this.inputData.args[0] = activity
+        if(this.inputData.args && this.inputData.args[0]) {
+            // If arg[0] sent, if it's a number, set it to one of the defined ones
+            if(!(isNaN(this.inputData.args[0].trim()))) {
+                let activityID = this.inputData.args[0].trim()
+                if(activityID < activityNames.length) {
+                    activity = activityNames[activityID]
+                }
+            } else if(this.inputData.args[0].trim() != "") {
+                let activityName = this.inputData.args[0].trim()
+                if(activityNames.indexOf(activityName.toLowerCase()) > -1) {
+                    activity = activityNames[activityName.toLowerCase()]
+                }
+            }
+            if(activity.toLowerCase() == "moo") {
+                activity = defaultActivity
+            }
         }
 
-        if(isNaN(this.inputData.args[0])) {
-            if(activityIndexes.indexOf(this.inputData.args[0].toLowerCase()) > -1) {
-                activity = activityIndexes.indexOf(this.inputData.args[0].toLowerCase())
-            }
-        } else {
-            if((parseInt(this.inputData.args[0]) < 0) || (parseInt(this.inputData.args[0]) >= activityIndexes.length)) {
-                this.inputData.args[0] = activity
-            }
-            activity = parseInt(this.inputData.args[0])
-            if(activityIndexes[activity] == "moo") {
-                activity = 2
-            }
+        if(url != "") {
+            activity = "streaming"
+        } else if(activity.toLowerCase() == "streaming" && url == "") {
+            activity = defaultActivity
         }
 
         if(this.DEV) {
-            console.log("New activity ID:  ",activity)
-            console.log("New activity:     ",activityIndexes[activity])
+            console.log("New activity:".padEnd(padding),activity.toUpperCase())
             console.log()
         }
 
         if (activity !== "") {
-            let msg = this.prefix + "help"
-            client.user.setActivity(msg, {type:activity}) //you can change that to whatever you like
-            this.props.description = 'Status changed succesfully: ' + activityIndexes[activity].slice(0,1).toUpperCase() + activityIndexes[activity].slice(1) + " **" + msg + "**"
+            let args = {
+                name: msg,
+                type: activity.toUpperCase()
+            }
+            if(url != "") {
+                args.url = url
+            }
+            client.user.setActivity(args) //you can change that to whatever you like
+            let desc = "Status changed succesfully: "
+            desc += activity.charAt(0).toUpperCase() + activity.slice(1)
+            if(activity == "listening") {
+                desc += " to"
+            } else if(activity == "competing") {
+                desc += " in"
+            }
+            desc += " **"
+            desc += args.name
+            desc += "**"
+            this.props.description = desc
         }
     }
 }

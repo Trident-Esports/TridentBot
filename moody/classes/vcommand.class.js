@@ -234,8 +234,13 @@ module.exports = class VillainsCommand extends BaseCommand {
                     cleansed = args.join(" ").trim().replace(`<${matches.join("")}>`,"")
                 } else {
                     cleansed = args.join(" ").trim()
-                    for (let check of [`${loaded.username}#${loaded.discriminator}`, loaded.username]) {
-                        cleansed = cleansed.toLowerCase().trim().replace(check.toLowerCase(),"")
+                    for (let check of [
+                        `${loaded.username}#${loaded.discriminator}`,
+                        loaded.username,
+                        `${loaded.username}#${loaded.discriminator}`.toLowerCase(),
+                        loaded.username.toLowerCase()
+                    ]) {
+                        cleansed = cleansed.trim().replace(check,"")
                     }
                 }
                 foundHandles.argsArr = cleansed.trim().split(" ").filter(function(e) { return e != null && e != "" })
