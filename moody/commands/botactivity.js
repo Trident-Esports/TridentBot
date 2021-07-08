@@ -42,21 +42,25 @@ module.exports = class BotActivityCommand extends AdminCommand {
         if(this.DEV) {
             console.log("Default activity:".padEnd(padding),activity)
             console.log("Sent activity:".padEnd(padding),'[' + this.inputData.args[0] + ']')
-            if(this.inputData.args.length > 1) {
-                try {
-                    let tryURL = this.inputData.args[1].replace("<","").replace(">","")
-                    if(new URL(tryURL)) {
-                        url = tryURL
-                        if(this.inputData.args.length > 2)  {
-                            msg = this.inputData.args.slice(2).join(" ")
-                        }
+        }
+        if(this.inputData.args.length > 1) {
+            try {
+                let tryURL = this.inputData.args[1].replace("<","").replace(">","")
+                if(new URL(tryURL)) {
+                    url = tryURL
+                    if(this.inputData.args.length > 2)  {
+                        msg = this.inputData.args.slice(2).join(" ")
+                    }
+                    if(this.DEV) {
                         console.log("Sent URL:".padEnd(padding),url)
                     }
-                } catch {
-                    msg = this.inputData.args.slice(1).join(" ")
                 }
-                console.log("Sent msg:".padEnd(padding),msg)
+            } catch {
+                msg = this.inputData.args.slice(1).join(" ")
             }
+        }
+        if(this.DEV) {
+            console.log("Sent msg:".padEnd(padding),msg)
         }
 
         if(this.inputData.args && this.inputData.args[0]) {
@@ -104,8 +108,9 @@ module.exports = class BotActivityCommand extends AdminCommand {
             } else if(activity == "competing") {
                 desc += " in"
             }
-            desc += " **"
-            desc += args.name
+            desc += " "
+            desc += "**"
+            desc += args?.url ? `[${args.name}](${args.url} '${args.url}')` : args.name
             desc += "**"
             this.props.description = desc
         }
