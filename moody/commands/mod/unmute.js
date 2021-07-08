@@ -1,4 +1,4 @@
-const ModCommand = require('../classes/modcommand.class');
+const ModCommand = require('../../classes/modcommand.class');
 
 //FIXME: Like Mute
 module.exports = class UnmuteCommand extends ModCommand {

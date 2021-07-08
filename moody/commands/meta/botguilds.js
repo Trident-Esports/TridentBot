@@ -1,5 +1,5 @@
-const AdminCommand = require('../classes/admincommand.class');
-const VillainsEmbed = require('../classes/vembed.class');
+const AdminCommand = require('../../classes/admincommand.class');
+const VillainsEmbed = require('../../classes/vembed.class');
 
 function ksort(obj){
   var keys = Object.keys(obj).sort()

@@ -1,4 +1,4 @@
-const ModCommand = require('../classes/modcommand.class');
+const ModCommand = require('../../classes/modcommand.class');
 const ms = require('ms');
 
 //FIXME: Like Unmute

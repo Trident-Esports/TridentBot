@@ -1,35 +1,29 @@
-const VillainsCommand = require('../classes/vcommand.class');
-const VillainsEmbed = require('../classes/vembed.class');
-
-const fs = require('fs');
-
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-let DEV = GLOBALS.DEV;
+const VillainsCommand = require('../../classes/vcommand.class');
+const VillainsEmbed = require('../../classes/vembed.class');
 
 // Suggestions/Survey
 //FIXME: Make inheritable?
-module.exports = class SuggestionsCommand extends VillainsCommand {
+module.exports = class SurveyCommand extends VillainsCommand {
     constructor() {
         super({
-            name: "suggestions",
-            aliases: [ "suggest", "suggestion" ],
+            name: "survey",
             category: "meta",
-            description: "Suggestions"
+            description: "Survey"
         })
     }
 
     async run(client, message, args) {
         let props = {
-            title: { text: "Suggestions" }
+            title: { text: "Survey" }
         }
         let emoji = {
-            "yes": "👍",
-            "no": "👎"
+            "yes": "✅",
+            "no": "❌"
         }
-        let channelName = DEV ? "suggestions" : "❓suggestions❓"
+        let channelName = "survey"
         const channel = message.guild.channels.cache.find(c => c.name === channelName);
         if(!channel) {
-            props.description = "Suggestions channel doesn't exist!"
+            props.description = "Survey channel doesn't exist!"
         } else {
             props.author = {
                 name: message.author.tag,

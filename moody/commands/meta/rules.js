@@ -1,5 +1,5 @@
-const VillainsCommand = require('../classes/vcommand.class');
-const VillainsEmbed = require('../classes/vembed.class');
+const VillainsCommand = require('../../classes/vcommand.class');
+const VillainsEmbed = require('../../classes/vembed.class');
 
 const fs = require('fs');
 

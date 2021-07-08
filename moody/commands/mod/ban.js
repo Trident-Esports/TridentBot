@@ -1,4 +1,4 @@
-const ModCommand = require('../classes/modcommand.class');
+const ModCommand = require('../../classes/modcommand.class');
 
 module.exports = class BanCommand extends ModCommand {
     constructor() {

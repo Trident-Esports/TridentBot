@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-const VillainsCommand = require('../classes/vcommand.class');
-const VillainsEmbed = require('../classes/vembed.class');
+const VillainsCommand = require('../../classes/vcommand.class');
+const VillainsEmbed = require('../../classes/vembed.class');
 
 function walk(dir) {
     let results = [];

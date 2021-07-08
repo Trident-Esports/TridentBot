@@ -1,5 +1,5 @@
-const VillainsCommand = require('../classes/vcommand.class');
-const VillainsEmbed = require('../classes/vembed.class');
+const VillainsCommand = require('../../classes/vcommand.class');
+const VillainsEmbed = require('../../classes/vembed.class');
 
 const weather = require('weather-js');
 
@@ -9,7 +9,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
         let comprops = {
             name: "weather",
             aliases: [ "w" ],
-            category: "diagnostic",
+            category: "information",
             description: "Check your weather!"
         }
         super(comprops)
@@ -82,5 +82,6 @@ module.exports = class WeatherCommand extends VillainsCommand {
             let embed = new VillainsEmbed(props)
             message.channel.send(embed)
         })
+        this.null = true
     }
 }

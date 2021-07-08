@@ -10,10 +10,9 @@ module.exports = class BlackjackCommand extends GameCommand {
         });
     }
 
-    async run(client, message) {
-        let msg = [
+    async action(client, message) {
+        this.props.description = [
             "`Coming Soon!`"
-        ]
-        await message.channel.send(msg);
+        ].join("\n")
     }
 }
