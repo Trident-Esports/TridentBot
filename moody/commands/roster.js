@@ -76,7 +76,8 @@ module.exports = class RosterCommand extends VillainsCommand {
             props.caption.text = profile.title
 
             let emoji = ""
-            let emojiKey = filepath.match(/(?:\.\/rosters\/dbs\/teams\/)([^\/]*)(.*)/)[1]
+            let emojiMatch = filepath.match(/(?:\.\/rosters\/dbs\/teams\/)([^\/]*)(.*)/)
+            let emojiKey = emojiMatch ? emojiMatch[1] : ""
             let emojiName = emojiKey
             if (emojiName == "val") {
                 emojiName = "valorant"
