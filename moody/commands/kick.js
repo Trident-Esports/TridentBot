@@ -14,12 +14,16 @@ module.exports = class KickCommand extends ModCommand {
     }
 
     async action(client, message) {
-        const member = this.inputData.loaded
+        const member = message.guild.member(this.inputData.loaded)
         if(! this.DEV) {
             // Do the thing
-            member.kick()
+            member.kick({ reason:this.inputData.args.join(" ") })
             this.props.description = `<@${member.id}> has been kicked from the server`
-            this.props.image = "https://tenor.com/view/missed-kick-missed-kick-minions-fail-gif-12718518"
+            if(this.inputData.args.join(" ") != "") {
+                this.props.description += "\n"
+                this.props.description += "Reason: [" + this.inputData.args.join(" ") + "]"
+            }
+            this.props.image = "https://i.pinimg.com/originals/71/71/6c/71716cc590ce7970ac82e8457d787147.gif"
         } else {
             // Describe the thing
             this.props.description = `<@${member.id}> *would be* **kicked** if this wasn't in DEV Mode`
