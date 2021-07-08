@@ -11,13 +11,12 @@
     "manager": {
       "title": "Manager",
       "users": [
-        "guessmonster"
+        "marsh"
       ]
     },
     "coach": {
       "title": "Coach",
       "users": [
-        "crash"
       ]
     },
     "main": {
