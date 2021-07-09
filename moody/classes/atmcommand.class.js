@@ -41,10 +41,44 @@ module.exports = class ATMCommand extends GameCommand {
         switch (this.props.caption.text) {
             case "Refund":
                 this.flags.user = "invalid";
+                this.flags.search = "invalid";
             case "Give":
             case "Steal":
                 this.flags.target = "required";
+                this.flags.search = "invalid";
                 break;
+        }
+    }
+
+    async db_query(userID, type, amount) {
+        let amounts = {}
+        if (typeof type === "object") {
+            amounts = type
+        } else {
+            switch(type) {
+                case "wallet":
+                    type = "gold";
+                    break;
+            }
+            amounts[type] = amount
+        }
+
+        for (let [thisType, thisAmount] of Object.entries(amounts)) {
+            let model = ""
+            switch(thisType) {
+                case "gold":
+                case "bank":
+                    model = "profileModel";
+                    break;
+            }
+            if (model != "") {
+                let inc = {}
+                inc[thisType] = thisAmount
+                await this[model].findOneAndUpdate(
+                    { userID: userID },
+                    { $inc: inc }
+                )
+            }
         }
     }
 
@@ -64,7 +98,6 @@ module.exports = class ATMCommand extends GameCommand {
 
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = this.errors.adminOnly.join("\n")
             }
         }
@@ -73,7 +106,6 @@ module.exports = class ATMCommand extends GameCommand {
 
         if ((isNaN(amount) && (["all","half"].indexOf(amount) == -1)) || (parseInt(amount) <= 0)) {
             this.error = true
-            this.props.title.text = "Error"
             this.props.description = `Amount must be a positive whole number, "all" or "half". '${amount}' given.`
         }
 
@@ -84,7 +116,6 @@ module.exports = class ATMCommand extends GameCommand {
 
             if (!profileData) {
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
             }
 
@@ -95,7 +126,6 @@ module.exports = class ATMCommand extends GameCommand {
                     if (loaded) {
                         if ((["Give", "Steal"].indexOf(this.props.caption.text) > -1) && (this.inputData.user.id === loaded.id)) {
                             this.error = true
-                            this.props.title.text = "Error"
                             this.props.description = `You can't ${this.props.caption.text} Gold to/from yourself!`
                         }
 
@@ -106,13 +136,11 @@ module.exports = class ATMCommand extends GameCommand {
 
                             if (!targetData) {
                                 this.error = true
-                                this.props.title.text = "Error"
                                 this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
                             }
                         }
                     } else {
                         this.error = true
-                        this.props.title.text = "Error"
                         this.props.description = `You need to specify a player to ${props.caption.text} Gold.`
                     }
                 }
@@ -141,7 +169,6 @@ module.exports = class ATMCommand extends GameCommand {
                     if (["Deposit","Give","Withdraw"].indexOf(this.props.caption.text) >= -1) {
                         if (parseInt(amount) > parseInt(reserve)) {
                             this.error = true
-                            this.props.title.text = "Error"
                             this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
                         }
                     }
@@ -182,20 +209,10 @@ module.exports = class ATMCommand extends GameCommand {
                                 break;
                         }
                         if (inc.gold !== 0) {
-                            await this.profileModel.findOneAndUpdate({
-                                    userID: this.inputData.user.id
-                                }, {
-                                    $inc: inc
-                                }
-                            );
+                            await this.db_query(this.inputData.user.id, inc)
                         }
                         if (loaded && targetInc.gold !== 0) {
-                            await this.profileModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $inc: targetInc
-                                }
-                            );
+                            await this.db_query(loaded.id, targetInc)
                         }
 
                         this.props.description = []

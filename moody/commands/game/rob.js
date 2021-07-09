@@ -53,13 +53,11 @@ module.exports = class RobCommand extends GameCommand {
             if (usermoney < minSteal) {
                 // You need >= $minSteal
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = `You need at least ${this.emojis.gold}${minSteal} in your wallet to rob someone!`
             }
             if (targetmoney < minSteal) {
                 // Target needs >= $minSteal
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = `Mentioned user needs to have at least ${this.emojis.gold}${minSteal} in their wallet to rob!`
             }
 

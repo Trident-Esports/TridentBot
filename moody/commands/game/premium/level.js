@@ -17,7 +17,6 @@ module.exports = class LevelCommand extends GameCommand {
         const levelData = await this.Levels.fetch(loaded.id, 1);
         if (!levelData) {
             this.error = true
-            this.props.title.text = "Error"
             this.props.description = "This user doesn't have a Level.😢"
         }
 

@@ -43,7 +43,6 @@ module.exports = class CoinFlipCommand extends GameCommand {
 
             if (gambledAmount < minGamble) {
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = `You must gamble at least ${this.emojis.gold}${minGamble}. '${gambledAmount}' given.`
             }
 
@@ -60,7 +59,6 @@ module.exports = class CoinFlipCommand extends GameCommand {
 
                 if (gambledAmount > profileData.gold) {
                     this.error = true
-                    this.props.title.text = "Error"
                     this.props.description = `You seem to be a bit short on money there. '${gambledAmount}' given and you've got ${this.emojis.gold}${profileData.gold}.`
                 }
 

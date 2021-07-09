@@ -192,7 +192,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         // If we have calculated a Target
         if (loaded) {
             // Make sure Loaded isn't from an Invalid source
-            for (let handleType of ["user", "target", "mention", "search"]) {
+            for (let handleType of ["mention", "search", "user", "target"]) {
                 if ((foundHandles.loadedType == handleType) && (this.flags[handleType] == "invalid")) {
                     foundHandles.invalid = handleType
                 }
@@ -358,6 +358,14 @@ module.exports = class VillainsCommand extends BaseCommand {
         await this.processArgs(message, args, this.flags)
 
         await this.build(client, message)
+
+        if (this.error) {
+            if (this.props?.title) {
+                this.props.title.text = "Error"
+            } else if (this.props?.caption) {
+                this.props.caption.text = "Error"
+            }
+        }
 
         if(this.pages.length == 0) {
             if(this.props?.full && this.props.full) {

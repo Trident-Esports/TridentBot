@@ -42,12 +42,10 @@ module.exports = class ShopCommand extends GameCommand {
 
             if (!inventoryData) {
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = this.errors.game.mongoDB.noInventory.join("\n")
             }
             if (!profileData) {
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
             }
 
@@ -103,13 +101,11 @@ module.exports = class ShopCommand extends GameCommand {
                 }
 
                 if (selected_item == "") {
-                    this.error
-                    this.props.title.text = "Error"
+                    this.error = true
                     this.props.description = "No item name given."
                 }
                 if (quantity == -1) {
-                    this.error
-                    this.props.title.text = "Error"
+                    this.error = true
                     this.props.description = `Invalid quantity. '${quantity}' given.`
                 }
 
@@ -288,7 +284,7 @@ module.exports = class ShopCommand extends GameCommand {
                             }
                             this.props.description = this.props.description.join("\n")
                         } else {
-                            this.props.title.text = "Error"
+                            this.error = true
                             this.props.description = [
                                 `Yes, you have no ${item.emoji}${item.stylized}.`,
                                 `'${inventorySorts.flat[item.emoji]}' in inventory.`,
@@ -299,7 +295,7 @@ module.exports = class ShopCommand extends GameCommand {
                 }
 
                 if ((!this.props.description) || (this.props.description == "")) {
-                    this.props.title.text = "Error"
+                    this.error = true
                     this.props.description = `Item doesn't exist. '${selected_item}' given.`
                 }
             }

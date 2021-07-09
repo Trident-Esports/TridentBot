@@ -25,7 +25,7 @@ module.exports = class UnmuteCommand extends ModCommand {
             this.props.description = `<@${member.id}> has been unmuted`
         } else {
             // Describe the thing
-            this.props.description = `<@${member.id}> *would be* unmuted if this wasn't in DEV Mode`
+            this.props.description = `<@${member.id}> *would be* **unmuted** if this wasn't in DEV Mode`
         }
     }
 }

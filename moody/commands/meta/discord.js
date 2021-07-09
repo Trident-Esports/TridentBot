@@ -27,7 +27,6 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
             this.props.description = `***[Join our Discord!](${url})***`
         } else {
             this.error = true
-            this.props.title.text = "Error"
             this.props.description = "No invite code found in profile."
         }
     }
