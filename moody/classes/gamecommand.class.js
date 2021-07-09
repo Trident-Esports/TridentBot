@@ -40,4 +40,47 @@ module.exports = class GameCommand extends VillainsCommand {
     set emojis(emojis) {
         this.#emojis = emojis
     }
+
+    async db_query(userID, model) {
+        switch(model) {
+            case "profile":
+                model = "profileModel";
+                break;
+        }
+        return await this[model].findOne(
+            { userID: userID }
+        )
+    }
+
+    async db_transform(userID, type, amount) {
+        let amounts = {}
+        if (typeof type === "object") {
+            amounts = type
+        } else {
+            switch(type) {
+                case "wallet":
+                    type = "gold";
+                    break;
+            }
+            amounts[type] = amount
+        }
+
+        for (let [thisType, thisAmount] of Object.entries(amounts)) {
+            let model = ""
+            switch(thisType) {
+                case "gold":
+                case "bank":
+                    model = "profileModel";
+                    break;
+            }
+            if (model != "") {
+                let inc = {}
+                inc[thisType] = thisAmount
+                await this[model].findOneAndUpdate(
+                    { userID: userID },
+                    { $inc: inc }
+                )
+            }
+        }
+    }
 }
