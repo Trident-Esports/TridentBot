@@ -43,8 +43,14 @@ module.exports = class GameCommand extends VillainsCommand {
 
     async db_query(userID, model) {
         switch(model) {
-            case "profile":
-                model = "profileModel";
+            case "levels":
+                model = "Levels";
+                break;
+            case "xpboost":
+                model = "XPBoostModel";
+                break;
+            default:
+                model += "Model";
                 break;
         }
         return await this[model].findOne(
