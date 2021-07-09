@@ -50,7 +50,18 @@ module.exports = class ATMCommand extends GameCommand {
         }
     }
 
-    async db_query(userID, type, amount) {
+    async db_query(userID, model) {
+        switch(model) {
+            case "profile":
+                model = "profileModel";
+                break;
+        }
+        return await this[model].findOne(
+            { userID: userID }
+        )
+    }
+
+    async db_transform(userID, type, amount) {
         let amounts = {}
         if (typeof type === "object") {
             amounts = type
@@ -110,9 +121,7 @@ module.exports = class ATMCommand extends GameCommand {
         }
 
         if (!(this.error)) {
-            const profileData = await this.profileModel.findOne({
-                userID: loaded.id
-            })
+            const profileData = await this.db_query(this.inputData.user.id, "profile")
 
             if (!profileData) {
                 this.error = true
@@ -130,9 +139,7 @@ module.exports = class ATMCommand extends GameCommand {
                         }
 
                         if (!(this.error)) {
-                            targetData = await this.profileModel.findOne({
-                                userID: loaded.id
-                            })
+                            targetData = await this.db_query(loaded.id, "profile")
 
                             if (!targetData) {
                                 this.error = true
@@ -209,10 +216,10 @@ module.exports = class ATMCommand extends GameCommand {
                                 break;
                         }
                         if (inc.gold !== 0) {
-                            await this.db_query(this.inputData.user.id, inc)
+                            await this.db_transform(this.inputData.user.id, inc)
                         }
                         if (loaded && targetInc.gold !== 0) {
-                            await this.db_query(loaded.id, targetInc)
+                            await this.db_transform(loaded.id, targetInc)
                         }
 
                         this.props.description = []
