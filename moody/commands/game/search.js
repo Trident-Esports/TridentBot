@@ -102,10 +102,19 @@ module.exports = class SearchCommand extends GameCommand {
                 })
 
                 this.props.color = this.props.success.color
-                this.props.description = [
-                    `You searched the ${location} and found ${this.emojis.gold}${RANDOM_NUMBER}`,
-                    `Earned ${this.emojis.xp}${randomXP} XP`
-                ].join("\n")
+                this.props.description = `You searched the ${location} and found...`
+                this.props.fields = [
+                    {
+                        name: `${this.emojis.gold}${RANDOM_NUMBER.toLocaleString("en-AU")}`,
+                        value: "Gold",
+                        inline: true
+                    },
+                    {
+                        name: `${this.emojis.xp}${randomXP.toLocaleString("en-AU")}`,
+                        value: "XP",
+                        inline: true
+                    }
+                ]
             } else if (number <= fail) {
                 // Gold Decrease
                 let inc = {
@@ -132,8 +141,16 @@ module.exports = class SearchCommand extends GameCommand {
                     `You searched the ${location} and got injured! This causes you to drop ${this.emojis.gold}${RANDOM_NUMBER}`,
                     `Maybe a bad idea or just Unlucky.`,
                     "",
-                    `Earned ${this.emojis.xp}${randomXP} XP and even more experience of not to do it again xD`
+                    `Earned...`
                 ].join("\n")
+
+                this.props.fields = [
+                    {
+                        name: `${this.emojis.xp}${randomXP.toLocaleString("en-AU")}`,
+                        value: "XP",
+                        inline: true
+                    }
+                ]
 
             } else if (number <= special) {
                 // Minions Increase
@@ -148,10 +165,22 @@ module.exports = class SearchCommand extends GameCommand {
 
                 this.props.color = this.props.special.color
                 this.props.description = [
-                    `You go to search the ${location} and for some reason find ${this.emojis.minions}${RANDOM_MINIONS} Minions following you home.`,
+                    `You go to search the ${location} and for some reason find **Minions** following you home.`,
                     "",
-                    `Earned ${this.emojis.xp}${randomXP} XP`
+                    `Earned...`
                 ].join("\n")
+                this.props.fields = [
+                    {
+                        name: `${this.emojis.minions}${RANDOM_MINIONS.toLocaleString("en-AU")}`,
+                        value: "Minions",
+                        inline: true
+                    },
+                    {
+                        name: `${this.emojis.xp}${randomXP.toLocaleString("en-AU")}`,
+                        value: "XP",
+                        inline: true
+                    }
+                ]
             }
             this.send(message, new VillainsEmbed(this.props))
             this.null = true
@@ -162,8 +191,16 @@ module.exports = class SearchCommand extends GameCommand {
             if (collected.size == 0) {
                 this.props.title.text = `${loaded.username} forgot to search anywhere! 🤦‍♀️`
                 this.props.description = [
-                    `What are you doing <@${loaded.id}>?! There was ${this.emojis.gold}${RANDOM_NUMBER} hidden inside the ${chosenLocations[0]} 😭\n Luckily you atleast Earned ${this.emojis.xp}${randomXP} XP`
+                    `What are you doing <@${loaded.id}>?! There was ${this.emojis.gold}${RANDOM_NUMBER} hidden inside the ${chosenLocations[0]} 😭`,
+                    `Luckily you atleast Earned...`
                 ].join("\n")
+                this.props.fields = [
+                    {
+                        name: `${this.emojis.xp}${randomXP.toLocaleString("en-AU")}`,
+                        value: "XP",
+                        inline: true
+                    }
+                ]
                 this.send(message, new VillainsEmbed(this.props))
                 this.null = true
             }
