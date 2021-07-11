@@ -53,9 +53,10 @@ module.exports = class PurgeCommand extends BaseCommand {
         }
 
         let embed = new SlimEmbed(props)
-        await message.channel.send(message, embed)
+        await message.channel.send(embed)
             .then(msg => {
                 setTimeout(() => msg.delete(), ms(duration))
             })
-    }
+            
+    } 
 }
