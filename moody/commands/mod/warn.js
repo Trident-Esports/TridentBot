@@ -40,31 +40,28 @@ module.exports = class WarnCommand extends ModCommand {
             user: user.id
         }, async (err, data) => {
             if (err) throw err;
-            if (this.DEV) {
-                msg = "!! DEV !! - Warned for " + reason
-            } else {
-                if (!data) {
-                    data = new db({
-                        guildID: message.guild.id,
-                        user: user.id,
-                        content: [{
-                            moderator: message.author.id,
-                            reason: reason
-                        }]
-                    })
-                } else {
-                    const obj = {
+
+            if (!data) {
+                data = new db({
+                    guildID: message.guild.id,
+                    user: user.id,
+                    content: [{
                         moderator: message.author.id,
                         reason: reason
-                    }
-                    if (!obj.reason) {
-                        data = false
-                    } else {
-                        data.content.push(obj)
-                    }
+                    }]
+                })
+            } else {
+                const obj = {
+                    moderator: message.author.id,
+                    reason: reason
                 }
-                data.save()
+                if (!obj.reason) {
+                    data = false
+                } else {
+                    data.content.push(obj)
+                }
             }
+            data.save()
         });
     }
 }

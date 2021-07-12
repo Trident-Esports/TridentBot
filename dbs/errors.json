@@ -11,6 +11,9 @@
     "cantActionOthers": [ "You can't target others!" ],
     "cantActionSearch": [ "You can't search for a Target!" ],
     "cantActionSelf": [ "You can't target yourself!" ],
+    "warns": {
+        "noWarns" : ["No warns in the database for this user"]
+    },
     "game": {
         "mongoDB": {
             "noInventory": [ "No inventory data found." ],
