@@ -1,8 +1,7 @@
 const ModCommand = require('../../classes/modcommand.class');
 const db = require('../../../models/warns')
 
-//FIXME: Like Unmute
-module.exports = class MuteCommand extends ModCommand {
+module.exports = class WarnCommand extends ModCommand {
     constructor() {
         let comprops = {
             name: "warn",
