@@ -1,7 +1,7 @@
 const ModCommand = require('../../classes/modcommand.class');
 const db = require('../../../models/warns')
 
-module.exports = class RemoveLastWarnCommand extends ModCommand {
+module.exports = class RemoveLongestWarnCommand extends ModCommand {
     constructor() {
         let comprops = {
             name: "removelongestwarn",
