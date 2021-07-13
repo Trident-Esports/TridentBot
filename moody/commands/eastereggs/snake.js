@@ -7,7 +7,7 @@ module.exports = class SnakeCommand extends VillainsCommand {
             category: "eastereggs",
             description: "",
         }
-        super(comprops)
+        super(comprops, { caption: { text: "Konami Code" } })
     }
 
     async action(client, message) {

@@ -25,17 +25,21 @@ module.exports = class RobCommand extends GameCommand {
         if (!(this.error)) {
             this.props.title = {}
 
-            const profileData = await this.profileModel.findOne({
-                userID: target.id
-            })
-            const usermoney = this.profileModel.findOne({
-                userID: user.id,
-                gold: profileData.gold
-            })
-            const targetmoney = this.profileModel.findOne({
-                userID: target.id,
-                gold: profileData.gold
-            })
+            const profileData = await this.db_query(target.id, "profile")
+            const usermoney = await this.db_query(
+                {
+                    userID: user.id,
+                    gold: profileData.gold
+                },
+                "profile"
+            )
+            const targetmoney = await this.db_query(
+                {
+                    userID: target.id,
+                    gold: profileData.gold
+                },
+                "profile"
+            )
 
             let options = [
                 'Success',

@@ -20,7 +20,7 @@ module.exports = class BotVoteCommand extends VillainsCommand {
         url += "https://top.gg/bot/"
         url += "828317713256415252"
         url += "/vote"
-        this.props.description = `***[Vote for @VillainsBot on top.gg!](${url})***`
+        this.props.description = `***[Vote for @VillainsBot on top.gg!](${url} '${url}')***`
 
         this.props.footer = {
             msg: "Prizes for Voting COMING SOON!"

@@ -200,7 +200,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 teamName += json.team_id
                                 teamURL += "team/" + json.team_id
                             }
-                            props.description += ` *([${teamName}](${teamURL}))*`
+                            props.description += ` *([${teamName}](${teamURL} '${teamURL}'))*`
 
                             embed.setDescription(props.description)
                         }
@@ -259,7 +259,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             embed.setDescription(
                                 [
                                     "__***" + emoji + teamName + "***__",
-                                    "No selected matches found for [" + teamName + "](" + teamURL + ")."
+                                    `No selected matches found for [${teamName}](${teamURL} '${teamURL}').`
                                 ].join("\n")
                             )
                         }

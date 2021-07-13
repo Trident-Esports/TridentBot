@@ -70,7 +70,7 @@ module.exports = class ATMCommand extends GameCommand {
             }
         }
 
-        var amount = (this.inputData.args && this.inputData.args[0]) ? this.inputData.args[0].replace(",","").replace(".","").toLowerCase() : -1
+        let amount = (this.inputData.args && this.inputData.args[0]) ? this.inputData.args[0].replace(",","").replace(".","").toLowerCase() : -1
 
         if ((isNaN(amount) && (["all","half"].indexOf(amount) == -1)) || (parseInt(amount) <= 0)) {
             this.error = true
@@ -138,24 +138,24 @@ module.exports = class ATMCommand extends GameCommand {
                     }
 
                     if (!(this.error)) {
-                        let inc = { gold: 0 }
+                        let userInc = { gold: 0 }
                         let targetInc = { gold: 0 }
                         let [verb, direction, container] = ["", "", ""]
                         switch (this.props.caption.text) {
                             case "Deposit":
                                 // User to User
-                                inc = { gold: -amount, bank: amount };
+                                userInc = { gold: -amount, bank: amount };
                                 [verb, direction, container] = ["Deposited", "into", "their Bank"];
                                 break;
                             case "Give":
                                 // User to Target
-                                inc = { gold: -amount };
+                                userInc = { gold: -amount };
                                 targetInc = { gold: amount };
                                 [verb, direction, container] = ["Given", "to", `<@${loaded.id}>'s Wallet`];
                                 break;
                             case "Withdraw":
                                 // User to User
-                                inc = { gold: amount, bank: -amount };
+                                userInc = { gold: amount, bank: -amount };
                                 [verb, direction, container] = ["Withdrawn", "into", "their Wallet"];
                                 break;
                             case "Refund":
@@ -165,15 +165,15 @@ module.exports = class ATMCommand extends GameCommand {
                                 break;
                             case "Steal":
                                 // Target to User
-                                inc = { gold: amount };
+                                userInc = { gold: amount };
                                 targetInc = { gold: -amount };
                                 [verb, direction, container] = ["Stole", "from", `<@${loaded.id}>'s Wallet`];
                                 break;
                             default:
                                 break;
                         }
-                        if (inc.gold !== 0) {
-                            await this.db_transform(this.inputData.user.id, inc)
+                        if (userInc.gold !== 0) {
+                            await this.db_transform(this.inputData.user.id, userInc)
                         }
                         if (loaded && targetInc.gold !== 0) {
                             await this.db_transform(loaded.id, targetInc)

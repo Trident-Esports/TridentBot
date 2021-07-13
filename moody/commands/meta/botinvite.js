@@ -29,7 +29,7 @@ module.exports = class BotInviteCommand extends VillainsCommand {
             url += "?client_id=" + defaults.bot.clientID
             url += "&scope=" + defaults.bot.scope
             url += "&permissions=" + defaults.bot.permissions
-            this.props.description = `***[Invite @VillainsBot to your Discord!](${url})***`
+            this.props.description = `***[Invite @VillainsBot to your Discord!](${url} '${url}')***`
         } else {
             this.error = true
             this.props.description = "No invite link found in defaults."

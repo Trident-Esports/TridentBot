@@ -20,15 +20,16 @@ module.exports = class GameCommand extends VillainsCommand {
         super({...comprops}, {...props})
         if (comprops?.extensions) {
             for (let extension of comprops.extensions) {
+                // [key, path] = await this.db_key(extension)
                 let key = extension + "Model"
-                let inc = "../../models/" + extension + "Schema"
+                let path = "../../models/" + extension + "Schema"
                 if (extension == "levels") {
                     key = "Levels"
-                    inc = "discord-xp"
+                    path = "discord-xp"
                 } else if (extension == "xpboost") {
                     key = "XPBoostModel"
                 }
-                this[key] = require(inc)
+                this[key] = require(path)
             }
         }
         this.emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
@@ -41,25 +42,37 @@ module.exports = class GameCommand extends VillainsCommand {
         this.#emojis = emojis
     }
 
-    async db_query(userID, model) {
-        switch(model) {
-            case "levels":
-                model = "Levels";
-                break;
-            case "xpboost":
-                model = "XPBoostModel";
-                break;
-            default:
-                model += "Model";
-                break;
+    async db_key(extension) {
+        let key = extension + "Model"
+        let path = "../../models/" + extension + "Schema"
+        if (extension.indexOf("level") > -1) {
+            key = "Levels"
+            path = "discord-xp"
+        } else if (extension == "xpboost") {
+            key = "XPBoostModel"
         }
-        return await this[model].findOne(
-            { userID: userID }
-        )
+        return [key, path]
+    }
+
+    async db_query(userID, model) {
+        let pieces = await this.db_key(model)
+        model = pieces[0]
+        if (model == "Levels") {
+            return await this[model].fetch(userID, 1)
+        } else {
+            let payload = {}
+            if (typeof userID === "object") {
+                payload = userID
+            } else {
+                payload = { userID: userID }
+            }
+            return await this[model].findOne(payload)
+        }
     }
 
     async db_transform(userID, type, amount) {
         let amounts = {}
+        let method = "$inc"
         if (typeof type === "object") {
             amounts = type
         } else {
@@ -76,15 +89,20 @@ module.exports = class GameCommand extends VillainsCommand {
             switch(thisType) {
                 case "gold":
                 case "bank":
-                    model = "profileModel";
+                case "minions":
+                    model = "profile";
                     break;
             }
+            let pieces = await this.db_key(model)
+            model = pieces[0]
             if (model != "") {
-                let inc = {}
-                inc[thisType] = thisAmount
+                let operation = {}
+                operation[thisType] = thisAmount
+                let payload = {}
+                payload[method] = operation
                 await this[model].findOneAndUpdate(
                     { userID: userID },
-                    { $inc: inc }
+                    payload
                 )
             }
         }

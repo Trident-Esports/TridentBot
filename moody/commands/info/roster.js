@@ -109,7 +109,10 @@ module.exports = class RosterCommand extends VillainsCommand {
                     url += "tourney/" + profile.team.tourneyID + '/'
                     name += profile.team.tourneyID + '/'
                 }
-                url += "team/" + profile.team.teamID
+                if(!(profile?.team?.tourneyID)) {
+                    url += "team/"
+                }
+                url += profile.team.teamID
                 name += profile.team.teamID
                 props.description += `*[${name}](${url} '${url}')*`
                 props.caption.url = url

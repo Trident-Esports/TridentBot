@@ -14,16 +14,14 @@ module.exports = class LevelCommand extends GameCommand {
     async action(client, message) {
         const loaded = this.inputData.loaded
 
-        const levelData = await this.Levels.fetch(loaded.id, 1);
+        const levelData = await this.db_query(loaded.id, "levels");
         if (!levelData) {
             this.error = true
             this.props.description = "This user doesn't have a Level.😢"
         }
 
         if (!(this.error)) {
-            const XPBoostData = await this.XPBoostModel.findOne({
-                userID: loaded.id
-            });
+            const XPBoostData = await this.db_query(loaded.id, "xpboost")
 
             this.props.description = `This is <@${loaded.id}>'s Level`
             this.props.fields = [

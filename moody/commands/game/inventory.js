@@ -18,9 +18,7 @@ module.exports = class InventoryCommand extends GameCommand {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
-            const inventoryData = await this.inventoryModel.findOne({
-                userID: loaded.id
-            });
+            const inventoryData = await this.db_query(loaded.id, "inventory")
 
             let inventory = {}
             for (let cat of ["items","consumables","powers"]) {

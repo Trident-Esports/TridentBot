@@ -15,9 +15,7 @@ module.exports = class BalanceCommand extends GameCommand {
     async action(client, message) {
         const loaded = this.inputData.loaded
 
-        const profileData = await this.profileModel.findOne({
-            userID: loaded.id
-        });
+        const profileData = await this.db_query(loaded.id, "profile")
 
         this.props.description = `This is <@${loaded.id}>'s Balance`
         this.props.fields = [

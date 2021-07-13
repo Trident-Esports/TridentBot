@@ -71,7 +71,7 @@ module.exports = class SearchCommand extends GameCommand {
             this.props.title.text = `${loaded.username} searched the ${location} 🕵️`
 
             if (hasLeveledUP) {
-                const user = await this.Levels.fetch(loaded.id, 1);
+                const user = await this.db_query(loaded.id, "levels");
                 let reward = {
                     gold: 1000,
                     minions: 1

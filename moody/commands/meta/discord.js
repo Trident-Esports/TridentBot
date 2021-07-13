@@ -24,7 +24,8 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
             url += "https://discord.gg/"
             url += GLOBALS.discord.invites.home.code
             this.props.description = url
-            this.props.description = `***[Join our Discord!](${url})***`
+            this.props.description = `***[Join our Discord!](${url} '${url}')***`
+            // message.channel.send(url)
         } else {
             this.error = true
             this.props.description = "No invite code found in profile."

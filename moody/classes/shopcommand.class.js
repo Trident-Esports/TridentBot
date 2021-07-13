@@ -33,12 +33,8 @@ module.exports = class ShopCommand extends GameCommand {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
-            const inventoryData = await this.inventoryModel.findOne({
-                userID: loaded.id
-            });
-            const profileData = await this.profileModel.findOne({
-                userID: loaded.id
-            });
+            const inventoryData = await this.db_query(loaded.id, "inventory")
+            const profileData = await this.db_query(loaded.id, "profile")
 
             if (!inventoryData) {
                 this.error = true
@@ -151,15 +147,10 @@ module.exports = class ShopCommand extends GameCommand {
                         // Buy
                         let cost = parseInt(item.value) * parseInt(quantity)
                         if (gold < cost) return message.channel.send('You cannot afford to buy this item')
-                        await this.profileModel.findOneAndUpdate({
-                            userID: loaded.id
-                        }, {
-                            $inc: {
-                                gold: -cost
-                            }
-                        });
+                        await this.db_transform(loaded.id, "gold", -cost)
 
                         let selected_items = new Array(quantity).fill(item.emoji);
+                        // await this.db_transform(loaded.id, "items", selected_items)
                         await this.inventoryModel.findOneAndUpdate({
                             userID: loaded.id
                         }, {
@@ -186,6 +177,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 // Pull All
                                 let pull = {}
                                 pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
+                                // await this.db_transform(loaded.id, "pull", pull)
                                 await this.inventoryModel.findOneAndUpdate({
                                     userID: loaded.id
                                 }, {
@@ -195,6 +187,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 // Put back minus q
                                 let push = {}
                                 push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
+                                // await this.db_transform(loaded.id, "push", push)
                                 await this.inventoryModel.findOneAndUpdate({
                                     userID: loaded.id
                                 }, {

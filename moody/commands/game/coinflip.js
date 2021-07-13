@@ -47,9 +47,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
             }
 
             if (!(this.error)) {
-                const profileData = await this.profileModel.findOne({
-                    userID: loaded.id
-                })
+                const profileData = await this.db_query(loaded.id, "profile")
                 if (gambledAmount == 'all') {
                     gambledAmount = profileData.gold
                 }
@@ -119,38 +117,27 @@ module.exports = class CoinFlipCommand extends GameCommand {
                                     break
                             }
                             if (gotHeads || gotTails) {
-                                await this.profileModel.findOneAndUpdate({
-                                    userID: loaded.id,
-                                }, {
-                                    $inc: {
-                                        gold: gambledAmount,
-                                    },
-                                });
+                                await this.db_transform(loaded.id, "gold", gambledAmount)
+
                                 console.log((gotHeads ? "Heads" : "Tails" + ':'),number)
                                 this.props.color = this.props.success.color
                                 this.props.title.text = this.props.success.title
                                 this.props.description = `You chose ${choice} and won ${this.emojis.gold}${gambledAmount.toString()}.`
                             } else if (number <= Side && m.content.charAt(0).toLowerCase() === 's') {
-                                await this.profileModel.findOneAndUpdate({
-                                    userID: loaded.id,
-                                }, {
-                                    $inc: {
+                                await this.db_transform(loaded.id,
+                                    {
                                         gold: -1,
-                                        minions: RANDOM_MINIONS,
-                                    },
-                                });
+                                        minions: RANDOM_MINIONS
+                                    }
+                                )
+
                                 console.log("Side:",number)
                                 this.props.color = this.props.special.color
                                 this.props.title.text = this.props.special.title
                                 this.props.description = `You go to flip the coin and it lands on its ${choice} and for some reason you find ${RANDOM_MINIONS} Minions grabbing the coin.\n\nThey are now yours!`
                             } else {
-                                await this.profileModel.findOneAndUpdate({
-                                    userID: loaded.id,
-                                }, {
-                                    $inc: {
-                                        gold: -gambledAmount,
-                                    },
-                                });
+                                await this.db_transform(loaded.id, "gold", -gambledAmount)
+
                                 console.log("Fail:",number)
                                 this.props.color = this.props.fail.color
                                 this.props.title.text = this.props.fail.title
@@ -168,13 +155,8 @@ module.exports = class CoinFlipCommand extends GameCommand {
 
                     COLLECTOR.on("end", async (collected) => {
                         if (collected.size == 0) {
-                            await this.profileModel.findOneAndUpdate({
-                                userID: loaded.id,
-                            }, {
-                                $inc: {
-                                    gold: -1,
-                                },
-                            });
+                            await this.db_transform(loaded.id, "gold", -1)
+
                             this.props.description = `You forgot to flip the coin and it fell out of your hand and rolled away. You lost 💰1.`
                             this.props.description = `<@${loaded.id}>` + "\n" + this.props.description
 

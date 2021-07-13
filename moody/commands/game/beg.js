@@ -36,7 +36,7 @@ module.exports = class BegCommand extends GameCommand {
 
             if (hasLeveledUP) {
 
-                const levelData = await this.Levels.fetch(loaded.id, 1);
+                const levelData = await this.db_query(loaded.id, "levels");
                 let gainedmoney = 1000
                 let gainedminions = 1
                 let inc = {

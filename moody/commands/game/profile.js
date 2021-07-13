@@ -16,16 +16,10 @@ module.exports = class ProfileCommand extends GameCommand {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
-            const profileData = await this.profileModel.findOne({
-                userID: loaded.id
-            })
-            const healthData = await this.healthModel.findOne({
-                userID: loaded.id
-            })
-            const XPBoostData = await this.XPBoostModel.findOne({
-                userID: loaded.id
-            })
-            const levelData = await this.Levels.fetch(loaded.id, 1)
+            const profileData = await this.db_query(loaded.id, "profile")
+            const healthData = await this.db_query(loaded.id, "health")
+            const XPBoostData = await this.db_query(loaded.id, "xpboost")
+            const levelData = await this.db_query(loaded.id, "levels")
 
             this.props.description = `This is <@${loaded.id}>'s Profile`
             this.props.fields = [

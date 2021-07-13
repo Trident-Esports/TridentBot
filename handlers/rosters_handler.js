@@ -39,9 +39,9 @@ module.exports = (client, message, args) => {
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
 
         if (profile.aliases) {
-            let tmp = file.split('/')
-            let gameID = tmp[tmp.length - 2]
-            let filename = tmp[tmp.length - 1].replace(".json","")
+            let fileparts = file.split('/')
+            let gameID = fileparts[fileparts.length - 2]
+            let filename = fileparts[fileparts.length - 1].replace(".json","")
 
             if (Object.keys(roster_aliases).indexOf(gameID) == -1) {
                 roster_aliases[gameID] = {}
