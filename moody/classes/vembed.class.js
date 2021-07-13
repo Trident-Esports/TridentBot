@@ -172,6 +172,9 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         this.setThumbnail(avatars.thumbnail.avatar)
 
         // Body Description
+        if (typeof props.description === "object") {
+            props.description = props.description.join("\n")
+        }
         this.setDescription(props.description)
 
         // Fields

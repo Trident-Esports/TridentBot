@@ -24,21 +24,25 @@ module.exports = class RemoveLongestWarnCommand extends ModCommand {
             this.props.description = this.errors.cantActionSelf
         }
 
-        if (this.DEV) {
-            this.props.description = "!! DEV !! - This user has " + data.content.length + " warns. Would delete Warn #" + (isNaN(number) ? 1 : number)
+        if(!(this.error)) {
+            db.findOne({
+                guildID: message.guild.id,
+                user: user.id
+            }, async (err, data) => {
+                if (err) throw err;
+                let props = {}
+                if (data) {
+                    props.description = `Deleted <@${user.id}>'s last warn`
+                    data.content.splice(0, 1)
+                    data.save()
+                } else {
+                    props.error = true
+                    props.description = `<@${user.id}> has no warns!`
+                }
+                let embed = new VillainsEmbed(props)
+                message.channel.send(embed)
+            })
+            this.null = true
         }
-
-        this.props.description = `Deleted ${user} last warn`
-
-        db.findOne({
-            guildID: message.guild.id,
-            user: user.id
-        }, async (err, data) => {
-            if (err) throw err;
-            if (data) {
-                data.content.splice(0, 1)
-                data.save()
-            }
-        })
     }
 }

@@ -11,7 +11,7 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
             description: ""
         }
         let props = {
-            title: {
+            caption: {
                 text: "***HelpLine***"
             },
             image: 'https://multiculturalmarriage.files.wordpress.com/2013/07/help-button-hi.png'

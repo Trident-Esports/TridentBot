@@ -1,3 +1,4 @@
+const VillainsEmbed = require('../../classes/vembed.class')
 const ModCommand = require('../../classes/modcommand.class');
 const db = require('../../../models/warns')
 
@@ -21,20 +22,31 @@ module.exports = class WarnsCommand extends ModCommand {
             this.props.description = this.errors.cantActionSelf
         }
 
-        db.findOne({
-            guildID: message.guild.id,
-            user: user.id
-        }, async (err, data) => {
-            if (err) throw err;
-            if (data) {
-                this.props.title.text = `${user.tag}'s warns`
-                this.props.description = data.content.map((w, i) => `\`${i + 1}\` | Moderator : ${message.guild.members.cache.get(w.moderator).user.tag}\nReason : ${w.reason}`)
-                this.props.color = "#00A3FF"
-            } else {
-                this.error = true
-                this.props.description = this.errors.noProfile
-            }
-            console.log(data)
-        })
+        if (!(this.error)) {
+            db.findOne({
+                guildID: message.guild.id,
+                user: user.id
+            }, async (err, data) => {
+                if (err) throw err;
+                let props = { }
+                if (data) {
+                    props.description = []
+                    props.description.push(`***<@${user.id}>'s warns***`)
+                    for (let [i, warn] of Object.entries(data.content)) {
+                        props.description.push(
+                            `\`${i + 1}\` | Moderator: <@${message.guild.members.cache.get(warn.moderator).user.id}>`,
+                            `Reason: ${warn.reason}`
+                        )
+                    }
+                    props.color = "#00A3FF"
+                } else {
+                    props.error = true
+                    props.description = this.errors.noProfile
+                }
+                let embed = new VillainsEmbed(props)
+                message.channel.send(embed)
+            })
+            this.null = true
+        }
     }
-}//FIZME: Can't figure out the mapping for the warns. Shows nothing.
+}

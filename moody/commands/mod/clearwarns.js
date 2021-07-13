@@ -1,3 +1,4 @@
+const VillainsEmbed = require('../../classes/vembed.class')
 const ModCommand = require('../../classes/modcommand.class');
 const db = require('../../../models/warns')
 
@@ -24,22 +25,27 @@ module.exports = class ClearWarnsCommand extends ModCommand {
             this.props.description = this.errors.cantActionSelf
         }
 
-        if (this.DEV) {
-            this.props.description += `!! DEV !! - Cleared ${user}'s warns`
-        } else {
-            this.props.description += `Cleared ${user}'s warns`
+        if(!(this.error)) {
+            db.findOne({
+                guildID: message.guild.id,
+                user: user.id
+            }, async (err, data) => {
+                if (err) throw err;
+                let props = { caption: { text: "Clear Warns" } }
+                if (data) {
+                    await db.findOneAndDelete({
+                        guildID: message.guild.id,
+                        user: user.id
+                    })
+                    props.description = `Cleared <@${user.id}>'s warns`
+                } else {
+                    props.error = true
+                    props.description = `<@${user.id}> has no warns!`
+                }
+                let embed = new VillainsEmbed(props)
+                message.channel.send(embed)
+            })
+            this.null = true
         }
-        db.findOne({
-            guildID: message.guild.id,
-            user: user.id
-        }, async (err, data) => {
-            if (err) throw err;
-            if (data) {
-                await db.findOneAndDelete({
-                    guildID: message.guild.id,
-                    user: user.id
-                })
-            }
-        })
     }
-}//FIXME: NO DEV to stop warn clears. Also nothing to say if there is no data. Doesn't break though
+}
