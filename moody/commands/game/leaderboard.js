@@ -48,7 +48,7 @@ module.exports = class LeaderboardCommand extends GameCommand {
                     inline: true
                 }
             )
-            if ((parseInt(slot) + 1) % 8 == 0) {
+            if ((parseInt(slot) + 1) % 5 == 0) {
                 this.pages.push(new VillainsEmbed(props))
                 props.fields = []
             }

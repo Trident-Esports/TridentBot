@@ -68,7 +68,7 @@ module.exports = async (Discord, client, message) => {
             title: { text: "**WELCOME**" },
             fields: [
                 {
-                    name: `Welcome to VillainsBot, <@${message.author.id}>!`,
+                    name: `Welcome to VillainsBot, ${message.author}!`,
                     value: [
                         "To start your journey, use `.beg`",
                         "To check your profile, use `.profile`",

@@ -1,5 +1,6 @@
 const ModCommand = require('../../classes/modcommand.class');
-const db = require('../../../models/warns')
+const db = require('../../../models/warns');
+const VillainsEmbed = require('../../classes/vembed.class');
 
 module.exports = class RemoveLongestWarnCommand extends ModCommand {
     constructor() {
