@@ -85,9 +85,20 @@
     "twitch": "gemlordtv",
     "twitter": "gemlordtv"
   },
+  "glitch": {
+    "instagram": "ssarah.adams",
+    "twitter": "subtleglitch_",
+    "twitch": "thesubtleglitch"
+  },
   "glny": {
   },
+  "griteo": {
+    "twitter": "griteo_r6",
+    "twitch": "griteo_r6"
+  },
   "grubb": {
+    "instagram": "grubbcs",
+    "twitter": "grubbcs"
   },
   "guessmonster": {
     "stylized": "GuessMonster",
@@ -207,6 +218,10 @@
     "twitch": "queeenjw",
     "twitter": "queeenjw"
   },
+  "relliic": {
+    "twitch": "relliictv",
+    "twitter": "relliicr6"
+  },
   "robbo": {
     "instagram": "james.robbo03",
     "twitch": "unknownrobbo",
@@ -230,6 +245,9 @@
     "twitch": "scarth_rl",
     "twitter": "scarthrl"
   },
+  "schnow": {
+    "stylized": "S1"
+  },
   "scubasteve": {
     "stylized": "ScubaSteve835",
     "instagram": "scuba.steve835",
@@ -243,6 +261,11 @@
     "stylized": "Smokeyy",
     "twitch": "smokeyy03",
     "twitter": "smokeyy__1"
+  },
+  "snagglefart": {
+    "instagram": "chris.m.m.m.m.m.m.m",
+    "twitch": "elluzionzz",
+    "twitter": "elluzionzz"
   },
   "spoon": {
     "stylized": "spoon",
@@ -258,9 +281,6 @@
     "stylized": "SUAVE",
     "twitch": "matteosuave",
     "twitter": "suaveoce"
-  },
-  "subtleglitchh": {
-    "stylized": "SubtleGlitchh"
   },
   "suto": {
     "stylized": "suto",
@@ -296,6 +316,9 @@
     "stylized": "bLeH",
     "instagram": "_wanrae_",
     "twitter": "wanrae_"
+  },
+  "wolfyee": {
+    "twitter": "wolfyeedoo"
   },
   "yung": {
     "twitch": "yungoce"

@@ -4,7 +4,6 @@ const cooldownsModel = require('../../models/cooldownsSchema'); // Cooldowns
 const healthModel = require('../../models/healthSchema');       // Health
 const XPBoostModel = require('../../models/xpboostSchema');     // XP Boost
 
-const { MessageEmbed } = require('discord.js'); // Discord Embeds
 const VillainsEmbed = require('../../moody/classes/vembed.class'); // Villains Embed
 
 const fs = require('fs'); // File System
@@ -69,7 +68,7 @@ module.exports = async (Discord, client, message) => {
             title: { text: "**WELCOME**" },
             fields: [
                 {
-                    name: `Welcome to VillainsBot, <@${message.author.id}>!`,
+                    name: `Welcome to VillainsBot, ${message.author}!`,
                     value: [
                         "To start your journey, use `.beg`",
                         "To check your profile, use `.profile`",

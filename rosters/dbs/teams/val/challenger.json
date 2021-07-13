@@ -11,7 +11,7 @@
     "manager": {
       "title": "Manager",
       "users": [
-        "guessmonster"
+        "marsh"
       ]
     },
     "coach": {
@@ -32,8 +32,7 @@
     },
     "sub": {
       "title": "Sub",
-      "users": [
-      ]
+      "users": []
     }
   }
 }

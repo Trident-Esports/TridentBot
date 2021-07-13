@@ -19,21 +19,24 @@ module.exports = class VillainsEmbed extends MessageEmbed {
     constructor(props = {}) {
         if (
           (
-            (!props?.title?.text) ||
+            (!(props?.title?.text)) ||
             (props?.title?.text && (props.title.text.trim() == "" || props.title.text.trim() == "<NONE>"))
           ) &&
           (props?.title?.url && props.title.url.trim() != "")
         ) {
             props.title.text = "Source"
         }
-        if ((!props?.description) || (props?.description && props.description.trim() == "")) {
+        if (props?.description && Array.isArray(props.description)) {
+            props.description = props.description.join("\n")
+        }
+        if ((!(props?.description)) || (props?.description && props.description.trim() == "")) {
             props.description = "** **"
         }
         if (typeof props.timestamp === undefined) {
             props.timestamp = true
         }
 
-        if ((!props?.color) || (props?.color && props.color.trim() == "")) {
+        if ((!(props?.color)) || (props?.color && props.color.trim() == "")) {
             switch (props.color) {
                 default:
                     props.color = defaults.stripe;
@@ -47,28 +50,41 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             description: "Something got stuffed up here..."
         })
 
+        // Inbound footer message
         let haveFooterMsg = props?.footer?.msg
-        let footerMsgNotNone = haveFooterMsg && (props.footer.msg.trim() != "") && (props.footer.msg != "<NONE>")
+
+        // Inbound footer message and not "<NONE>"
+        let footerMsgNotNone = haveFooterMsg && (props.footer.msg.trim() != "") && (props.footer.msg.trim() != "<NONE>")
+
+        // We've got pages
         let havePages = props?.pages
 
         // Footer
         if(footerMsgNotNone) {
+            // If we have an inbound footer
             if(DEV || havePages) {
+                // If we need to repurpose the footer
+                // Append sent footer message to description
                 if(props.description != "") {
                     props.description += "\n\n"
                 }
                 props.description += ">>" + props.footer.msg
             }
         }
+
         // Hack in my stuff to differentiate
         if (DEV) {
+            // Custom user footer
             props.color = GLOBALS["stripe"]
             props.footer = GLOBALS.footer
             this.setTimestamp()
-        } else if(!props?.footer) {
+        } else if((!haveFooterMsg) || (haveFooterMsg && (!footerMsgNotNone))) {
+            // Default footer
             props.footer = defaults.footer
         }
-        this.setFooter(props.footer.msg, props.footer.image)
+        if (props?.footer?.msg) {
+            this.setFooter(props.footer.msg, props.footer.image)
+        }
 
         // ERROR
         if (
@@ -78,9 +94,6 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         ) {
             props.color = "#ff0000" // RED
         }
-
-        // Color
-        this.setColor(props.color)
 
         // Stripe
         this.setColor(props.color)
@@ -159,6 +172,9 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         this.setThumbnail(avatars.thumbnail.avatar)
 
         // Body Description
+        if (typeof props.description === "object") {
+            props.description = props.description.join("\n")
+        }
         this.setDescription(props.description)
 
         // Fields

@@ -1,6 +1,6 @@
 {
-    "profile": {
-        "section": "PROFILE COMMANDS",
+    "personal": {
+        "section": "PERSONAL COMMANDS",
         "help": "View personal statistics.",
         "commands": {
             "balance": {
@@ -65,8 +65,8 @@
             }
         }
     },
-    "fight": {
-        "section": "FIGHT COMMANDS",
+    "battle": {
+        "section": "BATTLE COMMANDS",
         "help": "Battle other members.",
         "commands": {
             "fight": {

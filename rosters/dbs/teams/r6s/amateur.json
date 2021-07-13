@@ -31,9 +31,7 @@
     },
     "sub": {
       "title": "Sub",
-      "users": [
-        "error"
-      ]
+      "users": []
     }
   }
 }

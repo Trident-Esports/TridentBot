@@ -5,6 +5,15 @@ Branded Generic Command Handler
 BaseCommand
  VillainsCommand
 
+TODO:
+ Game
+  Blackjack
+  Fight
+  Rob
+ Matches
+ Purge
+ Roster
+
 */
 
 const { BaseCommand } = require('a-djs-handler');
@@ -21,25 +30,33 @@ module.exports = class VillainsCommand extends BaseCommand {
     #flags;     // Private: Flags for user management
     #error;     // Private: Error Thrown
     #errors;    // Private: Global Error Message strings
+    #channel;   // Private: Channel to send VillainsEmbed to
     #inputData; // Private: Command Inputs
 
     constructor(comprops = {}, props = {}) {
         super(comprops)
 
-        if (!(props?.caption?.text)) {
+        this.props = props
+
+        if (!(this?.props?.full)) {
+            this.props.full = true
+        }
+        if (!(this?.props?.caption?.text)) {
             if (!(props?.caption)) {
-                props.caption = {}
+                this.props.caption = {}
             }
-            props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
+            this.props.caption.text = this.name.charAt(0).toUpperCase() + this.name.slice(1)
         }
-        if (!(props?.title)) {
-            props.title = {}
+        if (!(this?.props?.title)) {
+            this.props.title = {}
+        } else if (props?.title) {
+            this.props.title = props.title
         }
-        if (!(props?.description)) {
-            props.description = ""
+        if (!(this?.props?.description)) {
+            this.props.description = ""
         }
-        if (!(props?.players)) {
-            props.players = {}
+        if (!(this?.props?.players)) {
+            this.props.players = {}
         }
         if (!(comprops?.flags)) {
             this.flags = {}
@@ -47,17 +64,17 @@ module.exports = class VillainsCommand extends BaseCommand {
             this.flags = comprops.flags
         }
 
-        for (let [player, setting] of Object.entries({user:"default",target:"optional",bot:"invalid"})) {
+        for (let [player, setting] of Object.entries({user:"default",target:"optional",bot:"invalid",search:"valid"})) {
             if (Object.keys(this.flags).indexOf(player) == -1) {
                 this.flags[player] = setting
             }
         }
 
         const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
         this.DEV = GLOBALS.DEV
-        this.props = props
+        this.prefix = DEFAULTS.prefix
         this.pages = []
-        this.props.title = props.title
         this.error = false
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
         this.inputData = {}
@@ -105,6 +122,13 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.#errors = errors
     }
 
+    get channel() {
+        return this.#channel
+    }
+    set channel(channel) {
+        this.#channel = channel
+    }
+
     get inputData() {
         return this.#inputData
     }
@@ -112,7 +136,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.#inputData = inputData
     }
 
-    async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid" }) {
+    async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
         let foundHandles = { players: {}, invalid: false, flags: flags }
 
         let user = message.author
@@ -168,7 +192,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         // If we have calculated a Target
         if (loaded) {
             // Make sure Loaded isn't from an Invalid source
-            for (let handleType of ["user", "target"]) {
+            for (let handleType of ["mention", "search", "user", "target"]) {
                 if ((foundHandles.loadedType == handleType) && (this.flags[handleType] == "invalid")) {
                     foundHandles.invalid = handleType
                 }
@@ -186,6 +210,7 @@ module.exports = class VillainsCommand extends BaseCommand {
                 // Set Invalid because Bot
                 foundHandles.invalid = "bot"
             }
+
             foundHandles.loaded = loaded
 
             // Set Loaded as Target Player
@@ -214,14 +239,21 @@ module.exports = class VillainsCommand extends BaseCommand {
                     cleansed = args.join(" ").trim().replace(`<${matches.join("")}>`,"")
                 } else {
                     cleansed = args.join(" ").trim()
-                    for (let check of [`${loaded.username}#${loaded.discriminator}`, loaded.username]) {
-                        cleansed = cleansed.toLowerCase().trim().replace(check.toLowerCase(),"")
+                    for (let check of [
+                        `${loaded.username}#${loaded.discriminator}`,
+                        loaded.username,
+                        `${loaded.username}#${loaded.discriminator}`.toLowerCase(),
+                        loaded.username.toLowerCase()
+                    ]) {
+                        cleansed = cleansed.trim().replace(check,"")
                     }
                 }
                 foundHandles.argsArr = cleansed.trim().split(" ").filter(function(e) { return e != null && e != "" })
                 cleansed = foundHandles.argsArr.join(" ")
                 foundHandles.args = cleansed.trim().split(" ")
                 debugout.push(`Clean:`.padEnd(padding) + `[${cleansed}]`)
+            } else {
+                foundHandles.args = [ "" ]
             }
         } catch(e) {
             console.log("---")
@@ -249,6 +281,12 @@ module.exports = class VillainsCommand extends BaseCommand {
                 case "bot":
                     foundHandles.description = this.errors.cantActionBot.join("\n");
                     break;
+                case "mention":
+                    foundHandles.description = this.errors.cantActionMention.join("\n");
+                    break;
+                case "search":
+                    foundHandles.description = this.errors.cantActionSearch.join("\n");
+                    break;
                 default:
                     break;
             }
@@ -256,8 +294,8 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         this.inputData = foundHandles
         this.props.players = foundHandles.players
-        this.props.title = foundHandles.title
-        this.props.description = foundHandles.description
+        this.props.title = foundHandles?.title ? foundHandles.title : this.props.title
+        this.props.description = foundHandles?.description ? foundHandles.description : this.props.description
     }
 
     async action(client, message) {
@@ -278,6 +316,9 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
+        if (!this.channel) {
+            this.channel = message.channel
+        }
         // If pages are being forced, set defaults
         if (forcepages) {
             emoji = ["◀️", "▶️"]
@@ -288,7 +329,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         if (Array.isArray(pages)) {
             // If it's just one and we're not forcing pages, just send the embed
             if ((pages.length <= 1) && !forcepages) {
-                message.channel.send(pages[0])
+                return this.channel.send(pages[0])
             } else {
                 // Else, set up for pagination
                 // Sanity check for emoji pageturners
@@ -305,11 +346,11 @@ module.exports = class VillainsCommand extends BaseCommand {
                     emoji.push(filler)
                 }
                 // Send the pages
-                await pagination(message, pages, emoji, timeout)
+                return await pagination(message, pages, emoji, timeout)
             }
         } else {
             // Else, it's just an embed, send it
-            message.channel.send(pages)
+            return this.channel.send(pages)
         }
     }
 
@@ -317,6 +358,14 @@ module.exports = class VillainsCommand extends BaseCommand {
         await this.processArgs(message, args, this.flags)
 
         await this.build(client, message)
+
+        if (this.error) {
+            if (this.props?.title) {
+                this.props.title.text = "Error"
+            } else if (this.props?.caption) {
+                this.props.caption.text = "Error"
+            }
+        }
 
         if(this.pages.length == 0) {
             if(this.props?.full && this.props.full) {
@@ -326,6 +375,8 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
         }
 
-        await this.send(message, this.pages)
+        if ((!(this?.null)) || (this?.null && (!(this.null)))) {
+            await this.send(message, this.pages)
+        }
     }
 }

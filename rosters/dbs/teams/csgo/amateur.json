@@ -17,8 +17,7 @@
     },
     "coach": {
       "title": "Coach",
-      "users": [
-      ]
+      "users": []
     },
     "main": {
       "title": "Main",
@@ -26,14 +25,13 @@
         "brian",
         "grubb",
         "t3rbo",
-        "robbo"
+        "robbo",
+        "wolfyee"
       ]
     },
     "sub": {
       "title": "Sub",
-      "users": [
-        "TBA"
-      ]
+      "users": []
     }
   }
 }

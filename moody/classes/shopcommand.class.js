@@ -10,7 +10,6 @@ BaseCommand
 */
 
 const GameCommand = require('./gamecommand.class');
-const VillainsEmbed = require('./vembed.class');
 
 const fs = require('fs')
 
@@ -34,21 +33,15 @@ module.exports = class ShopCommand extends GameCommand {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
-            const inventoryData = await this.inventoryModel.findOne({
-                userID: loaded.id
-            });
-            const profileData = await this.profileModel.findOne({
-                userID: loaded.id
-            });
+            const inventoryData = await this.db_query(loaded.id, "inventory")
+            const profileData = await this.db_query(loaded.id, "profile")
 
             if (!inventoryData) {
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = this.errors.game.mongoDB.noInventory.join("\n")
             }
             if (!profileData) {
                 this.error = true
-                this.props.title.text = "Error"
                 this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
             }
 
@@ -81,7 +74,6 @@ module.exports = class ShopCommand extends GameCommand {
 
                 var gold = profileData.gold //Players gold
 
-                //FIXME: Try to parse from args returned from this.getArgs()
                 let re = /^([a-z ]*)([\d]*)$/
                 let selected_item = ""
                 let quantity = -1
@@ -90,8 +82,8 @@ module.exports = class ShopCommand extends GameCommand {
                     if (matches) {
                         selected_item = matches[1].trim().replace(/\s/g, '')
                         quantity = ((!isNaN(matches[2])) && (matches[2] != "")) ? parseInt(matches[2]) : 1
-                    } else if (this.inputData.args[0] in emojiItems) {
-                        selected_item = emojiItems[this.inputData.args[0]]
+                    } else if (this.inputData.args[0].toLowerCase() in emojiItems) {
+                        selected_item = emojiItems[this.inputData.args[0].toLowerCase()]
                         re = /([\d]*)/
                         let tmp = this.inputData.args
                         tmp.shift()
@@ -105,13 +97,11 @@ module.exports = class ShopCommand extends GameCommand {
                 }
 
                 if (selected_item == "") {
-                    this.error
-                    this.props.title.text = "Error"
+                    this.error = true
                     this.props.description = "No item name given."
                 }
                 if (quantity == -1) {
-                    this.error
-                    this.props.title.text = "Error"
+                    this.error = true
                     this.props.description = `Invalid quantity. '${quantity}' given.`
                 }
 
@@ -157,22 +147,10 @@ module.exports = class ShopCommand extends GameCommand {
                         // Buy
                         let cost = parseInt(item.value) * parseInt(quantity)
                         if (gold < cost) return message.channel.send('You cannot afford to buy this item')
-                        await this.profileModel.findOneAndUpdate({
-                            userID: loaded.id
-                        }, {
-                            $inc: {
-                                gold: -cost
-                            }
-                        });
+                        await this.db_transform(loaded.id, "gold", -cost)
 
                         let selected_items = new Array(quantity).fill(item.emoji);
-                        await this.inventoryModel.findOneAndUpdate({
-                            userID: loaded.id
-                        }, {
-                            $push: {
-                                items: selected_items
-                            }
-                        });
+                        await this.db_transform(loaded.id, "$push", { items: selected_items })
 
                         this.props.description = `<@${loaded.id}> just bought `
                         this.props.description += `${quantity} `
@@ -192,20 +170,12 @@ module.exports = class ShopCommand extends GameCommand {
                                 // Pull All
                                 let pull = {}
                                 pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
-                                await this.inventoryModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $pull: pull
-                                })
+                                await this.db_transform(loaded.id, "$pull", pull)
 
                                 // Put back minus q
                                 let push = {}
                                 push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
-                                await this.inventoryModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $push: push
-                                })
+                                await this.db_transform(loaded.id, "$push", push)
 
                                 this.props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
@@ -221,13 +191,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 let special = 100
 
                                 if (number <= success) {
-                                    await this.XPBoostModel.findOneAndUpdate({
-                                        userID: loaded.id
-                                    }, {
-                                        $inc: {
-                                            xpboost: 25
-                                        }
-                                    })
+                                    await this.db_transform(loaded.id, "xpboost", 25)
                                     this.props.description.push("You have fed your minions and they are now by your side, gaining 25% XP Boost!")
                                     this.props.fields.push({
                                         name: `${this.emojis.xpboost}25%`,
@@ -236,13 +200,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 } else if (number <= fail) {
                                     // do nothing
                                 } else if (number <= special) {
-                                    await this.profileModel.findOneAndUpdate({
-                                        userID: loaded.id
-                                    }, {
-                                        $inc: {
-                                            minions: minions
-                                        }
-                                    })
+                                    await this.db_transform(loaded.id, "minions", minions)
                                     this.props.description.push(`Wait, what is this?!? Your minions have just multiplied. You just gained ${this.emojis.minions}${minions} Minions!`)
                                     this.props.fields.push({
                                         name: `${this.emojis.minions}${minions}`,
@@ -256,29 +214,15 @@ module.exports = class ShopCommand extends GameCommand {
                                 // Pull All
                                 let pull = {}
                                 pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
-                                await this.inventoryModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $pull: pull
-                                })
+                                await this.db_transform(loaded.id, "$pull", pull)
 
                                 // Put back minus q
                                 let push = {}
                                 push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
-                                await this.inventoryModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $push: push
-                                })
+                                await this.db_transform(loaded.id, "$push", push)
 
                                 // Restore Health
-                                await this.healthModel.findOneAndUpdate({
-                                    userID: loaded.id,
-                                }, {
-                                    $set: {
-                                        health: 100,
-                                    },
-                                })
+                                await this.db_transform(loaded.id, "health", 100)
                                 this.props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
                                     "Their health has been restored."
@@ -290,7 +234,7 @@ module.exports = class ShopCommand extends GameCommand {
                             }
                             this.props.description = this.props.description.join("\n")
                         } else {
-                            this.props.title.text = "Error"
+                            this.error = true
                             this.props.description = [
                                 `Yes, you have no ${item.emoji}${item.stylized}.`,
                                 `'${inventorySorts.flat[item.emoji]}' in inventory.`,
@@ -300,8 +244,8 @@ module.exports = class ShopCommand extends GameCommand {
                     }
                 }
 
-                if (this.props.description == "") {
-                    this.props.title.text = "Error"
+                if ((!this.props.description) || (this.props.description == "")) {
+                    this.error = true
                     this.props.description = `Item doesn't exist. '${selected_item}' given.`
                 }
             }
