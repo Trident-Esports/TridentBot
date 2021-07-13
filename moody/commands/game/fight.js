@@ -14,6 +14,7 @@ module.exports = class FightCommand extends GameCommand {
     }
 
     async run(client, message, args) {
+        return message.channel.send("Temporarily disabled.")
 
         /*
         User:   Invalid
