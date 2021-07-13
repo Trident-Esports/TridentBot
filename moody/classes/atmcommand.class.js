@@ -130,7 +130,7 @@ module.exports = class ATMCommand extends GameCommand {
                     } else {
                         amount = parseInt(amount)
                     }
-                    if (["Deposit","Give","Withdraw"].indexOf(this.props.caption.text) >= -1) {
+                    if (["Deposit","Give","Withdraw"].indexOf(this.props.caption.text) > -1) {
                         if (parseInt(amount) > parseInt(reserve)) {
                             this.error = true
                             this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
