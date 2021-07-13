@@ -1,5 +1,5 @@
 const { BaseCommand } = require('a-djs-handler');
-const SlimEmbed = require('../classes/vslimbed.class');
+const SlimEmbed = require('../../classes/vslimbed.class');
 
 const fs = require('fs');
 const ms = require('ms');
@@ -9,7 +9,7 @@ module.exports = class PurgeCommand extends BaseCommand {
     constructor() {
         super({
             name: "purge",
-            category: "admin",
+            category: "mod",
             description: "Purge messages"
         })
     }
