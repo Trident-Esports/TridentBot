@@ -150,14 +150,7 @@ module.exports = class ShopCommand extends GameCommand {
                         await this.db_transform(loaded.id, "gold", -cost)
 
                         let selected_items = new Array(quantity).fill(item.emoji);
-                        // await this.db_transform(loaded.id, "items", selected_items)
-                        await this.inventoryModel.findOneAndUpdate({
-                            userID: loaded.id
-                        }, {
-                            $push: {
-                                items: selected_items
-                            }
-                        });
+                        await this.db_transform(loaded.id, "$push", { items: selected_items })
 
                         this.props.description = `<@${loaded.id}> just bought `
                         this.props.description += `${quantity} `
@@ -177,22 +170,12 @@ module.exports = class ShopCommand extends GameCommand {
                                 // Pull All
                                 let pull = {}
                                 pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
-                                // await this.db_transform(loaded.id, "pull", pull)
-                                await this.inventoryModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $pull: pull
-                                })
+                                await this.db_transform(loaded.id, "$pull", pull)
 
                                 // Put back minus q
                                 let push = {}
                                 push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
-                                // await this.db_transform(loaded.id, "push", push)
-                                await this.inventoryModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $push: push
-                                })
+                                await this.db_transform(loaded.id, "$push", push)
 
                                 this.props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
@@ -208,13 +191,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 let special = 100
 
                                 if (number <= success) {
-                                    await this.XPBoostModel.findOneAndUpdate({
-                                        userID: loaded.id
-                                    }, {
-                                        $inc: {
-                                            xpboost: 25
-                                        }
-                                    })
+                                    await this.db_transform(loaded.id, "xpboost", 25)
                                     this.props.description.push("You have fed your minions and they are now by your side, gaining 25% XP Boost!")
                                     this.props.fields.push({
                                         name: `${this.emojis.xpboost}25%`,
@@ -223,13 +200,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 } else if (number <= fail) {
                                     // do nothing
                                 } else if (number <= special) {
-                                    await this.profileModel.findOneAndUpdate({
-                                        userID: loaded.id
-                                    }, {
-                                        $inc: {
-                                            minions: minions
-                                        }
-                                    })
+                                    await this.db_transform(loaded.id, "minions", minions)
                                     this.props.description.push(`Wait, what is this?!? Your minions have just multiplied. You just gained ${this.emojis.minions}${minions} Minions!`)
                                     this.props.fields.push({
                                         name: `${this.emojis.minions}${minions}`,
@@ -243,29 +214,15 @@ module.exports = class ShopCommand extends GameCommand {
                                 // Pull All
                                 let pull = {}
                                 pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
-                                await this.inventoryModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $pull: pull
-                                })
+                                await this.db_transform(loaded.id, "$pull", pull)
 
                                 // Put back minus q
                                 let push = {}
                                 push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
-                                await this.inventoryModel.findOneAndUpdate({
-                                    userID: loaded.id
-                                }, {
-                                    $push: push
-                                })
+                                await this.db_transform(loaded.id, "$push", push)
 
                                 // Restore Health
-                                await this.healthModel.findOneAndUpdate({
-                                    userID: loaded.id,
-                                }, {
-                                    $set: {
-                                        health: 100,
-                                    },
-                                })
+                                await this.db_transform(loaded.id, "health", 100)
                                 this.props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
                                     "Their health has been restored."

@@ -18,7 +18,7 @@ module.exports = class SearchCommand extends GameCommand {
         const loaded = this.inputData.loaded
 
         const randomXP = Math.floor(Math.random() * 200) + 50;
-        const hasLeveledUP = await this.Levels.appendXp(loaded.id, 1, randomXP);
+        const hasLeveledUP = await this.db_transform(loaded.id, "xp", randomXP);
 
         const LOCATIONS = [
             "Forest",
@@ -76,14 +76,12 @@ module.exports = class SearchCommand extends GameCommand {
                     gold: 1000,
                     minions: 1
                 }
-                await this.profileModel.findOneAndUpdate({
-                    userID: loaded.id,
-                }, {
-                    $inc: {
+                await this.db_transform(loaded.id,
+                    {
                         gold: reward.gold,
                         minions: reward.minions
-                    },
-                });
+                    }
+                )
                 this.props.footer.msg = [
                     `You just Advanced to Level ${user.level}!`,
                     `You have gained: ${this.emojis.gold}+${reward.gold} , ${this.emojis.minions}+${reward.minions}`
@@ -92,14 +90,7 @@ module.exports = class SearchCommand extends GameCommand {
 
             if (number <= success) {
                 // Gold Increase
-                let inc = {
-                    gold: RANDOM_NUMBER
-                }
-                await this.profileModel.findOneAndUpdate({
-                    userID: loaded.id,
-                }, {
-                    $inc: inc,
-                })
+                await this.db_transform(loaded.id, "gold", RANDOM_NUMBER)
 
                 this.props.color = this.props.success.color
                 this.props.description = `You searched the ${location} and found...`
@@ -117,24 +108,10 @@ module.exports = class SearchCommand extends GameCommand {
                 ]
             } else if (number <= fail) {
                 // Gold Decrease
-                let inc = {
-                    gold: -RANDOM_NUMBER
-                }
-                await this.profileModel.findOneAndUpdate({
-                    userID: loaded.id,
-                }, {
-                    $inc: inc,
-                })
+                await this.db_transform(loaded.id, "gold", -RANDOM_NUMBER)
 
                 // Health Decrease
-                inc = {
-                    health: -Health_Loss
-                }
-                await this.healthModel.findOneAndUpdate({
-                    userID: loaded.id,
-                }, {
-                    $inc: inc,
-                })
+                await this.db_transform(loaded.id, "health", -Health_Loss)
 
                 this.props.color = this.props.fail.color
                 this.props.description = [
@@ -154,14 +131,7 @@ module.exports = class SearchCommand extends GameCommand {
 
             } else if (number <= special) {
                 // Minions Increase
-                let inc = {
-                    minions: RANDOM_MINIONS
-                }
-                await this.profileModel.findOneAndUpdate({
-                    userID: loaded.id,
-                }, {
-                    $inc: inc,
-                })
+                await this.db_transform(loaded.id, "minions", RANDOM_MINIONS)
 
                 this.props.color = this.props.special.color
                 this.props.description = [

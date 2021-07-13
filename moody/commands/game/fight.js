@@ -73,7 +73,7 @@ module.exports = class FightCommand extends GameCommand {
 
         COLLECTOR.on("collect", async (m) => {
 
-            const hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
+            const hasLeveledUP = await this.db_transform(message.author.id, "xp", randomXP);
 
             props.color = "#FF5000"
             props.title = "WINNER WINNER CHICKEN DINNER"

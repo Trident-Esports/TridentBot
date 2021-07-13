@@ -89,11 +89,7 @@ module.exports = class InventoryCommand extends GameCommand {
                     let pull = {}
                     pull[cat] = emojiItem
                     // console.log("$pull:",pull)
-                    await this.inventoryModel.findOneAndUpdate({
-                        userID: loaded.id
-                    }, {
-                        $pull: pull
-                    })
+                    await this.db_transform(loaded.id, "$pull", pull)
                 }
             }
             // Push back to DB
@@ -102,11 +98,7 @@ module.exports = class InventoryCommand extends GameCommand {
                     let push = {}
                     push[cat] = new Array(inventorySorts.flat[emojiItem]).fill(emojiItem)
                     // console.log("$push:",push)
-                    await this.inventoryModel.findOneAndUpdate({
-                        userID: loaded.id
-                    }, {
-                        $push: push
-                    })
+                    await this.db_transform(loaded.id, "$push", push)
                 }
             }
 

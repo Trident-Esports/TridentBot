@@ -87,23 +87,55 @@ module.exports = class GameCommand extends VillainsCommand {
         for (let [thisType, thisAmount] of Object.entries(amounts)) {
             let model = ""
             switch(thisType) {
+                // Profile
                 case "gold":
                 case "bank":
                 case "minions":
                     model = "profile";
                     break;
+                case "wallet":
+                    thisType = "gold";
+                    model = "profile";
+                    break;
+                // Health
+                case "health":
+                    model = thisType;
+                    break;
+                // Inventory //FIXME: The $pull/$push operators aren't universally unique to this
+                case "items":
+                case "consumables":
+                case "powers":
+                case "$pull":
+                case "$push":
+                    model = "inventory";
+                    break;
+                // XP
+                case "xp":
+                    model = "levels";
+                    break;
+                // XPBoost
+                case "xpboost":
+                    model = thisType;
+                    break;
             }
             let pieces = await this.db_key(model)
             model = pieces[0]
             if (model != "") {
-                let operation = {}
-                operation[thisType] = thisAmount
-                let payload = {}
-                payload[method] = operation
-                await this[model].findOneAndUpdate(
-                    { userID: userID },
-                    payload
-                )
+                if (thisType == "xp") {
+                    //FIXME: Only supports one XP manip
+                    if (thisAmount > 0) {
+                        return await this[model].appendXp(userID, 1, thisAmount)
+                    }
+                } else {
+                    let operation = {}
+                    operation[thisType] = thisAmount
+                    let payload = {}
+                    payload[method] = operation
+                    await this[model].findOneAndUpdate(
+                        { userID: userID },
+                        payload
+                    )
+                }
             }
         }
     }

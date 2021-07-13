@@ -20,14 +20,7 @@ module.exports = class DailyCommand extends GameCommand {
             let [minReward, maxReward] = [30000, 30000]
             const randomNumber = Math.floor(Math.random() * (maxReward - minReward)) + minReward;
 
-            let inc = {
-                gold: randomNumber
-            }
-            await this.profileModel.findOneAndUpdate({
-                userID: loaded.id,
-            }, {
-                $inc: inc,
-            });
+            await this.db_transform(loaded.id, "gold", randomNumber)
 
             this.props.description = `*<@${loaded.id}> has checked into the Lair for the Day and received...*`
             this.props.fields = [

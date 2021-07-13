@@ -81,7 +81,7 @@ module.exports = class RobCommand extends GameCommand {
                 let hasLeveledUP = false
 
                 if (final === 'Success') {
-                    hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
+                    hasLeveledUP = await this.db_transform(message.author.id, "xp", randomXP);
 
                     if (targetmoney.gold < amount) {
                         amount = targetmoney.gold
@@ -102,23 +102,13 @@ module.exports = class RobCommand extends GameCommand {
                     ]
 
                     // Add $minSteal to User
-                    let inc = { gold: amount }
-                    await this.profileModel.findOneAndUpdate({
-                        userID: user.id
-                    }, {
-                        $inc: inc
-                    });
+                    await this.db_transform(user.id, "gold", amount)
 
                     // Remove $minSteal from Target
-                    inc = { gold: -amount }
-                    await this.profileModel.findOneAndUpdate({
-                        userID: target.id
-                    }, {
-                        $inc: inc
-                    });
+                    await this.db_transform(target.id, "gold", -amount)
 
                 } else if (final === 'Failed') {
-                    hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
+                    hasLeveledUP = await this.db_transform(message.author.id, "xp", randomXP);
 
                     this.props.description = [
                         `<@${user.id}> tried to rob <@${target.id}>. You realise they are poor.`,
@@ -133,7 +123,7 @@ module.exports = class RobCommand extends GameCommand {
                     ]
 
                 } else if (final === 'Paid') {
-                    hasLeveledUP = await this.Levels.appendXp(message.author.id, 1, randomXP);
+                    hasLeveledUP = await this.db_transform(message.author.id, "xp", randomXP);
 
                     this.props.description = [
                         `<@${user.id}> tried to rob <@${target.id}>. You were caught and instead <@${target.id}> stole your gun and robbed you of **${this.emojis.gold}${amount}**.`,
@@ -155,31 +145,16 @@ module.exports = class RobCommand extends GameCommand {
                     ]
 
                     // Add $minSteal to Target
-                    let inc = { gold: amount }
-                    await this.profileModel.findOneAndUpdate({
-                        userID: target.id
-                    }, {
-                        $inc: inc
-                    });
+                    await this.db_transform(target.id, "gold", amount)
 
                     // Remove $minSteal from User
-                    inc = { gold: -amount }
-                    await this.profileModel.findOneAndUpdate({
-                        userID: user.id
-                    }, {
-                        $inc: inc
-                    });
+                    await this.db_transform(user.id, "gold", -amount)
                 }
 
                 if (hasLeveledUP) {
                     const user = await this.Levels.fetch(message.author.id, 1);
                     const target = message.author
-                    let inc = { gold: 1000, minions: 1 }
-                    await this.profileModel.findOneAndUpdate({
-                        userID: target.id,
-                    }, {
-                        $inc: inc
-                    });
+                    await this.db_transform(target.id, inc)
                     this.props.footer.msg = [
                         `${message.author.username} You just Advanced to Level ${user.level}!`,
                         `You have gained: ${this.emojis.gold}${inc.gold}, ${this.emojis.minions}${inc.minions}`

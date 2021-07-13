@@ -23,16 +23,9 @@ module.exports = class BegCommand extends GameCommand {
             let [minXP, maxXP] = [15, 50]
             const randomXP = Math.floor(Math.random() * (maxXP - minXP)) + minXP;
 
-            let inc = {
-                gold: randomNumber
-            }
-            await this.profileModel.findOneAndUpdate({
-                userID: loaded.id,
-            }, {
-                $inc: inc,
-            });
+            await this.db_transform(loaded.id, "gold", randomNumber)
 
-            const hasLeveledUP = await this.Levels.appendXp(loaded.id, 1, randomXP);
+            const hasLeveledUP = await this.db_transform(loaded.id, "xp", randomXP)
 
             if (hasLeveledUP) {
 
@@ -43,11 +36,7 @@ module.exports = class BegCommand extends GameCommand {
                     gold: gainedmoney,
                     minions: gainedminions
                 }
-                await this.profileModel.findOneAndUpdate({
-                    userID: loaded.id,
-                }, {
-                    $inc: inc,
-                });
+                await this.db_transform(loaded.id, inc)
 
                 let msg = [
                     `You just Advanced to Level ${levelData.level.toLocaleString("en-AU")}!`,
