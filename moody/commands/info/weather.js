@@ -27,7 +27,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
             degreeType: degreeType
         }, await function(error, result) {
             if(error || !args[0] || result === undefined || result.length === 0) {
-                VillainsCommand.error = true //FIXME: Error of Undefined
+                props.error = true
                 props.caption.text = "Error"
                 props.color = "RED"
                 if(error) {
