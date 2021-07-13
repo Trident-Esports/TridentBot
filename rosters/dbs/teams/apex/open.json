@@ -7,8 +7,7 @@
   "members": {
     "manager": {
       "title": "Manager",
-      "users": [
-      ]
+      "users": []
     },
     "main": {
       "title": "Main",

@@ -17,8 +17,7 @@
     },
     "coach": {
       "title": "Coach",
-      "users": [
-      ]
+      "users": []
     },
     "main": {
       "title": "Main",
@@ -32,9 +31,7 @@
     },
     "sub": {
       "title": "Sub",
-      "users": [
-        "TBA"
-      ]
+      "users": []
     }
   }
 }
