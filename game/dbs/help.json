@@ -4,20 +4,24 @@
         "help": "View personal statistics.",
         "commands": {
             "balance": {
+                "syntax": "%% [<@mention>]",
                 "aliases": [ "bal" ],
                 "help": [ "Shows player's balance." ]
             },
             "buy": {
+                "syntax": "%% <item> [<amount=1>]",
                 "help": [ "Allows a player to buy items from the shop." ]
             },
             "daily": {
                 "help": [ "Recieve a daily gift." ]
             },
             "gamehelp": {
+                "syntax": "%% [<section>] [<subsection>]",
                 "aliases": [ "gh" ],
                 "help": [ "Brings up this menu." ]
             },
             "inventory": {
+                "syntax": "%% [<@mention>]",
                 "aliases": [ "i" ],
                 "help": [ "Checks users items." ]
             },
@@ -26,10 +30,12 @@
                 "help": [ "Shows the current top 10 players worldwide." ]
             },
             "level": {
+                "syntax": "%% [<@mention>]",
                 "aliases": [ "lvl" ],
                 "help": [ "Shows player's Level." ]
             },
             "profile": {
+                "syntax": "%% [<@mention>]",
                 "aliases": [ "pr", "acc" ],
                 "help": [ "Shows player's Profile." ]
             },
@@ -37,6 +43,7 @@
                 "help": [ "Allows a player to see what items are available to buy." ]
             },
             "use":{
+                "syntax": "%% <item> [<amount=1>]",
                 "help": [ "Allows a player to use an item they have in their inventory." ]
             }
         }
@@ -49,6 +56,7 @@
                 "help": [ "Begs for a random amount of money." ]
             },
             "deposit": {
+                "syntax": "%% <amount>",
                 "aliases": [ "dep" ],
                 "help": [ "Deposit gold to player's bank." ]
             },
@@ -60,6 +68,7 @@
                 "help": [ "Search 1 of 3 random locations for some gold." ]
             },
             "withdraw": {
+                "syntax": "%% <amount>",
                 "aliases": [ "wd", "with" ],
                 "help": [ "Withdraw gold from user's bank." ]
             }
@@ -70,11 +79,11 @@
         "help": "Battle other members.",
         "commands": {
             "fight": {
-                "syntax": "fight <@mention>",
+                "syntax": "%% <@mention>",
                 "help": [ "Fight another user for bragging rights and winnings of gold." ]
             },
             "rob": {
-                "syntax": "rob <@mention>",
+                "syntax": "%% <@mention> <amount>",
                 "help": [ "Robs another user for gold. Look out though this could backfire." ]
             }
         }
@@ -85,7 +94,7 @@
         "commands": {
             "coinflip": {
                 "aliases": [ "cf" ],
-                "syntax": "coinflip <amount>",
+                "syntax": "%% <amount>",
                 "help": [ "Gamble some gold on a coinflip." ]
             }
         }
