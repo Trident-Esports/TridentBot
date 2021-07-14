@@ -85,7 +85,7 @@ module.exports = class SearchCommand extends GameCommand {
                 this.props.footer.msg = [
                     `You just Advanced to Level ${user.level}!`,
                     `You have gained: ${this.emojis.gold}+${reward.gold} , ${this.emojis.minions}+${reward.minions}`
-                ].join(" · ")
+                ].join(" • ")
             }
 
             if (number <= success) {

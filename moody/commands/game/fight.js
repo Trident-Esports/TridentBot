@@ -26,7 +26,6 @@ module.exports = class FightCommand extends GameCommand {
         */
         let user = this.inputData.user
         let opponent = this.inputData.loaded
-        let props = {}
 
         this.numErrors = 0
         this.props.title.text = "🛡️⚔️ BATTLE ⚔️🛡️"
@@ -42,11 +41,11 @@ module.exports = class FightCommand extends GameCommand {
         const randomXP = Math.floor(Math.random() * 300) + 300;
 
         const Contestants = [
-            user.id,
-            opponent.id,
-        ];
+            user,
+            opponent
+        ]
 
-        const winnerID = Contestants.sort(() => Math.random() - Math.random()).slice(0, 1);
+        const winner = Contestants.sort(() => Math.random() - Math.random()).slice(0, 1)[0];
         let WinningsNUMBER = Math.floor(Math.random() * 1500) + 1200;
 
         const FILTER = (m) => {
@@ -74,45 +73,43 @@ module.exports = class FightCommand extends GameCommand {
         COLLECTOR.on("collect", async (m) => {
             if (m.content.startsWith(this.prefix)) {
                 this.error = true
-                props.error = true
                 this.numErrors += 1
-                props.description = 'You are already in a command. Duel Cancelled!'
+                this.props.description = 'You are already in a command. Duel Cancelled!'
             }
 
             if (m.content.toLowerCase() === 'no' || m.content.toLowerCase().startsWith('n')) {
                 this.error = true
-                props.error = true
                 this.numErrors += 1
-                props.description = 'The Duel was Cancelled!'
+                this.props.description = 'The Duel was Cancelled!'
             }
 
             if (!(this.error)) {
-                const hasLeveledUP = await this.db_transform(winnerID, "xp", randomXP);
+                const hasLeveledUP = await this.db_transform(winner.id, "xp", randomXP);
 
-                props.color = "#FF5000"
-                props.title = "WINNER WINNER CHICKEN DINNER"
-                props.description = [
-                    `<@${winnerID}> Won the Fight. Recieving ${this.emojis.gold}${WinningsNUMBER.toLocaleString("en-AU")} in Winnings!`,
-                    `<@${winnerID}> Earned ${this.emojis.xp}${randomXP} XP`
+                this.props.color = "#FF5000"
+                this.props.title = "WINNER WINNER CHICKEN DINNER"
+                this.props.description = [
+                    `<@${winner.id}> Won the Fight. Recieving ${this.emojis.gold}${WinningsNUMBER.toLocaleString("en-AU")} in Winnings!`,
+                    `<@${winner.id}> Earned ${this.emojis.xp}${randomXP} XP`
                 ]
 
                 if (m.content.toLowerCase() === 'yes' || m.content.toLowerCase().startsWith('y')) {
-                    await this.db_transform(winnerID, "gold", WinningsNUMBER)
+                    await this.db_transform(winner.id, "gold", WinningsNUMBER)
 
                     if (hasLeveledUP) {
-                        const levelData = await this.db_query(winnerID, "levels");
+                        const levelData = await this.db_query(winner.id, "levels");
                         let reward = {gold: 1000, minions: 1}
-                        await this.db_transform(winnerID, { gold: reward.gold, minions: reward.minions })
+                        await this.db_transform(winner.id, { gold: reward.gold, minions: reward.minions })
 
-                        props.footer.msg = [
-                            `<@${winnerID}> You just Advanced to Level ${levelData.level}!`,
+                        this.props.footer.msg = [
+                            `${winner.username}: You just Advanced to Level ${levelData.level}!`,
                             `You have gained: ${this.emojis.gold}${reward.gold}, ${this.emojis.minions}${reward.minions}`
-                        ].join(" · ")
+                        ].join(" • ")
                     }
                 }
             }
 
-            let embed = new VillainsEmbed(props)
+            let embed = new VillainsEmbed(this.props)
             this.send(message, embed);
             this.null = true
         });
@@ -121,10 +118,9 @@ module.exports = class FightCommand extends GameCommand {
             if (collected.size == 0) {
                 //cooldown = 0
                 this.error = true
-                props.error = true
-                props.description = `Nobody has answered. Duel Cancelled!`
+                this.props.description = `Nobody has answered. Duel Cancelled!`
 
-                let embed = new VillainsEmbed(props)
+                let embed = new VillainsEmbed(this.props)
                 this.send(message, embed);
                 this.null = true
             }

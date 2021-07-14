@@ -203,9 +203,11 @@ module.exports = class VillainsCommand extends BaseCommand {
 
             // If Loaded is a Bot
             // If Bot has been specified as a Valid source
+            // Get Bot whitelist
+            let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json","utf8"))
             if (["default","required","optional"].indexOf(this.flags.bot) > -1) {
                 // Do... something?
-            } else if (loaded?.bot && loaded.bot) {
+            } else if (loaded?.bot && loaded.bot && (USERIDS?.botWhite.indexOf(loaded.id) == -1)) {
                 // If Bot has been specified as in Invalid source
                 // Set Invalid because Bot
                 foundHandles.invalid = "bot"
