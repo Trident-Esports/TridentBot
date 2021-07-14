@@ -209,7 +209,7 @@ module.exports = async (Discord, client, message) => {
                 Seconds: Math.floor(time_left % 60)
             };
             let [msg, repl] = [
-                `Please wait {0}{1}{2}{3}before using **${command.name}**.`,
+                `Please wait {0}{1}{2}{3}before using **${prefix}${command.name}**.`,
                 [
                     time_parts.Days ? `${time_parts.Days}d ` : "",
                     time_parts.Hours ? `${time_parts.Hours}h ` : "",
