@@ -164,7 +164,7 @@ module.exports = class RosterCommand extends VillainsCommand {
                             }
                         }
                         if (userURL != "") {
-                            userSTR += '[' + name + "](" + userURL + ')'
+                            userSTR += `[${name}](${userURL} '${userURL}')`
                         } else {
                             userSTR += name
                         }

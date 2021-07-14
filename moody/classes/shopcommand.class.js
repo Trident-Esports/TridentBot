@@ -72,7 +72,7 @@ module.exports = class ShopCommand extends GameCommand {
                     }
                 }
 
-                var gold = profileData.gold //Players gold
+                let gold = profileData.gold //Players gold
 
                 let re = /^([a-z ]*)([\d]*)$/
                 let selected_item = ""

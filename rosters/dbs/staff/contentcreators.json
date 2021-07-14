@@ -7,7 +7,9 @@
   "members": {
     "manager": {
       "title": "Manager",
-      "users": []
+      "users": [
+        "skyanite"
+      ]
     },
     "creator": {
       "title": "Content Creator",

@@ -37,7 +37,7 @@ module.exports = class SearchCommand extends GameCommand {
 
         const RANDOM_NUMBER = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
         const RANDOM_MINIONS = Math.floor(Math.random() * 10) + 1;
-        var Health_Loss = Math.floor(Math.random() * 10) + 1;
+        let Health_Loss = Math.floor(Math.random() * 10) + 1;
 
         const FILTER = (m) => {
             return chosenLocations.some((answer) => answer.split(" ").pop().toLowerCase() === m.content.split(" ").pop().toLowerCase()) && m.author.id === loaded.id;
@@ -60,11 +60,11 @@ module.exports = class SearchCommand extends GameCommand {
 
         // Got a response for Location to Search
         COLLECTOR.on("collect", async (m) => {
-            var number = Math.round(Math.random() * 100);
+            let number = Math.round(Math.random() * 100);
 
-            var success = 80;
-            var fail = 95;
-            var special = 100;
+            let success = 80;
+            let fail = 95;
+            let special = 100;
 
             let location = m.content.split(" ").map(x => x.charAt(0).toUpperCase() + x.slice(1))
 

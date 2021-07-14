@@ -1,10 +1,9 @@
 const AdminCommand = require('../../classes/admincommand.class');
 
 function ksort(obj){
-  var keys = Object.keys(obj).sort()
-    , sortedObj = {};
+  let keys = Object.keys(obj).sort(), sortedObj = {};
 
-  for(var i in keys) {
+  for(let i in keys) {
     sortedObj[keys[i]] = obj[keys[i]];
   }
 

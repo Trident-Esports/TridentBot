@@ -95,11 +95,11 @@ module.exports = class CoinFlipCommand extends GameCommand {
 
                     COLLECTOR.on("collect", async (m) => {
 
-                        var number = Math.round(Math.random() * 100);
+                        let number = Math.round(Math.random() * 100);
 
-                        var Heads = 50;
-                        var Tails = 50;
-                        var Side = 2;
+                        let Heads = 50;
+                        let Tails = 50;
+                        let Side = 2;
 
                         try {
                             let gotHeads = number <= Heads && m.content.charAt(0).toLowerCase() === 'h';

@@ -2,8 +2,8 @@ const GameCommand = require('../../classes/gamecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
 function ordinal(n) {
-  var s = ["th", "st", "nd", "rd"];
-  var v = n%100;
+  let s = ["th", "st", "nd", "rd"];
+  let v = n%100;
   return n + (s[(v-20)%10] || s[v] || s[0]);
 }
 module.exports = class LeaderboardCommand extends GameCommand {

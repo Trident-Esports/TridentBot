@@ -10,6 +10,13 @@ const fs = require('fs'); // File System
 
 const cooldowns = new Map();
 
+function formatUnicorn(str, args) {
+  for (key in args) {
+    str = str.replace(new RegExp("\\{" + key + "\\}", "gi"), args[key]);
+  }
+  return str;
+};
+
 module.exports = async (Discord, client, message) => {
 
     const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
@@ -195,18 +202,22 @@ module.exports = async (Discord, client, message) => {
         if (current_time < expiration_time) {
             const time_left = (expiration_time - current_time) / 1000;
 
-            var Days = Math.floor(time_left / 86400); // Find the Days
-            var Hours = Math.floor(time_left / 3600) % 24; //Finds the Hours
-            var Minutes = Math.floor(time_left / 60) % 60; //Finds the minutes
-            var Seconds = Math.floor(time_left % 60); //Finds the remaining seconds.
-
-            if (!Days && !Hours && !Minutes) return message.reply(`Please wait ${Seconds} more seconds before using **${command.name}.**`);
-            // if (!Hours) return message.reply(`Please wait ${Minutes} more minutes and ${Seconds} more seconds before using **${command.name}**.`);
-            if (!Hours && !Days)
-                return message.reply(`Please wait ${Minutes}m ${Seconds}s before using **${command.name}**.`);
-
-            else (!Days)
-            return message.reply(`Please wait ${Hours}h ${Minutes}m ${Seconds}s before using **${command.name}**.`);
+            let time_parts = {
+                Days: Math.floor(time_left / (60*60*24)),
+                Hours: Math.floor(time_left / (60*60)) % 24,
+                Minutes: Math.floor(time_left / 60) % 60,
+                Seconds: Math.floor(time_left % 60)
+            };
+            let [msg, repl] = [
+                `Please wait {0}{1}{2}{3}before using **${command.name}**.`,
+                [
+                    time_parts.Days ? `${time_parts.Days}d ` : "",
+                    time_parts.Hours ? `${time_parts.Hours}h ` : "",
+                    time_parts.Minutes ? `${time_parts.Minutes}m ` : "",
+                    time_parts.Seconds ? `${time_parts.Seconds}s ` : ""
+                ]
+            ];
+            return message.reply(formatUnicorn(msg, repl));
         }
     }
 
