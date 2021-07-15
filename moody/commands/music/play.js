@@ -1,5 +1,6 @@
 const VillainsCommand = require('../../classes/vcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
+const BotActivityCommand = require('../mod/botactivity');
 
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
@@ -63,12 +64,13 @@ module.exports = class PlayCommand extends VillainsCommand {
     }
 
     // Song Player
-    async songPlayer(message, song) {
+    async songPlayer(client, message, song) {
         this.song_queue = this.queue.get(message.guild.id);
 
         if (!song) {
             this.error = true;
             this.props.description = "No songs left in queue. Bot leaving voice channel.";
+            let ba = new BotActivityCommand().run(client, message, [])
             // Nuke Bot
             this.song_queue.voice_channel.leave();
             this.queue.delete(message.guild.id);
@@ -87,16 +89,17 @@ module.exports = class PlayCommand extends VillainsCommand {
         })
             .on('finish', () => {
                 this.song_queue.songs.shift();
-                this.songPlayer(message, this.song_queue.songs[0]);
+                this.songPlayer(client, message, this.song_queue.songs[0]);
             }); {
             this.props.description = `Now playing **${song.title}** enjoy`
+            let ba = new BotActivityCommand().run(client, message, [ "listening", song.title ])
             this.send(message, new VillainsEmbed(this.props))
             this.null = true
         }
     }
 
     // Locate, queue, play song
-    async playSong(message) {
+    async playSong(client, message) {
         this.callBot(message)
 
         if (!(this.error)) {
@@ -176,7 +179,7 @@ module.exports = class PlayCommand extends VillainsCommand {
 
                     try {
                         queue_constructor.connection = await this.callBot(message);
-                        await this.songPlayer(message, queue_constructor.songs[0]);
+                        await this.songPlayer(client, message, queue_constructor.songs[0]);
                     } catch (err) {
                         this.queue.delete(message.guild.id);
                         this.error = true
@@ -238,7 +241,7 @@ module.exports = class PlayCommand extends VillainsCommand {
 
         if (!(this.error)) {
             if (["play","p"].indexOf(cmd) > -1) {
-                this.playSong(message)
+                this.playSong(client, message)
             } else if (cmd == "skip") {
                 this.skipSong(message)
             } else if (cmd == "stop" || cmd == "clearqueue") {
