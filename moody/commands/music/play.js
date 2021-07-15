@@ -70,7 +70,17 @@ module.exports = class PlayCommand extends VillainsCommand {
         if (!song) {
             this.error = true;
             this.props.description = "No songs left in queue. Bot leaving voice channel.";
-            let ba = new BotActivityCommand().run(client, message, [])
+
+            let activityType = ""
+            if (client?.user?.presence?.activities) {
+                if (client.user.presence.activities.length > 0) {
+                    activityType = client.user.presence.activities[0].type.toLowerCase()
+                }
+            }
+            if (activityType != "streaming") {
+                let ba = new BotActivityCommand().run(client, message, [])
+            }
+
             // Nuke Bot
             this.song_queue.voice_channel.leave();
             this.queue.delete(message.guild.id);
@@ -92,7 +102,17 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.songPlayer(client, message, this.song_queue.songs[0]);
             }); {
             this.props.description = `Now playing **${song.title}** enjoy`
-            let ba = new BotActivityCommand().run(client, message, [ "listening", song.title ])
+
+            let activityType = ""
+            if (client?.user?.presence?.activities) {
+                if (client.user.presence.activities.length > 0) {
+                    activityType = client.user.presence.activities[0].type.toLowerCase()
+                }
+            }
+            if (activityType != "streaming") {
+                let ba = new BotActivityCommand().run(client, message, [ "listening", song.title ])
+            }
+
             this.send(message, new VillainsEmbed(this.props))
             this.null = true
         }
