@@ -311,9 +311,9 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
     }
 
-    async build(client, message) {
+    async build(client, message, cmd) {
         if(!(this.error)) {
-            await this.action(client, message)
+            await this.action(client, message, cmd)
         }
     }
 
@@ -356,10 +356,10 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
     }
 
-    async run(client, message, args) {
+    async run(client, message, args, cmd) {
         await this.processArgs(message, args, this.flags)
 
-        await this.build(client, message)
+        await this.build(client, message, cmd)
 
         if (this.error) {
             if (this.props?.title) {
