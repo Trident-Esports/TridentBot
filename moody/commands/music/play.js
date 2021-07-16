@@ -11,25 +11,34 @@ const { getPreview } = require("spotify-url-info");
 // Sonic CD End           | .p <https://www.youtube.com/watch?v=oGiDJAjJ5Iw>
 // Let the Bad Times Roll | .p <https://open.spotify.com/track/6IOL5tW3yRKKKpPNVCVmzU?si=5561f47153294b2a>
 
+const queue = new Map()
 module.exports = class PlayCommand extends VillainsCommand {
     constructor() {
         let comprops = {
-            name: 'play',
-            aliases: ['p','stop','skip','clearqueue','callbot','nukebot'],
+            name: 'play',             // songSearch
+            aliases: [
+                'callbot',            // callBot
+                'p',                  // songSearch
+                'skip',               // skipSong
+                'currentsong',        // showQueue(1)
+                'showqueue',          // showQueue
+                'stop','clearqueue',  // clearQueue
+                'nukebot'             // nukeBot
+            ],
             category: 'music',
             description: 'Manages music',
         }
         super(comprops, { caption: { text: "Villains Music" } })
-        this.queue = new Map()
+        this.connection = null
         this.song_queue = null
         this.server_queue = null
         this.voice_channel = null
     }
 
     async action(client, message, cmd) {
-        // Call Bot
-        let callBot = async (message) => {
-            console.log("Music: Calling Bot")
+        // Pre-Flight Checks
+        let preFlightChecks = async (message) => {
+            console.log("Music: Pre-Flight Checks")
             // Get voice channel that caller is in
             this.voice_channel = message.member.voice.channel
             if (!this.voice_channel) {
@@ -38,13 +47,6 @@ module.exports = class PlayCommand extends VillainsCommand {
             }
 
             if (!(this.error)) {
-                const connection = await this.voice_channel.join();
-
-                if(!connection) {
-                    this.error = true
-                    this.props.description = "Bot couldn't join voice channel"
-                }
-
                 if (!(this.error)) {
                     // Get Bot perms for channel
                     console.log("Music: Checking Bot's Perms")
@@ -53,29 +55,41 @@ module.exports = class PlayCommand extends VillainsCommand {
                         this.error = true
                         this.props.description = "Bot doesn't have access to the voice channel that you're in"
                     }
-                    return connection
+
+                    if(!(this.server_queue)) {
+                        this.server_queue = queue.get(message.guild.id)
+                    }
                 }
             }
-            return null
+        }
+
+        // Call Bot
+        let callBot = async (message) => {
+            console.log("Music: Calling Bot")
+            this.connection = await this.voice_channel.join();
+
+            if(!this.connection) {
+                this.error = true
+                this.props.description = "Bot couldn't join voice channel"
+            }
         }
 
         // Nuke Bot
         let nukeBot = async (message) => {
             console.log("Music: Nuking Bot")
-            this.song_queue.voice_channel.leave();
-            this.queue.delete(message.guild.id);
+            await this.voice_channel.leave();
+            queue.delete(message.guild.id);
         }
 
         // Play/Queue Song
         let songPlayer = async (client, message, song) => {
-            console.log("Music: Play Song")
-
             if (!(this.song_queue)) {
-              this.song_queue = this.queue.get(message.guild.id);
-              console.log("Music: Getting Song Queue:",this?.song_queue?.songs ? this.song_queue.songs : "None");
+              this.song_queue = queue.get(message.guild.id);
+              console.log("Music: Setting Song Queue:",this?.song_queue?.songs ? this.song_queue.songs : "None");
             }
 
             if (!song) {
+                console.log("Music: No Songs left")
                 this.error = true;
                 this.props.description = "No songs left in queue. Bot leaving voice channel.";
 
@@ -96,6 +110,8 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.null = true
                 return;
             }
+
+            console.log("Music: Play Song")
 
             const stream = ytdl(song.url, {
                 filter: 'audioonly'
@@ -129,11 +145,10 @@ module.exports = class PlayCommand extends VillainsCommand {
         }
 
         // Search for Song
-        let playSong = async (client, message) => {
+        let songSearch = async (client, message) => {
             console.log("Music: Search for Song")
 
             if (!(this.error)) {
-                // Get queue
                 let song = {};
 
                 let inputURL = this?.inputData?.args.join(" ").trim().replace("<","").replace(">","")
@@ -194,6 +209,14 @@ module.exports = class PlayCommand extends VillainsCommand {
 
                 if (!(this.error)) {
                     // If there's no queue
+                    if (!(this.server_queue)) {
+                      if(this.song_queue) {
+                          this.server_queue = this.song_queue;
+                      } else {
+                          this.server_queue = queue.get(message.guild.id);
+                      }
+                      console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs : "None");
+                    }
                     if (!this.server_queue) {
                         // Make one
                         const queue_constructor = {
@@ -203,14 +226,15 @@ module.exports = class PlayCommand extends VillainsCommand {
                             songs: []
                         }
 
-                        this.queue.set(message.guild.id, queue_constructor);
+                        queue.set(message.guild.id, queue_constructor);
                         queue_constructor.songs.push(song);
 
                         try {
-                            queue_constructor.connection = await callBot(message);
+                            await callBot(message);
+                            queue_constructor.connection = this.connection;
                             await songPlayer(client, message, queue_constructor.songs[0]);
                         } catch (err) {
-                            this.queue.delete(message.guild.id);
+                            queue.delete(message.guild.id);
                             this.error = true
                             this.props.description = "There was an Error connecting"
                             throw err;
@@ -218,6 +242,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                     } else {
                         // We've got a queue, add to it
                         this.server_queue.songs.push(song); {
+                            console.log("Music: Queueing Song")
                             this.props.description = `**${song.title}** added to queue`;
                             this.send(message, new VillainsEmbed(this.props));
                             this.null = true
@@ -241,6 +266,34 @@ module.exports = class PlayCommand extends VillainsCommand {
             } else {
                 this.props.description = "Skipping song";
                 this.server_queue.connection.dispatcher.end();
+                this.send(message, new VillainsEmbed(this.props));
+                this.null = true;
+            }
+        }
+
+        // Show Queue
+        let showQueue = async (message, amount) => {
+            console.log("Music: Showing Queue")
+            if (!message.member.voice.channel) {
+                this.error = true
+                this.props.description = "You need to be in a voice channel"
+            }
+
+            if (!this.server_queue) {
+                this.error = true
+                this.props.description = "There are no songs in the queue"
+            } else {
+                this.props.description = []
+                let list = this.server_queue.songs
+                if (amount == 1) {
+                    list = [ this.server_queue.songs[0] ]
+                }
+                console.log(list)
+                for (let song of list) {
+                    if (song) {
+                        this.props.description.push(song.title)
+                    }
+                }
                 this.send(message, new VillainsEmbed(this.props));
                 this.null = true;
             }
@@ -272,24 +325,22 @@ module.exports = class PlayCommand extends VillainsCommand {
         }
 
         if (!(this.error)) {
-            await callBot(message)
-            if (!(this.server_queue)) {
-              // this.server_queue = this.queue.get(message.guild.id);
-              this.server_queue = this.song_queue
-              console.log("Music: Getting Server Queue:",this?.server_queue ? this.server_queue : "None")
-            }
+            await preFlightChecks(message)
             if (["play","p"].indexOf(cmd) > -1) {
-                await playSong(client, message)
+                await songSearch(client, message)
             } else if (cmd == "skip") {
                 await skipSong(message)
+            } else if (cmd == "showqueue" || cmd == "currentsong") {
+                await showQueue(message, cmd == "currentsong" ? 1 : -1)
             } else if (cmd == "stop" || cmd == "clearqueue") {
                 await clearQueue(message)
             } else if (cmd == "callbot") {
-                // do nothing
+                await callBot(message)
             } else if (cmd == "nukebot") {
                 await nukeBot(message)
             }
             if (!(this.error)) {
+                message.delete()
                 this.null = true
             }
         }
