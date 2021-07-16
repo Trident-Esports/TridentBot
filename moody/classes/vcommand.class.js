@@ -36,7 +36,7 @@ module.exports = class VillainsCommand extends BaseCommand {
     constructor(comprops = {}, props = {}) {
         super(comprops)
 
-        this.props = props
+        this.props = {...props}
 
         if (!(this?.props?.full)) {
             this.props.full = true
@@ -68,6 +68,10 @@ module.exports = class VillainsCommand extends BaseCommand {
             if (Object.keys(this.flags).indexOf(player) == -1) {
                 this.flags[player] = setting
             }
+        }
+
+        if (this?.props?.null && this.props.null) {
+            this.null = true
         }
 
         const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
