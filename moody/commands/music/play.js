@@ -24,7 +24,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 'p',                  // songSearch
                 'skip',               // skipSong
                 'currentsong',        // showQueue(1)
-                'showqueue',          // showQueue
+                'showqueue', 'q',     // showQueue
                 'stop','clearqueue',  // clearQueue
                 'nukebot'             // nukeBot
             ],
@@ -307,7 +307,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.error = true
                 this.props.description = "There are no songs in the queue."
             } else {
-                this.props.description = []
+                this.thisqueue = []
                 let list = this.server_queue.songs
                 if (amount == 1) {
                     list = [ this.server_queue.songs[0] ]
@@ -315,9 +315,11 @@ module.exports = class PlayCommand extends VillainsCommand {
                 console.log(list)
                 for (let song of list) {
                     if (song) {
-                        this.props.description.push(song.title)
+                        this.thisqueue.push(song.title)
                     }
                 }
+                this.props.description = this.thisqueue.join("\n\n")
+
                 this.send(message, new VillainsEmbed(this.props));
                 this.null = true;
             }
@@ -358,7 +360,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 } else if (cmd == "skip") {
                     // Skip
                     await skipSong(message)
-                } else if (cmd == "showqueue" || cmd == "currentsong") {
+                } else if (cmd == "showqueue" || cmd === "q" || cmd == "currentsong") {
                     // Show Queue/Current Song
                     await showQueue(message, cmd == "currentsong" ? 1 : -1)
                 } else if (cmd == "stop" || cmd == "clearqueue") {
