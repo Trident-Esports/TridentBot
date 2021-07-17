@@ -2,6 +2,7 @@ const VillainsCommand = require('../../classes/vcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 const BotActivityCommand = require('../mod/botactivity');
 
+//TODO: Figure out how to pipe into 'youtube-dl-exec' module
 const ytdl = require('ytdl-core');
 const ytSearch = require('yt-search');
 
