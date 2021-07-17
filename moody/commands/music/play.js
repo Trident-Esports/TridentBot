@@ -4,6 +4,7 @@ const BotActivityCommand = require('../mod/botactivity');
 
 //TODO: Figure out how to pipe into 'youtube-dl-exec' module
 const ytdl = require('ytdl-core');
+const ytpl = require('ytpl');
 const ytSearch = require('yt-search');
 
 const { getPreview } = require("spotify-url-info");
@@ -147,13 +148,19 @@ module.exports = class PlayCommand extends VillainsCommand {
         }
 
         // Search for Song
-        let songSearch = async (client, message) => {
+        let songSearch = async (client, message, inputURL) => {
             console.log("Music: Search for Song")
 
             if (!(this.error)) {
                 let song = {};
 
-                let inputURL = this?.inputData?.args.join(" ").trim().replace("<","").replace(">","")
+                let silent = false;
+
+                if (!inputURL) {
+                    inputURL = this?.inputData?.args.join(" ").trim().replace("<","").replace(">","")
+                } else {
+                    silent = true;
+                }
 
                 // Validate URL as YT URL
                 if (ytdl.validateURL(inputURL)) {
@@ -162,6 +169,22 @@ module.exports = class PlayCommand extends VillainsCommand {
                         title: songInfo.videoDetails.title,
                         url: songInfo.videoDetails.video_url
                     };
+                } else if (inputURL.includes('youtu') && inputURL.includes('be') && inputURL.includes('playlist')) {
+                    const playlistInfo = await ytpl(inputURL);
+
+                    this.props.description = `Playlist **${playlistInfo.title}** added to queue.`;
+                    this.send(message, new VillainsEmbed(this.props));
+                    this.null = true;
+
+                    let success = false;
+                    for (let [, songInfo] of Object.entries(playlistInfo.items)) {
+                        if (songInfo?.url && songInfo.url != "") {
+                            success = await songSearch(client, message, songInfo.shortUrl) || false;
+                        }
+                    }
+                    if (!success) {
+                        this.null = true;
+                    }
                 } else if (inputURL.includes('spotify')) {
                     // Check if Spotify
                     const spotifyTrackInfo = await getPreview(inputURL);
@@ -245,13 +268,17 @@ module.exports = class PlayCommand extends VillainsCommand {
                         // We've got a queue, add to it
                         this.server_queue.songs.push(song); {
                             console.log("Music: Queueing Song")
-                            this.props.description = `**${song.title}** added to queue`;
-                            this.send(message, new VillainsEmbed(this.props));
+                            if (!silent && song?.title) {
+                                this.props.description = `Song **${song.title}** added to queue.`;
+                                this.send(message, new VillainsEmbed(this.props));
+                            }
                             this.null = true
+                            return true
                         }
                     }
                 }
             }
+            return false
         }
 
         // Skip Song
