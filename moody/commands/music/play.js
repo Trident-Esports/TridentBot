@@ -7,9 +7,10 @@ const ytSearch = require('yt-search');
 
 const { getPreview } = require("spotify-url-info");
 
-// Sonic CD Open          | .p <https://www.youtube.com/watch?v=EYW7-hNXZlM>
-// Sonic CD End           | .p <https://www.youtube.com/watch?v=oGiDJAjJ5Iw>
-// Let the Bad Times Roll | .p <https://open.spotify.com/track/6IOL5tW3yRKKKpPNVCVmzU?si=5561f47153294b2a>
+// Sonic CD Open            | .p <https://www.youtube.com/watch?v=EYW7-hNXZlM>
+// Sonic CD End             | .p <https://www.youtube.com/watch?v=oGiDJAjJ5Iw>
+// Let the Bad Times Roll   | .p <https://open.spotify.com/track/6IOL5tW3yRKKKpPNVCVmzU?si=5561f47153294b2a>
+// Kingdom Hearts Playlist  | .p <https://www.youtube.com/playlist?list=PLrk5ekL2Y-u9ERXjjoDXD57ajaXFNzSYy>
 
 const queue = new Map()
 module.exports = class PlayCommand extends VillainsCommand {
@@ -43,7 +44,7 @@ module.exports = class PlayCommand extends VillainsCommand {
             this.voice_channel = message.member.voice.channel
             if (!this.voice_channel) {
                 this.error = true
-                this.props.description = 'You need to be in a voice channel to play some music'
+                this.props.description = 'You need to be connected to a voice channel to play music.'
             }
 
             if (!(this.error)) {
@@ -53,7 +54,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                     const permissions = this.voice_channel.permissionsFor(message.client.user);
                     if ((!(permissions.has('CONNECT' || 'SPEAK')))) {
                         this.error = true
-                        this.props.description = "Bot doesn't have access to the voice channel that you're in"
+                        this.props.description = `<@${client.user.id}> doesn't have permission to join the voice channel that you're in.`
                     }
 
                     if(!(this.server_queue)) {
@@ -70,7 +71,7 @@ module.exports = class PlayCommand extends VillainsCommand {
 
             if(!this.connection) {
                 this.error = true
-                this.props.description = "Bot couldn't join voice channel"
+                this.props.description = "Bot couldn't join voice channel."
             }
         }
 
@@ -91,7 +92,7 @@ module.exports = class PlayCommand extends VillainsCommand {
             if (!song) {
                 console.log("Music: No Songs left")
                 this.error = true;
-                this.props.description = "No songs left in queue. Bot leaving voice channel.";
+                this.props.description = `No songs left in queue. <@${client.user.id}> leaving voice channel.`;
 
                 let activityType = ""
                 if (client?.user?.presence?.activities) {
@@ -126,7 +127,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                     this.song_queue.songs.shift();
                     songPlayer(client, message, this.song_queue.songs[0]);
                 }); {
-                this.props.description = `Now playing **${song.title}** enjoy`
+                this.props.description = `Now playing **${song.title}**, enjoy!`
 
                 let activityType = ""
                 if (client?.user?.presence?.activities) {
@@ -179,7 +180,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                         };
                     } else {
                         this.error = true
-                        this.props.description = "Error finding song."
+                        this.props.description = "Couldn't find Spotify song on YouTube."
                     }
                 } else {
                     // Not YT nor Spotify
@@ -257,12 +258,12 @@ module.exports = class PlayCommand extends VillainsCommand {
             console.log("Music: Skipping Song")
             if (!message.member.voice.channel) {
                 this.error = true
-                this.props.description = "You need to be in a voice channel"
+                this.props.description = "You need to be connected to a voice channel to skip songs."
             }
 
             if (!this.server_queue) {
                 this.error = true
-                this.props.description = "There are no songs in the queue"
+                this.props.description = "There are no songs in the queue."
             } else {
                 this.props.description = "Skipping song";
                 this.server_queue.connection.dispatcher.end();
@@ -274,14 +275,9 @@ module.exports = class PlayCommand extends VillainsCommand {
         // Show Queue
         let showQueue = async (message, amount) => {
             console.log("Music: Showing Queue")
-            if (!message.member.voice.channel) {
-                this.error = true
-                this.props.description = "You need to be in a voice channel"
-            }
-
             if (!this.server_queue) {
                 this.error = true
-                this.props.description = "There are no songs in the queue"
+                this.props.description = "There are no songs in the queue."
             } else {
                 this.props.description = []
                 let list = this.server_queue.songs
@@ -304,14 +300,14 @@ module.exports = class PlayCommand extends VillainsCommand {
             console.log("Music: Clearing Queue")
             if (!message.member.voice.channel) {
                 this.error = true
-                this.props.description = "You need to be in a voice channel"
+                this.props.description = "You need to be connected to a voice channel to clear the queue."
             }
 
             if (!this.server_queue) {
                 this.error = true
-                this.props.description = "There are no songs in the queue"
+                this.props.description = "There are no songs in the queue."
             } else {
-                this.props.description = "Dumping queue";
+                this.props.description = "Dumping the queue.";
                 this.server_queue.songs = [];
                 this.server_queue.connection.dispatcher.end();
                 this.send(message, new VillainsEmbed(this.props));
@@ -326,22 +322,31 @@ module.exports = class PlayCommand extends VillainsCommand {
 
         if (!(this.error)) {
             await preFlightChecks(message)
-            if (["play","p"].indexOf(cmd) > -1) {
-                await songSearch(client, message)
-            } else if (cmd == "skip") {
-                await skipSong(message)
-            } else if (cmd == "showqueue" || cmd == "currentsong") {
-                await showQueue(message, cmd == "currentsong" ? 1 : -1)
-            } else if (cmd == "stop" || cmd == "clearqueue") {
-                await clearQueue(message)
-            } else if (cmd == "callbot") {
-                await callBot(message)
-            } else if (cmd == "nukebot") {
-                await nukeBot(message)
-            }
-            if (!(this.error)) {
-                message.delete()
-                this.null = true
+
+            if(!(this.error)) {
+                if (["play","p"].indexOf(cmd) > -1) {
+                    // Search/Enqueue
+                    await songSearch(client, message)
+                } else if (cmd == "skip") {
+                    // Skip
+                    await skipSong(message)
+                } else if (cmd == "showqueue" || cmd == "currentsong") {
+                    // Show Queue/Current Song
+                    await showQueue(message, cmd == "currentsong" ? 1 : -1)
+                } else if (cmd == "stop" || cmd == "clearqueue") {
+                    // Clear Queue
+                    await clearQueue(message)
+                } else if (cmd == "callbot") {
+                    // Call Bot
+                    await callBot(message)
+                } else if (cmd == "nukebot") {
+                    // Nuke Bot
+                    await nukeBot(message)
+                }
+                if (!(this.error)) {
+                    message.delete()
+                    this.null = true
+                }
             }
         }
     }
