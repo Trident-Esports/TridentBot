@@ -88,7 +88,8 @@ module.exports = class PlayCommand extends VillainsCommand {
         let songPlayer = async (client, message, song) => {
             if (!(this.song_queue)) {
               this.song_queue = queue.get(message.guild.id);
-              console.log("Music: Setting Song Queue:",this?.song_queue?.songs ? this.song_queue.songs : "None");
+              // console.log("Music: Setting Song Queue:",this?.song_queue?.songs ? this.song_queue.songs : "None");
+              console.log("Music: Setting Song Queue:",this?.song_queue?.songs ? this.song_queue.songs.length : "None");
             }
 
             if (!song) {
@@ -162,12 +163,20 @@ module.exports = class PlayCommand extends VillainsCommand {
                     silent = true;
                 }
 
+                let user = {
+                    username: message.author.username,
+                    discriminator: message.author.discriminator,
+                    avatar: message.author.displayAvatarURL({ format: "png", dynamic: true }),
+                    id: message.author.id
+                }
+
                 // Validate URL as YT URL
                 if (ytdl.validateURL(inputURL)) {
                     const songInfo = await ytdl.getInfo(inputURL);
                     song = {
                         title: songInfo.videoDetails.title,
-                        url: songInfo.videoDetails.video_url
+                        url: songInfo.videoDetails.video_url,
+                        user: user
                     };
                 } else if (inputURL.includes('youtu') && inputURL.includes('be') && inputURL.includes('playlist')) {
                     const playlistInfo = await ytpl(inputURL);
@@ -200,7 +209,8 @@ module.exports = class PlayCommand extends VillainsCommand {
                     if (video) {
                         song = {
                             title: video.title,
-                            url: video.url
+                            url: video.url,
+                            user: user
                         };
                     } else {
                         this.error = true
@@ -223,7 +233,8 @@ module.exports = class PlayCommand extends VillainsCommand {
                         if (video) {
                             song = {
                                 title: video.title,
-                                url: video.url
+                                url: video.url,
+                                user: user
                             };
                         } else {
                             this.error = true
@@ -232,7 +243,8 @@ module.exports = class PlayCommand extends VillainsCommand {
                     }
                 }
 
-                if (!(this.error)) {
+                // Sanity check
+                if ((!(this.error)) && song && song?.title) {
                     // If there's no queue
                     if (!(this.server_queue)) {
                       if(this.song_queue) {
@@ -240,7 +252,8 @@ module.exports = class PlayCommand extends VillainsCommand {
                       } else {
                           this.server_queue = queue.get(message.guild.id);
                       }
-                      console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs : "None");
+                      // console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs : "None");
+                      console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
                     }
                     if (!this.server_queue) {
                         // Make one
@@ -312,10 +325,10 @@ module.exports = class PlayCommand extends VillainsCommand {
                 if (amount == 1) {
                     list = [ this.server_queue.songs[0] ]
                 }
-                console.log(list)
-                for (let song of list) {
+                // console.log(list)
+                for (let [idx, song] of list.entries()) {
                     if (song) {
-                        this.thisqueue.push(song.title)
+                        this.thisqueue.push(`${idx + 1}. **${song.title}**` + ((song?.user) ? ` (*${song.user.username}#${song.user.discriminator}*)` : ""))
                     }
                 }
                 this.props.description = this.thisqueue.join("\n\n")
