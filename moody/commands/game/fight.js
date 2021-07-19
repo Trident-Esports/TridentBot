@@ -34,7 +34,7 @@ module.exports = class FightCommand extends GameCommand {
             }
         }
 
-        const prefix = '.'
+        const prefix = 'vln'
 
         const randomXP = Math.floor(Math.random() * 300) + 300;
 

@@ -13,7 +13,7 @@ const Levels = require('discord-xp') // Discord Game XP
 const fs = require('fs');
 SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
 
-const prefix = '.' // Default prefix
+const prefix = 'vln ' // Default prefix
 
 Levels.setURL(SENSITIVE.client.mongoDB);
 client.commands = new Discord.Collection();
