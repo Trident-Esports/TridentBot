@@ -360,7 +360,9 @@ module.exports = class PlayCommand extends VillainsCommand {
 
         //Jump to song in Queue
         let jumpQueue = async (message) => {
-            let jumpnum = this.inputData.args[0]
+            //let jumpnum = this.inputData.args[0]
+            this.props.description = "Coming Soon"
+            this.send(message, new VillainsEmbed(this.props));
         }
 
         // Short circuit if no args

@@ -3,10 +3,7 @@
   "title": "CSGO Amateur Roster",
   "aliases": ["csar"],
   "url": "https://discord.com/channels/788021898146742292/788558005917450251/815180874739089418",
-  "team": {
-    "teamID": "262202",
-    "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/320440_t1_cgau-14k-Z0-Newlogoiwr-thumb.png"
-  },
+  "team": {},
   "#url": "#rosters: CSGO Amateur",
   "members": {
     "manager": {
@@ -21,13 +18,7 @@
     },
     "main": {
       "title": "Main",
-      "users": [
-        "brian",
-        "grubb",
-        "t3rbo",
-        "robbo",
-        "wolfyee"
-      ]
+      "users": []
     },
     "sub": {
       "title": "Sub",
