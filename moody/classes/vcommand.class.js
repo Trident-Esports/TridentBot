@@ -55,6 +55,9 @@ module.exports = class VillainsCommand extends BaseCommand {
         if (!(this?.props?.description)) {
             this.props.description = ""
         }
+        if (!(this?.props?.footer)) {
+            this.props.footer = {}
+        }
         if (!(this?.props?.players)) {
             this.props.players = {}
         }

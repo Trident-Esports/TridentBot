@@ -192,7 +192,7 @@ module.exports = class ShopCommand extends GameCommand {
 
                                 if (number <= success) {
                                     await this.db_transform(loaded.id, "xpboost", 25)
-                                    this.props.description.push("You have fed your minions and they are now by your side, gaining 25% XP Boost!")
+                                    this.props.description.push("You have fed your minions and they are now by your side, gained:")
                                     this.props.fields.push({
                                         name: `${this.emojis.xpboost}25%`,
                                         value: "XPBoost"
