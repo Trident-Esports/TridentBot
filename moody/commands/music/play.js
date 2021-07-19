@@ -130,7 +130,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                     this.song_queue.songs.shift();
                     songPlayer(client, message, this.song_queue.songs[0]);
                 }); {
-                this.props.description = `Now playing **${song.title}**, enjoy!`
+                this.props.description = `Now playing **${song.title}**, enjoy!` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : "")
 
                 let activityType = ""
                 if (client?.user?.presence?.activities) {
@@ -181,7 +181,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 } else if (inputURL.includes('youtu') && inputURL.includes('be') && inputURL.includes('playlist')) {
                     const playlistInfo = await ytpl(inputURL);
 
-                    this.props.description = `Playlist **${playlistInfo.title}** added to queue.`;
+                    this.props.description = `Playlist **${playlistInfo.title}** added to queue by` + ` [*<@${message.author.id}>*] `
                     this.send(message, new VillainsEmbed(this.props));
                     this.null = true;
 
@@ -282,7 +282,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                         this.server_queue.songs.push(song); {
                             console.log("Music: Queueing Song")
                             if (!silent && song?.title) {
-                                this.props.description = `Song **${song.title}** added to queue.`;
+                                this.props.description = `Song **${song.title}** added to queue by` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : "");
                                 this.send(message, new VillainsEmbed(this.props));
                             }
                             this.null = true
@@ -325,10 +325,10 @@ module.exports = class PlayCommand extends VillainsCommand {
                 if (amount == 1) {
                     list = [ this.server_queue.songs[0] ]
                 }
-                // console.log(list)
+                
                 for (let [idx, song] of list.entries()) {
                     if (song) {
-                        this.thisqueue.push(`${idx + 1}. **${song.title}**` + ((song?.user) ? ` (*${song.user.username}#${song.user.discriminator}*)` : ""))
+                        this.thisqueue.push(`${idx + 1}. **${song.title}**` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : ""))
                     }
                 }
                 this.props.description = this.thisqueue.join("\n\n")
