@@ -1,0 +1,24 @@
+{
+  "stripe": "default",
+  "title": "Studio Roster",
+  "aliases": [
+    "studio",
+    "gfx",
+    "vfx"
+  ],
+  "url": "",
+  "#url": "#rosters: Studio",
+  "members": {
+    "gfx": {
+      "title": "GFX",
+      "users": [
+        "zyajin"
+      ]
+    },
+    "vfx": {
+      "title": "VFX",
+      "users": []
+    }
+  }
+}
+

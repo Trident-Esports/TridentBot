@@ -1,0 +1,20 @@
+{
+  "stripe": "default",
+  "title": "Devs Roster",
+  "aliases": [
+    "devs"
+  ],
+  "url": "",
+  "#url": "#rosters: Dev",
+  "members": {
+    "devs": {
+      "title": "Developers",
+      "users": [
+        "miketrethewey",
+        "noongar1800",
+        "prime",
+        "zenom"
+      ]
+    }
+  }
+}
