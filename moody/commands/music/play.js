@@ -22,7 +22,7 @@ module.exports = class PlayCommand extends VillainsCommand {
             aliases: [
                 'callbot',            // callBot
                 'p',                  // songSearch
-                'skip',               // skipSong
+                'skip', 'jump',       // skipSong
                 'currentsong',        // showQueue(1)
                 'showqueue', 'q',     // showQueue
                 'stop','clearqueue',  // clearQueue
@@ -88,7 +88,7 @@ module.exports = class PlayCommand extends VillainsCommand {
         let songPlayer = async (client, message, song) => {
             if (!(this.song_queue)) {
               this.song_queue = queue.get(message.guild.id);
-              // console.log("Music: Setting Song Queue:",this?.song_queue?.songs ? this.song_queue.songs : "None");
+              
               console.log("Music: Setting Song Queue:",this?.song_queue?.songs ? this.song_queue.songs.length : "None");
             }
 
@@ -252,7 +252,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                       } else {
                           this.server_queue = queue.get(message.guild.id);
                       }
-                      // console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs : "None");
+                      
                       console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
                     }
                     if (!this.server_queue) {
@@ -328,7 +328,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 
                 for (let [idx, song] of list.entries()) {
                     if (song) {
-                        this.thisqueue.push(`${idx + 1}. **${song.title}**` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : ""))
+                        this.thisqueue.push(`\`${idx + 1}. ${song.title} \`` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : ""))
                     }
                 }
                 this.props.description = this.thisqueue.join("\n\n")
@@ -358,6 +358,11 @@ module.exports = class PlayCommand extends VillainsCommand {
             }
         }
 
+        //Jump to song in Queue
+        let jumpQueue = async (message) => {
+            let jumpnum = this.inputData.args[0]
+        }
+
         // Short circuit if no args
         if (!(this?.inputData?.args)) {
             return;
@@ -379,6 +384,9 @@ module.exports = class PlayCommand extends VillainsCommand {
                 } else if (cmd == "stop" || cmd == "clearqueue") {
                     // Clear Queue
                     await clearQueue(message)
+                } else if (cmd == "jump") {
+                    // Jump to Song
+                    await jumpQueue(message)
                 } else if (cmd == "callbot") {
                     // Call Bot
                     await callBot(message)
