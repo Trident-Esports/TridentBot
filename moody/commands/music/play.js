@@ -9,10 +9,11 @@ const ytSearch = require('yt-search');
 
 const { getPreview } = require("spotify-url-info");
 
-// Sonic CD Open            | .p <https://www.youtube.com/watch?v=EYW7-hNXZlM>
-// Sonic CD End             | .p <https://www.youtube.com/watch?v=oGiDJAjJ5Iw>
-// Let the Bad Times Roll   | .p <https://open.spotify.com/track/6IOL5tW3yRKKKpPNVCVmzU?si=5561f47153294b2a>
-// Kingdom Hearts Playlist  | .p <https://www.youtube.com/playlist?list=PLrk5ekL2Y-u9ERXjjoDXD57ajaXFNzSYy>
+// Sonic CD Open            | vln p <https://www.youtube.com/watch?v=EYW7-hNXZlM>
+// Sonic CD End             | vln p <https://www.youtube.com/watch?v=oGiDJAjJ5Iw>
+// Let the Bad Times Roll   | vln p <https://open.spotify.com/track/6IOL5tW3yRKKKpPNVCVmzU?si=5561f47153294b2a>
+// Kingdom Hearts Playlist  | vln p <https://www.youtube.com/playlist?list=PLrk5ekL2Y-u9ERXjjoDXD57ajaXFNzSYy>
+// Hero of Rhyme Playlist   | vln p <https://www.youtube.com/playlist?list=PLrk5ekL2Y-u-uAIRJQ1HXPWqBa_jRkcNK>
 
 const queue = new Map()
 module.exports = class PlayCommand extends VillainsCommand {
@@ -22,7 +23,8 @@ module.exports = class PlayCommand extends VillainsCommand {
             aliases: [
                 'callbot',            // callBot
                 'p',                  // songSearch
-                'skip', 'jump',       // skipSong
+                'skip',               // skipSong
+                'jump',               // jumpSong
                 'currentsong',        // showQueue(1)
                 'showqueue', 'q',     // showQueue
                 'stop','clearqueue',  // clearQueue
@@ -50,18 +52,19 @@ module.exports = class PlayCommand extends VillainsCommand {
             }
 
             if (!(this.error)) {
-                if (!(this.error)) {
-                    // Get Bot perms for channel
-                    console.log("Music: Checking Bot's Perms")
-                    const permissions = this.voice_channel.permissionsFor(message.client.user);
-                    if ((!(permissions.has('CONNECT' || 'SPEAK')))) {
-                        this.error = true
-                        this.props.description = `<@${client.user.id}> doesn't have permission to join the voice channel that you're in.`
-                    }
+                // Get Bot perms for channel
+                console.log("Music: Checking Bot's Perms")
+                const permissions = this.voice_channel.permissionsFor(message.client.user);
+                if ((!(permissions.has('CONNECT' || 'SPEAK')))) {
+                    this.error = true
+                    this.props.description = `<@${client.user.id}> doesn't have permission to join the voice channel that you're in.`
+                    console.log("Music: !!! Bot doesn't have perms to channel !!!")
+                }
 
-                    if(!(this.server_queue)) {
-                        this.server_queue = queue.get(message.guild.id)
-                    }
+                if(!(this.server_queue)) {
+                    this.server_queue = queue.get(message.guild.id)
+
+                    console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
                 }
             }
         }
@@ -88,7 +91,7 @@ module.exports = class PlayCommand extends VillainsCommand {
         let songPlayer = async (client, message, song) => {
             if (!(this.song_queue)) {
               this.song_queue = queue.get(message.guild.id);
-              
+
               console.log("Music: Setting Song Queue:",this?.song_queue?.songs ? this.song_queue.songs.length : "None");
             }
 
@@ -252,7 +255,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                       } else {
                           this.server_queue = queue.get(message.guild.id);
                       }
-                      
+
                       console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
                     }
                     if (!this.server_queue) {
@@ -295,7 +298,7 @@ module.exports = class PlayCommand extends VillainsCommand {
         }
 
         // Skip Song
-        let skipSong = async (message) => {
+        let skipSong = async (message, silent = true) => {
             console.log("Music: Skipping Song")
             if (!message.member.voice.channel) {
                 this.error = true
@@ -306,11 +309,28 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.error = true
                 this.props.description = "There are no songs in the queue."
             } else {
-                this.props.description = "Skipping song";
                 this.server_queue.connection.dispatcher.end();
-                this.send(message, new VillainsEmbed(this.props));
-                this.null = true;
+                if (!silent) {
+                    this.props.description = "Skipping song";
+                    this.send(message, new VillainsEmbed(this.props));
+                    this.null = true;
+                }
             }
+        }
+
+        // Jump to song in Queue
+        let jumpSong = async (message) => {
+            let jumpNum = this.inputData.args[0]
+            console.log("Jump Song:",jumpNum)
+            console.log("Pre Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None")
+            if (parseInt(jumpNum) > 2) {
+                this.server_queue.songs = this.server_queue.songs.slice(parseInt(jumpNum) - 2)
+                console.log("Post Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None")
+                await skipSong(message)
+            } else if (parseInt(jumpNum) == 2) {
+                await skipSong(message)
+            }
+            this.null = true
         }
 
         // Show Queue
@@ -325,7 +345,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 if (amount == 1) {
                     list = [ this.server_queue.songs[0] ]
                 }
-                
+
                 for (let [idx, song] of list.entries()) {
                     if (song) {
                         this.thisqueue.push(`\`${idx + 1}. ${song.title} \`` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : ""))
@@ -358,13 +378,6 @@ module.exports = class PlayCommand extends VillainsCommand {
             }
         }
 
-        //Jump to song in Queue
-        let jumpQueue = async (message) => {
-            //let jumpnum = this.inputData.args[0]
-            this.props.description = "Coming Soon"
-            this.send(message, new VillainsEmbed(this.props));
-        }
-
         // Short circuit if no args
         if (!(this?.inputData?.args)) {
             return;
@@ -374,21 +387,21 @@ module.exports = class PlayCommand extends VillainsCommand {
             await preFlightChecks(message)
 
             if(!(this.error)) {
-                if (["play","p"].indexOf(cmd) > -1) {
+                if (["play", "p"].indexOf(cmd) > -1) {
                     // Search/Enqueue
                     await songSearch(client, message)
                 } else if (cmd == "skip") {
                     // Skip
                     await skipSong(message)
-                } else if (cmd == "showqueue" || cmd === "q" || cmd == "currentsong") {
-                    // Show Queue/Current Song
-                    await showQueue(message, cmd == "currentsong" ? 1 : -1)
-                } else if (cmd == "stop" || cmd == "clearqueue") {
-                    // Clear Queue
-                    await clearQueue(message)
                 } else if (cmd == "jump") {
                     // Jump to Song
-                    await jumpQueue(message)
+                    await jumpSong(message)
+                } else if (["showqueue", "q", "currentsong"].indexOf(cmd) > -1) {
+                    // Show Queue/Current Song
+                    await showQueue(message, cmd == "currentsong" ? 1 : -1)
+                } else if (["stop", "clearqueue"].indexOf(cmd) > -1) {
+                    // Clear Queue
+                    await clearQueue(message)
                 } else if (cmd == "callbot") {
                     // Call Bot
                     await callBot(message)
