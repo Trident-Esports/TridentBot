@@ -69,7 +69,7 @@ module.exports = class MessageEvent extends BaseEvent {
         if (typeof command.run === "function") {
             // If it's a a-djs-style func, run it
             let adjs = new command.constructor()
-            adjs.run(handler.client, message, args)
+            adjs.run(handler.client, message, args, cmd)
         }
     }
 }

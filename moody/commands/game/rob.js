@@ -147,7 +147,7 @@ module.exports = class RobCommand extends GameCommand {
                     this.props.footer.msg = [
                         `${message.author.username} You just Advanced to Level ${user.level}!`,
                         `You have gained: ${this.emojis.gold}${inc.gold}, ${this.emojis.minions}${inc.minions}`
-                    ].join(" · ")
+                    ].join(" • ")
                 }
             }
         }

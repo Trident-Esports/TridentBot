@@ -146,7 +146,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 }
 
                 // if (DEV) {
-                //     console.log("Fetching:",url.toString())
+                //     console.log(`Fetching:${url.toString()}`)
                 // }
 
                 let props = {
@@ -265,7 +265,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
                     } catch(e) {
                         console.log(e)
-                        // console.log("Malformed JSON:",url)
+                        // console.log(`Malformed JSON:${url}`)
                     }
                 });
                 pages.push(embed)

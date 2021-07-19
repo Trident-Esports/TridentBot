@@ -83,7 +83,7 @@ module.exports = class GameHelpCommand extends GameCommand {
                             }
                             this.props.fields.push(
                                 {
-                                    name: "`" + this.prefix + command + "`",
+                                    name: "`" + this.prefix + command + (commandAttrs?.syntax ? commandAttrs.syntax.replace("%%","") : "") + "`",
                                     value: value,
                                     inline: false
                                 }

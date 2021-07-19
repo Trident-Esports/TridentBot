@@ -41,7 +41,7 @@ module.exports = class BegCommand extends GameCommand {
                 let msg = [
                     `You just Advanced to Level ${levelData.level.toLocaleString("en-AU")}!`,
                     `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString("en-AU")}, ${this.emojis.minions}${gainedminions.toLocaleString("en-AU")}`
-                ].join(" · ")
+                ].join(" • ")
 
                 this.props.footer.msg = msg
             }
