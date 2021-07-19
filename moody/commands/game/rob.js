@@ -141,13 +141,22 @@ module.exports = class RobCommand extends GameCommand {
                 }
 
                 if (hasLeveledUP) {
-                    const user = await this.Levels.fetch(message.author.id, 1);
-                    const target = message.author
+
+                    const levelData = await this.db_query(target.id, "levels");
+                    let gainedmoney = 1000
+                    let gainedminions = 1
+                    let inc = {
+                        gold: gainedmoney,
+                        minions: gainedminions
+                    }
                     await this.db_transform(target.id, inc)
-                    this.props.footer.msg = [
-                        `${message.author.username} You just Advanced to Level ${user.level}!`,
-                        `You have gained: ${this.emojis.gold}${inc.gold}, ${this.emojis.minions}${inc.minions}`
+    
+                    let msg = [
+                        `You just Advanced to Level ${levelData.level.toLocaleString("en-AU")}!`,
+                        `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString("en-AU")}, ${this.emojis.minions}${gainedminions.toLocaleString("en-AU")}`
                     ].join(" • ")
+    
+                    this.props.description += msg
                 }
             }
         }
