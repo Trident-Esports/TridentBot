@@ -228,7 +228,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 value += "Starting"
                             }
                             name += match.discord.team + " 🆚 " + match.discord.opponent
-                            value += ": " + match.discord.starting + "\n";
+                            value += ": <t:" + match.discord.timestamp + ":f>" + "\n";
                             if(match.discord.status == "incomplete" || (match.discord.scoreKeys.bySide.home != 0 || match.discord.scoreKeys.bySide.opponent != 0)) {
                                 value += '[';
                                 if(match.discord.status == "complete") {
