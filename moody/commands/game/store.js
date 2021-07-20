@@ -42,7 +42,7 @@ module.exports = class StoreCommand extends GameCommand {
 
                 this.props.fields.push(
                     {
-                        name: items + " " + names + "   " + "💰" + values.toLocaleString("en-AU"),
+                        name: items + " " + names + "   " + this.emojis.gold + values.toLocaleString("en-AU"),
                         value: "`" + descriptions + "`",
                         inline: false
                     }

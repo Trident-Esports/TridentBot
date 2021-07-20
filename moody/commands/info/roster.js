@@ -84,12 +84,13 @@ module.exports = class RosterCommand extends VillainsCommand {
             }
 
             let foundEmoji = false
-            if (message.guild.id in emojiIDs) {
-                if (emojiKey in emojiIDs[message.guild.id]) {
-                    emoji += "<:" + emojiName + ':' + emojiIDs[message.guild.id][emojiKey] + ">"
-                    foundEmoji = true
-                }
+
+            let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+            if (cachedEmoji?.available) {
+                foundEmoji = true
+                desc += `${cachedEmoji}`;
             }
+
             if (!foundEmoji) {
                 if (emojiKey) {
                     emoji += '[' + emojiKey + "] "

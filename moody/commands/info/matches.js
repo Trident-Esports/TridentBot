@@ -118,10 +118,10 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 }
             } else {
                 // something got stuffed up
-                let msg = `${message.author}, the correct usage is` + "\n"
-                msg += "`.matches [all|incomplete|complete|next]`" + "\n"
-                msg += "`.matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                msg += "`.matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
+                let msg = `${message.author}, the correct usage is:` + "\n"
+                msg += "`" + this.prefix + "matches [all|incomplete|complete|next]`" + "\n"
+                msg += "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
+                msg += "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
                 return message.channel.send(msg)
             }
         }
@@ -171,12 +171,13 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
 
                         let foundEmoji = false
-                        if (message.guild.id in emojiIDs) {
-                            if (emojiKey in emojiIDs[message.guild.id]) {
-                                emoji += "<:" + emojiName + ':' + emojiIDs[message.guild.id][emojiKey] + ">"
-                                foundEmoji = true
-                            }
+
+                        let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+                        if (cachedEmoji?.available) {
+                            foundEmoji = true
+                            emoji += `${cachedEmoji}`;
                         }
+
                         if (!foundEmoji) {
                             if (emojiKey) {
                                 emoji += '[' + emojiKey + "] "
