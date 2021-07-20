@@ -1,6 +1,7 @@
 const VillainsCommand = require('../../classes/vcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 const BotActivityCommand = require('../mod/botactivity');
+const { DiscordAPIError } = require('discord.js');
 
 //TODO: Figure out how to pipe into 'youtube-dl-exec' module
 const ytdl = require('ytdl-core');
@@ -28,7 +29,9 @@ module.exports = class PlayCommand extends VillainsCommand {
                 'currentsong',        // showQueue(1)
                 'showqueue', 'q',     // showQueue
                 'stop','clearqueue',  // clearQueue
-                'nukebot'             // nukeBot
+                'wherebot',           // whereBot
+                'nukebot',            // nukeBot
+                'cyclebot'            // cycleBot
             ],
             category: 'music',
             description: 'Manages music',
@@ -36,11 +39,23 @@ module.exports = class PlayCommand extends VillainsCommand {
         super(comprops, { caption: { text: "Villains Music" } })
         this.connection = null
         this.song_queue = null
+        this.now_playing = null
         this.server_queue = null
         this.voice_channel = null
     }
 
     async action(client, message, cmd) {
+        // Pre-Flight Checks
+        // Call Bot
+        // Nuke Bot
+        // Where Bot
+        // Play/Queue Song
+        // Search for Song
+        // Skip Song
+        // Jump to Song
+        // Show Queue
+        // Clear Queue
+
         // Pre-Flight Checks
         let preFlightChecks = async (message) => {
             console.log("Music: Pre-Flight Checks")
@@ -87,6 +102,17 @@ module.exports = class PlayCommand extends VillainsCommand {
             queue.delete(message.guild.id);
         }
 
+        // Where Bot
+        let whereBot = async(client, message) => {
+            this.props.description = []
+            for (let [connectionID, connection] of client.voice.connections.entries()) {
+                this.props.description.push(`<#${connection.channel.id}>`)
+                console.log(`${connection.channel.name} (ID:${connection.channel.id})`)
+            }
+            await this.send(message, new VillainsEmbed(this.props))
+            this.null = true
+        }
+
         // Play/Queue Song
         let songPlayer = async (client, message, song) => {
             if (!(this.song_queue)) {
@@ -113,7 +139,7 @@ module.exports = class PlayCommand extends VillainsCommand {
 
                 // Nuke Bot
                 await nukeBot(message)
-                this.send(message, new VillainsEmbed(this.props))
+                await this.send(message, new VillainsEmbed(this.props))
                 this.null = true
                 return;
             }
@@ -146,7 +172,10 @@ module.exports = class PlayCommand extends VillainsCommand {
                     ba.run(client, message, [ "listening", song.title ])
                 }
 
-                this.send(message, new VillainsEmbed(this.props))
+                if (this.now_playing && (!(this.now_playing.deleted))) {
+                    this.now_playing.delete()
+                }
+                this.now_playing = await this.send(message, new VillainsEmbed(this.props))
                 this.null = true
             }
         }
@@ -185,7 +214,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                     const playlistInfo = await ytpl(inputURL);
 
                     this.props.description = `Playlist **${playlistInfo.title}** added to queue by` + ` [*<@${message.author.id}>*] `
-                    this.send(message, new VillainsEmbed(this.props));
+                    await this.send(message, new VillainsEmbed(this.props));
                     this.null = true;
 
                     let success = false;
@@ -286,7 +315,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                             console.log("Music: Queueing Song")
                             if (!silent && song?.title) {
                                 this.props.description = `Song **${song.title}** added to queue by` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : "");
-                                this.send(message, new VillainsEmbed(this.props));
+                                await this.send(message, new VillainsEmbed(this.props));
                             }
                             this.null = true
                             return true
@@ -309,10 +338,10 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.error = true
                 this.props.description = "There are no songs in the queue."
             } else {
-                this.server_queue.connection.dispatcher.end();
+                await this.server_queue.connection.dispatcher.end();
                 if (!silent) {
                     this.props.description = "Skipping song";
-                    this.send(message, new VillainsEmbed(this.props));
+                    await this.send(message, new VillainsEmbed(this.props));
                     this.null = true;
                 }
             }
@@ -340,20 +369,29 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.error = true
                 this.props.description = "There are no songs in the queue."
             } else {
-                this.thisqueue = []
                 let list = this.server_queue.songs
                 if (amount == 1) {
                     list = [ this.server_queue.songs[0] ]
                 }
 
+                let thisqueue = []
                 for (let [idx, song] of list.entries()) {
                     if (song) {
-                        this.thisqueue.push(`\`${idx + 1}. ${song.title} \`` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : ""))
+                        thisqueue.push(`\`${idx + 1}. ${song.title} \`` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : ""))
+                    }
+                    if ((idx  > 0) && ((idx + 1) % 10 == 0)) {
+                        this.props.description = thisqueue.join("\n\n")
+                        this.pages.push(new VillainsEmbed(this.props))
+                        thisqueue = []
                     }
                 }
-                this.props.description = this.thisqueue.join("\n\n")
+                if (thisqueue.length > 0) {
+                    this.props.description = thisqueue.join("\n\n")
+                    this.pages.push(new VillainsEmbed(this.props))
+                    thisqueue = []
+                }
 
-                this.send(message, new VillainsEmbed(this.props));
+                await this.send(message, this.pages);
                 this.null = true;
             }
         }
@@ -372,8 +410,8 @@ module.exports = class PlayCommand extends VillainsCommand {
             } else {
                 this.props.description = "Dumping the queue.";
                 this.server_queue.songs = [];
-                this.server_queue.connection.dispatcher.end();
-                this.send(message, new VillainsEmbed(this.props));
+                await this.server_queue.connection.dispatcher.end();
+                await this.send(message, new VillainsEmbed(this.props));
                 this.null = true;
             }
         }
@@ -384,34 +422,53 @@ module.exports = class PlayCommand extends VillainsCommand {
         }
 
         if (!(this.error)) {
-            await preFlightChecks(message)
+            if (cmd == "wherebot") {
+                // Where Bot
+                await whereBot(client, message)
+            } else {
+                await preFlightChecks(message)
 
-            if(!(this.error)) {
-                if (["play", "p"].indexOf(cmd) > -1) {
-                    // Search/Enqueue
-                    await songSearch(client, message)
-                } else if (cmd == "skip") {
-                    // Skip
-                    await skipSong(message)
-                } else if (cmd == "jump") {
-                    // Jump to Song
-                    await jumpSong(message)
-                } else if (["showqueue", "q", "currentsong"].indexOf(cmd) > -1) {
-                    // Show Queue/Current Song
-                    await showQueue(message, cmd == "currentsong" ? 1 : -1)
-                } else if (["stop", "clearqueue"].indexOf(cmd) > -1) {
-                    // Clear Queue
-                    await clearQueue(message)
-                } else if (cmd == "callbot") {
-                    // Call Bot
-                    await callBot(message)
-                } else if (cmd == "nukebot") {
-                    // Nuke Bot
-                    await nukeBot(message)
+                if(!(this.error)) {
+                    if (["play", "p"].indexOf(cmd) > -1) {
+                        // Search/Enqueue
+                        await songSearch(client, message)
+                    } else if (cmd == "skip") {
+                        // Skip
+                        await skipSong(message)
+                    } else if (cmd == "jump") {
+                        // Jump to Song
+                        await jumpSong(message)
+                    } else if (["showqueue", "q", "currentsong"].indexOf(cmd) > -1) {
+                        // Show Queue/Current Song
+                        await showQueue(message, cmd == "currentsong" ? 1 : -1)
+                    } else if (["stop", "clearqueue"].indexOf(cmd) > -1) {
+                        // Clear Queue
+                        await clearQueue(message)
+                    } else if (cmd == "callbot") {
+                        // Call Bot
+                        await callBot(message)
+                    } else if (cmd == "nukebot") {
+                        // Nuke Bot
+                        await nukeBot(message)
+                    } else if (cmd == "cyclebot") {
+                        // Cycle Bot
+                        await nukeBot(message)
+                        await callBot(message)
+                    }
                 }
-                if (!(this.error)) {
-                    message.delete()
-                    this.null = true
+            }
+            if (!(this.error)) {
+                if (!(message.deleted)) {
+                    try {
+                        await message.delete()
+                        this.null = true
+                    } catch (e) {
+                        if (e instanceof DiscordAPIError) {
+                            if (e.httpStatus === 404) {
+                                console.log("Music: Message already deleted. Ignoring.")
+                            }
+                        }
+                    }
                 }
             }
         }
