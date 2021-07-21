@@ -24,13 +24,13 @@ module.exports = class PlayCommand extends VillainsCommand {
             aliases: [
                 'callbot',            // callBot
                 'p',                  // songSearch
-                'skip',               // skipSong
+                'skip', 'next',       // skipSong
                 'jump',               // jumpSong
                 'currentsong',        // showQueue(1)
                 'showqueue', 'q',     // showQueue
                 'stop','clearqueue',  // clearQueue
                 'wherebot',           // whereBot
-                'nukebot',            // nukeBot
+                'nukebot', 'leave',   // nukeBot
                 'cyclebot'            // cycleBot
             ],
             category: 'music',
@@ -432,7 +432,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                     if (["play", "p"].indexOf(cmd) > -1) {
                         // Search/Enqueue
                         await songSearch(client, message)
-                    } else if (cmd == "skip") {
+                    } else if (["skip", "next"].indexOf(cmd) > -1) {
                         // Skip
                         await skipSong(message)
                     } else if (cmd == "jump") {
@@ -447,7 +447,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                     } else if (cmd == "callbot") {
                         // Call Bot
                         await callBot(message)
-                    } else if (cmd == "nukebot") {
+                    } else if (["nukebot", "leave"].indexOf(cmd) > -1) {
                         // Nuke Bot
                         await nukeBot(message)
                     } else if (cmd == "cyclebot") {

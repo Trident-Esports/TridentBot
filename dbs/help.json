@@ -6,32 +6,32 @@
       "help": {
         "aliases": [ "h" ],
         "help": [
-          "_Brings up this menu_."
+          "Brings up this menu."
         ]
       },
       "invite": {
         "help": [
-          "_Invite link to Villains Esports Discord_."
+          "Invite link to Villains Esports Discord."
         ]
       },
       "discord": {
         "help": [
-          "_Invite link to VillainsBot Discord_."
+          "Invite link to VillainsBot Discord."
         ]
       },
       "socials": {
         "help": [
-          "_Link to all Villains Esports Socials_."
+          "Link to all Villains Esports Socials."
         ]
       },
       "rules": {
         "help": [
-          "_List of rules for the server_."
+          "List of rules for the server."
         ]
       },
       "suggest": {
         "help": [
-          "_Make a suggestion for the server/bot/etc._"
+          "Make a suggestion for the server/bot/etc."
         ]
       },
       "survey": {
@@ -48,23 +48,24 @@
       "play": {
         "aliases": [ "p" ],
         "help": [
-          "_To play a song you specify_"
+          "To play a song you specify"
         ]
       },
       "skip": {
         "aliases": [ "next" ],
         "help": [
-          "_Skips to the next song in the queue_"
+          "Skips to the next song in the queue"
         ]
       },
       "stop": {
         "help": [
-          "_Stops the music and makes the bot leave_"
+          "Stops the music and makes the bot leave"
         ]
       },
       "leave": {
+        "aliases": [ "nukebot" ],
         "help": [
-          "_Tells the bot to leave your Voice Channel_"
+          "Tells the bot to leave your Voice Channel"
         ]
       }
     }
@@ -75,12 +76,12 @@
     "commands": {
       "ping": {
         "help": [
-          "_pong!_"
+          "pong!"
         ]
       },
       "weather": {
         "help": [
-          "_Tells you the weather for the city provided_"
+          "Tells you the weather for the city provided"
         ]
       }
     }
