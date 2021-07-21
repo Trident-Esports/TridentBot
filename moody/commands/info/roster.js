@@ -85,8 +85,10 @@ module.exports = class RosterCommand extends VillainsCommand {
 
             let foundEmoji = false
 
+            
             let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
             if (cachedEmoji?.available) {
+                let desc = ""
                 foundEmoji = true
                 desc += `${cachedEmoji}`;
             }
