@@ -9,12 +9,6 @@
   },
   "#url": "#rosters: VALORANT lists",
   "members": {
-    "manager": {
-      "title": "Manager",
-      "users": [
-        "queen"
-      ]
-    },
     "coach": {
       "title": "Coach",
       "users": [
@@ -24,11 +18,10 @@
     "main": {
       "title": "Main",
       "users": [
+        "wanrae",
         "fluffy",
         "glitch",
-        "maxxe",
-        "peachu",
-        "wanrae"
+        "maxxe"
       ]
     },
     "sub": {

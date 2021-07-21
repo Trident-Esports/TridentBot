@@ -13,9 +13,17 @@ const Levels = require('discord-xp') // Discord Game XP
 const fs = require('fs');
 SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
 
-const prefix = 'vln ' // Default prefix
+const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"));
 
-Levels.setURL(SENSITIVE.client.mongoDB);
+const prefix = DEFAULTS.prefix // Default prefix
+
+try {
+    Levels.setURL(SENSITIVE.client.mongoDB);
+} catch {
+    console.log("MongoDB: Failed to connect!");
+    return;
+}
+
 client.commands = new Discord.Collection();
 client.events = new Discord.Collection();
 
