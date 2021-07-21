@@ -6,16 +6,18 @@
   "#url": "#rosters: Staff",
   "members": {
     "evil": {
+      "manager": {
+        "title": "General Manager",
+        "users": [
+          "zenom"
+        ]
+      },
       "title": "Evil Council",
       "users": [
         "hackermans",
-        "dazza",
         "guessmonster",
-        "harryhaz1",
         "miketrethewey",
-        "noongar1800",
-        "prime",
-        "zenom"
+        "noongar1800"
       ]
     }
   }
