@@ -45,7 +45,7 @@ module.exports = class GameCommand extends VillainsCommand {
     async db_key(extension) {
         let key = extension + "Model"
         let path = "../../models/" + extension + "Schema"
-        if (extension.indexOf("level") > -1) {
+        if (extension.includes("level")) {
             key = "Levels"
             path = "discord-xp"
         } else if (extension == "xpboost") {

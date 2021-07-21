@@ -62,7 +62,7 @@ module.exports = class ModHelpCommand extends ModCommand {
                 }
             )
             for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
-                if((["all", "section"].indexOf(scope) > -1) || (scope == "single" && command == search.term)) {
+                if((["all", "section"].includes(scope)) || (scope == "single" && command == search.term)) {
                     let value = `_${commandAttrs.help.join("\n")}_`
                     if("aliases" in commandAttrs) {
                         value += "\n"

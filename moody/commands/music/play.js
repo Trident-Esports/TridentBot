@@ -429,25 +429,25 @@ module.exports = class PlayCommand extends VillainsCommand {
                 await preFlightChecks(message)
 
                 if(!(this.error)) {
-                    if (["play", "p"].indexOf(cmd) > -1) {
+                    if (["play", "p"].includes(cmd)) {
                         // Search/Enqueue
                         await songSearch(client, message)
-                    } else if (["skip", "next"].indexOf(cmd) > -1) {
+                    } else if (["skip", "next"].includes(cmd)) {
                         // Skip
                         await skipSong(message)
                     } else if (cmd == "jump") {
                         // Jump to Song
                         await jumpSong(message)
-                    } else if (["showqueue", "q", "currentsong"].indexOf(cmd) > -1) {
+                    } else if (["showqueue", "q", "currentsong"].includes(cmd)) {
                         // Show Queue/Current Song
                         await showQueue(message, cmd == "currentsong" ? 1 : -1)
-                    } else if (["stop", "clearqueue"].indexOf(cmd) > -1) {
+                    } else if (["stop", "clearqueue"].includes(cmd)) {
                         // Clear Queue
                         await clearQueue(message)
                     } else if (cmd == "callbot") {
                         // Call Bot
                         await callBot(message)
-                    } else if (["nukebot", "leave"].indexOf(cmd) > -1) {
+                    } else if (["nukebot", "leave"].includes(cmd)) {
                         // Nuke Bot
                         await nukeBot(message)
                     } else if (cmd == "cyclebot") {
