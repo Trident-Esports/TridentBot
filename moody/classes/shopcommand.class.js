@@ -222,7 +222,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 await this.db_transform(loaded.id, "$push", push)
 
                                 // Restore Health
-                                await this.db_transform(loaded.id, "health", 100)
+                                await this.db_transform(loaded.id, "$set:health", 100)
                                 this.props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
                                     "Their health has been restored."

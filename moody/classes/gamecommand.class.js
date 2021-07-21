@@ -76,6 +76,11 @@ module.exports = class GameCommand extends VillainsCommand {
         if (typeof type === "object") {
             amounts = type
         } else {
+            if (type.includes(":")) {
+                type = type.split(":")
+                method = type[0]
+                type = type[1]
+            }
             switch(type) {
                 case "wallet":
                     type = "gold";
@@ -100,14 +105,18 @@ module.exports = class GameCommand extends VillainsCommand {
                 // Health
                 case "health":
                     model = thisType;
+                    method = "$set";
                     break;
                 // Inventory //FIXME: The $pull/$push operators aren't universally unique to this
                 case "items":
                 case "consumables":
                 case "powers":
+                    model = "inventory";
+                    break;
                 case "$pull":
                 case "$push":
                     model = "inventory";
+                    method = thisType;
                     break;
                 // XP
                 case "xp":
@@ -127,13 +136,9 @@ module.exports = class GameCommand extends VillainsCommand {
                         return await this[model].appendXp(userID, 1, thisAmount)
                     }
                 } else {
-                    let operation = {}
-                    operation[thisType] = thisAmount
-                    let payload = {}
-                    payload[method] = operation
                     await this[model].findOneAndUpdate(
                         { userID: userID },
-                        payload
+                        { [ method ]: { [ thisType ]: thisAmount } }
                     )
                 }
             }
