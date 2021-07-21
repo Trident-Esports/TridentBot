@@ -89,8 +89,8 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         // ERROR
         if (
           (props.error) ||
-          (props?.title?.text && props.title.text.toLowerCase().indexOf("error") > -1) ||
-          (props?.description && props.description.toLowerCase().indexOf("***error***") > -1)
+          (props?.title?.text && props.title.text.toLowerCase().includes("error")) ||
+          (props?.description && props.description.toLowerCase().includes("***error***"))
         ) {
             props.color = "#ff0000" // RED
         }

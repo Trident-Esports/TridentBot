@@ -51,7 +51,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             // third arg passed
                             // third arg is not a number
                             // this is a valid span
-                            if (args[2] && isNaN(args[2]) && (["all","complete","completed","incomplete","next"].indexOf(args[2].toLowerCase()) > -1)) {
+                            if (args[2] && isNaN(args[2]) && (["all","complete","completed","incomplete","next"].includes(args[2].toLowerCase()))) {
                                 let span = args[2].toLowerCase()
                                 if (span == "completed") {
                                     span = "complete"
@@ -64,7 +64,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             }
                         } else {  // second arg is text (first was teamID, this is span)
                             profile.team.teamID = args[0]
-                            if (args[1] && isNaN(args[1]) && (["all","complete","completed","incomplete","next"].indexOf(args[1].toLowerCase()) > -1)) {
+                            if (args[1] && isNaN(args[1]) && (["all","complete","completed","incomplete","next"].includes(args[1].toLowerCase()))) {
                                 // this is a valid span
                                 let span = args[1].toLowerCase()
                                 if (span == "completed") {
@@ -88,7 +88,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
                     }
                 } else {  // first arg is text
-                    if (["all","complete","completed","incomplete","next"].indexOf(args[0].toLowerCase()) > -1) {
+                    if (["all","complete","completed","incomplete","next"].includes(args[0].toLowerCase())) {
                         // this is a valid span
                         // return all rosters for span
                         let span = args[0].toLowerCase()
@@ -153,7 +153,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                     description: "Something got stuffed up here..."
                 }
                 let title = span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule"
-                props.url = url.toString().indexOf('-') > -1 ? url.toString().substr(0,url.toString().indexOf('-')) : url
+                props.url = url.toString().includes('-') ? url.toString().substr(0,url.toString().indexOf('-')) : url
                 let embed = new VillainsEmbed(props)
 
                 await req(params, function (err, res, data) {
