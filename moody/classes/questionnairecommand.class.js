@@ -74,7 +74,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
 
         if(!(this.error)) {
             this.null = true
-            this.send(message, embed).then(async (msg) => {
+            await this.send(message, embed).then(async (msg) => {
                 for (let emoji of this.emoji) {
                     await msg.react(emoji)
                 }
