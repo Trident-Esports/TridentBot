@@ -2,6 +2,7 @@ const QuestionnaireCommand = require('../../classes/questionnairecommand.class')
 const VillainsEmbed = require('../../classes/vembed.class');
 
 const fs = require('fs');
+const ms = require('ms');
 
 // Giveaways
 module.exports = class GiveawayCommand extends QuestionnaireCommand {
@@ -28,16 +29,9 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         }
 
         if (!(this.error)) {
-            let duration = this.inputData.args.shift().split("")
-            let unit = duration.pop()
-            switch (unit) {
-                case "m":
-                    duration = parseInt(duration) * 10 * 60;
-                    break;
-                case "d":
-                    duration = parseInt(duration) * 10 * 60 * 24;
-                    break;
-            }
+            // this.props.description = [(`\`Input: vln giveaway ${this.inputData.args.join(" ")}\``), (`\`Input: ${this.inputData.args}`)]
+            let duration = ms(this.inputData.args.shift())  // In Milliseconds
+            // this.props.description.push(`Duration: ${duration} ms`)
 
             if ((!(duration)) || isNaN(duration)) {
                 this.error = true
@@ -46,6 +40,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
             if (!(this.error)) {
                 let winnersnum = parseInt(this.inputData.args.shift().replace("w",""))
+                // this.props.description.push(`Winners: ${winnersnum}`)
 
                 if((!(winnersnum)) || isNaN(winnersnum)) {
                     this.error = true
@@ -54,6 +49,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
                 if (!(this.error)) {
                     let product = this.inputData.args.join(" ")
+                    // this.props.description.push(`Product: ${product}`)
 
                     if (!(product)) {
                         this.error = true
@@ -61,11 +57,15 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                     }
 
                     if (!(this.error)) {
-                        let end = parseInt(Date.now() / 1000) + parseInt(duration)
+                        // this.props.description.push(`Duration: ${duration} ms`)
+                        // this.props.description.push(`Now:      ${Date.now()} ms`)
+                        // Date.now() // In Milliseconds
+                        let end = parseInt((Date.now() + parseInt(duration)) / 1000) // In Seconds
+                        // this.props.description.push(`End:      ${end} s\``)
                         this.props.title.text = product
                         this.props.description = [
                             `React with ${this.emoji[0]} to enter!`,
-                            `Ends: <t:${end}:f>`,
+                            `Ends: <t:${end}:f>`, // In Seconds
                             `Hosted By: ${message.author}`
                         ]
 
@@ -83,16 +83,40 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                 )
                             };
 
+                            // this.props.description.push(`Collector: ${duration} ms\``)
                             const COLLECTOR = msg.createReactionCollector(FILTER, {
-                                max: winnersnum,
-                                time: parseInt(duration) * 1000
+                                max: this.DEV ? winnersnum : 500,  //FIXME: This is winnersnum for testing
+                                time: parseInt(duration) // In Milliseconds
                             });
                             COLLECTOR.on('end', collected => {
+                                let reactors = {}
+                                let fields = []
                                 for (let [reaction, reactionData] of collected) {
-                                    for (let [userID, userData] of reactionData.users.cache) {
-                                        console.log(`${userData.username}#${userData.discriminator}`)
+                                    if (!(reactors[reaction])) {
+                                        reactors[reaction] = []
                                     }
+                                    for (let [userID, userData] of reactionData.users.cache) {
+                                        if (!userData.bot) {
+                                            reactors[reaction].push(`<@${userID}>`)
+                                            console.log(`${reaction}: ${userData.username}#${userData.discriminator} (ID:${userID})`)
+                                        }
+                                    }
+                                    fields.push(
+                                        {
+                                            name: `Reaction: ${reaction}`,
+                                            value: reactors[reaction],
+                                            inline: true
+                                        },
+                                        {
+                                            name: `Winner: ${reaction}`,
+                                            value: reactors[reaction][Math.floor(Math.random() * reactors[reaction].length)],
+                                            inline: true
+                                        }
+                                    )
                                 }
+                                let embed = new VillainsEmbed({ caption: { text: "Giveaway" }, description: "Reactors", fields: fields });
+                                this.null = true
+                                this.send(message, embed)
                             });
                         })
                     }
