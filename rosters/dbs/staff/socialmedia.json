@@ -1,0 +1,17 @@
+{
+    "stripe": "default",
+    "title": "Social Media Staff Roster",
+    "aliases": ["socialmedia"],
+    "url": "",
+    "#url": "#rosters: Staff",
+    "members": {
+      "evil": {
+        "title": "Social Media Staff",
+        "users": [
+          "wanrae",
+          "dazza",
+          "sotto"
+        ]
+      }
+    }
+  }
