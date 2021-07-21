@@ -33,7 +33,7 @@ module.exports = (client, message, args) => {
     let roster_aliases = {}
 
     for (const file of rosters_profiles) {
-        if(file.indexOf("socials") > -1) {
+        if(file.includes("socials")) {
             continue;
         }
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
