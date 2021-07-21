@@ -1,0 +1,47 @@
+{
+    "stripe": "default",
+    "title": "Management Roster",
+    "aliases": [ "management" , "managers" ],
+    "url": "",
+    "#url": "#rosters: Staff",
+    "members": {
+      "general": {
+        "title": "General Manager",
+        "users": [
+          "zenom"
+        ]
+      },
+      "social media": {
+          "title": "Social Media Manager",
+          "users": [
+              "hackermans"
+          ]
+      },
+      "events":{
+          "title": "Events Manager",
+          "users": [
+              "noongar1800"
+          ]
+      },
+      "valorant": {
+          "title": "Valorant Managers",
+          "users": [
+              "marsh",
+              "queen"
+              
+          ]
+      },
+      "rl": {
+          "title": "Rocket League Manager",
+          "users": [
+              "capther0"
+          ]
+      },
+      "r6s": {
+          "title": "Rainbow 6 Seige Manager",
+          "users": [
+              "salvo"
+          ]
+      }
+    }
+  }
