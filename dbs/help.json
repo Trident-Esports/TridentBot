@@ -42,7 +42,7 @@
       "giveaway": {
         "help": [
           "Creates a giveaway for the topic of your choice with a specified number of winners.",
-          "Syntax: <time><winners><product>"
+          "Syntax: `<time>``<winners>``<product>`"
         ]
       }
     }
