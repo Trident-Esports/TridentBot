@@ -17,16 +17,18 @@
     "main": {
       "title": "Main",
       "users": [
+        "klockzyy",
+        "maishiu",
         "marsh",
         "myth",
-        "prophet",
-        "pocket",
-        "suave"
+        "pocket"
       ]
     },
     "sub": {
       "title": "Sub",
-      "users": []
+      "users": [
+        "prophet"
+      ]
     }
   }
 }
