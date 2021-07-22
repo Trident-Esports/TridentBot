@@ -36,7 +36,13 @@
       },
       "survey": {
         "help": [
-          "Creates a yes/no survey for whatever you specify"
+          "Creates a yes/no survey for whatever you specify."
+        ]
+      },
+      "giveaway": {
+        "help": [
+          "Creates a giveaway for the topic of your choice with a specified number of winners.",
+          "Syntax: <time><winners><product>"
         ]
       }
     }
