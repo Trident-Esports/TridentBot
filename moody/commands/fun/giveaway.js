@@ -3,6 +3,7 @@ const VillainsEmbed = require('../../classes/vembed.class');
 
 const fs = require('fs');
 const ms = require('ms');
+const Shuffle = require('array-shuffle');
 
 // Giveaways
 module.exports = class GiveawayCommand extends QuestionnaireCommand {
@@ -11,7 +12,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
             name: "giveaway",
             category: "fun",
             description: "Giveaways",
-            channelName: "giveaway",
+            channelName: "🎉giveaways", //FIXME: Needs to change dependant on channels.json
             emoji: ["🎉"]
         }
 
@@ -29,9 +30,9 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         }
 
         if (!(this.error)) {
-            // this.props.description = [(`\`Input: vln giveaway ${this.inputData.args.join(" ")}\``), (`\`Input: ${this.inputData.args}`)]
-            let duration = ms(this.inputData.args.shift())  // In Milliseconds
-            // this.props.description.push(`Duration: ${duration} ms`)
+            this.props.description = [(`\`Input: vln giveaway ${this.inputData.args.join(" ")}\``), (`\`Input: ${this.inputData.args}`)]
+            let duration = ms(this.inputData.args.shift()) // In Milliseconds
+            this.props.description.push(`Duration: ${duration} ms`)
 
             if ((!(duration)) || isNaN(duration)) {
                 this.error = true
@@ -39,17 +40,17 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
             }
 
             if (!(this.error)) {
-                let winnersnum = parseInt(this.inputData.args.shift().replace("w",""))
-                // this.props.description.push(`Winners: ${winnersnum}`)
+                let winnersnum = parseInt(this.inputData.args.shift().replace("w", ""))
+                this.props.description.push(`Winners: ${winnersnum}`)
 
-                if((!(winnersnum)) || isNaN(winnersnum)) {
+                if ((!(winnersnum)) || isNaN(winnersnum)) {
                     this.error = true
                     this.props.description = `Please enter a maximum number of winners. '${winnersnum}' given.`
                 }
 
                 if (!(this.error)) {
                     let product = this.inputData.args.join(" ")
-                    // this.props.description.push(`Product: ${product}`)
+                    this.props.description.push(`Product: ${product}`)
 
                     if (!(product)) {
                         this.error = true
@@ -57,11 +58,11 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                     }
 
                     if (!(this.error)) {
-                        // this.props.description.push(`Duration: ${duration} ms`)
-                        // this.props.description.push(`Now:      ${Date.now()} ms`)
-                        // Date.now() // In Milliseconds
+                        this.props.description.push(`Duration: ${duration} ms`)
+                        this.props.description.push(`Now:      ${Date.now()} ms`)
+                        Date.now() // In Milliseconds
                         let end = parseInt((Date.now() + parseInt(duration)) / 1000) // In Seconds
-                        // this.props.description.push(`End:      ${end} s\``)
+                        this.props.description.push(`End:      ${end} s\``)
                         this.props.title.text = product
                         this.props.description = [
                             `React with ${this.emoji[0]} to enter!`,
@@ -76,45 +77,59 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                             }
                             const FILTER = (reaction, user) => {
                                 return (
-                                          reaction.emoji.name === this.emoji[0] &&
-                                          (!user.bot) &&
-                                          // (user.id !== message.author.id) &&
-                                          true
+                                    reaction.emoji.name === this.emoji[0] &&
+                                    (!user.bot) &&
+                                    // (user.id !== message.author.id) &&
+                                    true
                                 )
                             };
 
                             // this.props.description.push(`Collector: ${duration} ms\``)
                             const COLLECTOR = msg.createReactionCollector(FILTER, {
-                                max: this.DEV ? winnersnum : 500,  //FIXME: This is winnersnum for testing
+                                max: 5000, //FIXME: This is winnersnum for testing
                                 time: parseInt(duration) // In Milliseconds
                             });
                             COLLECTOR.on('end', collected => {
                                 let reactors = {}
                                 let fields = []
                                 for (let [reaction, reactionData] of collected) {
-                                    if (!(reactors[reaction])) {
-                                        reactors[reaction] = []
+                                    if (!(reactors.reaction)) {
+                                        reactors.reaction = [1,2,43,4,5,63,7,85,9,0,420,4,32,4,56,64]
                                     }
                                     for (let [userID, userData] of reactionData.users.cache) {
                                         if (!userData.bot) {
-                                            reactors[reaction].push(`<@${userID}>`)
+                                            reactors.reaction.push(`<@${userID}>`)
                                             console.log(`${reaction}: ${userData.username}#${userData.discriminator} (ID:${userID})`)
                                         }
                                     }
-                                    fields.push(
-                                        {
-                                            name: `Reaction: ${reaction}`,
-                                            value: reactors[reaction],
-                                            inline: true
-                                        },
-                                        {
-                                            name: `Winner: ${reaction}`,
-                                            value: reactors[reaction][Math.floor(Math.random() * reactors[reaction].length)],
-                                            inline: true
-                                        }
-                                    )
+
+                                    let winners1 = Shuffle(reactors.reaction)
+                                    let winners = winners1.splice(0, winnersnum)
+
+                                    fields.push({
+                                        name: `Winners: ${reaction}`,
+                                        value: `${winners.join("\n")}`,
+                                        inline: true
+                                    }, {
+                                        name: `Host`,
+                                        value: `${message.author}`,
+                                        inline: true
+                                    })
+                                    msg.channel.send(`${winners.join("\n")}`)
+                                        .then(msg => {
+                                            setTimeout(() => msg.delete(), 2000)
+                                        })
                                 }
-                                let embed = new VillainsEmbed({ caption: { text: "Giveaway" }, description: "Reactors", fields: fields });
+
+                                let embed = new VillainsEmbed({
+                                    caption: {
+                                        text: "Giveaway Winners"
+                                    },
+                                    fields: fields,
+                                    footer: {
+                                        msg: "DM Host to claim your Prizes!"
+                                    }
+                                });
                                 this.null = true
                                 this.send(message, embed)
                             });
