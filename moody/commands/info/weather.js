@@ -16,7 +16,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
 
     async action(client, message) {
         let degreeType = "C"
-        if (["C","F"].indexOf(this.inputData.args[this.inputData.args.length - 1].toUpperCase()) > -1) {
+        if (["C","F"].includes(this.inputData.args[this.inputData.args.length - 1].toUpperCase())) {
             degreeType = this.inputData.args.pop().toUpperCase()
         }
         let args = this.inputData.args

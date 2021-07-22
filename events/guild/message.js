@@ -36,18 +36,6 @@ module.exports = async (Discord, client, message) => {
         }
     }
 
-    // If it's just the prefix, return error
-    if (message.content == prefix) {
-        let props = {
-            caption: { text: "VillainsBot" },
-            title: { text: "Error" },
-            description: "Please send a proper command."
-        }
-        let embed = new VillainsEmbed(props);
-        message.channel.send(embed)
-        return;
-    }
-
     // If it doesn't start with our prefix, return
     if (!message.content.startsWith(prefix)) return;
 

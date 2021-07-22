@@ -61,7 +61,7 @@ module.exports = class ATMCommand extends GameCommand {
         }
 
         // Refund & Steal are Admin-only
-        if (["Refund", "Steal"].indexOf(this.props.caption.text) > -1) {
+        if (["Refund", "Steal"].includes(this.props.caption.text)) {
             let APPROVED_ROLES = ROLES["admin"]
 
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
@@ -87,10 +87,10 @@ module.exports = class ATMCommand extends GameCommand {
 
             if (!(this.error)) {
                 let targetData = null
-                let needTarget = ["Give", "Refund", "Steal"].indexOf(this.props.caption.text) > -1
+                let needTarget = ["Give", "Refund", "Steal"].includes(this.props.caption.text)
                 if (needTarget) {
                     if (loaded) {
-                        if ((["Give", "Steal"].indexOf(this.props.caption.text) > -1) && (this.inputData.user.id === loaded.id)) {
+                        if ((["Give", "Steal"].includes(this.props.caption.text)) && (this.inputData.user.id === loaded.id)) {
                             this.error = true
                             this.props.description = `You can't ${this.props.caption.text} Gold to/from yourself!`
                         }
@@ -130,7 +130,7 @@ module.exports = class ATMCommand extends GameCommand {
                     } else {
                         amount = parseInt(amount)
                     }
-                    if (["Deposit","Give","Withdraw"].indexOf(this.props.caption.text) > -1) {
+                    if (["Deposit","Give","Withdraw"].includes(this.props.caption.text)) {
                         if (parseInt(amount) > parseInt(reserve)) {
                             this.error = true
                             this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`

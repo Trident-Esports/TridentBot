@@ -29,7 +29,6 @@ client.events = new Discord.Collection();
 
 // Load Handlers
 [
-    'command_handler',
     'event_handler',
     'game_handler',
     'rosters_handler'
@@ -68,5 +67,3 @@ const handler = new Handler(client, {
 (async () => {
     await handler.start();
 })();
-
-client.login(SENSITIVE.client.login);

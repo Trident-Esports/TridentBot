@@ -30,7 +30,7 @@ module.exports = class MessageEvent extends BaseEvent {
                 ]
             }
             if (message.content.toLowerCase().includes('lol')) {
-                if (message.author.bot || (blacklist.guildIDs.indexOf(message.guild.id) > -1)) {
+                if (message.author.bot || (blacklist.guildIDs.includes(message.guild.id))) {
                     return
                 }
                 message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
