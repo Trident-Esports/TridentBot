@@ -18,13 +18,37 @@ module.exports = class RulesRoleCommand extends VillainsCommand {
             }
         }
         super(comprops, props)
+        this.channelName = "rules"
+    }
+
+    async getChannel(message, channelType) {
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelID = 0
+        let channel = null
+
+        // Get channel IDs for this guild
+        if (Object.keys(channelIDs).includes(message.guild.id)) {
+            // If the channel type exists
+            if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
+                // Get the ID
+                channelID = channelIDs[message.guild.id][channelType]
+            }
+        }
+
+        // If the ID is not a number, search for a named channel
+        if (isNaN(channelID)) {
+            channel = message.guild.channels.cache.find(c => c.name === channelID);
+        } else {
+            // Else, search for a numbered channel
+            channel = message.guild.channels.cache.find(c => c.id === channelID);
+        }
+
+        return channel
     }
 
     async action(client, message) {
         let RULES_EMOJI = "✅"
-        let RULES_CHANNEL = JSON.parse(fs.readFileSync("./dbs/channels.json"))[message.guild.id]["rules"]
-        RULES_CHANNEL = message.guild.channels.cache.find(channel => channel.name === RULES_CHANNEL)
-        this.channel = RULES_CHANNEL
+        this.channel = await this.getChannel(message, "rules")
 
         this.props.caption = { text: "Accepting Values" }
 

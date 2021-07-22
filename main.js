@@ -67,5 +67,3 @@ const handler = new Handler(client, {
 (async () => {
     await handler.start();
 })();
-
-client.login(SENSITIVE.client.login);

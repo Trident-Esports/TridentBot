@@ -7,9 +7,33 @@ module.exports = class GuildMemberRemoveEvent extends BaseEvent {
         super('guildMemberRemove')
     }
 
+    async getChannel(message, channelType) {
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelID = 0
+        let channel = null
+
+        // Get channel IDs for this guild
+        if (Object.keys(channelIDs).includes(message.guild.id)) {
+            // If the channel type exists
+            if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
+                // Get the ID
+                channelID = channelIDs[message.guild.id][channelType]
+            }
+        }
+
+        // If the ID is not a number, search for a named channel
+        if (isNaN(channelID)) {
+            channel = message.guild.channels.cache.find(c => c.name === channelID);
+        } else {
+            // Else, search for a numbered channel
+            channel = message.guild.channels.cache.find(c => c.id === channelID);
+        }
+
+        return channel
+    }
+
     async run(handler, member) {
-        // Message Channels
-        const channelIDs = JSON.parse(fs.readFileSync("dbs/channels.json", "utf8"))
+        const channel = await this.getChannel(member, "welcome")
 
         let consolePad = 20
         console.log("---")
@@ -25,28 +49,22 @@ module.exports = class GuildMemberRemoveEvent extends BaseEvent {
         console.log(
             "Leave Channel:".padEnd(consolePad),
             (
-              (
-                (member.guild.id in channelIDs) &&
-                (channelIDs[member.guild.id]?.welcome)
-              ) ?
-                `Yes (ID:${channelIDs[member.guild.id].welcome})` :
+              channel
+              ?
+                `Yes (ID:${channel.id})` :
                 "No"
             )
         )
 
-        if (!(member.guild.id in channelIDs)) {
-            return
-        }
-
-        const channel = member.guild.channels.cache.get(channelIDs[member.guild.id].welcome)
-        try {
-            let rules = [
-                `<@${member.id}> Has just become a Hero.`
-            ]
-            return channel.send(rules.join("\n"))
-        }
-        catch (err) {
-           throw (err);
+        if (channel) {
+            try {
+                let rules = [
+                    `<@${member.id}> has just become a **Hero**.`
+                ]
+                await channel.send(rules.join("\n"))
+            } catch (err) {
+                throw (err);
+            }
         }
     }
 }

@@ -1,9 +1,9 @@
 const QuestionnaireCommand = require('../../classes/questionnairecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
+const { DiscordAPIError } = require('discord.js');
 
 const fs = require('fs');
 const ms = require('ms');
-const Shuffle = require('array-shuffle');
 
 // Giveaways
 module.exports = class GiveawayCommand extends QuestionnaireCommand {
@@ -12,11 +12,36 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
             name: "giveaway",
             category: "fun",
             description: "Giveaways",
-            channelName: "🎉giveaways", //FIXME: Needs to change dependant on channels.json
+            channelName: "giveaway",
             emoji: ["🎉"]
         }
 
         super(comprops)
+    }
+
+    async getChannel(message, channelType) {
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelID = 0
+        let channel = null
+
+        // Get channel IDs for this guild
+        if (Object.keys(channelIDs).includes(message.guild.id)) {
+            // If the channel type exists
+            if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
+                // Get the ID
+                channelID = channelIDs[message.guild.id][channelType]
+            }
+        }
+
+        // If the ID is not a number, search for a named channel
+        if (isNaN(channelID)) {
+            channel = message.guild.channels.cache.find(c => c.name === channelID);
+        } else {
+            // Else, search for a numbered channel
+            channel = message.guild.channels.cache.find(c => c.id === channelID);
+        }
+
+        return channel
     }
 
     async action(client, message) {
@@ -30,9 +55,20 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         }
 
         if (!(this.error)) {
-            this.props.description = [(`\`Input: vln giveaway ${this.inputData.args.join(" ")}\``), (`\`Input: ${this.inputData.args}`)]
+            // vln giveaway 20s 1w :poop:
+
+            this.channel = await this.getChannel(message, "giveaway")
+
+            this.props.description = []
+
+            // this.props.description.push(
+            //     `\`Input: vln giveaway ${this.inputData.args.join(" ")}\``,
+            //     `\`Input: ${this.inputData.args}`
+            // )
+
             let duration = ms(this.inputData.args.shift()) // In Milliseconds
-            this.props.description.push(`Duration: ${duration} ms`)
+
+            // this.props.description.push(`Duration: ${duration} ms`)
 
             if ((!(duration)) || isNaN(duration)) {
                 this.error = true
@@ -50,7 +86,8 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
                 if (!(this.error)) {
                     let product = this.inputData.args.join(" ")
-                    this.props.description.push(`Product: ${product}`)
+
+                    // this.props.description.push(`Product: ${product}`)
 
                     if (!(product)) {
                         this.error = true
@@ -58,23 +95,29 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                     }
 
                     if (!(this.error)) {
-                        this.props.description.push(`Duration: ${duration} ms`)
-                        this.props.description.push(`Now:      ${Date.now()} ms`)
-                        Date.now() // In Milliseconds
+                        // this.props.description.push(`Duration: ${duration} ms`)
+                        // this.props.description.push(`Now:      ${Date.now()} ms`)
+
+                        // Date.now() // In Milliseconds
                         let end = parseInt((Date.now() + parseInt(duration)) / 1000) // In Seconds
-                        this.props.description.push(`End:      ${end} s\``)
+
+                        // this.props.description.push(`End:      ${end} s\``)
+
                         this.props.title.text = product
-                        this.props.description = [
+                        this.props.description.push(
                             `React with ${this.emoji[0]} to enter!`,
-                            `Ends: <t:${end}:f>`, // In Seconds
+                            `Ends: <t:${end}:f>`,                     // In Seconds
                             `Hosted By: ${message.author}`
-                        ]
+                        )
 
                         this.null = true
                         await this.send(message, new VillainsEmbed(this.props)).then(async (msg) => {
                             for (let emoji of this.emoji) {
                                 await msg.react(emoji)
                             }
+
+                            let winners = []
+
                             const FILTER = (reaction, user) => {
                                 return (
                                     reaction.emoji.name === this.emoji[0] &&
@@ -86,52 +129,86 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
                             // this.props.description.push(`Collector: ${duration} ms\``)
                             const COLLECTOR = msg.createReactionCollector(FILTER, {
-                                max: 5000, //FIXME: This is winnersnum for testing
+                                max: (this.DEV) ? winnersnum : 5000, //FIXME: This is winnersnum for testing
                                 time: parseInt(duration) // In Milliseconds
                             });
                             COLLECTOR.on('end', collected => {
                                 let reactors = {}
                                 let fields = []
                                 for (let [reaction, reactionData] of collected) {
-                                    if (!(reactors.reaction)) {
-                                        reactors.reaction = []
+                                    if (!(reactors[reaction])) {
+                                        reactors[reaction] = []
                                     }
-                                    for (let [userID, userData] of reactionData.users.cache) {
-                                        if (!userData.bot) {
-                                            reactors.reaction.push(`<@${userID}>`)
-                                            console.log(`${reaction}: ${userData.username}#${userData.discriminator} (ID:${userID})`)
+                                    for (let [userID, ] of reactionData.users.cache) {
+                                        if (userID !== client.user.id) {
+                                            reactors[reaction].push(userID)
                                         }
                                     }
 
-                                    let winners1 = Shuffle(reactors.reaction)
-                                    let winners = winners1.splice(0, winnersnum)
+                                    let shuffler = (arr) => {
+                                        let currentIndex = arr.length,  randomIndex;
 
-                                    fields.push({
-                                        name: `Winners: ${reaction}`,
-                                        value: `${winners.join("\n")}`,
-                                        inline: true
-                                    }, {
-                                        name: `Host`,
-                                        value: `${message.author}`,
-                                        inline: true
-                                    })
-                                    msg.channel.send(`${winners.join("\n")}`)
-                                        .then(msg => {
-                                            setTimeout(() => msg.delete(), 2000)
-                                        })
+                                        // While there remain elements to shuffle...
+                                        while (0 !== currentIndex) {
+                                            // Pick a remaining element...
+                                            randomIndex = Math.floor(Math.random() * currentIndex);
+                                            currentIndex--;
+
+                                            // And swap it with the current element.
+                                            [arr[currentIndex], arr[randomIndex]] = [
+                                                arr[randomIndex], arr[currentIndex]];
+                                        }
+
+                                        return arr;
+                                    }
+
+                                    winners = shuffler(reactors[reaction]).slice(0,winnersnum)
+
+                                    fields.push(
+                                        {
+                                            name: "Prize",
+                                            value: product
+                                        },
+                                        {
+                                            name: "Ended",
+                                            value: `<t:${end}:f>`
+                                        },
+                                        {
+                                            name: `Winners: ${reaction}`,
+                                            value: `${winners.map(x => `<@${x}>`).join("\n")}`,
+                                            inline: true
+                                        },
+                                        {
+                                            name: `Host`,
+                                            value: `${message.author}`,
+                                            inline: true
+                                        }
+                                    )
                                 }
 
                                 let embed = new VillainsEmbed({
                                     caption: {
                                         text: "Giveaway Winners"
                                     },
-                                    fields: fields,
-                                    footer: {
-                                        msg: "DM Host to claim your Prizes!"
-                                    }
+                                    description: [
+                                        `Please DM the Host for your prize!`
+                                    ].join("\n"),
+                                    fields: fields
                                 });
-                                this.null = true
-                                this.send(message, embed)
+                                for (let winner of winners) {
+                                    client.users.fetch(winner, false).then((user) => {
+                                        if (!(user.bot)) {
+                                            try {
+                                                user.send(embed)
+                                            } catch (e) {
+                                                if (e instanceof DiscordAPIError) {
+                                                    console.log(`Can't send message to ${user.username}#${user.discriminator} (ID:${user.id})`)
+                                                }
+                                            }
+                                        }
+                                    })
+                                }
+                                msg.channel.send(embed);
                             });
                         })
                     }
