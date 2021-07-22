@@ -94,7 +94,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                 let fields = []
                                 for (let [reaction, reactionData] of collected) {
                                     if (!(reactors.reaction)) {
-                                        reactors.reaction = [1,2,43,4,5,63,7,85,9,0,420,4,32,4,56,64]
+                                        reactors.reaction = []
                                     }
                                     for (let [userID, userData] of reactionData.users.cache) {
                                         if (!userData.bot) {
