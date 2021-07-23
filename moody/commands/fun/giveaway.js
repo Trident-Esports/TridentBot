@@ -124,7 +124,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                 return (
                                     reaction.emoji.name === this.emoji[0] &&
                                     (!user.bot) &&
-                                    // (user.id !== message.author.id) &&
+                                    (user.id !== message.author.id) &&
                                     true
                                 )
                             };
