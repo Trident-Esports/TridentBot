@@ -28,14 +28,11 @@
           "users": [
               "guessmonster",
               "queen"
-              
           ]
       },
       "rl": {
           "title": "Rocket League Manager",
-          "users": [
-              "capther0"
-          ]
+          "users": []
       },
       "r6s": {
           "title": "Rainbow 6 Seige Manager",
@@ -44,4 +41,4 @@
           ]
       }
     }
-  }
+}
