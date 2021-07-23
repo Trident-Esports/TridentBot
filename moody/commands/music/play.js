@@ -3,7 +3,7 @@ const VillainsEmbed = require('../../classes/vembed.class');
 const BotActivityCommand = require('../mod/botactivity');
 const { DiscordAPIError } = require('discord.js');
 
-//TODO: Figure out how to pipe into 'youtube-dl-exec' module
+//TODO: Spotify Playlists
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const ytSearch = require('yt-search');

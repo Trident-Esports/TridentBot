@@ -2,6 +2,9 @@ const { BaseEvent } = require('a-djs-handler')
 const fs = require('fs')
 const VillainsEmbed = require('../../classes/vembed.class')
 
+//TODO: Move getChannel() to VillainsEvent
+//TODO: Copy getChannel() to VillainsCommand
+
 // Member Join
 module.exports = class GuildMemberAddEvent extends BaseEvent {
     constructor() {

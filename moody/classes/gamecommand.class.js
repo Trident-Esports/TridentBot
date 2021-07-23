@@ -89,6 +89,15 @@ module.exports = class GameCommand extends VillainsCommand {
             amounts[type] = amount
         }
 
+        /*
+
+          Profile works
+          Health works
+          Inventory doesn't work
+          XP works
+          XPBoost works
+
+        */
         for (let [thisType, thisAmount] of Object.entries(amounts)) {
             let model = ""
             switch(thisType) {
