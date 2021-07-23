@@ -36,7 +36,7 @@ module.exports = class VillainsCommand extends BaseCommand {
     constructor(comprops = {}, props = {}) {
         super(comprops)
 
-        this.props = props
+        this.props = {...props}
 
         if (!(this?.props?.full)) {
             this.props.full = true
@@ -55,6 +55,9 @@ module.exports = class VillainsCommand extends BaseCommand {
         if (!(this?.props?.description)) {
             this.props.description = ""
         }
+        if (!(this?.props?.footer)) {
+            this.props.footer = {}
+        }
         if (!(this?.props?.players)) {
             this.props.players = {}
         }
@@ -68,6 +71,10 @@ module.exports = class VillainsCommand extends BaseCommand {
             if (Object.keys(this.flags).indexOf(player) == -1) {
                 this.flags[player] = setting
             }
+        }
+
+        if (this?.props?.null && this.props.null) {
+            this.null = true
         }
 
         const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
@@ -203,9 +210,11 @@ module.exports = class VillainsCommand extends BaseCommand {
 
             // If Loaded is a Bot
             // If Bot has been specified as a Valid source
-            if (["default","required","optional"].indexOf(this.flags.bot) > -1) {
+            // Get Bot whitelist
+            let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json","utf8"))
+            if (["default","required","optional"].includes(this.flags.bot)) {
                 // Do... something?
-            } else if (loaded?.bot && loaded.bot) {
+            } else if (loaded?.bot && loaded.bot && (USERIDS?.botWhite.indexOf(loaded.id) == -1)) {
                 // If Bot has been specified as in Invalid source
                 // Set Invalid because Bot
                 foundHandles.invalid = "bot"
@@ -309,9 +318,9 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
     }
 
-    async build(client, message) {
+    async build(client, message, cmd) {
         if(!(this.error)) {
-            await this.action(client, message)
+            await this.action(client, message, cmd)
         }
     }
 
@@ -354,10 +363,10 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
     }
 
-    async run(client, message, args) {
+    async run(client, message, args, cmd) {
         await this.processArgs(message, args, this.flags)
 
-        await this.build(client, message)
+        await this.build(client, message, cmd)
 
         if (this.error) {
             if (this.props?.title) {

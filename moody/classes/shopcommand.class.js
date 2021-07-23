@@ -72,7 +72,7 @@ module.exports = class ShopCommand extends GameCommand {
                     }
                 }
 
-                var gold = profileData.gold //Players gold
+                let gold = profileData.gold //Players gold
 
                 let re = /^([a-z ]*)([\d]*)$/
                 let selected_item = ""
@@ -143,7 +143,7 @@ module.exports = class ShopCommand extends GameCommand {
                 }
 
                 if (item) {
-                    if (["Buy"].indexOf(this.props.caption.text) > -1) {
+                    if (["Buy"].includes(this.props.caption.text)) {
                         // Buy
                         let cost = parseInt(item.value) * parseInt(quantity)
                         if (gold < cost) return message.channel.send('You cannot afford to buy this item')
@@ -157,7 +157,7 @@ module.exports = class ShopCommand extends GameCommand {
                         this.props.description += `${item.emoji}`
                         this.props.description += (item?.stylized ? item.stylized : (selected_item.charAt(0).toUpperCase() + selected_item.slice(1)))
                         this.props.description += "!"
-                    } else if (["Use"].indexOf(this.props.caption.text) > -1) {
+                    } else if (["Use"].includes(this.props.caption.text)) {
                         // Use
                         this.props.fields = []
                         let haveEnough = inventorySorts.flat[item.emoji] >= quantity
@@ -192,7 +192,7 @@ module.exports = class ShopCommand extends GameCommand {
 
                                 if (number <= success) {
                                     await this.db_transform(loaded.id, "xpboost", 25)
-                                    this.props.description.push("You have fed your minions and they are now by your side, gaining 25% XP Boost!")
+                                    this.props.description.push("You have fed your minions and they are now by your side, gained:")
                                     this.props.fields.push({
                                         name: `${this.emojis.xpboost}25%`,
                                         value: "XPBoost"
@@ -222,7 +222,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 await this.db_transform(loaded.id, "$push", push)
 
                                 // Restore Health
-                                await this.db_transform(loaded.id, "health", 100)
+                                await this.db_transform(loaded.id, "$set:health", 100)
                                 this.props.description = [
                                     `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
                                     "Their health has been restored."

@@ -1,18 +1,19 @@
 {
   "745409743593406634": {
     "#note": "VillainsBot",
-    "welcome": "833803551876579336",
-    "rules": "833542659448242206",
-    "roles": "859897211202043914",
+    "welcome": "welcome",
+    "rules": "rules",
+    "roles": "roles",
     "suggestions": "suggestions",
-    "survey": "survey"
+    "survey": "survey",
+    "giveaway": "giveaways"
   },
   "788021898146742292": {
     "#note": "Villains Esports",
     "welcome": "795820413241786398",
     "rules": "788576321231388704",
     "roles": "795824892863053895",
-    "suggestions": "❓suggestions❓",
-    "survey": "survey"
+    "suggestions": "818993586662146089",
+    "giveaway": "860740465782816768"
   }
 }

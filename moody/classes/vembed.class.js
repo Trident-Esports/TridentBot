@@ -11,6 +11,7 @@ const fs = require('fs');
 const { MessageEmbed } = require('discord.js');
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
 let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 let DEV = GLOBALS.DEV
 
@@ -83,14 +84,17 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             props.footer = defaults.footer
         }
         if (props?.footer?.msg) {
+            if (!(props.footer.msg.includes(PACKAGE.version))) {
+                props.footer.msg += ` [v${PACKAGE.version}]`
+            }
             this.setFooter(props.footer.msg, props.footer.image)
         }
 
         // ERROR
         if (
           (props.error) ||
-          (props?.title?.text && props.title.text.toLowerCase().indexOf("error") > -1) ||
-          (props?.description && props.description.toLowerCase().indexOf("***error***") > -1)
+          (props?.title?.text && props.title.text.toLowerCase().includes("error")) ||
+          (props?.description && props.description.toLowerCase().includes("***error***"))
         ) {
             props.color = "#ff0000" // RED
         }

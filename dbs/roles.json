@@ -1,12 +1,15 @@
 {
   "admin": [
     "MEGAMIND",
-    "Overlords"
+    "Overlords",
+    "Evil Council"
   ],
   "mod": [
     "Mod",
-    "Evil Council"
+    "Moderator",
+    "Evil Mod"
   ],
+  "rules": "Accepted Values",
   "member": "Minions",
   "muted": "Muted"
 }

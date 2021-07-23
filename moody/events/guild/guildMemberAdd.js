@@ -6,11 +6,38 @@ const VillainsEmbed = require('../../classes/vembed.class')
 module.exports = class GuildMemberAddEvent extends BaseEvent {
     constructor() {
         super('guildMemberAdd')
+        this.channelName = "welcome"
+    }
+
+    async getChannel(message, channelType) {
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelID = 0
+        let channel = null
+
+        // Get channel IDs for this guild
+        if (Object.keys(channelIDs).includes(message.guild.id)) {
+            // If the channel type exists
+            if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
+                // Get the ID
+                channelID = channelIDs[message.guild.id][channelType]
+            }
+        }
+
+        // If the ID is not a number, search for a named channel
+        if (isNaN(channelID)) {
+            channel = message.guild.channels.cache.find(c => c.name === channelID);
+        } else {
+            // Else, search for a numbered channel
+            channel = message.guild.channels.cache.find(c => c.id === channelID);
+        }
+
+        return channel
     }
 
     async run(handler, member) {
+        const channel = await this.getChannel(member, "welcome")
+
         // Message Channels
-        const channelIDs = JSON.parse(fs.readFileSync("dbs/channels.json", "utf8"))
         let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
         // Add Minion Role
         let welcomeRole = ROLES.member;
@@ -18,7 +45,6 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
         if (welcomeRole?.id) {
             member.roles.add(welcomeRole.id);
         }
-        // console.log(member) // If You Want The User Info in Console Who Joined Server Then You Can Add This Line. // Optional
 
         let consolePad = 20
         console.log("---")
@@ -43,39 +69,36 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
         console.log(
             "Welcome Channel:".padEnd(consolePad),
             (
-              (
-                (member.guild.id in channelIDs) &&
-                (channelIDs[member.guild.id]?.welcome)
-              ) ?
-                `Yes (ID:${channelIDs[member.guild.id].welcome})` :
+              channel
+              ?
+                `Yes (ID:${channel.id})` :
                 "No"
             )
         )
 
-        if (!(member.guild.id in channelIDs)) {
-            return
-        }
+        if (channel) {
+            let ROLES_CHANNEL = await this.getChannel(member, "roles")
+            let RULES_CHANNEL = await this.getChannel(member, "rules")
 
-        const channel = member.guild.channels.cache.get(channelIDs[member.guild.id].welcome)
-        try {
-            let rules = [
-                `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
-                "**Are you ready to become a Super Villain?**",
-                "",
-                `Please Read ${member.guild.channels.cache.get(channelIDs[member.guild.id].rules).toString()}.`,
-                "",
-                `Also to access the server channels, please go to ${member.guild.channels.cache.get(channelIDs[member.guild.id].roles).toString()}.`
-            ]
-            let props = {
-                title: "Welcome to ${member.guild.name}",
-                description: rules.join("\n")
+            try {
+                let rules = [
+                    `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
+                    "**Are you ready to become a Super Villain?**",
+                    "",
+                    `Please Read ${RULES_CHANNEL.toString()}.`,
+                    "",
+                    `Also to access the server channels, please go to ${ROLES_CHANNEL.toString()}.`
+                ]
+                let props = {
+                    title: "Welcome to ${member.guild.name}",
+                    description: rules.join("\n")
+                }
+                const embed = new VillainsEmbed(props);
+
+                await channel.send(embed);
+            } catch (err) {
+                throw (err);
             }
-            const embed = new VillainsEmbed(props);
-
-            return channel.send(embed);
-        }
-        catch (err) {
-           throw (err);
         }
     }
 }

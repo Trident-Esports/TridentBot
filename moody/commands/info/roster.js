@@ -69,7 +69,6 @@ module.exports = class RosterCommand extends VillainsCommand {
         for (filepath of profiles) {
             let props = { caption: {}, author: {}, players: {} }
             let profile = JSON.parse(fs.readFileSync(filepath, "utf8"))
-            let emojiIDs = JSON.parse(fs.readFileSync("dbs/emojis.json","utf8"))
             let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
 
             // Title
@@ -84,12 +83,14 @@ module.exports = class RosterCommand extends VillainsCommand {
             }
 
             let foundEmoji = false
-            if (message.guild.id in emojiIDs) {
-                if (emojiKey in emojiIDs[message.guild.id]) {
-                    emoji += "<:" + emojiName + ':' + emojiIDs[message.guild.id][emojiKey] + ">"
-                    foundEmoji = true
-                }
+
+
+            let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+            if (cachedEmoji?.available) {
+                foundEmoji = true
+                emoji += `${cachedEmoji}`;
             }
+
             if (!foundEmoji) {
                 if (emojiKey) {
                     emoji += '[' + emojiKey + "] "
@@ -138,6 +139,23 @@ module.exports = class RosterCommand extends VillainsCommand {
 
             // Team Members
             if (profile?.members) {
+                if (filepath.includes("teams")) {
+                    let management = JSON.parse(fs.readFileSync("./rosters/dbs/staff/management.json","utf8"))
+                    if (management?.members) {
+                        if (Object.keys(management.members).includes(emojiKey)) {
+                            if (management.members[emojiKey]?.users) {
+                                let newmembers = {
+                                    managers: {
+                                        title: "Manager",
+                                        users: management.members[emojiKey].users
+                                    },
+                                    ...profile.members
+                                }
+                                profile.members = newmembers
+                            }
+                        }
+                    }
+                }
                 for (let [groupName, groupAttrs] of Object.entries(profile.members)) {
                     let userSTR = ""
                     if (groupAttrs?.users?.length == 0) {

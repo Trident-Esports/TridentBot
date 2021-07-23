@@ -51,7 +51,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             // third arg passed
                             // third arg is not a number
                             // this is a valid span
-                            if (args[2] && isNaN(args[2]) && (["all","complete","completed","incomplete","next"].indexOf(args[2].toLowerCase()) > -1)) {
+                            if (args[2] && isNaN(args[2]) && (["all","complete","completed","incomplete","next"].includes(args[2].toLowerCase()))) {
                                 let span = args[2].toLowerCase()
                                 if (span == "completed") {
                                     span = "complete"
@@ -64,7 +64,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             }
                         } else {  // second arg is text (first was teamID, this is span)
                             profile.team.teamID = args[0]
-                            if (args[1] && isNaN(args[1]) && (["all","complete","completed","incomplete","next"].indexOf(args[1].toLowerCase()) > -1)) {
+                            if (args[1] && isNaN(args[1]) && (["all","complete","completed","incomplete","next"].includes(args[1].toLowerCase()))) {
                                 // this is a valid span
                                 let span = args[1].toLowerCase()
                                 if (span == "completed") {
@@ -88,7 +88,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
                     }
                 } else {  // first arg is text
-                    if (["all","complete","completed","incomplete","next"].indexOf(args[0].toLowerCase()) > -1) {
+                    if (["all","complete","completed","incomplete","next"].includes(args[0].toLowerCase())) {
                         // this is a valid span
                         // return all rosters for span
                         let span = args[0].toLowerCase()
@@ -118,10 +118,10 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 }
             } else {
                 // something got stuffed up
-                let msg = `${message.author}, the correct usage is` + "\n"
-                msg += "`.matches [all|incomplete|complete|next]`" + "\n"
-                msg += "`.matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                msg += "`.matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
+                let msg = `${message.author}, the correct usage is:` + "\n"
+                msg += "`" + this.prefix + "matches [all|incomplete|complete|next]`" + "\n"
+                msg += "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
+                msg += "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
                 return message.channel.send(msg)
             }
         }
@@ -146,14 +146,14 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 }
 
                 // if (DEV) {
-                //     console.log("Fetching:",url.toString())
+                //     console.log(`Fetching:${url.toString()}`)
                 // }
 
                 let props = {
                     description: "Something got stuffed up here..."
                 }
                 let title = span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule"
-                props.url = url.toString().indexOf('-') > -1 ? url.toString().substr(0,url.toString().indexOf('-')) : url
+                props.url = url.toString().includes('-') ? url.toString().substr(0,url.toString().indexOf('-')) : url
                 let embed = new VillainsEmbed(props)
 
                 await req(params, function (err, res, data) {
@@ -171,12 +171,13 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
 
                         let foundEmoji = false
-                        if (message.guild.id in emojiIDs) {
-                            if (emojiKey in emojiIDs[message.guild.id]) {
-                                emoji += "<:" + emojiName + ':' + emojiIDs[message.guild.id][emojiKey] + ">"
-                                foundEmoji = true
-                            }
+
+                        let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+                        if (cachedEmoji?.available) {
+                            foundEmoji = true
+                            emoji += `${cachedEmoji}`;
                         }
+
                         if (!foundEmoji) {
                             if (emojiKey) {
                                 emoji += '[' + emojiKey + "] "
@@ -228,7 +229,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 value += "Starting"
                             }
                             name += match.discord.team + " 🆚 " + match.discord.opponent
-                            value += ": " + match.discord.starting + "\n";
+                            value += ": <t:" + match.discord.timestamp + ":f>" + "\n";
                             if(match.discord.status == "incomplete" || (match.discord.scoreKeys.bySide.home != 0 || match.discord.scoreKeys.bySide.opponent != 0)) {
                                 value += '[';
                                 if(match.discord.status == "complete") {
@@ -265,7 +266,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
                     } catch(e) {
                         console.log(e)
-                        // console.log("Malformed JSON:",url)
+                        // console.log(`Malformed JSON:${url}`)
                     }
                 });
                 pages.push(embed)

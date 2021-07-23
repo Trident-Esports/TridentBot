@@ -26,14 +26,14 @@ module.exports = class GameHelpCommand extends GameCommand {
             // If we're loading a section
             let loadSection = this.inputData.args && this.inputData.args[0] && this.inputData.args[0] != "" ? this.inputData.args[0].toLowerCase() : ""
             if (loadSection != "") {
-                if (Object.keys(helpData).indexOf(loadSection) > -1) {
+                if (Object.keys(helpData).includes(loadSection)) {
                     helpData = {
                         key: helpData[loadSection]
                     }
                 } else {
                     // Section find failed, try to load a subsection
                     for (let [section, subsection] of Object.entries(helpData)) {
-                        if (Object.keys(subsection.commands).indexOf(loadSection) > -1) {
+                        if (Object.keys(subsection.commands).includes(loadSection)) {
                             helpData = {
                                 key: helpData[section]
                             };
@@ -83,7 +83,7 @@ module.exports = class GameHelpCommand extends GameCommand {
                             }
                             this.props.fields.push(
                                 {
-                                    name: "`" + this.prefix + command + "`",
+                                    name: "`" + this.prefix + command + (commandAttrs?.syntax ? commandAttrs.syntax.replace("%%","") : "") + "`",
                                     value: value,
                                     inline: false
                                 }

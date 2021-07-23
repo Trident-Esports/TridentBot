@@ -6,10 +6,10 @@
     "#url": "#rosters: Staff",
     "members": {
       "general": {
-        "title": "General Manager",
-        "users": [
-          "zenom"
-        ]
+          "title": "General Manager",
+          "users": [
+              "zenom"
+          ]
       },
       "social media": {
           "title": "Social Media Manager",
@@ -23,14 +23,14 @@
               "noongar1800"
           ]
       },
-      "valorant": {
+      "val": {
           "title": "Valorant Managers",
           "users": [
               "guessmonster",
               "queen"
           ]
       },
-      "rl": {
+      "rocketleague": {
           "title": "Rocket League Manager",
           "users": []
       },

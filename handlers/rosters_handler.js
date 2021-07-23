@@ -33,7 +33,7 @@ module.exports = (client, message, args) => {
     let roster_aliases = {}
 
     for (const file of rosters_profiles) {
-        if(file.indexOf("socials") > -1) {
+        if(file.includes("socials")) {
             continue;
         }
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
@@ -103,8 +103,7 @@ module.exports = (client, message, args) => {
             name: profile.aliases[0],
             aliases: profile.aliases,
             description: profile.title,
-            async execute(message, client, Discord) {
-                let emojiIDs = JSON.parse(fs.readFileSync("dbs/emojis.json","utf8"))
+            async execute(message, client) {
                 let props = {
                     title: { text: profile.title }
                 }
@@ -119,9 +118,11 @@ module.exports = (client, message, args) => {
                     for (let teamID in teams) {
                         if (teams.hasOwnProperty(teamID)) {
                             let teamName = teams[teamID].name;
-                            if (emojiIDs[message.guild.id][gameID]) {
-                                desc += "<:" + emojiName + ":" + emojiIDs[message.guild.id][gameID] + ">";
+                            let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+                            if (cachedEmoji?.available) {
+                                desc += `${cachedEmoji}`;
                             }
+
                             desc += teamName;
                             desc += " (";
                             desc += "`" + teamID + "`";

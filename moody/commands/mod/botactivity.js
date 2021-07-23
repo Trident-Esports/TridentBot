@@ -2,7 +2,7 @@ const AdminCommand = require('../../classes/admincommand.class');
 
 // AdminCommand
 module.exports = class BotActivityCommand extends AdminCommand {
-    constructor() {
+    constructor(props = {}) {
         let comprops = {
             name: "botactivity",
             aliases: [ "ba" ],
@@ -12,11 +12,12 @@ module.exports = class BotActivityCommand extends AdminCommand {
                 user: "unapplicable"
             }
         }
-        let props = {
+        props = Object.assign(props,
+        {
             caption: {
                 text: "Bot Activity"
             }
-        }
+        })
         super(comprops, props)
     }
 
