@@ -1,5 +1,4 @@
-const VillainsCommand = require('../../classes/vcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class FootCommand extends VillainsCommand {
     constructor() {

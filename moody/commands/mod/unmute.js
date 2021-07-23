@@ -1,7 +1,8 @@
-const ModCommand = require('../../classes/modcommand.class');
+const IRCVoiceCommand = require('../../classes/command/ircvoicecommand.class');
 
 //FIXME: Like Mute
-module.exports = class UnmuteCommand extends ModCommand {
+
+module.exports = class UnmuteCommand extends IRCVoiceCommand {
     constructor() {
         let comprops = {
             name: "unmute",

@@ -7,7 +7,7 @@ BaseCommand
 */
 
 const VillainsCommand = require('./vcommand.class');
-const VillainsEmbed = require('./vembed.class');
+const VillainsEmbed = require('../embed/vembed.class');
 const fs = require('fs');
 
 module.exports = class QuestionnaireCommand extends VillainsCommand {

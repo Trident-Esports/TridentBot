@@ -1,4 +1,4 @@
-const AdminCommand = require('../../classes/admincommand.class');
+const AdminCommand = require('../../classes/command/admincommand.class');
 
 // AdminCommand
 module.exports = class BotActivityCommand extends AdminCommand {

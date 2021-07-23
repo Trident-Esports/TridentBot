@@ -1,4 +1,4 @@
-const GameCommand = require('../../classes/gamecommand.class');
+const GameCommand = require('../../classes/command/gamecommand.class');
 
 module.exports = class DailyCommand extends GameCommand {
     constructor() {

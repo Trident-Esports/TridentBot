@@ -1,5 +1,5 @@
-const QuestionnaireCommand = require('../../classes/questionnairecommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const QuestionnaireCommand = require('../../classes/command/questionnairecommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 const { DiscordAPIError } = require('discord.js');
 
 const fs = require('fs');

@@ -1,6 +1,5 @@
-const QuestionnaireCommand = require('../../classes/questionnairecommand.class');
+const QuestionnaireCommand = require('../../classes/command/questionnairecommand.class');
 
-// Suggestions
 module.exports = class SuggestionsCommand extends QuestionnaireCommand {
     constructor() {
         let comprops = {

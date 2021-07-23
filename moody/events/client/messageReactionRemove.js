@@ -1,7 +1,7 @@
-const { BaseEvent } = require('a-djs-handler')
+const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
 
-module.exports = class MessageReactionRemoveEvent extends BaseEvent {
+module.exports = class MessageReactionRemoveEvent extends VillainsEvent {
     constructor() {
         super('messageReactionRemove')
         this.channelName = "rules"

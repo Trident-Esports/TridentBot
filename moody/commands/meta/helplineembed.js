@@ -1,7 +1,5 @@
-const VillainsCommand = require('../../classes/vcommand.class');
-
+const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 
 module.exports = class HelplineEmbedCommand extends VillainsCommand {
     constructor() {
@@ -18,6 +16,7 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
         }
         super(comprops, props)
     }
+
     async action(client, message) {
         this.props.description = 'This is a list of the commands and help for VillainsBot'
         this.props.fields = [

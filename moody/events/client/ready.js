@@ -1,7 +1,7 @@
-const { BaseEvent } = require('a-djs-handler')
+const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
 
-module.exports = class ReadyEvent extends BaseEvent {
+module.exports = class ReadyEvent extends VillainsEvent {
     constructor() {
         super('ready')
     }

@@ -1,7 +1,7 @@
-const { BaseEvent } = require('a-djs-handler')
-const VillainsEmbed = require('../../classes/vembed.class')
+const VillainsEmbed = require('../../classes/embed/vembed.class')
+const VillainsEvent = require('../../classes/event/vevent.class')
 
-module.exports = class MessageEvent extends BaseEvent {
+module.exports = class MessageEvent extends VillainsEvent {
     constructor() {
         super('message')
     }

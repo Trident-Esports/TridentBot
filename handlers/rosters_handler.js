@@ -4,7 +4,7 @@
 const fs = require('fs');
 const MatchesCommand = require('../moody/commands/info/matches')
 const RosterCommand = require('../moody/commands/info/roster')
-const VillainsEmbed = require('../moody/classes/vembed.class');
+const VillainsEmbed = require('../moody/classes/embed/vembed.class');
 
 let walk = function (dir) {
     let results = [];

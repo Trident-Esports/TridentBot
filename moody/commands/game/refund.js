@@ -1,4 +1,4 @@
-const ATMCommand = require('../../classes/atmcommand.class');
+const ATMCommand = require('../../classes/command/atmcommand.class');
 
 module.exports = class RefundCommand extends ATMCommand {
     constructor() {

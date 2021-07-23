@@ -1,12 +1,12 @@
-const { BaseEvent } = require('a-djs-handler')
+const VillainsEmbed = require('../../classes/embed/vembed.class')
+const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
-const VillainsEmbed = require('../../classes/vembed.class')
 
 //TODO: Move getChannel() to VillainsEvent
 //TODO: Copy getChannel() to VillainsCommand
 
 // Member Join
-module.exports = class GuildMemberAddEvent extends BaseEvent {
+module.exports = class GuildMemberAddEvent extends VillainsEvent {
     constructor() {
         super('guildMemberAdd')
         this.channelName = "welcome"

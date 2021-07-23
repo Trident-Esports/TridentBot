@@ -1,5 +1,4 @@
-const VillainsCommand = require('../../classes/vcommand.class');
-
+const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
 
 module.exports = class RulesCommand extends VillainsCommand {

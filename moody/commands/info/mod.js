@@ -1,5 +1,5 @@
-const VillansEmbed = require('../../classes/vembed.class')
-const ModCommand = require('../../classes/modcommand.class')
+const VillansEmbed = require('../../classes/embed/vembed.class')
+const ModCommand = require('../../classes/command/modcommand.class')
 const fs = require('fs')
 
 module.exports = class ModHelpCommand extends ModCommand {

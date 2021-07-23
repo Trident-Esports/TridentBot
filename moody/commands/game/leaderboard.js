@@ -1,5 +1,5 @@
-const GameCommand = require('../../classes/gamecommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const GameCommand = require('../../classes/command/gamecommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 
 function ordinal(n) {
   let s = ["th", "st", "nd", "rd"];

@@ -1,8 +1,8 @@
-const { BaseEvent } = require('a-djs-handler')
+const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
 
 // Member Join
-module.exports = class GuildMemberRemoveEvent extends BaseEvent {
+module.exports = class GuildMemberRemoveEvent extends VillainsEvent {
     constructor() {
         super('guildMemberRemove')
     }

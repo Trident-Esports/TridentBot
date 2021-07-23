@@ -1,4 +1,4 @@
-const GameCommand = require('../../classes/gamecommand.class');
+const GameCommand = require('../../classes/command/gamecommand.class');
 
 // ATMCommand: User to User, like Give
 
@@ -150,12 +150,12 @@ module.exports = class RobCommand extends GameCommand {
                         minions: gainedminions
                     }
                     await this.db_transform(target.id, inc)
-    
+
                     let msg = [
                         `You just Advanced to Level ${levelData.level.toLocaleString("en-AU")}!`,
                         `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString("en-AU")}, ${this.emojis.minions}${gainedminions.toLocaleString("en-AU")}`
                     ].join(" • ")
-    
+
                     this.props.description += msg
                 }
             }

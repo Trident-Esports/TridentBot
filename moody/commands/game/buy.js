@@ -1,4 +1,4 @@
-const ShopCommand = require('../../classes/shopcommand.class');
+const ShopCommand = require('../../classes/command/shopcommand.class');
 
 module.exports = class BuyCommand extends ShopCommand {
     constructor() {

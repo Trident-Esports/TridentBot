@@ -1,6 +1,5 @@
-const TicketCommand = require('../../classes/ticketcommand.class');
+const TicketCommand = require('../../classes/command/ticketcommand.class');
 
-// Ticket
 module.exports = class TheBoysTicketCommand extends TicketCommand {
     constructor() {
         let comprops = {

@@ -1,7 +1,7 @@
-const fs = require('fs');
+const VillainsCommand = require('../../classes/command/vcommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 const dasu = require('dasu');
-const VillainsCommand = require('../../classes/vcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const fs = require('fs');
 
 function walk(dir) {
     let results = [];
@@ -21,6 +21,7 @@ function walk(dir) {
     });
     return results;
 }
+
 module.exports = class MatchesCommand extends VillainsCommand {
     constructor() {
         super({

@@ -1,4 +1,4 @@
-const ModCommand = require('../../classes/modcommand.class');
+const ModCommand = require('../../classes/command/modcommand.class');
 const db = require('../../../models/warns')
 
 module.exports = class WarnCommand extends ModCommand {

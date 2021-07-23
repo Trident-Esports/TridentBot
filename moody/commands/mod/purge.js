@@ -1,6 +1,5 @@
 const { BaseCommand } = require('a-djs-handler');
-const SlimEmbed = require('../../classes/vslimbed.class');
-
+const SlimEmbed = require('../../classes/embed/vslimbed.class');
 const fs = require('fs');
 const ms = require('ms');
 
@@ -57,6 +56,6 @@ module.exports = class PurgeCommand extends BaseCommand {
             .then(msg => {
                 setTimeout(() => msg.delete(), ms(duration))
             })
-            
-    } 
+
+    }
 }

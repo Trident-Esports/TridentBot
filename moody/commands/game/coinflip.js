@@ -1,5 +1,5 @@
-const GameCommand = require('../../classes/gamecommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const GameCommand = require('../../classes/command/gamecommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 
 module.exports = class CoinFlipCommand extends GameCommand {
     //FIXME: Footer getting smudged?

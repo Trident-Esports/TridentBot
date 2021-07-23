@@ -1,5 +1,4 @@
-const GameCommand = require('../../classes/gamecommand.class');
-
+const GameCommand = require('../../classes/command/gamecommand.class');
 const fs = require('fs');
 
 module.exports = class InventoryCommand extends GameCommand {

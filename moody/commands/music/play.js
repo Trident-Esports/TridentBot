@@ -1,6 +1,6 @@
-const VillainsCommand = require('../../classes/vcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
 const BotActivityCommand = require('../mod/botactivity');
+const VillainsCommand = require('../../classes/command/vcommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 const { DiscordAPIError } = require('discord.js');
 
 //TODO: Spotify Playlists

@@ -17,8 +17,8 @@ TODO:
 */
 
 const { BaseCommand } = require('a-djs-handler');
-const VillainsEmbed = require('../classes/vembed.class');
-const SlimEmbed = require('../classes/vslimbed.class');
+const VillainsEmbed = require('../embed/vembed.class');
+const SlimEmbed = require('../embed/vslimbed.class');
 const pagination = require('discord.js-pagination');
 
 const fs = require('fs');

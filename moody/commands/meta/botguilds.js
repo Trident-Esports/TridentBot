@@ -1,4 +1,4 @@
-const AdminCommand = require('../../classes/admincommand.class');
+const AdminCommand = require('../../classes/command/admincommand.class');
 
 function ksort(obj){
   let keys = Object.keys(obj).sort(), sortedObj = {};

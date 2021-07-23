@@ -4,7 +4,7 @@ const cooldownsModel = require('../../models/cooldownsSchema'); // Cooldowns
 const healthModel = require('../../models/healthSchema');       // Health
 const XPBoostModel = require('../../models/xpboostSchema');     // XP Boost
 
-const VillainsEmbed = require('../../moody/classes/vembed.class'); // Villains Embed
+const VillainsEmbed = require('../../moody/classes/embed/vembed.class'); // Villains Embed
 
 const fs = require('fs'); // File System
 

@@ -1,4 +1,4 @@
-const VillainsCommand = require('../../classes/vcommand.class');
+const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class BonkCommand extends VillainsCommand {
     constructor() {
