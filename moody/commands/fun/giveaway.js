@@ -1,6 +1,8 @@
 const QuestionnaireCommand = require('../../classes/questionnairecommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
-const { DiscordAPIError } = require('discord.js');
+const {
+    DiscordAPIError
+} = require('discord.js');
 
 const fs = require('fs');
 const ms = require('ms');
@@ -20,7 +22,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
     }
 
     async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json", "utf8"))
         let channelID = 0
         let channel = null
 
@@ -46,7 +48,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
     async action(client, message) {
         let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
-        let APPROVED_ROLES = ROLES["admin", "mod"]
+        let APPROVED_ROLES = ROLES["admin"]
 
         if (!message.member.roles.cache.some(r => APPROVED_ROLES.includes(r.name))) {
             this.error = true
@@ -106,7 +108,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                         this.props.title.text = product
                         this.props.description.push(
                             `React with ${this.emoji[0]} to enter!`,
-                            `Ends: <t:${end}:f>`,                     // In Seconds
+                            `Ends: <t:${end}:f>`, // In Seconds
                             `Hosted By: ${message.author}`
                         )
 
@@ -146,7 +148,8 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                     }
 
                                     let shuffler = (arr) => {
-                                        let currentIndex = arr.length,  randomIndex;
+                                        let currentIndex = arr.length,
+                                            randomIndex;
 
                                         // While there remain elements to shuffle...
                                         while (0 !== currentIndex) {
@@ -156,34 +159,30 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
                                             // And swap it with the current element.
                                             [arr[currentIndex], arr[randomIndex]] = [
-                                                arr[randomIndex], arr[currentIndex]];
+                                                arr[randomIndex], arr[currentIndex]
+                                            ];
                                         }
 
                                         return arr;
                                     }
 
-                                    winners = shuffler(reactors[reaction]).slice(0,winnersnum)
+                                    winners = shuffler(reactors[reaction]).slice(0, winnersnum)
 
-                                    fields.push(
-                                        {
-                                            name: "Prize",
-                                            value: product
-                                        },
-                                        {
-                                            name: "Ended",
-                                            value: `<t:${end}:f>`
-                                        },
-                                        {
-                                            name: `Winners: ${reaction}`,
-                                            value: `${winners.map(x => `<@${x}>`).join("\n")}`,
-                                            inline: true
-                                        },
-                                        {
-                                            name: `Host`,
-                                            value: `${message.author}`,
-                                            inline: true
-                                        }
-                                    )
+                                    fields.push({
+                                        name: "Prize",
+                                        value: product
+                                    }, {
+                                        name: "Ended",
+                                        value: `<t:${end}:f>`
+                                    }, {
+                                        name: `Winners: ${reaction}`,
+                                        value: `${winners.map(x => `<@${x}>`).join("\n")}`,
+                                        inline: true
+                                    }, {
+                                        name: `Host`,
+                                        value: `${message.author}`,
+                                        inline: true
+                                    })
                                 }
 
                                 let embed = new VillainsEmbed({
