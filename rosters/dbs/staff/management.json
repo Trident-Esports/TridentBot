@@ -12,34 +12,32 @@
           ]
       },
       "social media": {
-          "title": "Social Media Manager",
+          "title": "Social Media",
           "users": [
               "hackermans"
           ]
       },
       "events":{
-          "title": "Events Manager",
+          "title": "Events",
           "users": [
               "noongar1800"
           ]
       },
-      "val": {
-          "title": "Valorant Managers",
+      "r6s": {
+          "title": "Rainbow Six Seige",
           "users": [
-              "guessmonster",
-              "queen"
+              "salvo"
           ]
       },
       "rocketleague": {
-          "title": "Rocket League Manager",
-          "users": [
-              "capther0"
-          ]
+          "title": "Rocket League",
+          "users": []
       },
-      "r6s": {
-          "title": "Rainbow 6 Seige Manager",
+      "val": {
+          "title": "VALORANT",
           "users": [
-              "salvo"
+              "guessmonster",
+              "queen"
           ]
       }
     }
