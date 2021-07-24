@@ -6,15 +6,21 @@ const { DiscordAPIError } = require('discord.js');
 //TODO: Spotify Playlists
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
+const spURLinfo = require('spotify-url-info');
+// const dasu = require('dasu');
 const ytSearch = require('yt-search');
 
 const { getPreview } = require("spotify-url-info");
 
-// Sonic CD Open            | vln p <https://www.youtube.com/watch?v=EYW7-hNXZlM>
-// Sonic CD End             | vln p <https://www.youtube.com/watch?v=oGiDJAjJ5Iw>
-// Let the Bad Times Roll   | vln p <https://open.spotify.com/track/6IOL5tW3yRKKKpPNVCVmzU?si=5561f47153294b2a>
-// Kingdom Hearts Playlist  | vln p <https://www.youtube.com/playlist?list=PLrk5ekL2Y-u9ERXjjoDXD57ajaXFNzSYy>
-// Hero of Rhyme Playlist   | vln p <https://www.youtube.com/playlist?list=PLrk5ekL2Y-u-uAIRJQ1HXPWqBa_jRkcNK>
+// Sonic CD Open                | vln p <https://www.youtube.com/watch?v=EYW7-hNXZlM>
+// Sonic CD End                 | vln p <https://www.youtube.com/watch?v=oGiDJAjJ5Iw>
+// Let the Bad Times Roll       | vln p <https://open.spotify.com/track/6IOL5tW3yRKKKpPNVCVmzU?si=5561f47153294b2a>
+// Kingdom Hearts Playlist      | vln p <https://www.youtube.com/playlist?list=PLrk5ekL2Y-u9ERXjjoDXD57ajaXFNzSYy>
+// Hero of Rhyme Playlist       | vln p <https://www.youtube.com/playlist?list=PLrk5ekL2Y-u-uAIRJQ1HXPWqBa_jRkcNK>
+// Sonic CD Playlist            | vln p <https://open.spotify.com/playlist/5sBxaMJYdJSG24tPc5gcL8>
+// Power Overwhelming Playlist  | vln p <https://open.spotify.com/playlist/3lP3PBGRxlq9nQHcKmh9uZ>
+// Power Overwhelming Playlist  | vln p spotify:user:1212372188:3lP3PBGRxlq9nQHcKmh9uZ
+// Power Overwhelming Playlist  | vln p 1212372188:3lP3PBGRxlq9nQHcKmh9uZ
 
 const queue = new Map()
 module.exports = class PlayCommand extends VillainsCommand {
@@ -204,6 +210,7 @@ module.exports = class PlayCommand extends VillainsCommand {
 
                 // Validate URL as YT URL
                 if (ytdl.validateURL(inputURL)) {
+                    console.log("Music: YouTube Song -->")
                     const songInfo = await ytdl.getInfo(inputURL);
                     song = {
                         title: songInfo.videoDetails.title,
@@ -211,6 +218,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                         user: user
                     };
                 } else if (inputURL.includes('youtu') && inputURL.includes('be') && inputURL.includes('playlist')) {
+                    console.log("Music: YouTube Playlist -->")
                     const playlistInfo = await ytpl(inputURL);
 
                     this.props.description = `Playlist **${playlistInfo.title}** added to queue by` + ` [*<@${message.author.id}>*] `
@@ -228,28 +236,102 @@ module.exports = class PlayCommand extends VillainsCommand {
                     }
                 } else if (inputURL.includes('spotify')) {
                     // Check if Spotify
-                    const spotifyTrackInfo = await getPreview(inputURL);
 
-                    const videoFinder = async (query) => {
-                        const videoResult = await ytSearch(query);
-                        return videoResult.videos.length > 1 ? videoResult.videos[0] : null;
-                    };
+                    if (inputURL.includes("playlist")) {
+                        // spotify-playlist probably can use spotify:playlist:playlistID
+                        // spotify-web-api-node.getPlaylist(playlistID) // needs API key
+                        // spotify-url-info.getTracks(inputURL)
+                        console.log("Music: Spotify Playlist -->")
+                        let playlistID = inputURL.split('/').pop()
 
-                    const video = await videoFinder(`${spotifyTrackInfo.title} ${spotifyTrackInfo.artist}`);
+                        // spotify-url-info method
+                        if (true) {
+                            await spURLinfo.getData(inputURL).then(async (data) => {
+                                const spotifyPlaylistInfo = data
+                                const spotifyTracks = spotifyPlaylistInfo?.tracks?.items ? spotifyPlaylistInfo.tracks.items : null
+                                if (spotifyTracks) {
+                                    for (let [, spotifyTrackInfo] of Object.entries(spotifyTracks)) {
+                                        if (spotifyTrackInfo?.track?.external_urls) {
+                                            await songSearch(client, message, spotifyTrackInfo.track.external_urls.spotify)
+                                        }
+                                    }
+                                }
+                            })
+                        }
 
-                    // If we got something, package it
-                    if (video) {
-                        song = {
-                            title: video.title,
-                            url: video.url,
-                            user: user
-                        };
+                        // dasu method
+                        if (false) {
+                            let req = dasu.req
+
+                            let filepath = "/spotify/" + playlistID
+                            let url = new URL("http://villainsoce.mymm1.com:80" + filepath)
+
+                            let params = {
+                                method: 'GET',
+                                protocol: url.protocol,
+                                hostname: url.hostname,
+                                port: url.port,
+                                path: url.pathname + (url?.searchParams ? ('?' + url.searchParams.toString()) : '')
+                            }
+
+                            await req(params, async function (err, res, data) {
+                                try {
+                                    let json = JSON.parse(data)
+                                    if ("data" in json) {
+                                        if ("Escaped JSON" in json.data) {
+                                            let encodedJSON = json.data["Escaped JSON"]
+                                            if (encodedJSON) {
+                                                encodedJSON = encodedJSON.replace(/\s/g, '')
+                                                let decodedJSON = decodeURI(encodedJSON)
+                                                    .replace(/\%2C/g,',')
+                                                    .replace(/\%2F/g,'/')
+                                                    .replace(/\%3A/g,':')
+
+                                                const spotifyPlaylistInfo = JSON.parse(decodedJSON)
+                                                const spotifyTracks = spotifyPlaylistInfo?.tracks?.items ? spotifyPlaylistInfo.tracks.items : null
+
+                                                if (spotifyTracks) {
+                                                    for (let [, spotifyTrackInfo] of Object.entries(spotifyTracks)) {
+                                                        if (spotifyTrackInfo?.track?.external_urls) {
+                                                            await songSearch(client, message, spotifyTrackInfo.track.external_urls.spotify)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                } catch(e) {
+                                    console.log(e)
+                                    // console.log(`Malformed JSON:${url}`)
+                                }
+                            })
+                        }
                     } else {
-                        this.error = true
-                        this.props.description = "Couldn't find Spotify song on YouTube."
+                        console.log("Music: Spotify Song -->")
+                        const spotifyTrackInfo = await getPreview(inputURL);
+
+                        const videoFinder = async (query) => {
+                            const videoResult = await ytSearch(query);
+                            return videoResult.videos.length > 1 ? videoResult.videos[0] : null;
+                        };
+
+                        const video = await videoFinder(`${spotifyTrackInfo.title} ${spotifyTrackInfo.artist}`);
+
+                        // If we got something, package it
+                        if (video) {
+                            song = {
+                                title: video.title,
+                                url: video.url,
+                                user: user
+                            };
+                        } else {
+                            this.error = true
+                            this.props.description = "Couldn't find Spotify song on YouTube."
+                        }
                     }
                 } else {
                     // Not YT nor Spotify
+                    console.log("Music: Neither YouTube nor Spotify -->")
                     const videoFinder = async (query) => {
                         const videoResult = await ytSearch(query);
                         return videoResult.videos.length > 1 ? videoResult.videos[0] : null;
@@ -312,7 +394,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                     } else {
                         // We've got a queue, add to it
                         this.server_queue.songs.push(song); {
-                            console.log("Music: Queueing Song")
+                            console.log(`Music: Queueing Song: ${song.title}`)
                             if (!silent && song?.title) {
                                 this.props.description = `Song **${song.title}** added to queue by` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : "");
                                 await this.send(message, new VillainsEmbed(this.props));
