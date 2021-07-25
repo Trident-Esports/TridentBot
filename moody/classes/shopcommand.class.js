@@ -39,10 +39,12 @@ module.exports = class ShopCommand extends GameCommand {
             if (!inventoryData) {
                 this.error = true
                 this.props.description = this.errors.game.mongoDB.noInventory.join("\n")
+                return
             }
             if (!profileData) {
                 this.error = true
                 this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
+                return
             }
 
             if (!(this.error)) {
@@ -99,10 +101,12 @@ module.exports = class ShopCommand extends GameCommand {
                 if (selected_item == "") {
                     this.error = true
                     this.props.description = "No item name given."
+                    return
                 }
                 if (quantity == -1) {
                     this.error = true
                     this.props.description = `Invalid quantity. '${quantity}' given.`
+                    return
                 }
 
                 let [cat, items] = [null, null]
@@ -240,6 +244,7 @@ module.exports = class ShopCommand extends GameCommand {
                                 `'${inventorySorts.flat[item.emoji]}' in inventory.`,
                                 `'${quantity}' requested to use.`
                             ].join("\n")
+                            return
                         }
                     }
                 }
@@ -247,6 +252,7 @@ module.exports = class ShopCommand extends GameCommand {
                 if ((!this.props.description) || (this.props.description == "")) {
                     this.error = true
                     this.props.description = `Item doesn't exist. '${selected_item}' given.`
+                    return
                 }
             }
         }

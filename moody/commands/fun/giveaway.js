@@ -21,45 +21,18 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         super(comprops)
     }
 
-    async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json", "utf8"))
-        let channelID = 0
-        let channel = null
-
-        // Get channel IDs for this guild
-        if (Object.keys(channelIDs).includes(message.guild.id)) {
-            // If the channel type exists
-            if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
-                // Get the ID
-                channelID = channelIDs[message.guild.id][channelType]
-            }
-        }
-
-        // If the ID is not a number, search for a named channel
-        if (isNaN(channelID)) {
-            channel = message.guild.channels.cache.find(c => c.name === channelID);
-        } else {
-            // Else, search for a numbered channel
-            channel = message.guild.channels.cache.find(c => c.id === channelID);
-        }
-
-        return channel
-    }
-
     async action(client, message) {
         let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
         let APPROVED_ROLES = ROLES["admin"]
 
         if (!message.member.roles.cache.some(r => APPROVED_ROLES.includes(r.name))) {
             this.error = true
-            this.props.title.text = "Error"
             this.props.description = this.errors.modOnly
+            return
         }
 
         if (!(this.error)) {
             // vln giveaway 20s 1w :poop:
-
-            this.channel = await this.getChannel(message, "giveaway")
 
             this.props.description = []
 
@@ -74,26 +47,36 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
             if ((!(duration)) || isNaN(duration)) {
                 this.error = true
+                this.channel = message.channel
                 this.props.description = `Please enter an amount of time for the Giveaway to go for. '${duration}' given.`
+                return
             }
 
             if (!(this.error)) {
-                let winnersnum = parseInt(this.inputData.args.shift().replace("w", ""))
+                let winnersnum = this.inputData.args.shift()
+                if (winnersnum) {
+                    winnersnum = parseInt(winnersnum.replace("w", ""))
+                }
                 this.props.description.push(`Winners: ${winnersnum}`)
 
                 if ((!(winnersnum)) || isNaN(winnersnum)) {
                     this.error = true
+                    this.channel = message.channel
                     this.props.description = `Please enter a maximum number of winners. '${winnersnum}' given.`
+                    return
                 }
 
                 if (!(this.error)) {
+                    this.channel = await this.getChannel(message, "giveaway")
                     let product = this.inputData.args.join(" ")
 
                     // this.props.description.push(`Product: ${product}`)
 
                     if (!(product)) {
                         this.error = true
+                        this.channel = message.channel
                         this.props.description = "What are you giving away?"
+                        return
                     }
 
                     if (!(this.error)) {
@@ -185,16 +168,16 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                     })
                                 }
 
-                                let embed = new VillainsEmbed({
+                                let desc = fields.length > 0 ? `Please DM the host for your prize!` : `No Winners found!`
+                                let props = {
                                     caption: {
                                         text: "Giveaway Winners"
                                     },
-                                    description: [
-                                        `Please DM the Host for your prize!`
-                                    ].join("\n"),
+                                    description: [desc].join("\n"),
                                     fields: fields
-                                });
-                                for (let winner of winners) {
+                                }
+                                let embed = new VillainsEmbed(props);
+                                for (let winner of [...winners, message.author.id]) {
                                     client.users.fetch(winner, false).then((user) => {
                                         if (!(user.bot)) {
                                             try {

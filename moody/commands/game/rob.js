@@ -47,11 +47,13 @@ module.exports = class RobCommand extends GameCommand {
                 // You need >= $minSteal
                 this.error = true
                 this.props.description = `You need at least ${this.emojis.gold}${minSteal} in your wallet to rob someone!`
+                return
             }
             if (targetmoney < minSteal) {
                 // Target needs >= $minSteal
                 this.error = true
                 this.props.description = `Mentioned user needs to have at least ${this.emojis.gold}${minSteal} in their wallet to rob!`
+                return
             }
 
             if (!(this.error)) {
@@ -150,12 +152,12 @@ module.exports = class RobCommand extends GameCommand {
                         minions: gainedminions
                     }
                     await this.db_transform(target.id, inc)
-    
+
                     let msg = [
                         `You just Advanced to Level ${levelData.level.toLocaleString("en-AU")}!`,
                         `You have gained: ${this.emojis.gold}${gainedmoney.toLocaleString("en-AU")}, ${this.emojis.minions}${gainedminions.toLocaleString("en-AU")}`
                     ].join(" • ")
-    
+
                     this.props.description += msg
                 }
             }

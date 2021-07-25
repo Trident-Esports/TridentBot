@@ -20,6 +20,7 @@ module.exports = class WarnsCommand extends ModCommand {
         if (!user) {
             this.error = true
             this.props.description = this.errors.cantActionSelf
+            return
         }
 
         if (!(this.error)) {

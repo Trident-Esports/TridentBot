@@ -87,46 +87,37 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             profiles[span] = [ handlerpath + filepath + '-' + span + ".json" ]
                         }
                     }
-                } else {  // first arg is text
-                    if (["all","complete","completed","incomplete","next"].includes(args[0].toLowerCase())) {
-                        // this is a valid span
-                        // return all rosters for span
-                        let span = args[0].toLowerCase()
-                        if (span == "completed") {
-                            span = "complete"
-                        }
-                        if (!profiles[span]) {
-                            profiles[span] = []
-                        }
-                        let locPath = "./rosters/dbs/teams"
-                        let files = walk(locPath)
-                        for (let file of files) {
-                            let fData = JSON.parse(fs.readFileSync(file, "utf8"))
-                            if (fData?.team?.teamID) {
-                                let handlerpath = "/team/"
-                                let filepath = fData.team.teamID
-                                if (fData?.team?.tourneyID) {
-                                    handlerpath = "/tourney/"
-                                    filepath = fData.team.tourneyID + '/' + filepath
-                                }
-                                profiles[span].push(
-                                    handlerpath + filepath + '-' + span + ".json"
-                                )
+                } else if (["all","complete","completed","incomplete","next"].includes(args[0].toLowerCase())) {
+                    // first arg is text
+                    // this is a valid span
+                    // return all rosters for span
+                    let span = args[0].toLowerCase()
+                    if (span == "completed") {
+                        span = "complete"
+                    }
+                    if (!profiles[span]) {
+                        profiles[span] = []
+                    }
+                    let locPath = "./rosters/dbs/teams"
+                    let files = walk(locPath)
+                    for (let file of files) {
+                        let fData = JSON.parse(fs.readFileSync(file, "utf8"))
+                        if (fData?.team?.teamID) {
+                            let handlerpath = "/team/"
+                            let filepath = fData.team.teamID
+                            if (fData?.team?.tourneyID) {
+                                handlerpath = "/tourney/"
+                                filepath = fData.team.tourneyID + '/' + filepath
                             }
+                            profiles[span].push(
+                                handlerpath + filepath + '-' + span + ".json"
+                            )
                         }
                     }
                 }
-            } else {
-                // something got stuffed up
-                let msg = `${message.author}, the correct usage is:` + "\n"
-                msg += "`" + this.prefix + "matches [all|incomplete|complete|next]`" + "\n"
-                msg += "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                msg += "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                return message.channel.send(msg)
             }
         }
 
-        let emojiIDs = JSON.parse(fs.readFileSync("dbs/emojis.json","utf8"))
         let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json","utf8"))
 
         let pages = []
@@ -272,6 +263,16 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 pages.push(embed)
             }
         }
-        super.send(message, pages, [], "", true)
+
+        if (pages.length) {
+            super.send(message, pages, [], "", true)
+        } else {
+            // something got stuffed up
+            let msg = `${message.author}, the correct usage is:` + "\n"
+            msg += "`" + this.prefix + "matches [all|incomplete|complete|next]`" + "\n"
+            msg += "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
+            msg += "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
+            return message.channel.send(msg)
+        }
     }
 }

@@ -29,6 +29,7 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
         } else {
             this.error = true
             this.props.description = "No invite code found in profile."
+            return
         }
     }
 }

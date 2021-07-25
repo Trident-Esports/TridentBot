@@ -68,6 +68,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
         if (this.inputData.args.length <= 0 || this.inputData.args[0].trim() == "") {
             this.error = true
             this.props.description = "No topic sent!"
+            return
         } else {
             this.props.description = this.inputData.args.join(" ")
         }
@@ -78,6 +79,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
             if (!this.channel) {
                 this.error = true
                 this.props.description = this.props.caption.text + " channel doesn't exist!"
+                return
             }
         }
 

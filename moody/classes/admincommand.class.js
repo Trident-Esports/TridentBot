@@ -54,6 +54,7 @@ module.exports = class AdminCommand extends VillainsCommand {
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
             this.error = true
             this.props.description = this.errors.adminOnly
+            return
         }
 
         if(!(this.error)) {

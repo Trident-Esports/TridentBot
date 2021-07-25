@@ -19,6 +19,7 @@ module.exports = class WarnCommand extends ModCommand {
         if (!user) {
             this.error = true
             this.props.description = this.errors.cantActionSelf
+            return
         }
 
         const reason = this.inputData.args.join(" ")
@@ -33,6 +34,7 @@ module.exports = class WarnCommand extends ModCommand {
         if (!reason) {
             this.error = true
             this.props.description = this.errors.noReason
+            return
         }
 
         if(!(this.error)) {

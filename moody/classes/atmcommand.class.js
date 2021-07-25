@@ -67,6 +67,7 @@ module.exports = class ATMCommand extends GameCommand {
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
                 this.error = true
                 this.props.description = this.errors.adminOnly.join("\n")
+                return
             }
         }
 
@@ -75,6 +76,7 @@ module.exports = class ATMCommand extends GameCommand {
         if ((isNaN(amount) && (["all","half"].indexOf(amount) == -1)) || (parseInt(amount) <= 0)) {
             this.error = true
             this.props.description = `Amount must be a positive whole number, "all" or "half". '${amount}' given.`
+            return
         }
 
         if (!(this.error)) {
@@ -83,6 +85,7 @@ module.exports = class ATMCommand extends GameCommand {
             if (!profileData) {
                 this.error = true
                 this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
+                return
             }
 
             if (!(this.error)) {
@@ -93,6 +96,7 @@ module.exports = class ATMCommand extends GameCommand {
                         if ((["Give", "Steal"].includes(this.props.caption.text)) && (this.inputData.user.id === loaded.id)) {
                             this.error = true
                             this.props.description = `You can't ${this.props.caption.text} Gold to/from yourself!`
+                            return
                         }
 
                         if (!(this.error)) {
@@ -101,11 +105,13 @@ module.exports = class ATMCommand extends GameCommand {
                             if (!targetData) {
                                 this.error = true
                                 this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
+                                return
                             }
                         }
                     } else {
                         this.error = true
                         this.props.description = `You need to specify a player to ${props.caption.text} Gold.`
+                        return
                     }
                 }
 
@@ -134,6 +140,7 @@ module.exports = class ATMCommand extends GameCommand {
                         if (parseInt(amount) > parseInt(reserve)) {
                             this.error = true
                             this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
+                            return
                         }
                     }
 

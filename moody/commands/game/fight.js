@@ -75,12 +75,14 @@ module.exports = class FightCommand extends GameCommand {
                 this.error = true
                 this.numErrors += 1
                 this.props.description = 'You are already in a command. Duel Cancelled!'
+                return
             }
 
             if (m.content.toLowerCase() === 'no' || m.content.toLowerCase().startsWith('n')) {
                 this.error = true
                 this.numErrors += 1
                 this.props.description = 'The Duel was Cancelled!'
+                return
             }
 
             if (!(this.error)) {

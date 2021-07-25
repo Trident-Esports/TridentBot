@@ -18,6 +18,7 @@ module.exports = class LevelCommand extends GameCommand {
         if (!levelData) {
             this.error = true
             this.props.description = "This user doesn't have a Level.😢"
+            return
         }
 
         if (!(this.error)) {
