@@ -25,8 +25,6 @@ let walk = function (dir) {
     return results;
 }
 
-let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-
 module.exports = (client, message, args) => {
     let dir = "./rosters"
     const rosters_profiles = walk(dir)
@@ -38,7 +36,11 @@ module.exports = (client, message, args) => {
         }
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
 
-        if (profile.aliases) {
+        if (!profile) {
+            console.log(`Failed to get roster: ${file}`)
+        }
+
+        if (profile?.aliases) {
             let fileparts = file.split('/')
             let gameID = fileparts[fileparts.length - 2]
             let filename = fileparts[fileparts.length - 1].replace(".json","")

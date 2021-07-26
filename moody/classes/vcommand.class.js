@@ -84,6 +84,31 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.error = false
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
         this.inputData = {}
+
+        // Bail if we fail to get server profile information
+        if (!GLOBALS) {
+            this.error = true
+            this.props.description = "Failed to get server profile information."
+            return
+        }
+        // Bail if we fail to get bot default information
+        if (!DEFAULTS) {
+            this.error = true
+            this.props.description = "Failed to get bot default information."
+            return
+        }
+        // Bail if we fail to get command prefix
+        if (!prefix) {
+            this.error = true
+            this.props.description = "Failed to get command prefix."
+            return
+        }
+        // Bail if we fail to get error message information
+        if (!(this.errors)) {
+            this.error = true
+            this.props.description = "Failed to get error message information."
+            return
+        }
     }
 
     get DEV() {
@@ -211,6 +236,16 @@ module.exports = class VillainsCommand extends BaseCommand {
             // If Bot has been specified as a Valid source
             // Get Bot whitelist
             let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json","utf8"))
+            // Bail if we fail to get UserIDs list
+            if (!USERIDS) {
+                this.error = true
+                this.props.description = "Failed to get UserIDs list."
+                return
+            }
+            // Fake an empty Bot Whitelist
+            if (!(USERIDS?.botWhite)) {
+                USERIDS["botWhite"] = []
+            }
             if (["default","required","optional"].includes(this.flags.bot)) {
                 // Do... something?
             } else if (loaded?.bot && loaded.bot && (USERIDS?.botWhite.indexOf(loaded.id) == -1)) {

@@ -67,8 +67,22 @@ module.exports = class ATMCommand extends GameCommand {
         // Refund & Steal are Admin-only
         if (["Refund", "Steal"].includes(this.props.caption.text)) {
             // Get botdev-defined list of roles groupings
+
             let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+            // Bail if we fail to get Roles information
+            if (!ROLES) {
+                this.error = true
+                this.props.description = "Failed to get Roles information."
+                return
+            }
+
             let APPROVED_ROLES = ROLES["admin"]
+            // Bail if we don't have intended Approved Roles data
+            if (!APPROVED_ROLES) {
+                this.error = true
+                this.props.description = "Failed to get Approved Roles."
+                return
+            }
 
             // Bail if member doesn't have Approved Roles
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {

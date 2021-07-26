@@ -19,17 +19,23 @@ module.exports = class LeaderboardCommand extends GameCommand {
     }
 
     async action(client, message) {
+        // Get leaderboard
         const rawLeaderboard = await this.Levels.fetchLeaderboard(1,10); // We grab top 10 users with most xp in the current server.
 
+        // Bail if no leaderboard data
         if (rawLeaderboard.length < 1) {
-            return reply("Nobody's on the leaderboard yet.");
+            this.error = true
+            this.description = "Nobody's on the leaderboard yet."
+            return
         }
 
+        // Process leaderboard
         const leaderboard = await this.Levels.computeLeaderboard(client, rawLeaderboard, true); // We process the leaderboard.
 
         let props = this.props
         props.fields = []
 
+        // Add users
         for (let [slot, player] of Object.entries(leaderboard)) {
             props.fields.push(
                 {
@@ -48,11 +54,15 @@ module.exports = class LeaderboardCommand extends GameCommand {
                     inline: true
                 }
             )
+
+            // Push pages by 5 users
             if ((parseInt(slot) + 1) % 5 == 0) {
                 this.pages.push(new VillainsEmbed(props))
                 props.fields = []
             }
         }
+
+        // Push each page
         if (props.fields.length > 0) {
             this.pages.push(new VillainsEmbed(props))
             props.fields = []

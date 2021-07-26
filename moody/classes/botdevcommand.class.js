@@ -40,6 +40,14 @@ module.exports = class BotDevCommand extends VillainsCommand {
 
         // Get botdev-defined list of userids of BotDevs
         this.USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8")).botDevs
+
+        // Bail if we fail to get UserIDs list
+        if (!(this.USERIDS)) {
+            this.USERIDS = { botDevs: [], botWhite: [] }
+            this.error = true
+            this.props.description = "Failed to get UserIDs list."
+            return
+        }
     }
 
     get USERIDS() {

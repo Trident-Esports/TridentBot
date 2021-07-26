@@ -55,6 +55,13 @@ module.exports = class ShopCommand extends GameCommand {
         // Get shop stock information
         let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
 
+        // Bail if we fail to get shop item stock information
+        if (!STOCKDATA) {
+            this.error = true
+            this.props.description = "Failed to get shop item stock information."
+            return
+        }
+
         // Sort inventory data
         let inventorySorts = {
             fromDB: {},

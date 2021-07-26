@@ -18,9 +18,20 @@ function formatUnicorn(str, args) {
 };
 
 module.exports = async (Discord, client, message) => {
-
     const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+
+    // Bail if we fail to get server profile information
+    if (!DEFAULTS) {
+        console.log("Failed to get server profile information.")
+        return
+    }
+
     const prefix = DEFAULTS.prefix; // Default Prefix
+    // Bail if we fail to get command prefix
+    if (!prefix) {
+        console.log("Failed to get command prefix.")
+        return
+    }
 
     //FIXME: Obsolete?
     if (message.author.bot) {

@@ -40,6 +40,13 @@ module.exports = class GameCommand extends VillainsCommand {
 
         // Get list of game emojis
         this.emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
+
+        // Bail if we fail to get game emojis data
+        if (!(this.emojis)) {
+            this.error = true
+            this.props.description = "Failed to get Game Emojis data."
+            return
+        }
     }
 
     get emojis() {
