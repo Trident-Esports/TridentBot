@@ -6,9 +6,9 @@ MessageEmbed
  VillainsEmbed
 
 */
+const { MessageEmbed } = require('discord.js');
 
 const fs = require('fs');
-const { MessageEmbed } = require('discord.js');
 
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))

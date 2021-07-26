@@ -9,16 +9,21 @@ BaseCommand
   BotDevCommand
 
 */
-
 const VillainsCommand = require('./vcommand.class');
-const VillainsEmbed = require('./vembed.class');
+
 const fs = require('fs');
 
 module.exports = class BotDevCommand extends VillainsCommand {
-    constructor(comprops = {}, props = { title: {}, description: "" }) {
-        super(comprops)
-        this.props = props
+    #USERIDS; // Private: USERIDS
 
+    constructor(comprops = {}, props = { title: {}, description: "" }) {
+        // Create a parent object
+        super(
+            {...comprops},
+            {...props}
+        )
+
+        // Load requested extensions
         if (comprops?.extensions) {
             for (let extension of comprops.extensions) {
                 let key = extension + "Model"
@@ -32,42 +37,26 @@ module.exports = class BotDevCommand extends VillainsCommand {
                 this[key] = require(inc)
             }
         }
+
+        // Get botdev-defined list of userids of BotDevs
+        this.USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8")).botDevs
     }
 
-    async action(client, message, args) {
-        // do nothing; command overrides this
-        if(APPROVED_USERIDS) {
-            // do the action
-        } else {
-            // describe the action
-        }
+    get USERIDS() {
+        return this.#USERIDS
+    }
+    set USERIDS(USERIDS) {
+        this.#USERIDS = USERIDS
     }
 
     async build(client, message, args) {
-        this.action(client, message, args)
-    }
-
-    async run(client, message, args) {
-        let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8"))
-
-        /*
-
-        Mike
-        Noongar
-        Prime
-
-        */
-
-        if(USERIDS.botDevs.indexOf(message.author.id) == -1) {
+        // Bail if not valid UserID
+        if(this.USERIDS.indexOf(message.author.id) == -1) {
             this.error = true
             this.props.description = this.errors.botDevOnly.join("\n")
             return
         } else {
-            this.build(client, message, args)
+            await this.action(client, message, args)
         }
-
-        let embed = new VillainsEmbed(this.props)
-
-        await message.channel.send(embed)
     }
 }

@@ -7,7 +7,6 @@ MessageEmbed
   SlimEmbed
 
 */
-
 const VillainsEmbed = require('./vembed.class');
 
 module.exports = class SlimEmbed extends VillainsEmbed {
@@ -26,6 +25,8 @@ module.exports = class SlimEmbed extends VillainsEmbed {
         props.footer = { msg: "<NONE>" }
         props.timestamp = false
 
-        super(props)
+        super(
+            {...props}
+        )
     }
 }

@@ -37,6 +37,7 @@ module.exports = class AdminCommand extends VillainsCommand {
             }
         }
 
+        // Get botdev-defined list of roles groupings
         this.ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
     }
 
@@ -50,15 +51,13 @@ module.exports = class AdminCommand extends VillainsCommand {
     async build(client, message) {
         let APPROVED_ROLES = this.ROLES["admin"]
 
-        // Only Approved Roles
+        // Bail if member doesn't have Approved Roles
         if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
             this.error = true
             this.props.description = this.errors.adminOnly
             return
         }
 
-        if(!(this.error)) {
-            await this.action(client, message)
-        }
+        await this.action(client, message)
     }
 }

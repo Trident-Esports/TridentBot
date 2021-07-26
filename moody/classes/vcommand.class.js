@@ -15,12 +15,11 @@ TODO:
  Roster
 
 */
-
 const { BaseCommand } = require('a-djs-handler');
 const VillainsEmbed = require('../classes/vembed.class');
 const SlimEmbed = require('../classes/vslimbed.class');
-const pagination = require('discord.js-pagination');
 
+const pagination = require('discord.js-pagination');
 const fs = require('fs');
 
 module.exports = class VillainsCommand extends BaseCommand {
@@ -364,10 +363,13 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     async run(client, message, args, cmd) {
+        // Process arguments
         await this.processArgs(message, args, this.flags)
 
+        // Build the thing
         await this.build(client, message, cmd)
 
+        // If we have an error, make it errortastic
         if (this.error) {
             if (this.props?.title) {
                 this.props.title.text = "Error"
@@ -376,6 +378,8 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
         }
 
+        // If we just got an embed, let's check to see if it's a full page or slim page
+        // Toss it in pages as a single page
         if(this.pages.length == 0) {
             if(this.props?.full && this.props.full) {
                 this.pages.push(new VillainsEmbed(this.props))
@@ -384,6 +388,8 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
         }
 
+        // this.null is to be set if we've already sent the page(s) somewhere else
+        // Not setting this.null after sending the page(s) will send the page(s) again
         if ((!(this?.null)) || (this?.null && (!(this.null)))) {
             await this.send(message, this.pages)
         }
