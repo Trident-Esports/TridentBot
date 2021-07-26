@@ -1,6 +1,5 @@
 const VillainsCommand = require('../../classes/vcommand.class')
 const VillainsEmbed = require('../../classes/vembed.class')
-const fs = require('fs')
 
 // Works with Events: messageReactionAdd & messageReactionRemove
 
@@ -17,33 +16,11 @@ module.exports = class RulesRoleCommand extends VillainsCommand {
                 text: "Accepting Values"
             }
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
         this.channelName = "rules"
-    }
-
-    async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
-        let channelID = 0
-        let channel = null
-
-        // Get channel IDs for this guild
-        if (Object.keys(channelIDs).includes(message.guild.id)) {
-            // If the channel type exists
-            if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
-                // Get the ID
-                channelID = channelIDs[message.guild.id][channelType]
-            }
-        }
-
-        // If the ID is not a number, search for a named channel
-        if (isNaN(channelID)) {
-            channel = message.guild.channels.cache.find(c => c.name === channelID);
-        } else {
-            // Else, search for a numbered channel
-            channel = message.guild.channels.cache.find(c => c.id === channelID);
-        }
-
-        return channel
     }
 
     async action(client, message) {
@@ -58,6 +35,7 @@ module.exports = class RulesRoleCommand extends VillainsCommand {
             "By selecting the reaction below, you are agreeing to Villains Values and will be punished according to how severely the values are broken."
         ]
 
+        // We'll handle sending it
         this.null = true
         await this.send(message, new VillainsEmbed(this.props)).then(async (msg) => {
             await msg.react(RULES_EMOJI)

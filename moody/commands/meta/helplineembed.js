@@ -1,8 +1,5 @@
 const VillainsCommand = require('../../classes/vcommand.class');
 
-const fs = require('fs');
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-
 module.exports = class HelplineEmbedCommand extends VillainsCommand {
     constructor() {
         let comprops = {
@@ -16,7 +13,10 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
             },
             image: 'https://multiculturalmarriage.files.wordpress.com/2013/07/help-button-hi.png'
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
     async action(client, message) {
         this.props.description = 'This is a list of the commands and help for VillainsBot'

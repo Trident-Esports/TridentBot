@@ -71,7 +71,7 @@ module.exports = (client, message, args) => {
             }
             client.commands.set(rosterCommand.name, rosterCommand);
 
-            if(file.indexOf("teams") !== -1) {
+            if(file.includes("teams")) {
                 let matchIDs = []
                 if (profile.team?.tourneyID) {
                     matchIDs.push(profile.team.tourneyID)

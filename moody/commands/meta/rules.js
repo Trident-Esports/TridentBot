@@ -9,17 +9,28 @@ module.exports = class RulesCommand extends VillainsCommand {
             category: "meta",
             description: "Rules to follow"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
         this.props.fields = []
         let rules = JSON.parse(fs.readFileSync("./dbs/rules.json", "utf8"))
+
+        if (!rules) {
+            this.error = true
+            this.props.description = "Failed to get Rules data."
+            return
+        }
+
         for(let rule in rules) {
-            this.props.fields.push({
-                name: "Rule " + (parseInt(rule) + 1),
-                value: "`" + rules[rule] + "`"
-            })
+            this.props.fields.push(
+                {
+                    name: "Rule " + (parseInt(rule) + 1),
+                    value: "`" + rules[rule] + "`"
+                }
+            )
         }
     }
 }

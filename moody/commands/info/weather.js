@@ -11,7 +11,9 @@ module.exports = class WeatherCommand extends VillainsCommand {
             category: "information",
             description: "Check your weather!"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

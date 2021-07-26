@@ -1,7 +1,8 @@
-const fs = require('fs');
-const dasu = require('dasu');
 const VillainsCommand = require('../../classes/vcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
+
+const fs = require('fs');
+const dasu = require('dasu');
 
 function walk(dir) {
     let results = [];
@@ -23,11 +24,13 @@ function walk(dir) {
 }
 module.exports = class MatchesCommand extends VillainsCommand {
     constructor() {
-        super({
-            name: "matches",
-            category: "information",
-            description: "Call match listings"
-        })
+        super(
+            {
+                name: "matches",
+                category: "information",
+                description: "Call match listings"
+            }
+        )
     }
 
     async run(client, message, args) {
