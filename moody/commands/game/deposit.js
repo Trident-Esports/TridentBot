@@ -12,6 +12,8 @@ module.exports = class DepositCommand extends ATMCommand {
                 bot: "invalid"
             }
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 }

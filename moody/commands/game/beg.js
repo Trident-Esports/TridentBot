@@ -8,7 +8,9 @@ module.exports = class BegCommand extends GameCommand {
             description: 'beg for gold',
             extensions: [ "levels", "profile" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

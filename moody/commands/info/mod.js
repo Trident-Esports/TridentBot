@@ -54,7 +54,7 @@ module.exports = class ModHelpCommand extends ModCommand {
                 scope = "section"
             } else {
                 // If it doesn't match a section, see if it matches a single command
-                for(let [section, commands] of Object.entries(helpData)) {
+                for(let [section, commands] of Object.entries(mod_commands)) {
                     if(Object.keys(commands.commands).includes(search.term)) {
                         let key = section
                         mod_commands = {
@@ -90,7 +90,7 @@ module.exports = class ModHelpCommand extends ModCommand {
                     )
                 }
             }
-            this.pages.push(new VillansEmbed(this.props))
+            this.pages.push(new VillansEmbed({...this.props}))
         }
 
         // If Production, send in DM

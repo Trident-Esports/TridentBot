@@ -139,8 +139,7 @@ module.exports = (client, message, args) => {
                     desc += "\n";
                 }
                 props.description = desc
-                let embed = new VillainsEmbed(props)
-                message.channel.send(embed);
+                message.channel.send(new VillainsEmbed({...props}));
             }
         }
         client.commands.set(profile.aliases[0], teams);

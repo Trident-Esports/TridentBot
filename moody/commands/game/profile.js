@@ -9,7 +9,9 @@ module.exports = class ProfileCommand extends GameCommand {
             description: 'Check the User\'s Profile',
             extensions: [ "profile", "health", "xpboost", "levels" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

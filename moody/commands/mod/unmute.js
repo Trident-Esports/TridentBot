@@ -8,7 +8,9 @@ module.exports = class UnmuteCommand extends ModCommand {
             category: "admin",
             description: "Unmute user"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

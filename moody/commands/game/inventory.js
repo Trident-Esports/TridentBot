@@ -11,7 +11,9 @@ module.exports = class InventoryCommand extends GameCommand {
             description: 'Check a users Inventory',
             extensions: ["inventory"]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

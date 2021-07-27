@@ -15,7 +15,9 @@ module.exports = class LeaderboardCommand extends GameCommand {
             description: 'Check the Global Leaderboard',
             extensions: [ "levels" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
@@ -57,14 +59,14 @@ module.exports = class LeaderboardCommand extends GameCommand {
 
             // Push pages by 5 users
             if ((parseInt(slot) + 1) % 5 == 0) {
-                this.pages.push(new VillainsEmbed(props))
+                this.pages.push(new VillainsEmbed({...props}))
                 props.fields = []
             }
         }
 
         // Push each page
         if (props.fields.length > 0) {
-            this.pages.push(new VillainsEmbed(props))
+            this.pages.push(new VillainsEmbed({...props}))
             props.fields = []
         }
     }

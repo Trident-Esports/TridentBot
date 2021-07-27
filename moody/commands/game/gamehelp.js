@@ -15,7 +15,10 @@ module.exports = class GameHelpCommand extends GameCommand {
                 text: "Game Help"
             }
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 
     async action(client, message) {

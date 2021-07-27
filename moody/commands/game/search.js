@@ -11,7 +11,9 @@ module.exports = class SearchCommand extends GameCommand {
             description: 'Choose your search location and have a chance at some gold!',
             extensions: ["profile", "levels", "health"]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
@@ -170,7 +172,7 @@ module.exports = class SearchCommand extends GameCommand {
             }
             // We'll handle sending it
             // SELFHANDLE: Collector Collected
-            this.send(message, new VillainsEmbed(this.props))
+            this.send(message, new VillainsEmbed({...this.props}))
             this.null = true
         });
 
@@ -192,7 +194,7 @@ module.exports = class SearchCommand extends GameCommand {
 
                 // We'll handle sending it
                 // SELFHANDLE: Collector Timed Out
-                this.send(message, new VillainsEmbed(this.props))
+                this.send(message, new VillainsEmbed({...this.props}))
                 this.null = true
             }
         });

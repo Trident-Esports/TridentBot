@@ -85,8 +85,7 @@ module.exports = async (Discord, client, message) => {
             ]
         }
 
-        let embed = new VillainsEmbed(props)
-        message.channel.send(embed)
+        message.channel.send(new VillainsEmbed({...props}))
     }
 
     let healthData;

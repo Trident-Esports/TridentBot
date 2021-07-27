@@ -15,7 +15,9 @@ module.exports = class RobCommand extends GameCommand {
                 bot: "invalid"
             }
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

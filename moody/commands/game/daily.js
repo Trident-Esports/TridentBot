@@ -8,7 +8,9 @@ module.exports = class DailyCommand extends GameCommand {
             description: 'Gain some Gold',
             extensions: [ "profile" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

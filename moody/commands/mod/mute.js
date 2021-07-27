@@ -10,7 +10,9 @@ module.exports = class MuteCommand extends ModCommand {
             category: "admin",
             description: "Mute user"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

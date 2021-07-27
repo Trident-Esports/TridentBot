@@ -18,7 +18,9 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
             emoji: ["🎉"]
         }
 
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
@@ -106,7 +108,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         this.null = true
 
         // Send the message
-        await this.send(message, new VillainsEmbed(this.props)).then(async (msg) => {
+        await this.send(message, new VillainsEmbed({...this.props})).then(async (msg) => {
             // Add reactions
             for (let emoji of this.emoji) {
                 await msg.react(emoji)
@@ -198,7 +200,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                     fields: fields
                 }
 
-                let embed = new VillainsEmbed(props);
+                let embed = new VillainsEmbed({...props});
                 // DM to winners & host
                 for (let winner of [...winners, message.author.id]) {
                     client.users.fetch(winner, false).then((user) => {

@@ -148,7 +148,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 }
                 let title = span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule"
                 props.url = url.toString().includes('-') ? url.toString().substr(0,url.toString().indexOf('-')) : url
-                let embed = new VillainsEmbed(props)
+                let embed = new VillainsEmbed({...props})
 
                 await req(params, function (err, res, data) {
                     try {
@@ -268,14 +268,17 @@ module.exports = class MatchesCommand extends VillainsCommand {
         }
 
         if (pages.length) {
-            super.send(message, pages, [], "", true)
+            this.send(message, pages, [], "", true)
         } else {
             // something got stuffed up
-            let msg = `${message.author}, the correct usage is:` + "\n"
-            msg += "`" + this.prefix + "matches [all|incomplete|complete|next]`" + "\n"
-            msg += "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-            msg += "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-            return message.channel.send(msg)
+            this.error = true
+            this.props.description = [
+                `${message.author}, the correct usage is:`,
+                "`" + this.prefix + "matches [all|incomplete|complete|next]`",
+                "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`",
+                "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`"
+            ].join("\n")
+            return
         }
     }
 }

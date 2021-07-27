@@ -9,7 +9,9 @@ module.exports = class LevelCommand extends GameCommand {
             description: 'Checks the Users Level',
             extensions: [ "levels", "xpboost" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
     async action(client, message) {
         // Get loaded target

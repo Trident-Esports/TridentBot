@@ -143,92 +143,92 @@ module.exports = class ATMCommand extends GameCommand {
                 this.props.description = `You need to specify a player to ${props.caption.text} Gold.`
                 return
             }
-
-            // Figure out source for gold
-            let reserve = 0
-            switch (this.props.caption.text) {
-                case "Deposit":
-                case "Give":
-                    reserve = profileData.gold
-                    break
-                case "Withdraw":
-                    reserve = profileData.bank
-                    break
-                default:
-                    reserve = 0
-                    break
-            }
-
-            // Calculate proper amount
-            if (amount == 'all') {
-                amount = parseInt(reserve)
-            } else if (amount == 'half') {
-                amount = parseInt(reserve / 2)
-            } else {
-                amount = parseInt(amount)
-            }
-            // Deposit/Give/Withdraw: Can't transfer more than you've got
-            // Bail if not enough gold
-            if (["Deposit","Give","Withdraw"].includes(this.props.caption.text)) {
-                if (parseInt(amount) > parseInt(reserve)) {
-                    this.error = true
-                    this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
-                    return
-                }
-            }
-
-            // Figure out plus/minus and destination for gold
-            let userInc = { gold: 0 }
-            let targetInc = { gold: 0 }
-            let [verb, direction, container] = ["", "", ""]
-            switch (this.props.caption.text) {
-                case "Deposit":
-                    // User to User
-                    userInc = { gold: -amount, bank: amount };
-                    [verb, direction, container] = ["Deposited", "into", "their Bank"];
-                    break;
-                case "Give":
-                    // User to Target
-                    userInc = { gold: -amount };
-                    targetInc = { gold: amount };
-                    [verb, direction, container] = ["Given", "to", `<@${loaded.id}>'s Wallet`];
-                    break;
-                case "Withdraw":
-                    // User to User
-                    userInc = { gold: amount, bank: -amount };
-                    [verb, direction, container] = ["Withdrawn", "into", "their Wallet"];
-                    break;
-                case "Refund":
-                    // Ether to Target
-                    targetInc = { gold: amount };
-                    [verb, direction, container] = ["Refunded", "into", `<@${loaded.id}>'s Wallet`];
-                    break;
-                case "Steal":
-                    // Target to User
-                    userInc = { gold: amount };
-                    targetInc = { gold: -amount };
-                    [verb, direction, container] = ["Stole", "from", `<@${loaded.id}>'s Wallet`];
-                    break;
-                default:
-                    break;
-            }
-
-            // If we're modding the user, do it
-            if (userInc.gold !== 0) {
-                await this.db_transform(this.inputData.user.id, userInc)
-            }
-            // If we're modding the target, do it
-            if (loaded && targetInc.gold !== 0) {
-                await this.db_transform(loaded.id, targetInc)
-            }
-
-            // Build the thing
-            this.props.description = []
-
-            this.props.description.push(`**<@${this.inputData.user.id}> has ${verb} ${this.emojis.gold}${amount.toLocaleString("en-AU")} Gold ${direction} ${container}!**`)
-            this.props.description.push("_Check your balance using `.balance`_")
-
-            this.props.description = this.props.description.join("\n")
         }
+
+        // Figure out source for gold
+        let reserve = 0
+        switch (this.props.caption.text) {
+            case "Deposit":
+            case "Give":
+                reserve = profileData.gold
+                break
+            case "Withdraw":
+                reserve = profileData.bank
+                break
+            default:
+                reserve = 0
+                break
+        }
+
+        // Calculate proper amount
+        if (amount == 'all') {
+            amount = parseInt(reserve)
+        } else if (amount == 'half') {
+            amount = parseInt(reserve / 2)
+        } else {
+            amount = parseInt(amount)
+        }
+        // Deposit/Give/Withdraw: Can't transfer more than you've got
+        // Bail if not enough gold
+        if (["Deposit","Give","Withdraw"].includes(this.props.caption.text)) {
+            if (parseInt(amount) > parseInt(reserve)) {
+                this.error = true
+                this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
+                return
+            }
+        }
+
+        // Figure out plus/minus and destination for gold
+        let userInc = { gold: 0 }
+        let targetInc = { gold: 0 }
+        let [verb, direction, container] = ["", "", ""]
+        switch (this.props.caption.text) {
+            case "Deposit":
+                // User to User
+                userInc = { gold: -amount, bank: amount };
+                [verb, direction, container] = ["Deposited", "into", "their Bank"];
+                break;
+            case "Give":
+                // User to Target
+                userInc = { gold: -amount };
+                targetInc = { gold: amount };
+                [verb, direction, container] = ["Given", "to", `<@${loaded.id}>'s Wallet`];
+                break;
+            case "Withdraw":
+                // User to User
+                userInc = { gold: amount, bank: -amount };
+                [verb, direction, container] = ["Withdrawn", "into", "their Wallet"];
+                break;
+            case "Refund":
+                // Ether to Target
+                targetInc = { gold: amount };
+                [verb, direction, container] = ["Refunded", "into", `<@${loaded.id}>'s Wallet`];
+                break;
+            case "Steal":
+                // Target to User
+                userInc = { gold: amount };
+                targetInc = { gold: -amount };
+                [verb, direction, container] = ["Stole", "from", `<@${loaded.id}>'s Wallet`];
+                break;
+            default:
+                break;
+        }
+
+        // If we're modding the user, do it
+        if (userInc.gold !== 0) {
+            await this.db_transform(this.inputData.user.id, userInc)
+        }
+        // If we're modding the target, do it
+        if (loaded && targetInc.gold !== 0) {
+            await this.db_transform(loaded.id, targetInc)
+        }
+
+        // Build the thing
+        this.props.description = []
+
+        this.props.description.push(`**<@${this.inputData.user.id}> has ${verb} ${this.emojis.gold}${amount.toLocaleString("en-AU")} Gold ${direction} ${container}!**`)
+        this.props.description.push("_Check your balance using `.balance`_")
+
+        this.props.description = this.props.description.join("\n")
     }
 }

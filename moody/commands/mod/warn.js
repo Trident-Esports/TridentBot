@@ -9,7 +9,9 @@ module.exports = class WarnCommand extends ModCommand {
             category: "admin",
             description: "Warns user"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

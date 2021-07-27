@@ -10,7 +10,9 @@ module.exports = class WarnsCommand extends ModCommand {
             category: "admin",
             description: "Shows all user warns in server"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
@@ -44,8 +46,7 @@ module.exports = class WarnsCommand extends ModCommand {
                 props.description = this.errors.noProfile
                 return
             }
-            let embed = new VillainsEmbed(props)
-            message.channel.send(embed)
+            message.channel.send(new VillainsEmbed({...props}))
         })
         // We'll handle sending it
         // SELFHANDLE: Inline Callback

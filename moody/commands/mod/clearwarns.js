@@ -43,8 +43,7 @@ module.exports = class ClearWarnsCommand extends ModCommand {
                 props.error = true
                 props.description = `<@${user.id}> has no warns!`
             }
-            let embed = new VillainsEmbed(props)
-            message.channel.send(embed)
+            message.channel.send(new VillainsEmbed({...props}))
         })
         // We'll handle sending it
         // SELFHANDLE: Inline Callback

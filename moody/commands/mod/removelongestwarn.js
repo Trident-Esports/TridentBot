@@ -13,7 +13,9 @@ module.exports = class RemoveLongestWarnCommand extends ModCommand {
             category: "admin",
             description: "Warns user"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message, args) {
@@ -40,8 +42,7 @@ module.exports = class RemoveLongestWarnCommand extends ModCommand {
                 props.error = true
                 props.description = `<@${user.id}> has no warns!`
             }
-            let embed = new VillainsEmbed(props)
-            message.channel.send(embed)
+            message.channel.send(new VillainsEmbed({...props}))
         })
         // We'll handle sending it
         // SELFHANDLE: Inline Callback

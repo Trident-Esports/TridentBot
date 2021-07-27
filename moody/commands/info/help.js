@@ -93,7 +93,7 @@ module.exports = class HelpCommand extends VillainsCommand {
                     )
                 }
             }
-            this.pages.push(new VillansEmbed(this.props))
+            this.pages.push(new VillansEmbed({...this.props}))
         }
     }
 }

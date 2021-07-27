@@ -9,7 +9,9 @@ module.exports = class BalanceCommand extends GameCommand {
             description: 'Checks the Users Balance',
             extensions: [ "profile" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

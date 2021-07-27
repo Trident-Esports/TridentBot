@@ -77,7 +77,7 @@ module.exports = class PlayCommand extends VillainsCommand {
             if (!this.voice_channel) {
                 this.error = true
                 this.props.description = 'You need to be connected to a voice channel to play music.'
-                return
+                return false
             }
 
             // Get Bot perms for channel
@@ -87,7 +87,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.error = true
                 this.props.description = `<@${client.user.id}> doesn't have permission to join the voice channel that you're in.`
                 console.log("Music: !!! Bot doesn't have perms to channel !!!")
-                return
+                return false
             }
 
             if(!(this.server_queue)) {
@@ -95,6 +95,7 @@ module.exports = class PlayCommand extends VillainsCommand {
 
                 console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
             }
+            return true
         }
 
         // Call Bot
@@ -123,7 +124,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.props.description.push(`<#${connection.channel.id}>`)
                 console.log(`${connection.channel.name} (ID:${connection.channel.id})`)
             }
-            await this.send(message, new VillainsEmbed(this.props))
+            await this.send(message, new VillainsEmbed({...this.props}))
             this.null = true
         }
 
@@ -155,7 +156,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 // We'll handle this one
                 // SELFHANDLE: This command is just messy at the moment.
                 await nukeBot(message)
-                await this.send(message, new VillainsEmbed(this.props))
+                await this.send(message, new VillainsEmbed({...this.props}))
                 this.null = true
                 return;
             }
@@ -191,7 +192,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 if (this.now_playing && (!(this.now_playing.deleted))) {
                     this.now_playing.delete()
                 }
-                this.now_playing = await this.send(message, new VillainsEmbed(this.props))
+                this.now_playing = await this.send(message, new VillainsEmbed({...this.props}))
                 this.null = true
             }
         }
@@ -210,6 +211,12 @@ module.exports = class PlayCommand extends VillainsCommand {
                 silent = true;
             }
 
+            if (!inputURL) {
+                this.error = true
+                this.props.description = "No search string given."
+                return
+            }
+
             let user = {
                 username: message.author.username,
                 discriminator: message.author.discriminator,
@@ -220,28 +227,43 @@ module.exports = class PlayCommand extends VillainsCommand {
             // Validate URL as YT URL
             if (ytdl.validateURL(inputURL)) {
                 console.log("Music: YouTube Song -->")
-                const songInfo = await ytdl.getInfo(inputURL);
-                song = {
-                    title: songInfo.videoDetails.title,
-                    url: songInfo.videoDetails.video_url,
-                    user: user
-                };
+                try {
+                    const songInfo = await ytdl.getInfo(inputURL);
+                    song = {
+                        title: songInfo.videoDetails.title,
+                        url: songInfo.videoDetails.video_url,
+                        user: user
+                    };
+                } catch {
+                    this.error = true
+                    this.props.description = "Invalid YouTube Song URL."
+                    return
+                }
             } else if (inputURL.includes('youtu') && inputURL.includes('be') && inputURL.includes('playlist')) {
                 console.log("Music: YouTube Playlist -->")
-                const playlistInfo = await ytpl(inputURL);
-
-                this.props.description = `Playlist **${playlistInfo.title}** added to queue by` + ` [*<@${message.author.id}>*] `
-                await this.send(message, new VillainsEmbed(this.props));
-                this.null = true;
-
-                let success = false;
-                for (let [, songInfo] of Object.entries(playlistInfo.items)) {
-                    if (songInfo?.url && songInfo.url != "") {
-                        success = await songSearch(client, message, songInfo.shortUrl) || false;
+                try {
+                    if (inputURL.includes('&')) {
+                        inputURL = inputURL.slice(0,inputURL.indexOf('&'))
                     }
-                }
-                if (!success) {
+                    const playlistInfo = await ytpl(inputURL);
+
+                    this.props.description = `Playlist **${playlistInfo.title}** added to queue by` + ` [*<@${message.author.id}>*] `
+                    await this.send(message, new VillainsEmbed({...this.props}));
                     this.null = true;
+
+                    let success = false;
+                    for (let [, songInfo] of Object.entries(playlistInfo.items)) {
+                        if (songInfo?.url && songInfo.url != "") {
+                            success = await songSearch(client, message, songInfo.shortUrl) || false;
+                        }
+                    }
+                    if (!success) {
+                        this.null = true;
+                    }
+                } catch {
+                    this.error = true
+                    this.props.description = "Invalid YouTube Playlist URL."
+                    return
                 }
             } else if (inputURL.includes('spotify')) {
                 // Check if Spotify
@@ -252,20 +274,29 @@ module.exports = class PlayCommand extends VillainsCommand {
                     // spotify-url-info.getTracks(inputURL)
                     console.log("Music: Spotify Playlist -->")
                     let playlistID = inputURL.split('/').pop()
+                    if (playlistID.includes('?')) {
+                        playlistID = playlistID.slice(0,playlistID.indexOf('?'))
+                    }
 
                     // spotify-url-info method
                     if (true) {
-                        await spURLinfo.getData(inputURL).then(async (data) => {
-                            const spotifyPlaylistInfo = data
-                            const spotifyTracks = spotifyPlaylistInfo?.tracks?.items ? spotifyPlaylistInfo.tracks.items : null
-                            if (spotifyTracks) {
-                                for (let [, spotifyTrackInfo] of Object.entries(spotifyTracks)) {
-                                    if (spotifyTrackInfo?.track?.external_urls) {
-                                        await songSearch(client, message, spotifyTrackInfo.track.external_urls.spotify)
+                        try {
+                            await spURLinfo.getData(inputURL).then(async (data) => {
+                                const spotifyPlaylistInfo = data
+                                const spotifyTracks = spotifyPlaylistInfo?.tracks?.items ? spotifyPlaylistInfo.tracks.items : null
+                                if (spotifyTracks) {
+                                    for (let [, spotifyTrackInfo] of Object.entries(spotifyTracks)) {
+                                        if (spotifyTrackInfo?.track?.external_urls) {
+                                            await songSearch(client, message, spotifyTrackInfo.track.external_urls.spotify)
+                                        }
                                     }
                                 }
-                            }
-                        })
+                            })
+                        } catch {
+                            this.error = true
+                            this.props.description = "Invalid Spotify Playlist URL."
+                            return
+                        }
                     }
 
                     // dasu method
@@ -317,25 +348,35 @@ module.exports = class PlayCommand extends VillainsCommand {
                     }
                 } else {
                     console.log("Music: Spotify Song -->")
-                    const spotifyTrackInfo = await getPreview(inputURL);
 
-                    const videoFinder = async (query) => {
-                        const videoResult = await ytSearch(query);
-                        return videoResult.videos.length > 1 ? videoResult.videos[0] : null;
-                    };
+                    try {
+                        if (inputURL.includes('?')) {
+                            inputURL = inputURL.slice(0,inputURL.indexOf('?'))
+                        }
+                        const spotifyTrackInfo = await getPreview(inputURL);
 
-                    const video = await videoFinder(`${spotifyTrackInfo.title} ${spotifyTrackInfo.artist}`);
-
-                    // If we got something, package it
-                    if (video) {
-                        song = {
-                            title: video.title,
-                            url: video.url,
-                            user: user
+                        const videoFinder = async (query) => {
+                            const videoResult = await ytSearch(query);
+                            return videoResult.videos.length > 1 ? videoResult.videos[0] : null;
                         };
-                    } else {
+
+                        const video = await videoFinder(`${spotifyTrackInfo.title} ${spotifyTrackInfo.artist}`);
+
+                        // If we got something, package it
+                        if (video) {
+                            song = {
+                                title: video.title,
+                                url: video.url,
+                                user: user
+                            };
+                        } else {
+                            this.error = true
+                            this.props.description = "Couldn't find Spotify song on YouTube."
+                            return
+                        }
+                    } catch {
                         this.error = true
-                        this.props.description = "Couldn't find Spotify song on YouTube."
+                        this.props.description = "Invalid Spotify Song URL."
                         return
                     }
                 }
@@ -407,7 +448,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                         console.log(`Music: Queueing Song: ${song.title}`)
                         if (!silent && song?.title) {
                             this.props.description = `Song **${song.title}** added to queue by` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : "");
-                            await this.send(message, new VillainsEmbed(this.props));
+                            await this.send(message, new VillainsEmbed({...this.props}));
                         }
                         this.null = true
                         return true
@@ -434,7 +475,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 await this.server_queue.connection.dispatcher.end();
                 if (!silent) {
                     this.props.description = "Skipping song";
-                    await this.send(message, new VillainsEmbed(this.props));
+                    await this.send(message, new VillainsEmbed({...this.props}));
                     this.null = true;
                 }
             }
@@ -475,13 +516,13 @@ module.exports = class PlayCommand extends VillainsCommand {
                     }
                     if ((idx  > 0) && ((idx + 1) % 10 == 0)) {
                         this.props.description = thisqueue.join("\n\n")
-                        this.pages.push(new VillainsEmbed(this.props))
+                        this.pages.push(new VillainsEmbed({...this.props}))
                         thisqueue = []
                     }
                 }
                 if (thisqueue.length > 0) {
                     this.props.description = thisqueue.join("\n\n")
-                    this.pages.push(new VillainsEmbed(this.props))
+                    this.pages.push(new VillainsEmbed({...this.props}))
                     thisqueue = []
                 }
 
@@ -507,7 +548,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.props.description = "Dumping the queue.";
                 this.server_queue.songs = [];
                 await this.server_queue.connection.dispatcher.end();
-                await this.send(message, new VillainsEmbed(this.props));
+                await this.send(message, new VillainsEmbed({...this.props}));
                 this.null = true;
             }
         }
@@ -520,9 +561,7 @@ module.exports = class PlayCommand extends VillainsCommand {
         if (cmd == "wherebot") {
             // Where Bot
             await whereBot(client, message)
-        } else {
-            await preFlightChecks(message)
-
+        } else if (await preFlightChecks(message)) {
             if (["play", "p"].includes(cmd)) {
                 // Search/Enqueue
                 await songSearch(client, message)
@@ -563,6 +602,10 @@ module.exports = class PlayCommand extends VillainsCommand {
                     }
                 }
             }
+        }
+
+        if(this.error) {
+            this.null = false
         }
     }
 }

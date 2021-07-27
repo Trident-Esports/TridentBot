@@ -137,7 +137,7 @@ module.exports = class RosterCommand extends VillainsCommand {
                 props.players.target.avatar = profile.team.avatar
             }
 
-            let rosterEmbed = new VillainsEmbed(props)
+            let rosterEmbed = new VillainsEmbed({...props})
 
             // Team Members
             if (profile?.members) {

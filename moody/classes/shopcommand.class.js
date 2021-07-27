@@ -173,7 +173,11 @@ module.exports = class ShopCommand extends GameCommand {
                 let cost = parseInt(item.value) * parseInt(quantity)
 
                 // Bail if we can't afford it
-                if (gold < cost) return message.channel.send('You cannot afford to buy this item')
+                if (gold < cost) {
+                    this.error = true
+                    this.props.description = "You cannot afford to buy this item."
+                    return
+                }
 
                 // Deduct cost
                 await this.db_transform(loaded.id, "gold", -cost)

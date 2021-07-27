@@ -38,7 +38,7 @@ module.exports = class RulesRoleCommand extends VillainsCommand {
         // We'll handle sending it
         // SELFHANDLE: .then()
         this.null = true
-        await this.send(message, new VillainsEmbed(this.props)).then(async (msg) => {
+        await this.send(message, new VillainsEmbed({...this.props})).then(async (msg) => {
             await msg.react(RULES_EMOJI)
             try {
                 if (!(message.deleted)) {

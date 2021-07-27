@@ -33,7 +33,9 @@ module.exports = class VillainsCommand extends BaseCommand {
     #inputData; // Private: Command Inputs
 
     constructor(comprops = {}, props = {}) {
-        super(comprops)
+        super(
+            {...comprops}
+        )
 
         this.props = {...props}
 
@@ -98,7 +100,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             return
         }
         // Bail if we fail to get command prefix
-        if (!prefix) {
+        if (!this.prefix) {
             this.error = true
             this.props.description = "Failed to get command prefix."
             return
@@ -445,9 +447,9 @@ module.exports = class VillainsCommand extends BaseCommand {
         // Toss it in pages as a single page
         if(this.pages.length == 0) {
             if(this.props?.full && this.props.full) {
-                this.pages.push(new VillainsEmbed(this.props))
+                this.pages.push(new VillainsEmbed({...this.props}))
             } else {
-                this.pages.push(new SlimEmbed(this.props))
+                this.pages.push(new SlimEmbed({...this.props}))
             }
         }
 

@@ -32,6 +32,12 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             props.timestamp = true
         }
 
+        super(
+            {
+                description: "Something got stuffed up here..."
+            }
+        )
+
         this.GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
         // Bail if we fail to get server profile information
         if (!(this.GLOBALS)) {
@@ -61,10 +67,6 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         } else {
             props.color = this.defaults.stripe;
         }
-
-        super({
-            description: "Something got stuffed up here..."
-        })
 
         // Inbound footer message
         let haveFooterMsg = props?.footer?.msg

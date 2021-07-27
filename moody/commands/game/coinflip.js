@@ -18,7 +18,10 @@ module.exports = class CoinFlipCommand extends GameCommand {
             title: {},
             thumbnail: ""
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 
     async action(client, message) {
@@ -168,8 +171,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                     this.props.description = `You chose ${choice} and the coin didn't land on that. this means you just lost ${this.emojis.gold}${gambledAmount.toString()}\n Maybe a bad idea or just Unlucky.`
                 }
 
-                let embed = new VillainsEmbed(this.props)
-                await this.send(message, embed)
+                await this.send(message, new VillainsEmbed({...this.props}))
             } catch (err) {
                 console.log("Error:",err)
                 console.log("Number:",number)
@@ -184,8 +186,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                 this.props.description = `You forgot to flip the coin and it fell out of your hand and rolled away. You lost 💰1.`
                 this.props.description = `<@${loaded.id}>` + "\n" + this.props.description
 
-                let embed = new VillainsEmbed(this.props)
-                await this.send(message, embed)
+                await this.send(message, new VillainsEmbed({...this.props}))
             }
             this.null = true
         });
