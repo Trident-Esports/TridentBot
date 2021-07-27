@@ -120,6 +120,7 @@ module.exports = class FightCommand extends GameCommand {
             }
 
             // We'll handle sending it
+            // SELFHANDLE: Collector Collected
             this.send(message, new VillainsEmbed(this.props));
             this.null = true
         });
@@ -132,6 +133,7 @@ module.exports = class FightCommand extends GameCommand {
                 this.props.description = `Nobody has answered. Duel Cancelled!`
 
                 // We'll handle sending it
+                // SELFHANDLE: Collector Timed Out
                 this.send(message, new VillainsEmbed(this.props));
                 this.null = true
             }

@@ -168,7 +168,8 @@ module.exports = class SearchCommand extends GameCommand {
                     }
                 ]
             }
-            // We'll handle sending this
+            // We'll handle sending it
+            // SELFHANDLE: Collector Collected
             this.send(message, new VillainsEmbed(this.props))
             this.null = true
         });
@@ -189,7 +190,8 @@ module.exports = class SearchCommand extends GameCommand {
                     }
                 ]
 
-                // We'll handle sending this
+                // We'll handle sending it
+                // SELFHANDLE: Collector Timed Out
                 this.send(message, new VillainsEmbed(this.props))
                 this.null = true
             }
