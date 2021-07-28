@@ -11,7 +11,10 @@ module.exports = class PurgeCommand extends ModCommand {
             {
                 name: "purge",
                 category: "mod",
-                description: "Purge messages"
+                description: "Purge messages",
+                flags: {
+                    user: "unapplicable"
+                }
             }
         )
     }
@@ -55,6 +58,7 @@ module.exports = class PurgeCommand extends ModCommand {
             duration = "5s"
         }
 
+        this.null = true
         // We'll handle sending it
         // SELFHANDLE: .then()
         await this.send(message, new SlimEmbed({...props})).then(
@@ -62,6 +66,5 @@ module.exports = class PurgeCommand extends ModCommand {
                 setTimeout(() => msg.delete(), ms(duration))
             }
         )
-        this.null = true
     }
 }

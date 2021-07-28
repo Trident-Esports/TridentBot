@@ -27,13 +27,15 @@ module.exports = class MatchesCommand extends VillainsCommand {
         super(
             {
                 name: "matches",
+                aliases: [ "match" ],
                 category: "information",
                 description: "Call match listings"
             }
         )
     }
 
-    async run(client, message, args) {
+    async action(client, message, cmd) {
+        let args = this.inputData.args;
         let profile = {
             "team": {}
         }
@@ -84,6 +86,11 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         // invalid span
                         // return all spans for teamID
                         validSpan = false
+                        if (cmd == "match") {
+                            handlerpath = "/match/"
+                            profiles[""] = [ handlerpath + filepath + ".json" ]
+                            validSpan = true
+                        }
                     }
                     if (!validSpan) {
                         for (let span of [ "all", "complete", "incomplete", "next" ]) {
@@ -143,10 +150,10 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 //     console.log(`Fetching:${url.toString()}`)
                 // }
 
-                let props = {
-                    description: "Something got stuffed up here..."
-                }
-                let title = span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule"
+                let props = []
+                props.description = "Something got stuffed up here..."
+
+                let title = (span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule").trim()
                 props.url = url.toString().includes('-') ? url.toString().substr(0,url.toString().indexOf('-')) : url
                 let embed = new VillainsEmbed({...props})
 
@@ -184,7 +191,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 props.description = `[${props.description}](${json.team_url} '${json.team_url}')`
                             }
 
-                            let teamName = "LPL Team #"
+                            let teamName = ""
                             let teamURL = "https://letsplay.live/"
 
                             if (json?.tournament_id) {
@@ -195,7 +202,10 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 teamName += json.team_id
                                 teamURL += "team/" + json.team_id
                             }
-                            props.description += ` *([${teamName}](${teamURL} '${teamURL}'))*`
+                            if (teamName != "") {
+                                teamName = "LPL Team #" + teamName
+                                props.description += ` *([${teamName}](${teamURL} '${teamURL}'))*`
+                            }
 
                             embed.setDescription(props.description)
                         }
@@ -224,6 +234,9 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             }
                             name += match.discord.team + " 🆚 " + match.discord.opponent
                             value += ": <t:" + match.discord.timestamp + ":f>" + "\n";
+                            if(match.discord.timestamp < (60 * 60 * 24 * 5)) {
+                              value = ""
+                            }
                             if(match.discord.status == "incomplete" || (match.discord.scoreKeys.bySide.home != 0 || match.discord.scoreKeys.bySide.opponent != 0)) {
                                 value += '[';
                                 if(match.discord.status == "complete") {
@@ -268,7 +281,8 @@ module.exports = class MatchesCommand extends VillainsCommand {
         }
 
         if (pages.length) {
-            this.send(message, pages, [], "", true)
+            await this.send(message, pages, [], "", true)
+            this.null = true
         } else {
             // something got stuffed up
             this.error = true
