@@ -154,6 +154,9 @@ module.exports = class LeagueCommand extends VillainsCommand {
                             if(match.discord.timestamp < (60 * 60 * 24 * 5)) {
                               value = ""
                             }
+                            if(match.discord.url) {
+                                value += `Match: [#${match.discord.id}](${match.discord.url} '${match.discord.url}')`
+                            }
                             embed.addField(name, value)
                         }
 
