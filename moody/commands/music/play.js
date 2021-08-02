@@ -124,6 +124,10 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.props.description.push(`<#${connection.channel.id}>`)
                 console.log(`${connection.channel.name} (ID:${connection.channel.id})`)
             }
+            if (this.props.description.length == 0) {
+                this.error = true
+                this.props.description.push("Bot not connected to a voice channel!")
+            }
             await this.send(message, new VillainsEmbed({...this.props}))
             this.null = true
         }
@@ -561,6 +565,9 @@ module.exports = class PlayCommand extends VillainsCommand {
         if (cmd == "wherebot") {
             // Where Bot
             await whereBot(client, message)
+        } else if (["showqueue", "q", "currentsong"].includes(cmd)) {
+            // Show Queue/Current Song
+            await showQueue(message, cmd == "currentsong" ? 1 : -1)
         } else if (await preFlightChecks(message)) {
             if (["play", "p"].includes(cmd)) {
                 // Search/Enqueue
@@ -571,9 +578,6 @@ module.exports = class PlayCommand extends VillainsCommand {
             } else if (cmd == "jump") {
                 // Jump to Song
                 await jumpSong(message)
-            } else if (["showqueue", "q", "currentsong"].includes(cmd)) {
-                // Show Queue/Current Song
-                await showQueue(message, cmd == "currentsong" ? 1 : -1)
             } else if (["stop", "clearqueue"].includes(cmd)) {
                 // Clear Queue
                 await clearQueue(message)
