@@ -6,6 +6,10 @@
   "team": {
     "teamID": "262205"
   },
+  "league": {
+    "game": "valorant",
+    "level": "challenger"
+  },
   "#url": "#rosters: VALORANT listings",
   "members": {
     "coach": {

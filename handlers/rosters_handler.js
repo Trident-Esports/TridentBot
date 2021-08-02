@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const MatchesCommand = require('../moody/commands/info/matches')
+const LeagueCommand = require('../moody/commands/info/league')
 const RosterCommand = require('../moody/commands/info/roster')
 const VillainsEmbed = require('../moody/classes/vembed.class');
 
@@ -48,7 +49,8 @@ module.exports = (client, message, args) => {
             }
             roster_aliases[gameID][profile.aliases[0]] = {
                 name: profile.title,
-                schedule: "team" in profile
+                schedule: "team" in profile,
+                league: "league" in profile
             }
 
             let rosterCommand = {
@@ -90,6 +92,21 @@ module.exports = (client, message, args) => {
                     }
                 }
                 client.commands.set(scheduleCommand.name, scheduleCommand);
+
+                if (profile?.team?.teamID && profile?.league?.game && profile?.league?.level) {
+                    let leagueCommand = {
+                        name: profile.aliases[0] + 'l',
+                        title: profile.title.replace("Roster", "League Schedule"),
+                        async execute(message) {
+                            let command = new LeagueCommand().run(
+                                client,
+                                message,
+                                [ profile.league.game, profile.league.level, profile.team.teamID ]
+                            )
+                        }
+                    }
+                    client.commands.set(leagueCommand.name, leagueCommand);
+                }
             }
         }
     }
@@ -129,6 +146,10 @@ module.exports = (client, message, args) => {
                             if (teams[teamID].schedule) {
                                 desc += "/";
                                 desc += "`" + teamID + 's' + "`";
+                            }
+                            if (teams[teamID].league) {
+                                desc += "/";
+                                desc += "`" + teamID + 'l' + "`";
                             }
                             desc += ")";
                             desc += "\n";

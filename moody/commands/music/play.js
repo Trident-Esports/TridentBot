@@ -115,7 +115,11 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.props.description.push(`<#${connection.channel.id}>`)
                 console.log(`${connection.channel.name} (ID:${connection.channel.id})`)
             }
-            await this.send(message, new VillainsEmbed(this.props))
+            if (this.props.description.length == 0) {
+                this.error = true
+                this.props.description.push("Bot not connected to a voice channel!")
+            }
+            await this.send(message, new VillainsEmbed({...this.props}))
             this.null = true
         }
 
@@ -503,41 +507,35 @@ module.exports = class PlayCommand extends VillainsCommand {
             return;
         }
 
-        if (!(this.error)) {
-            if (cmd == "wherebot") {
-                // Where Bot
-                await whereBot(client, message)
-            } else {
-                await preFlightChecks(message)
-
-                if(!(this.error)) {
-                    if (["play", "p"].includes(cmd)) {
-                        // Search/Enqueue
-                        await songSearch(client, message)
-                    } else if (["skip", "next"].includes(cmd)) {
-                        // Skip
-                        await skipSong(message)
-                    } else if (cmd == "jump") {
-                        // Jump to Song
-                        await jumpSong(message)
-                    } else if (["showqueue", "q", "currentsong"].includes(cmd)) {
-                        // Show Queue/Current Song
-                        await showQueue(message, cmd == "currentsong" ? 1 : -1)
-                    } else if (["stop", "clearqueue"].includes(cmd)) {
-                        // Clear Queue
-                        await clearQueue(message)
-                    } else if (cmd == "callbot") {
-                        // Call Bot
-                        await callBot(message)
-                    } else if (["nukebot", "leave"].includes(cmd)) {
-                        // Nuke Bot
-                        await nukeBot(message)
-                    } else if (cmd == "cyclebot") {
-                        // Cycle Bot
-                        await nukeBot(message)
-                        await callBot(message)
-                    }
-                }
+        if (cmd == "wherebot") {
+            // Where Bot
+            await whereBot(client, message)
+        } else if (["showqueue", "q", "currentsong"].includes(cmd)) {
+            // Show Queue/Current Song
+            await showQueue(message, cmd == "currentsong" ? 1 : -1)
+        } else if (await preFlightChecks(message)) {
+            if (["play", "p"].includes(cmd)) {
+                // Search/Enqueue
+                await songSearch(client, message)
+            } else if (["skip", "next"].includes(cmd)) {
+                // Skip
+                await skipSong(message)
+            } else if (cmd == "jump") {
+                // Jump to Song
+                await jumpSong(message)
+            } else if (["stop", "clearqueue"].includes(cmd)) {
+                // Clear Queue
+                await clearQueue(message)
+            } else if (cmd == "callbot") {
+                // Call Bot
+                await callBot(message)
+            } else if (["nukebot", "leave"].includes(cmd)) {
+                // Nuke Bot
+                await nukeBot(message)
+            } else if (cmd == "cyclebot") {
+                // Cycle Bot
+                await nukeBot(message)
+                await callBot(message)
             }
             if (!(this.error)) {
                 if (!(message.deleted)) {
