@@ -68,9 +68,23 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                 }
 
                 if (!noMatches) {
-                    props.description = "__***" + emoji + json.team + "***__"
-                    if (json?.team_url) {
-                        props.description = `[${props.description}](${json.team_url} '${json.team_url}')`
+                    props.description = ""
+                    if(json?.league_name) {
+                        let txt = "__***" + emoji + json.league_name + "***__"
+                        if(json?.league_url) {
+                            props.description += `[${txt}](${json.league_url} '${json.league_url}')`
+                        } else {
+                            props.description += txt
+                        }
+                        props.description += "\n"
+                    }
+                    if(json?.team) {
+                        let txt = "__***" + emoji + json.team + "***__"
+                        if(json?.team_url) {
+                            props.description += `[${txt}](${json.team_url} '${json.team_url}')`
+                        } else {
+                            props.description += txt
+                        }
                     }
 
                     let teamName = ""
