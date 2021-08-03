@@ -108,9 +108,6 @@ module.exports = class MatchesCommand extends TeamListingCommand {
             }
         }
 
-        let emojiIDs = JSON.parse(fs.readFileSync("dbs/emojis.json","utf8"))
-        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json","utf8"))
-
         let pages = []
 
         for (let [span, files] of Object.entries(profiles)) {

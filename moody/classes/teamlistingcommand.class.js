@@ -108,7 +108,7 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                 }
 
                 if (json?.team_avatar && json.team_avatar != "") {
-                    embed.setAuthor(title, defaults.thumbnail, url)
+                    embed.setAuthor(props.title.text, "", props.title.url)
                     embed.setThumbnail(json.team_avatar)
                 } else {
                     embed.setTitle(props.title.text, props.title.url)
@@ -146,13 +146,21 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                         )
                     ) {
                         value += '[';
-                        if(match.discord.status == "complete") {
+                        if (match.discord.status == "complete") {
                             value += "Final ";
                         }
                         value += "Score: " + match.discord.scoreKeys.bySide.home + " - " + match.discord.scoreKeys.bySide.opponent;
-                        value += `](${match.discord.url} '${match.discord.url}')`;
+                        value += `](${match.discord.url} '${match.discord.url}')` + "\n";
                     }
-                    if(match?.discord?.id && match?.discord?.url) {
+                    if (match?.discord?.maps) {
+                        for (let map of match.discord.maps) {
+                            value += ((map.winner == match.discord.team) ? "🟩" : "🟥");
+                            if (map?.score) {
+                                value += `${map.name}: ${map.score.join(" - ")}` + "\n"
+                            }
+                        }
+                    }
+                    if (match?.discord?.id && match?.discord?.url) {
                         value += `Match: [#${match.discord.id}](${match.discord.url} '${match.discord.url}')`
                     }
                     embed.addField(name, value)
