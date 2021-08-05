@@ -156,8 +156,11 @@ module.exports = class ESEACommand extends VillainsCommand {
                 ``
             )
             this.props.description.push(`Started: <t:${mData.timestamp}:f>`)
-            this.props.description.push(`Final Score: ${Object.values(mData.scoreKeys.bySide).join(" - ")}`)
-            this.props.description.push(`Map: ${mData.map.substr(mData.map.indexOf('_') + 1)}`)
+            this.props.description.push(`[Final Score: ${Object.values(mData.scoreKeys.bySide).join(" - ")}](${matchRoot}/${matchID} '${matchRoot}/${matchID}')`)
+            let mapName = mData.map.substr(mData.map.indexOf('_') + 1)
+            mapName = mapName.charAt(0).toUpperCase() + mapName.slice(1)
+            let mapURL = "https://counterstrike.fandom.com/wiki/" + mapName
+            this.props.description.push(`Map: [${mapName}](${mapURL} '${mapURL}')`)
             this.props.description.push()
             this.props.description.push("```")
             this.props.description.push("/-----------------------------------------------\\")
