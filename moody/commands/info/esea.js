@@ -103,17 +103,17 @@ module.exports = class ESEACommand extends VillainsCommand {
                 let player = {}
                 player.name = record[0]
                 player.ct = {}
-                player.ct.k = parseInt(record[1])
-                if(!(isNaN(player.ct.k))) {
-                  player.ct.d = parseInt(record[2])
-                  player.ct.a = parseInt(record[3])
-                  player.ct.kd = Number((player.ct.k / player.ct.d).toFixed(2))
-                  player.t = {}
-                  player.t.k = parseInt(record[4])
-                  player.t.d = parseInt(record[5])
-                  player.t.a = parseInt(record[6])
-                  player.t.kd = Number((player.t.k / player.t.d).toFixed(2))
-                  matchData[matchID].players.push(player)
+                player.ct.d = parseInt(record[2])
+                if(!(isNaN(player.ct.d))) {
+                    player.ct.k = parseInt(record[1])
+                    player.ct.a = parseInt(record[3])
+                    player.ct.kd = Number((player.ct.k / player.ct.d).toFixed(2))
+                    player.t = {}
+                    player.t.k = parseInt(record[4])
+                    player.t.d = parseInt(record[5])
+                    player.t.a = parseInt(record[6])
+                    player.t.kd = Number((player.t.k / player.t.d).toFixed(2))
+                    matchData[matchID].players.push(player)
                 }
             }
         }
@@ -137,7 +137,6 @@ module.exports = class ESEACommand extends VillainsCommand {
             }
         }
 
-
         for(let [matchID, mData] of Object.entries(matchData)) {
             if((wantedMatch > 0) && (matchID != wantedMatch)) {
                 continue;
@@ -155,29 +154,35 @@ module.exports = class ESEACommand extends VillainsCommand {
                 `[${mData.them.name}](${teamRoot}/${mData.them.id} '${teamRoot}/${mData.them.id}')` +
                 ``
             )
-            this.props.description.push(`Started: <t:${mData.timestamp}:f>`)
-            this.props.description.push(`[Final Score: ${Object.values(mData.scoreKeys.bySide).join(" - ")}](${matchRoot}/${matchID} '${matchRoot}/${matchID}')`)
-            let mapName = mData.map.substr(mData.map.indexOf('_') + 1)
-            mapName = mapName.charAt(0).toUpperCase() + mapName.slice(1)
-            let mapURL = "https://counterstrike.fandom.com/wiki/" + mapName
-            this.props.description.push(`Map: [${mapName}](${mapURL} '${mapURL}')`)
-            this.props.description.push()
-            this.props.description.push("```")
-            this.props.description.push("/-----------------------------------------------\\")
-            this.props.description.push("|           |Counter-Terrorist|    Terrorist    |")
-            this.props.description.push("|-----------------------------------------------|")
-            this.props.description.push("|  Player   |  K/ D: A [K/D ] |  K/ D: A [K/D ] |")
-            this.props.description.push("|-----------|---/--:---[-.--]-|---/--:---[-.--]-|")
-            for(let player of mData.players) {
-                this.props.description.push(
-                    `|` +
-                    `${player.name.padEnd(10)} | ` +
-                    `${(player.ct.k + "").padStart(2)}/${(player.ct.d + "").padStart(2)}:${(player.ct.a + "").padStart(2)} [${(player.ct.kd + "").padEnd(4)}] | ` +
-                    `${(player.t.k + "").padStart(2)}/${(player.t.d + "").padStart(2)}:${(player.t.a + "").padStart(2)} [${(player.t.kd + "").padEnd(4)}]` + ' |'
-                )
+            if(mData.timestamp > 0) {
+                this.props.description.push(`Started: <t:${mData.timestamp}:f>`)
+                this.props.description.push(`[Final Score: ${Object.values(mData.scoreKeys.bySide).join(" - ")}](${matchRoot}/${matchID} '${matchRoot}/${matchID}')`)
             }
-            this.props.description.push("\\-----------------------------------------------/")
-            this.props.description.push("```")
+            if(mData?.map) {
+                let mapName = mData.map.substr(mData.map.indexOf('_') + 1)
+                mapName = mapName.charAt(0).toUpperCase() + mapName.slice(1)
+                let mapURL = "https://counterstrike.fandom.com/wiki/" + mapName
+                this.props.description.push(`Map: [${mapName}](${mapURL} '${mapURL}')`)
+            }
+            if(mData.players.length > 0) {
+                this.props.description.push()
+                this.props.description.push("```")
+                this.props.description.push("/-----------------------------------------------\\")
+                this.props.description.push("|           |Counter-Terrorist|    Terrorist    |")
+                this.props.description.push("|-----------------------------------------------|")
+                this.props.description.push("|  Player   |  K/ D: A [K/D ] |  K/ D: A [K/D ] |")
+                this.props.description.push("|-----------|---/--:---[-.--]-|---/--:---[-.--]-|")
+                for(let player of mData.players) {
+                    this.props.description.push(
+                        `|` +
+                        `${player.name.padEnd(10)} | ` +
+                        `${(player.ct.k + "").padStart(2)}/${(player.ct.d + "").padStart(2)}:${(player.ct.a + "").padStart(2)} [${(player.ct.kd + "").padEnd(4)}] | ` +
+                        `${(player.t.k + "").padStart(2)}/${(player.t.d + "").padStart(2)}:${(player.t.a + "").padStart(2)} [${(player.t.kd + "").padEnd(4)}]` + ' |'
+                    )
+                }
+                this.props.description.push("\\-----------------------------------------------/")
+                this.props.description.push("```")
+            }
             let embed = new VillainsEmbed({...this.props})
             this.send(message, embed)
             this.null = true
