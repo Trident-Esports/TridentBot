@@ -94,7 +94,7 @@ module.exports = class ESEACommand extends VillainsCommand {
                             loser: match.us.score <= match.them.score ? match.us.score : match.them.score
                         }
                     }
-                    match.winner = match.us.score > match.them.score ? match.us.score : match.them.score
+                    match.winner = match.us.score > match.them.score ? match.us.name : match.them.name
                     match.timestamp = record[6]
                     matchData[matchID] = match
                 }
