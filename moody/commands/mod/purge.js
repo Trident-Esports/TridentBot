@@ -41,12 +41,7 @@ module.exports = class PurgeCommand extends BaseCommand {
             }
 
             if(props.description == "") {
-                await message.channel.messages.fetch( {
-                    limit: args[0]
-                })
-                    .then(messages => {
-                        message.channel.bulkDelete(messages)
-                    })
+                await message.channel.bulkDelete(parseInt(args[0]))
                 props.description = `Purging ${args[0]} messages.`
                 duration = "5s"
             }
@@ -57,6 +52,5 @@ module.exports = class PurgeCommand extends BaseCommand {
             .then(msg => {
                 setTimeout(() => msg.delete(), ms(duration))
             })
-            
-    } 
+    }
 }
