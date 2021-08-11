@@ -47,7 +47,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
     }
 
     async action(client, message) {
-        let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+        let ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
         let APPROVED_ROLES = ROLES["admin"]
 
         if (!message.member.roles.cache.some(r => APPROVED_ROLES.includes(r.name))) {

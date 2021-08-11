@@ -17,7 +17,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
         let teamType = args[1] ? args[1].toLowerCase() : ""
         let filepath = "./rosters/dbs"
         let profiles = []
-        let socials = JSON.parse(fs.readFileSync("rosters/dbs/socials/users.json", "utf8"))
+        let socials = JSON.parse(fs.readFileSync("./rosters/dbs/socials/users.json", "utf8"))
 
         if (gameID.indexOf("staff") == -1) {
             filepath += "/teams"
@@ -50,7 +50,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
         for (filepath of profiles) {
             let props = { caption: {}, author: {}, players: {} }
             let profile = JSON.parse(fs.readFileSync(filepath, "utf8"))
-            let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+            let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 
             // Title
             props.caption.text = profile.title

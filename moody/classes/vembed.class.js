@@ -10,9 +10,15 @@ MessageEmbed
 const fs = require('fs');
 const { MessageEmbed } = require('discord.js');
 
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let GLOBALS = null
+try {
+    GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+} catch(err) {
+    console.log("VEmbed: PROFILE manifest not found!")
+    process.exit(1)
+}
 let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
-let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 let DEV = GLOBALS.DEV
 
 module.exports = class VillainsEmbed extends MessageEmbed {

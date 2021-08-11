@@ -34,7 +34,7 @@ module.exports = class InventoryCommand extends GameCommand {
             }
             // console.log(inventory)
 
-            let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
+            let STOCKDATA = JSON.parse(fs.readFileSync("./game/dbs/items.json", "utf8"))
 
             let inventorySorts = {
                 fromDB: {},

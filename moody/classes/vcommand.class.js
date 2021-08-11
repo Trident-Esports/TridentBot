@@ -77,7 +77,13 @@ module.exports = class VillainsCommand extends BaseCommand {
             this.null = true
         }
 
-        const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        let GLOBALS = null
+        try {
+            GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        } catch(err) {
+            console.log("VCommand: PROFILE manifest not found!")
+            process.exit(1)
+        }
         const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
         this.DEV = GLOBALS.DEV
         this.prefix = DEFAULTS.prefix

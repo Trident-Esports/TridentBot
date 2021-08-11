@@ -16,7 +16,7 @@ module.exports = class StoreCommand extends GameCommand {
     }
 
     async action(client, message) {
-        let itemData = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
+        let itemData = JSON.parse(fs.readFileSync("./game/dbs/items.json", "utf8"))
 
         this.props.fields = []
 

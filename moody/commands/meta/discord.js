@@ -1,7 +1,13 @@
 const VillainsCommand = require('../../classes/vcommand.class');
 
 const fs = require('fs');
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+let GLOBALS = null
+try {
+    GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+} catch(err) {
+    console.log("Discord Invite: PROFILE manifest not found!")
+    process.exit(1)
+}
 
 module.exports = class DiscordInviteCommand extends VillainsCommand {
     constructor() {

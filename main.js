@@ -11,7 +11,14 @@ const Levels = require('discord-xp') // Discord Game XP
 
 //Login Tokens
 const fs = require('fs');
-SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
+
+let SENSITIVE = null
+try {
+    SENSITIVE = JSON.parse(fs.readFileSync("./SENSITIVE.json", "utf8"));
+} catch (err) {
+    console.log("Main: SENSITIVE manifest not found!")
+    process.exit(1)
+}
 
 const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"));
 
@@ -20,8 +27,8 @@ const prefix = DEFAULTS.prefix // Default prefix
 try {
     Levels.setURL(SENSITIVE.client.mongoDB);
 } catch {
-    console.log("MongoDB: Failed to connect!");
-    return;
+    console.log("MongoDB: Failed to connect!")
+    process.exit(1)
 }
 
 client.commands = new Discord.Collection();

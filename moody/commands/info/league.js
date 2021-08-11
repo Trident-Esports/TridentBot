@@ -27,7 +27,7 @@ module.exports = class LeagueCommand extends TeamListingCommand {
 
         profiles.league = [ handlerpath + leagueGame + '/' + leagueLevel + '/' + teamID + '.json' ]
 
-        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json","utf8"))
+        let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json","utf8"))
 
         let pages = []
 

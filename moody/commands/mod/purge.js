@@ -20,7 +20,7 @@ module.exports = class PurgeCommand extends BaseCommand {
             description: ""
         }
 
-        let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+        let ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
         let APPROVED_ROLES = ROLES["admin","mod"]
         let [ min, max ] = [ 1, 100 ]
         let duration = ""
