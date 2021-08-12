@@ -15,7 +15,9 @@ module.exports = class SocialsCommand extends VillainsCommand {
             category: "info",
             description: "Socials for Villains",
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

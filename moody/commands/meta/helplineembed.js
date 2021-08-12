@@ -22,7 +22,10 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
             },
             image: 'https://multiculturalmarriage.files.wordpress.com/2013/07/help-button-hi.png'
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
     async action(client, message) {
         this.props.description = 'This is a list of the commands and help for VillainsBot'

@@ -12,7 +12,9 @@ module.exports = class StoreCommand extends GameCommand {
             description: 'View the store',
             extensions: ["profile", "levels", "health"]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
@@ -20,7 +22,8 @@ module.exports = class StoreCommand extends GameCommand {
 
         this.props.fields = []
 
-        for (let [items, itemsAttr] of Object.entries(itemData)) {
+        // Build the thing
+        for (let [items, itemsAttr] of Object.entries(STOCKDATA)) {
             let value = itemsAttr
             for (let [item, itemAttr] of Object.entries(value)) {
                 let names = [];

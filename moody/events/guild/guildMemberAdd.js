@@ -96,9 +96,8 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
                     title: "Welcome to ${member.guild.name}",
                     description: rules.join("\n")
                 }
-                const embed = new VillainsEmbed(props);
 
-                await channel.send(embed);
+                await channel.send(new VillainsEmbed({...props}));
             } catch (err) {
                 throw (err);
             }

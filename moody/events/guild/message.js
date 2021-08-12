@@ -45,8 +45,7 @@ module.exports = class MessageEvent extends BaseEvent {
                 title: { text: "Error" },
                 description: "Please send a proper command."
             }
-            let embed = new VillainsEmbed(props);
-            message.channel.send(embed)
+            message.channel.send(new VillainsEmbed({...props}))
             return;
         }
 

@@ -1,0 +1,25 @@
+{
+  "stripe": "default",
+  "title": "CSGO Open Roster",
+  "aliases": ["csor"],
+  "url": "https://play.esea.net/teams/8772583",
+  "members": {
+    "main": {
+      "title": "Main",
+      "users": [
+          "asdf",
+          "mannygp",
+          "masonn",
+          "orendas",
+          "sha"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+          "atoms",
+          "isaiah"
+      ]
+    }
+  }
+}

@@ -9,25 +9,27 @@ BaseCommand
     Deposit
     Give
     Refund
-    Rob (NYI)
+    Rob
     Steal
     Withdraw
 
 */
-
 const GameCommand = require('./gamecommand.class');
 
 const fs = require('fs');
 let ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
 module.exports = class ATMCommand extends GameCommand {
     constructor(comprops = {}) {
-        super({
-            name: comprops.name,
-            aliases: comprops.aliases,
-            category: 'game',
-            description: comprops.description,
-            extensions: ["profile"]
-        })
+        // Create a parent object
+        // All ATMCommands are 'game' category
+        // All ATMCommands default to load profile extension
+        super(
+            {
+                category: 'game',
+                extensions: [ "profile" ],
+                ...comprops
+            }
+        )
 
         // Disable sources for ATMCommand and children
         for (let source of ["search"]) {
@@ -51,8 +53,10 @@ module.exports = class ATMCommand extends GameCommand {
     }
 
     async action(client, message) {
+        // Get loaded target
         const loaded = this.inputData.loaded
 
+        // Sanity check for title text
         if(!(this?.props?.title?.text)) {
             if(!(this?.props?.title)) {
                 this.props.title = { text: ""}
@@ -62,132 +66,169 @@ module.exports = class ATMCommand extends GameCommand {
 
         // Refund & Steal are Admin-only
         if (["Refund", "Steal"].includes(this.props.caption.text)) {
-            let APPROVED_ROLES = ROLES["admin"]
+            // Get botdev-defined list of roles groupings
 
+            let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+            // Bail if we fail to get Roles information
+            if (!ROLES) {
+                this.error = true
+                this.props.description = "Failed to get Roles information."
+                return
+            }
+
+            let APPROVED_ROLES = ROLES["admin"]
+            // Bail if we don't have intended Approved Roles data
+            if (!APPROVED_ROLES) {
+                this.error = true
+                this.props.description = "Failed to get Approved Roles."
+                return
+            }
+
+            // Bail if member doesn't have Approved Roles
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
                 this.error = true
                 this.props.description = this.errors.adminOnly.join("\n")
+                return
             }
         }
 
-        let amount = (this.inputData.args && this.inputData.args[0]) ? this.inputData.args[0].replace(",","").replace(".","").toLowerCase() : -1
+        // Get transfer amount
+        let amount = (this.inputData.args && this.inputData.args[0]) ?
+            this.inputData.args[0].replace(/[\,\.*]/g,'').toLowerCase() :
+            -1
 
+        // Bail if invalid amount
+        // Amount needs to be positive number, "all" or "half"
         if ((isNaN(amount) && (["all","half"].indexOf(amount) == -1)) || (parseInt(amount) <= 0)) {
             this.error = true
             this.props.description = `Amount must be a positive whole number, "all" or "half". '${amount}' given.`
+            return
         }
 
-        if (!(this.error)) {
-            const profileData = await this.db_query(this.inputData.user.id, "profile")
+        // Get user's profile data
+        const profileData = await this.db_query(this.inputData.user.id, "profile")
 
-            if (!profileData) {
+        // Bail if can't get user data
+        if (!profileData) {
+            this.error = true
+            this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
+            return
+        }
+
+        // Get target's profile data if needed
+        let targetData = null
+        // Give/Refund/Steal require a target
+        let needTarget = ["Give", "Refund", "Steal"].includes(this.props.caption.text)
+        if (needTarget) {
+            if (loaded) {
+                // Give/Steal can't target self
+                // Bail if targetting self
+                if ((["Give", "Steal"].includes(this.props.caption.text)) && (this.inputData.user.id === loaded.id)) {
+                    this.error = true
+                    this.props.description = `You can't ${this.props.caption.text} Gold to/from yourself!`
+                    return
+                }
+
+                // Get target's profile data
+                targetData = await this.db_query(loaded.id, "profile")
+                // Bail if can't get target data
+                if (!targetData) {
+                    this.error = true
+                    this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
+                    return
+                }
+            } else {
+                // Bail if no target sent
                 this.error = true
-                this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
-            }
-
-            if (!(this.error)) {
-                let targetData = null
-                let needTarget = ["Give", "Refund", "Steal"].includes(this.props.caption.text)
-                if (needTarget) {
-                    if (loaded) {
-                        if ((["Give", "Steal"].includes(this.props.caption.text)) && (this.inputData.user.id === loaded.id)) {
-                            this.error = true
-                            this.props.description = `You can't ${this.props.caption.text} Gold to/from yourself!`
-                        }
-
-                        if (!(this.error)) {
-                            targetData = await this.db_query(loaded.id, "profile")
-
-                            if (!targetData) {
-                                this.error = true
-                                this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
-                            }
-                        }
-                    } else {
-                        this.error = true
-                        this.props.description = `You need to specify a player to ${props.caption.text} Gold.`
-                    }
-                }
-
-                if (!(this.error)) {
-                    let reserve = 0
-                    switch (this.props.caption.text) {
-                        case "Deposit":
-                        case "Give":
-                            reserve = profileData.gold
-                            break
-                        case "Withdraw":
-                            reserve = profileData.bank
-                            break
-                        default:
-                            reserve = 0
-                            break
-                    }
-                    if (amount == 'all') {
-                        amount = parseInt(reserve)
-                    } else if (amount == 'half') {
-                        amount = parseInt(reserve / 2)
-                    } else {
-                        amount = parseInt(amount)
-                    }
-                    if (["Deposit","Give","Withdraw"].includes(this.props.caption.text)) {
-                        if (parseInt(amount) > parseInt(reserve)) {
-                            this.error = true
-                            this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
-                        }
-                    }
-
-                    if (!(this.error)) {
-                        let userInc = { gold: 0 }
-                        let targetInc = { gold: 0 }
-                        let [verb, direction, container] = ["", "", ""]
-                        switch (this.props.caption.text) {
-                            case "Deposit":
-                                // User to User
-                                userInc = { gold: -amount, bank: amount };
-                                [verb, direction, container] = ["Deposited", "into", "their Bank"];
-                                break;
-                            case "Give":
-                                // User to Target
-                                userInc = { gold: -amount };
-                                targetInc = { gold: amount };
-                                [verb, direction, container] = ["Given", "to", `<@${loaded.id}>'s Wallet`];
-                                break;
-                            case "Withdraw":
-                                // User to User
-                                userInc = { gold: amount, bank: -amount };
-                                [verb, direction, container] = ["Withdrawn", "into", "their Wallet"];
-                                break;
-                            case "Refund":
-                                // Ether to Target
-                                targetInc = { gold: amount };
-                                [verb, direction, container] = ["Refunded", "into", `<@${loaded.id}>'s Wallet`];
-                                break;
-                            case "Steal":
-                                // Target to User
-                                userInc = { gold: amount };
-                                targetInc = { gold: -amount };
-                                [verb, direction, container] = ["Stole", "from", `<@${loaded.id}>'s Wallet`];
-                                break;
-                            default:
-                                break;
-                        }
-                        if (userInc.gold !== 0) {
-                            await this.db_transform(this.inputData.user.id, userInc)
-                        }
-                        if (loaded && targetInc.gold !== 0) {
-                            await this.db_transform(loaded.id, targetInc)
-                        }
-
-                        this.props.description = []
-
-                        this.props.description.push(`**<@${this.inputData.user.id}> has ${verb} ${this.emojis.gold}${amount.toLocaleString("en-AU")} Gold ${direction} ${container}!**`)
-                        this.props.description.push("_Check your balance using `.balance`_")
-
-                        this.props.description = this.props.description.join("\n")
-                    }
-                }
+                this.props.description = `You need to specify a player to ${props.caption.text} Gold.`
+                return
             }
         }
+
+        // Figure out source for gold
+        let reserve = 0
+        switch (this.props.caption.text) {
+            case "Deposit":
+            case "Give":
+                reserve = profileData.gold
+                break
+            case "Withdraw":
+                reserve = profileData.bank
+                break
+            default:
+                reserve = 0
+                break
+        }
+
+        // Calculate proper amount
+        if (amount == 'all') {
+            amount = parseInt(reserve)
+        } else if (amount == 'half') {
+            amount = parseInt(reserve / 2)
+        } else {
+            amount = parseInt(amount)
+        }
+        // Deposit/Give/Withdraw: Can't transfer more than you've got
+        // Bail if not enough gold
+        if (["Deposit","Give","Withdraw"].includes(this.props.caption.text)) {
+            if (parseInt(amount) > parseInt(reserve)) {
+                this.error = true
+                this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
+                return
+            }
+        }
+
+        // Figure out plus/minus and destination for gold
+        let userInc = { gold: 0 }
+        let targetInc = { gold: 0 }
+        let [verb, direction, container] = ["", "", ""]
+        switch (this.props.caption.text) {
+            case "Deposit":
+                // User to User
+                userInc = { gold: -amount, bank: amount };
+                [verb, direction, container] = ["Deposited", "into", "their Bank"];
+                break;
+            case "Give":
+                // User to Target
+                userInc = { gold: -amount };
+                targetInc = { gold: amount };
+                [verb, direction, container] = ["Given", "to", `<@${loaded.id}>'s Wallet`];
+                break;
+            case "Withdraw":
+                // User to User
+                userInc = { gold: amount, bank: -amount };
+                [verb, direction, container] = ["Withdrawn", "into", "their Wallet"];
+                break;
+            case "Refund":
+                // Ether to Target
+                targetInc = { gold: amount };
+                [verb, direction, container] = ["Refunded", "into", `<@${loaded.id}>'s Wallet`];
+                break;
+            case "Steal":
+                // Target to User
+                userInc = { gold: amount };
+                targetInc = { gold: -amount };
+                [verb, direction, container] = ["Stole", "from", `<@${loaded.id}>'s Wallet`];
+                break;
+            default:
+                break;
+        }
+
+        // If we're modding the user, do it
+        if (userInc.gold !== 0) {
+            await this.db_transform(this.inputData.user.id, userInc)
+        }
+        // If we're modding the target, do it
+        if (loaded && targetInc.gold !== 0) {
+            await this.db_transform(loaded.id, targetInc)
+        }
+
+        // Build the thing
+        this.props.description = []
+
+        this.props.description.push(`**<@${this.inputData.user.id}> has ${verb} ${this.emojis.gold}${amount.toLocaleString("en-AU")} Gold ${direction} ${container}!**`)
+        this.props.description.push("_Check your balance using `.balance`_")
+
+        this.props.description = this.props.description.join("\n")
     }
 }

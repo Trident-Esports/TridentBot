@@ -13,6 +13,10 @@ module.exports = {
     permissions: [],
     description: "Checks the user's cooldowns",
     async execute(message) {
+        let props = {
+            "title": "***Cooldowns***",
+            "url": "https://discord.com/KKYdRbZcPT"
+        }
 
         let GLOBALS = null
         try {
@@ -26,10 +30,6 @@ module.exports = {
 
         let stripe = defaults["stripe"]
 
-        let props = {
-            "title": "***Cooldowns***",
-            "url": "https://discord.com/KKYdRbZcPT"
-        }
         switch (stripe) {
             default:
                 stripe = "#B2EE17";

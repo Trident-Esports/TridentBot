@@ -5,11 +5,13 @@ const VillainsEmbed = require('../../classes/vembed.class');
 
 module.exports = class RosterCommand extends TeamListingCommand {
     constructor() {
-        super({
-            name: "roster",
-            category: "information",
-            description: "Display a roster"
-        })
+        super(
+            {
+                name: "roster",
+                category: "information",
+                description: "Display a roster"
+            }
+        )
     }
 
     async run(client, message, args) {
@@ -116,7 +118,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
                 props.players.target.avatar = profile.team.avatar
             }
 
-            let rosterEmbed = new VillainsEmbed(props)
+            let rosterEmbed = new VillainsEmbed({...props})
 
             // Team Members
             if (profile?.members) {

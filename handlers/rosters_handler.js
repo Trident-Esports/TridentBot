@@ -39,7 +39,11 @@ module.exports = (client, message, args) => {
         }
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
 
-        if (profile.aliases) {
+        if (!profile) {
+            console.log(`Failed to get roster: ${file}`)
+        }
+
+        if (profile?.aliases) {
             let fileparts = file.split('/')
             let gameID = fileparts[fileparts.length - 2]
             let filename = fileparts[fileparts.length - 1].replace(".json","")
@@ -71,7 +75,7 @@ module.exports = (client, message, args) => {
             }
             client.commands.set(rosterCommand.name, rosterCommand);
 
-            if(file.indexOf("teams") !== -1) {
+            if(file.includes("teams")) {
                 let matchIDs = []
                 if (profile.team?.tourneyID) {
                     matchIDs.push(profile.team.tourneyID)
@@ -158,8 +162,7 @@ module.exports = (client, message, args) => {
                     desc += "\n";
                 }
                 props.description = desc
-                let embed = new VillainsEmbed(props)
-                message.channel.send(embed);
+                message.channel.send(new VillainsEmbed({...props}));
             }
         }
         client.commands.set(profile.aliases[0], teams);

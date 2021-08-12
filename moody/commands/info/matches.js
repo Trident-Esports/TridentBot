@@ -5,14 +5,18 @@ const VillainsEmbed = require('../../classes/vembed.class');
 
 module.exports = class MatchesCommand extends TeamListingCommand {
     constructor() {
-        super({
-            name: "matches",
-            category: "information",
-            description: "Call match listings"
-        })
+        super(
+            {
+                name: "matches",
+                aliases: [ "match" ],
+                category: "information",
+                description: "Call match listings"
+            }
+        )
     }
 
-    async run(client, message, args) {
+    async action(client, message, cmd) {
+        let args = this.inputData.args;
         let profile = {
             "team": {}
         }
@@ -63,6 +67,11 @@ module.exports = class MatchesCommand extends TeamListingCommand {
                         // invalid span
                         // return all spans for teamID
                         validSpan = false
+                        if (cmd == "match") {
+                            handlerpath = "/match/"
+                            profiles[""] = [ handlerpath + filepath + ".json" ]
+                            validSpan = true
+                        }
                     }
                     if (!validSpan) {
                         for (let span of [ "all", "complete", "incomplete", "next" ]) {
@@ -95,16 +104,12 @@ module.exports = class MatchesCommand extends TeamListingCommand {
                                     handlerpath + filepath + '-' + span + ".json"
                                 )
                             }
+                            profiles[span].push(
+                                handlerpath + filepath + '-' + span + ".json"
+                            )
                         }
                     }
                 }
-            } else {
-                // something got stuffed up
-                let msg = `${message.author}, the correct usage is:` + "\n"
-                msg += "`" + this.prefix + "matches [all|incomplete|complete|next]`" + "\n"
-                msg += "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                msg += "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                return message.channel.send(msg)
             }
         }
 
@@ -135,6 +140,20 @@ module.exports = class MatchesCommand extends TeamListingCommand {
                 pages.push(embed)
             }
         }
-        super.send(message, pages, [], "", true)
+
+        if (pages.length) {
+            await this.send(message, pages, [], "", true)
+            this.null = true
+        } else {
+            // something got stuffed up
+            this.error = true
+            this.props.description = [
+                `${message.author}, the correct usage is:`,
+                "`" + this.prefix + "matches [all|incomplete|complete|next]`",
+                "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`",
+                "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`"
+            ].join("\n")
+            return
+        }
     }
 }
