@@ -88,20 +88,7 @@ module.exports = class ShopCommand extends GameCommand {
             }
         }
 
-            if (!(this.error)) {
-                let STOCKDATA = JSON.parse(fs.readFileSync("./game/dbs/items.json", "utf8"))
-
-                let inventorySorts = {
-                    fromDB: {},
-                    toDB: {},
-                    flat: {},
-                    conversions: {
-                        // emojiToKey: {},
-                        emojiToCat: {}//,
-                        // keyToEmoji: {},
-                        // keyToCat: {}
-                    }
-                }
+        let gold = profileData.gold //Players gold
 
         // Figure out what and how much is being asked for
         let re = /^([a-z ]*)([\d]*)$/
