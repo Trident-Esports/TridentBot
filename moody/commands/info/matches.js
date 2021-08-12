@@ -1,8 +1,24 @@
-const fs = require('fs');
-const dasu = require('dasu');
 const TeamListingCommand = require('../../classes/teamlistingcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const fs = require('fs');
 
+function walk(dir, filext = ".json") {
+    let results = [];
+    let list = fs.readdirSync(dir);
+    list.forEach(function (file) {
+        file = dir + '/' + file;
+        let stat = fs.statSync(file);
+        if (stat && stat.isDirectory()) {
+            /* Recurse into a subdirectory */
+            results = results.concat(walk(file));
+        } else {
+            /* Is a JSON file */
+            if (file.endsWith(filext)) {
+                results.push(file);
+            }
+        }
+    });
+    return results;
+}
 module.exports = class MatchesCommand extends TeamListingCommand {
     constructor() {
         super(
@@ -90,7 +106,7 @@ module.exports = class MatchesCommand extends TeamListingCommand {
                             profiles[span] = []
                         }
                         let locPath = "./rosters/dbs/teams"
-                        let files = this.walk(locPath)
+                        let files = walk(locPath)
                         for (let file of files) {
                             let fData = JSON.parse(fs.readFileSync(file, "utf8"))
                             if (fData?.team?.teamID) {
@@ -104,9 +120,6 @@ module.exports = class MatchesCommand extends TeamListingCommand {
                                     handlerpath + filepath + '-' + span + ".json"
                                 )
                             }
-                            profiles[span].push(
-                                handlerpath + filepath + '-' + span + ".json"
-                            )
                         }
                     }
                 }
