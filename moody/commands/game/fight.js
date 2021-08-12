@@ -17,8 +17,6 @@ module.exports = class FightCommand extends GameCommand {
     }
 
     async action(client, message) {
-        // return message.channel.send("Temporarily disabled.")
-
         /*
         User:   Invalid
         Target: Valid
@@ -38,6 +36,7 @@ module.exports = class FightCommand extends GameCommand {
             `Do you accept?`
         ]
 
+        // XP Reward: 300 - 300
         const randomXP = Math.floor(Math.random() * 300) + 300;
 
         const Contestants = [
@@ -45,83 +44,97 @@ module.exports = class FightCommand extends GameCommand {
             opponent
         ]
 
+        // Choose a random winner
         const winner = Contestants.sort(() => Math.random() - Math.random()).slice(0, 1)[0];
+
+        // Gold Reward: 1200 - 1500
         let WinningsNUMBER = Math.floor(Math.random() * 1500) + 1200;
 
         const FILTER = (m) => {
             let conclusions = {
-                yes: m.content.toLowerCase().includes("yes") || m.content.toLowerCase().startsWith('y'),
-                no: m.content.toLowerCase().includes("no") || m.content.toLowerCase().startsWith('n'),
-                opponentMessage: m.author.id === opponent.id,
-                userMessage: m.author.id === user.id,
-                newCommand: m.content.startsWith(this.prefix)
+                yes: m.content.toLowerCase().startsWith('y'), // Yes
+                no: m.content.toLowerCase().startsWith('n'),  // No
+                opponentMessage: m.author.id === opponent.id, // Opponent's message
+                userMessage: m.author.id === user.id,         // User's message
+                newCommand: m.content.startsWith(this.prefix) // New command issued
             }
             return (
-                (conclusions.yes && conclusions.opponentMessage) ||
-                (conclusions.no && conclusions.opponentMessage) ||
-                (conclusions.no && conclusions.userMessage) ||
-                (conclusions.newCommand && conclusions.opponentMessage) ||
-                (conclusions.newCommand && conclusions.userMessage)
+                (conclusions.yes && conclusions.opponentMessage) ||         // Opponent says No
+                (conclusions.no && conclusions.opponentMessage) ||          // Opponent says Yes
+                (conclusions.no && conclusions.userMessage) ||              // User says No
+                (conclusions.newCommand && conclusions.opponentMessage) ||  // Opponent issues new command
+                (conclusions.newCommand && conclusions.userMessage)         // User issues new command
             )
         }
 
+        // 30 secs to collect response
         const COLLECTOR = message.channel.createMessageCollector(FILTER, {
             max: 1,
             time: 30 * 1000 // 30 seconds
         });
 
+        // When we're done collecting
         COLLECTOR.on("collect", async (m) => {
+            // Bail if we try to start a new command
             if (m.content.startsWith(this.prefix)) {
                 this.error = true
                 this.numErrors += 1
                 this.props.description = 'You are already in a command. Duel Cancelled!'
+                return
             }
 
-            if (m.content.toLowerCase() === 'no' || m.content.toLowerCase().startsWith('n')) {
+            // Bail if someone says no
+            if (m.content.toLowerCase().startsWith('n')) {
                 this.error = true
                 this.numErrors += 1
                 this.props.description = 'The Duel was Cancelled!'
+                return
             }
 
-            if (!(this.error)) {
-                const hasLeveledUP = await this.db_transform(winner.id, "xp", randomXP);
+            // XP Reward
+            const hasLeveledUP = await this.db_transform(winner.id, "xp", randomXP);
 
-                this.props.color = "#FF5000"
-                this.props.title = "WINNER WINNER CHICKEN DINNER"
-                this.props.description = [
-                    `<@${winner.id}> Won the Fight. Recieving ${this.emojis.gold}${WinningsNUMBER.toLocaleString("en-AU")} in Winnings!`,
-                    `<@${winner.id}> Earned ${this.emojis.xp}${randomXP} XP`
-                ]
+            this.props.color = "#FF5000"
+            this.props.title = "WINNER WINNER CHICKEN DINNER"
+            this.props.description = [
+                `<@${winner.id}> Won the Fight. Recieving ${this.emojis.gold}${WinningsNUMBER.toLocaleString("en-AU")} in Winnings!`,
+                `<@${winner.id}> Earned ${this.emojis.xp}${randomXP} XP`
+            ]
 
-                if (m.content.toLowerCase() === 'yes' || m.content.toLowerCase().startsWith('y')) {
-                    await this.db_transform(winner.id, "gold", WinningsNUMBER)
+            // If fight was accepted
+            if (m.content.toLowerCase().startsWith('y')) {
+                // Give gold to winner
+                await this.db_transform(winner.id, "gold", WinningsNUMBER)
 
-                    if (hasLeveledUP) {
-                        const levelData = await this.db_query(winner.id, "levels");
-                        let reward = {gold: 1000, minions: 1}
-                        await this.db_transform(winner.id, { gold: reward.gold, minions: reward.minions })
+                // Ding message
+                if (hasLeveledUP) {
+                    const levelData = await this.db_query(winner.id, "levels");
+                    let reward = {gold: 1000, minions: 1}
+                    await this.db_transform(winner.id, { gold: reward.gold, minions: reward.minions })
 
-                        this.props.footer.msg = [
-                            `${winner.username}: You just Advanced to Level ${levelData.level}!`,
-                            `You have gained: ${this.emojis.gold}${reward.gold}, ${this.emojis.minions}${reward.minions}`
-                        ].join(" • ")
-                    }
+                    this.props.footer.msg = [
+                        `${winner.username}: You just Advanced to Level ${levelData.level}!`,
+                        `You have gained: ${this.emojis.gold}${reward.gold}, ${this.emojis.minions}${reward.minions}`
+                    ].join(" • ")
                 }
             }
 
-            let embed = new VillainsEmbed(this.props)
-            this.send(message, embed);
+            // We'll handle sending it
+            // SELFHANDLE: Collector Collected
+            this.send(message, new VillainsEmbed({...this.props}));
             this.null = true
         });
 
+        // Time's up!
         COLLECTOR.on("end", (collected) => {
             if (collected.size == 0) {
                 //cooldown = 0
                 this.error = true
                 this.props.description = `Nobody has answered. Duel Cancelled!`
 
-                let embed = new VillainsEmbed(this.props)
-                this.send(message, embed);
+                // We'll handle sending it
+                // SELFHANDLE: Collector Timed Out
+                this.send(message, new VillainsEmbed({...this.props}));
                 this.null = true
             }
         });

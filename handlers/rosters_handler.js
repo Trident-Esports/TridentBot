@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const MatchesCommand = require('../moody/commands/info/matches')
+const LeagueCommand = require('../moody/commands/info/league')
 const RosterCommand = require('../moody/commands/info/roster')
 const VillainsEmbed = require('../moody/classes/vembed.class');
 
@@ -25,8 +26,6 @@ let walk = function (dir) {
     return results;
 }
 
-let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-
 module.exports = (client, message, args) => {
     let dir = "./rosters"
     const rosters_profiles = walk(dir)
@@ -38,7 +37,11 @@ module.exports = (client, message, args) => {
         }
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
 
-        if (profile.aliases) {
+        if (!profile) {
+            console.log(`Failed to get roster: ${file}`)
+        }
+
+        if (profile?.aliases) {
             let fileparts = file.split('/')
             let gameID = fileparts[fileparts.length - 2]
             let filename = fileparts[fileparts.length - 1].replace(".json","")
@@ -48,7 +51,8 @@ module.exports = (client, message, args) => {
             }
             roster_aliases[gameID][profile.aliases[0]] = {
                 name: profile.title,
-                schedule: "team" in profile
+                schedule: "team" in profile,
+                league: "league" in profile
             }
 
             let rosterCommand = {
@@ -69,7 +73,7 @@ module.exports = (client, message, args) => {
             }
             client.commands.set(rosterCommand.name, rosterCommand);
 
-            if(file.indexOf("teams") !== -1) {
+            if(file.includes("teams")) {
                 let matchIDs = []
                 if (profile.team?.tourneyID) {
                     matchIDs.push(profile.team.tourneyID)
@@ -90,6 +94,21 @@ module.exports = (client, message, args) => {
                     }
                 }
                 client.commands.set(scheduleCommand.name, scheduleCommand);
+
+                if (profile?.team?.teamID && profile?.league?.game && profile?.league?.level) {
+                    let leagueCommand = {
+                        name: profile.aliases[0] + 'l',
+                        title: profile.title.replace("Roster", "League Schedule"),
+                        async execute(message) {
+                            let command = new LeagueCommand().run(
+                                client,
+                                message,
+                                [ profile.league.game, profile.league.level, profile.team.teamID ]
+                            )
+                        }
+                    }
+                    client.commands.set(leagueCommand.name, leagueCommand);
+                }
             }
         }
     }
@@ -130,6 +149,10 @@ module.exports = (client, message, args) => {
                                 desc += "/";
                                 desc += "`" + teamID + 's' + "`";
                             }
+                            if (teams[teamID].league) {
+                                desc += "/";
+                                desc += "`" + teamID + 'l' + "`";
+                            }
                             desc += ")";
                             desc += "\n";
                         }
@@ -137,8 +160,7 @@ module.exports = (client, message, args) => {
                     desc += "\n";
                 }
                 props.description = desc
-                let embed = new VillainsEmbed(props)
-                message.channel.send(embed);
+                message.channel.send(new VillainsEmbed({...props}));
             }
         }
         client.commands.set(profile.aliases[0], teams);

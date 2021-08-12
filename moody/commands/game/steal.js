@@ -11,6 +11,8 @@ module.exports = class StealCommand extends ATMCommand {
                 bot: "invalid"
             }
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 }

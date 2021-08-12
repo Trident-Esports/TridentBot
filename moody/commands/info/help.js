@@ -4,11 +4,14 @@ const fs = require('fs')
 
 module.exports = class HelpCommand extends VillainsCommand {
     constructor() {
-        super({
-            name: "help",
-            category: "information",
-            description: "Bot Help"
-        })
+        super(
+            {
+                name: "help",
+                aliases: [ 'h' ],
+                category: "information",
+                description: "Bot Help"
+            }
+        )
     }
 
     async action(client, message) {
@@ -18,12 +21,21 @@ module.exports = class HelpCommand extends VillainsCommand {
         ]
         let helpData = JSON.parse(fs.readFileSync("./dbs/help.json", "utf8"))
 
+        // Bail if we fail to get mod help data
+        if (!helpData) {
+            this.error = true
+            this.props.description = "Failed to get Mod Help Data."
+            return
+        }
+
+        // Default to showing everything
         let scope = "all"
         let search = {
             "term": null,
             "single": null
         }
 
+        // If we've got a search term
         if(this.inputData.args) {
             if(this.inputData.args[0]) {
                 search["term"] = this.inputData.args[0]
@@ -34,16 +46,19 @@ module.exports = class HelpCommand extends VillainsCommand {
             }
         }
 
+        // Search for the term
         if(search.term) {
-            if(Object.keys(helpData).indexOf(search.term) !== -1) {
+            if(Object.keys(helpData).includes(search.term)) {
+                // If it matches a section, load that section
                 let key = search.term
                 helpData = {
                     key: helpData[key]
                 }
                 scope = "section"
             } else {
+                // If it doesn't match a section, see if it matches a single command
                 for(let [section, commands] of Object.entries(helpData)) {
-                    if(Object.keys(commands.commands).indexOf(search.term) !== -1) {
+                    if(Object.keys(commands.commands).includes(search.term)) {
                         let key = section
                         helpData = {
                             key: helpData[key]
@@ -54,6 +69,7 @@ module.exports = class HelpCommand extends VillainsCommand {
             }
         }
 
+        // Build the thing
         for(let [section, sectionAttrs] of Object.entries(helpData)) {
             this.props.fields = []
             this.props.fields.push(
@@ -77,7 +93,7 @@ module.exports = class HelpCommand extends VillainsCommand {
                     )
                 }
             }
-            this.pages.push(new VillansEmbed(this.props))
+            this.pages.push(new VillansEmbed({...this.props}))
         }
     }
 }

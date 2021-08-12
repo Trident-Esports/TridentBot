@@ -42,7 +42,14 @@ module.exports = class PlayCommand extends VillainsCommand {
             category: 'music',
             description: 'Manages music',
         }
-        super(comprops, { caption: { text: "Villains Music" } })
+        super(
+            {...comprops},
+            {
+                caption: {
+                    text: "Villains Music"
+                }
+            }
+        )
         this.connection = null
         this.song_queue = null
         this.now_playing = null
@@ -70,24 +77,25 @@ module.exports = class PlayCommand extends VillainsCommand {
             if (!this.voice_channel) {
                 this.error = true
                 this.props.description = 'You need to be connected to a voice channel to play music.'
+                return false
             }
 
-            if (!(this.error)) {
-                // Get Bot perms for channel
-                console.log("Music: Checking Bot's Perms")
-                const permissions = this.voice_channel.permissionsFor(message.client.user);
-                if ((!(permissions.has('CONNECT' || 'SPEAK')))) {
-                    this.error = true
-                    this.props.description = `<@${client.user.id}> doesn't have permission to join the voice channel that you're in.`
-                    console.log("Music: !!! Bot doesn't have perms to channel !!!")
-                }
-
-                if(!(this.server_queue)) {
-                    this.server_queue = queue.get(message.guild.id)
-
-                    console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
-                }
+            // Get Bot perms for channel
+            console.log("Music: Checking Bot's Perms")
+            const permissions = this.voice_channel.permissionsFor(message.client.user);
+            if ((!(permissions.has('CONNECT' || 'SPEAK')))) {
+                this.error = true
+                this.props.description = `<@${client.user.id}> doesn't have permission to join the voice channel that you're in.`
+                console.log("Music: !!! Bot doesn't have perms to channel !!!")
+                return false
             }
+
+            if(!(this.server_queue)) {
+                this.server_queue = queue.get(message.guild.id)
+
+                console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
+            }
+            return true
         }
 
         // Call Bot
@@ -98,6 +106,7 @@ module.exports = class PlayCommand extends VillainsCommand {
             if(!this.connection) {
                 this.error = true
                 this.props.description = "Bot couldn't join voice channel."
+                return
             }
         }
 
@@ -115,7 +124,11 @@ module.exports = class PlayCommand extends VillainsCommand {
                 this.props.description.push(`<#${connection.channel.id}>`)
                 console.log(`${connection.channel.name} (ID:${connection.channel.id})`)
             }
-            await this.send(message, new VillainsEmbed(this.props))
+            if (this.props.description.length == 0) {
+                this.error = true
+                this.props.description.push("Bot not connected to a voice channel!")
+            }
+            await this.send(message, new VillainsEmbed({...this.props}))
             this.null = true
         }
 
@@ -144,8 +157,10 @@ module.exports = class PlayCommand extends VillainsCommand {
                 }
 
                 // Nuke Bot
+                // We'll handle this one
+                // SELFHANDLE: This command is just messy at the moment.
                 await nukeBot(message)
-                await this.send(message, new VillainsEmbed(this.props))
+                await this.send(message, new VillainsEmbed({...this.props}))
                 this.null = true
                 return;
             }
@@ -181,7 +196,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 if (this.now_playing && (!(this.now_playing.deleted))) {
                     this.now_playing.delete()
                 }
-                this.now_playing = await this.send(message, new VillainsEmbed(this.props))
+                this.now_playing = await this.send(message, new VillainsEmbed({...this.props}))
                 this.null = true
             }
         }
@@ -190,39 +205,54 @@ module.exports = class PlayCommand extends VillainsCommand {
         let songSearch = async (client, message, inputURL) => {
             console.log("Music: Search for Song")
 
-            if (!(this.error)) {
-                let song = {};
+            let song = {};
 
-                let silent = false;
+            let silent = false;
 
-                if (!inputURL) {
-                    inputURL = this?.inputData?.args.join(" ").trim().replace("<","").replace(">","")
-                } else {
-                    silent = true;
-                }
+            if (!inputURL) {
+                inputURL = this?.inputData?.args.join(" ").trim().replace("<","").replace(">","")
+            } else {
+                silent = true;
+            }
 
-                let user = {
-                    username: message.author.username,
-                    discriminator: message.author.discriminator,
-                    avatar: message.author.displayAvatarURL({ format: "png", dynamic: true }),
-                    id: message.author.id
-                }
+            if (!inputURL) {
+                this.error = true
+                this.props.description = "No search string given."
+                return
+            }
 
-                // Validate URL as YT URL
-                if (ytdl.validateURL(inputURL)) {
-                    console.log("Music: YouTube Song -->")
+            let user = {
+                username: message.author.username,
+                discriminator: message.author.discriminator,
+                avatar: message.author.displayAvatarURL({ format: "png", dynamic: true }),
+                id: message.author.id
+            }
+
+            // Validate URL as YT URL
+            if (ytdl.validateURL(inputURL)) {
+                console.log("Music: YouTube Song -->")
+                try {
                     const songInfo = await ytdl.getInfo(inputURL);
                     song = {
                         title: songInfo.videoDetails.title,
                         url: songInfo.videoDetails.video_url,
                         user: user
                     };
-                } else if (inputURL.includes('youtu') && inputURL.includes('be') && inputURL.includes('playlist')) {
-                    console.log("Music: YouTube Playlist -->")
+                } catch {
+                    this.error = true
+                    this.props.description = "Invalid YouTube Song URL."
+                    return
+                }
+            } else if (inputURL.includes('youtu') && inputURL.includes('be') && inputURL.includes('playlist')) {
+                console.log("Music: YouTube Playlist -->")
+                try {
+                    if (inputURL.includes('&')) {
+                        inputURL = inputURL.slice(0,inputURL.indexOf('&'))
+                    }
                     const playlistInfo = await ytpl(inputURL);
 
                     this.props.description = `Playlist **${playlistInfo.title}** added to queue by` + ` [*<@${message.author.id}>*] `
-                    await this.send(message, new VillainsEmbed(this.props));
+                    await this.send(message, new VillainsEmbed({...this.props}));
                     this.null = true;
 
                     let success = false;
@@ -234,18 +264,27 @@ module.exports = class PlayCommand extends VillainsCommand {
                     if (!success) {
                         this.null = true;
                     }
-                } else if (inputURL.includes('spotify')) {
-                    // Check if Spotify
+                } catch {
+                    this.error = true
+                    this.props.description = "Invalid YouTube Playlist URL."
+                    return
+                }
+            } else if (inputURL.includes('spotify')) {
+                // Check if Spotify
 
-                    if (inputURL.includes("playlist")) {
-                        // spotify-playlist probably can use spotify:playlist:playlistID
-                        // spotify-web-api-node.getPlaylist(playlistID) // needs API key
-                        // spotify-url-info.getTracks(inputURL)
-                        console.log("Music: Spotify Playlist -->")
-                        let playlistID = inputURL.split('/').pop()
+                if (inputURL.includes("playlist")) {
+                    // spotify-playlist probably can use spotify:playlist:playlistID
+                    // spotify-web-api-node.getPlaylist(playlistID) // needs API key
+                    // spotify-url-info.getTracks(inputURL)
+                    console.log("Music: Spotify Playlist -->")
+                    let playlistID = inputURL.split('/').pop()
+                    if (playlistID.includes('?')) {
+                        playlistID = playlistID.slice(0,playlistID.indexOf('?'))
+                    }
 
-                        // spotify-url-info method
-                        if (true) {
+                    // spotify-url-info method
+                    if (true) {
+                        try {
                             await spURLinfo.getData(inputURL).then(async (data) => {
                                 const spotifyPlaylistInfo = data
                                 const spotifyTracks = spotifyPlaylistInfo?.tracks?.items ? spotifyPlaylistInfo.tracks.items : null
@@ -257,57 +296,67 @@ module.exports = class PlayCommand extends VillainsCommand {
                                     }
                                 }
                             })
+                        } catch {
+                            this.error = true
+                            this.props.description = "Invalid Spotify Playlist URL."
+                            return
+                        }
+                    }
+
+                    // dasu method
+                    if (false) {
+                        let req = dasu.req
+
+                        let filepath = "/spotify/" + playlistID
+                        let url = new URL("http://villainsoce.mymm1.com:80" + filepath)
+
+                        let params = {
+                            method: 'GET',
+                            protocol: url.protocol,
+                            hostname: url.hostname,
+                            port: url.port,
+                            path: url.pathname + (url?.searchParams ? ('?' + url.searchParams.toString()) : '')
                         }
 
-                        // dasu method
-                        if (false) {
-                            let req = dasu.req
+                        await req(params, async function (err, res, data) {
+                            try {
+                                let json = JSON.parse(data)
+                                if ("data" in json) {
+                                    if ("Escaped JSON" in json.data) {
+                                        let encodedJSON = json.data["Escaped JSON"]
+                                        if (encodedJSON) {
+                                            encodedJSON = encodedJSON.replace(/\s/g, '')
+                                            let decodedJSON = decodeURI(encodedJSON)
+                                                .replace(/\%2C/g,',')
+                                                .replace(/\%2F/g,'/')
+                                                .replace(/\%3A/g,':')
 
-                            let filepath = "/spotify/" + playlistID
-                            let url = new URL("http://villainsoce.mymm1.com:80" + filepath)
+                                            const spotifyPlaylistInfo = JSON.parse(decodedJSON)
+                                            const spotifyTracks = spotifyPlaylistInfo?.tracks?.items ? spotifyPlaylistInfo.tracks.items : null
 
-                            let params = {
-                                method: 'GET',
-                                protocol: url.protocol,
-                                hostname: url.hostname,
-                                port: url.port,
-                                path: url.pathname + (url?.searchParams ? ('?' + url.searchParams.toString()) : '')
-                            }
-
-                            await req(params, async function (err, res, data) {
-                                try {
-                                    let json = JSON.parse(data)
-                                    if ("data" in json) {
-                                        if ("Escaped JSON" in json.data) {
-                                            let encodedJSON = json.data["Escaped JSON"]
-                                            if (encodedJSON) {
-                                                encodedJSON = encodedJSON.replace(/\s/g, '')
-                                                let decodedJSON = decodeURI(encodedJSON)
-                                                    .replace(/\%2C/g,',')
-                                                    .replace(/\%2F/g,'/')
-                                                    .replace(/\%3A/g,':')
-
-                                                const spotifyPlaylistInfo = JSON.parse(decodedJSON)
-                                                const spotifyTracks = spotifyPlaylistInfo?.tracks?.items ? spotifyPlaylistInfo.tracks.items : null
-
-                                                if (spotifyTracks) {
-                                                    for (let [, spotifyTrackInfo] of Object.entries(spotifyTracks)) {
-                                                        if (spotifyTrackInfo?.track?.external_urls) {
-                                                            await songSearch(client, message, spotifyTrackInfo.track.external_urls.spotify)
-                                                        }
+                                            if (spotifyTracks) {
+                                                for (let [, spotifyTrackInfo] of Object.entries(spotifyTracks)) {
+                                                    if (spotifyTrackInfo?.track?.external_urls) {
+                                                        await songSearch(client, message, spotifyTrackInfo.track.external_urls.spotify)
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                } catch(e) {
-                                    console.log(e)
-                                    // console.log(`Malformed JSON:${url}`)
                                 }
-                            })
+                            } catch(e) {
+                                console.log(e)
+                                // console.log(`Malformed JSON:${url}`)
+                            }
+                        })
+                    }
+                } else {
+                    console.log("Music: Spotify Song -->")
+
+                    try {
+                        if (inputURL.includes('?')) {
+                            inputURL = inputURL.slice(0,inputURL.indexOf('?'))
                         }
-                    } else {
-                        console.log("Music: Spotify Song -->")
                         const spotifyTrackInfo = await getPreview(inputURL);
 
                         const videoFinder = async (query) => {
@@ -327,81 +376,86 @@ module.exports = class PlayCommand extends VillainsCommand {
                         } else {
                             this.error = true
                             this.props.description = "Couldn't find Spotify song on YouTube."
+                            return
                         }
-                    }
-                } else {
-                    // Not YT nor Spotify
-                    console.log("Music: Neither YouTube nor Spotify -->")
-                    const videoFinder = async (query) => {
-                        const videoResult = await ytSearch(query);
-                        return videoResult.videos.length > 1 ? videoResult.videos[0] : null;
-                    };
-                    if (inputURL == "") {
+                    } catch {
                         this.error = true
-                        this.props.description = "No search string given."
-                    }
-                    if (!(this.error)) {
-                        // Get the vid
-                        const video = await videoFinder(inputURL);
-
-                        if (video) {
-                            song = {
-                                title: video.title,
-                                url: video.url,
-                                user: user
-                            };
-                        } else {
-                            this.error = true
-                            this.props.description = "Error finding song."
-                        }
+                        this.props.description = "Invalid Spotify Song URL."
+                        return
                     }
                 }
+            } else {
+                // Not YT nor Spotify
+                console.log("Music: Neither YouTube nor Spotify -->")
+                const videoFinder = async (query) => {
+                    const videoResult = await ytSearch(query);
+                    return videoResult.videos.length > 1 ? videoResult.videos[0] : null;
+                };
+                if (inputURL == "") {
+                    this.error = true
+                    this.props.description = "No search string given."
+                    return
+                }
+                // Get the vid
+                const video = await videoFinder(inputURL);
 
-                // Sanity check
-                if ((!(this.error)) && song && song?.title) {
-                    // If there's no queue
-                    if (!(this.server_queue)) {
-                      if(this.song_queue) {
-                          this.server_queue = this.song_queue;
-                      } else {
-                          this.server_queue = queue.get(message.guild.id);
-                      }
+                if (video) {
+                    song = {
+                        title: video.title,
+                        url: video.url,
+                        user: user
+                    };
+                } else {
+                    this.error = true
+                    this.props.description = "Error finding song."
+                    return
+                }
+            }
 
-                      console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
+            // Sanity check
+            if (song && song?.title) {
+                // If there's no queue
+                if (!(this.server_queue)) {
+                  if(this.song_queue) {
+                      this.server_queue = this.song_queue;
+                  } else {
+                      this.server_queue = queue.get(message.guild.id);
+                  }
+
+                  console.log("Music: Setting Server Queue:",this?.server_queue?.songs ? this.server_queue.songs.length : "None");
+                }
+                if (!this.server_queue) {
+                    // Make one
+                    const queue_constructor = {
+                        voice_channel: this.voice_channel,
+                        text_channel: message.channel,
+                        Connection: null,
+                        songs: []
                     }
-                    if (!this.server_queue) {
-                        // Make one
-                        const queue_constructor = {
-                            voice_channel: this.voice_channel,
-                            text_channel: message.channel,
-                            Connection: null,
-                            songs: []
-                        }
 
-                        queue.set(message.guild.id, queue_constructor);
-                        queue_constructor.songs.push(song);
+                    queue.set(message.guild.id, queue_constructor);
+                    queue_constructor.songs.push(song);
 
-                        try {
-                            await callBot(message);
-                            queue_constructor.connection = this.connection;
-                            await songPlayer(client, message, queue_constructor.songs[0]);
-                        } catch (err) {
-                            queue.delete(message.guild.id);
-                            this.error = true
-                            this.props.description = "There was an Error connecting"
-                            throw err;
+                    try {
+                        await callBot(message);
+                        queue_constructor.connection = this.connection;
+                        await songPlayer(client, message, queue_constructor.songs[0]);
+                    } catch (err) {
+                        queue.delete(message.guild.id);
+                        this.error = true
+                        this.props.description = "There was an Error connecting"
+                        throw err;
+                    }
+                } else {
+                    // We've got a queue, add to it
+                    this.server_queue.songs.push(song); {
+                        console.log(`Music: Queueing Song: ${song.title}`)
+                        if (!silent && song?.title) {
+                            this.props.description = `Song **${song.title}** added to queue by` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : "");
+                            await this.send(message, new VillainsEmbed({...this.props}));
                         }
-                    } else {
-                        // We've got a queue, add to it
-                        this.server_queue.songs.push(song); {
-                            console.log(`Music: Queueing Song: ${song.title}`)
-                            if (!silent && song?.title) {
-                                this.props.description = `Song **${song.title}** added to queue by` + ((song?.user) ? ` [*<@${song.user.id}>*] ` : "");
-                                await this.send(message, new VillainsEmbed(this.props));
-                            }
-                            this.null = true
-                            return true
-                        }
+                        this.null = true
+                        return true
                     }
                 }
             }
@@ -414,16 +468,18 @@ module.exports = class PlayCommand extends VillainsCommand {
             if (!message.member.voice.channel) {
                 this.error = true
                 this.props.description = "You need to be connected to a voice channel to skip songs."
+                return
             }
 
             if (!this.server_queue) {
                 this.error = true
                 this.props.description = "There are no songs in the queue."
+                return
             } else {
                 await this.server_queue.connection.dispatcher.end();
                 if (!silent) {
                     this.props.description = "Skipping song";
-                    await this.send(message, new VillainsEmbed(this.props));
+                    await this.send(message, new VillainsEmbed({...this.props}));
                     this.null = true;
                 }
             }
@@ -450,6 +506,7 @@ module.exports = class PlayCommand extends VillainsCommand {
             if (!this.server_queue) {
                 this.error = true
                 this.props.description = "There are no songs in the queue."
+                return
             } else {
                 let list = this.server_queue.songs
                 if (amount == 1) {
@@ -463,13 +520,13 @@ module.exports = class PlayCommand extends VillainsCommand {
                     }
                     if ((idx  > 0) && ((idx + 1) % 10 == 0)) {
                         this.props.description = thisqueue.join("\n\n")
-                        this.pages.push(new VillainsEmbed(this.props))
+                        this.pages.push(new VillainsEmbed({...this.props}))
                         thisqueue = []
                     }
                 }
                 if (thisqueue.length > 0) {
                     this.props.description = thisqueue.join("\n\n")
-                    this.pages.push(new VillainsEmbed(this.props))
+                    this.pages.push(new VillainsEmbed({...this.props}))
                     thisqueue = []
                 }
 
@@ -484,16 +541,18 @@ module.exports = class PlayCommand extends VillainsCommand {
             if (!message.member.voice.channel) {
                 this.error = true
                 this.props.description = "You need to be connected to a voice channel to clear the queue."
+                return
             }
 
             if (!this.server_queue) {
                 this.error = true
                 this.props.description = "There are no songs in the queue."
+                return
             } else {
                 this.props.description = "Dumping the queue.";
                 this.server_queue.songs = [];
                 await this.server_queue.connection.dispatcher.end();
-                await this.send(message, new VillainsEmbed(this.props));
+                await this.send(message, new VillainsEmbed({...this.props}));
                 this.null = true;
             }
         }
@@ -503,56 +562,54 @@ module.exports = class PlayCommand extends VillainsCommand {
             return;
         }
 
-        if (!(this.error)) {
-            if (cmd == "wherebot") {
-                // Where Bot
-                await whereBot(client, message)
-            } else {
-                await preFlightChecks(message)
+        if (cmd == "wherebot") {
+            // Where Bot
+            await whereBot(client, message)
+        } else if (["showqueue", "q", "currentsong"].includes(cmd)) {
+            // Show Queue/Current Song
+            await showQueue(message, cmd == "currentsong" ? 1 : -1)
+        } else if (await preFlightChecks(message)) {
+            if (["play", "p"].includes(cmd)) {
+                // Search/Enqueue
+                await songSearch(client, message)
+            } else if (["skip", "next"].includes(cmd)) {
+                // Skip
+                await skipSong(message)
+            } else if (cmd == "jump") {
+                // Jump to Song
+                await jumpSong(message)
+            } else if (["stop", "clearqueue"].includes(cmd)) {
+                // Clear Queue
+                await clearQueue(message)
+            } else if (cmd == "callbot") {
+                // Call Bot
+                await callBot(message)
+            } else if (["nukebot", "leave"].includes(cmd)) {
+                // Nuke Bot
+                await nukeBot(message)
+            } else if (cmd == "cyclebot") {
+                // Cycle Bot
+                await nukeBot(message)
+                await callBot(message)
+            }
+        }
 
-                if(!(this.error)) {
-                    if (["play", "p"].includes(cmd)) {
-                        // Search/Enqueue
-                        await songSearch(client, message)
-                    } else if (["skip", "next"].includes(cmd)) {
-                        // Skip
-                        await skipSong(message)
-                    } else if (cmd == "jump") {
-                        // Jump to Song
-                        await jumpSong(message)
-                    } else if (["showqueue", "q", "currentsong"].includes(cmd)) {
-                        // Show Queue/Current Song
-                        await showQueue(message, cmd == "currentsong" ? 1 : -1)
-                    } else if (["stop", "clearqueue"].includes(cmd)) {
-                        // Clear Queue
-                        await clearQueue(message)
-                    } else if (cmd == "callbot") {
-                        // Call Bot
-                        await callBot(message)
-                    } else if (["nukebot", "leave"].includes(cmd)) {
-                        // Nuke Bot
-                        await nukeBot(message)
-                    } else if (cmd == "cyclebot") {
-                        // Cycle Bot
-                        await nukeBot(message)
-                        await callBot(message)
+        // Delete user-sent message
+        if (!(message.deleted)) {
+            try {
+                await message.delete()
+                this.null = true
+            } catch (e) {
+                if (e instanceof DiscordAPIError) {
+                    if (e.httpStatus === 404) {
+                        console.log("Music: Message already deleted. Ignoring.")
                     }
                 }
             }
-            if (!(this.error)) {
-                if (!(message.deleted)) {
-                    try {
-                        await message.delete()
-                        this.null = true
-                    } catch (e) {
-                        if (e instanceof DiscordAPIError) {
-                            if (e.httpStatus === 404) {
-                                console.log("Music: Message already deleted. Ignoring.")
-                            }
-                        }
-                    }
-                }
-            }
+        }
+
+        if(this.error) {
+            this.null = false
         }
     }
 }

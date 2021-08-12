@@ -1,7 +1,7 @@
-const fs = require('fs');
-
 const VillainsCommand = require('../../classes/vcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
+
+const fs = require('fs');
 
 function walk(dir) {
     let results = [];
@@ -24,11 +24,13 @@ function walk(dir) {
 
 module.exports = class RosterCommand extends VillainsCommand {
     constructor() {
-        super({
-            name: "roster",
-            category: "information",
-            description: "Display a roster"
-        })
+        super(
+            {
+                name: "roster",
+                category: "information",
+                description: "Display a roster"
+            }
+        )
     }
 
     async run(client, message, args) {
@@ -135,7 +137,7 @@ module.exports = class RosterCommand extends VillainsCommand {
                 props.players.target.avatar = profile.team.avatar
             }
 
-            let rosterEmbed = new VillainsEmbed(props)
+            let rosterEmbed = new VillainsEmbed({...props})
 
             // Team Members
             if (profile?.members) {

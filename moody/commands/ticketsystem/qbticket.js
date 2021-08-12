@@ -9,6 +9,8 @@ module.exports = class QueensTicketCommand extends TicketCommand {
             description: "Queen's Babies Ticket",
             parentID: "828140724888403968"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 }

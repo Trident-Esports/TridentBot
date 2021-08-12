@@ -25,7 +25,10 @@
     },
     "sub": {
       "title": "Sub",
-      "users": []
+      "users": [
+        "milo",
+        "error"
+      ]
     }
   }
 }

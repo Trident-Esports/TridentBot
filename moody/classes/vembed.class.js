@@ -6,14 +6,9 @@ MessageEmbed
  VillainsEmbed
 
 */
-
-const fs = require('fs');
 const { MessageEmbed } = require('discord.js');
 
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
-let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-let DEV = GLOBALS.DEV
+const fs = require('fs');
 
 module.exports = class VillainsEmbed extends MessageEmbed {
     // Sanity checks
@@ -37,19 +32,41 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             props.timestamp = true
         }
 
+        super(
+            {
+                description: "Something got stuffed up here..."
+            }
+        )
+
+        this.GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+        // Bail if we fail to get server profile information
+        if (!(this.GLOBALS)) {
+            console.log("Failed to get server profile information.")
+            return
+        }
+        // Bail if we fail to get module manifest information
+        this.PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
+        if (!(this.PACKAGE)) {
+            console.log("Failed to get module manifest information.")
+            return
+        }
+        // Bail if we fail to get bot defaults information
+        this.defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+        if (!(this.defaults)) {
+            console.log("Failed to get bot defaults information.")
+            return
+        }
+        this.DEV = this.GLOBALS.DEV
+
         if ((!(props?.color)) || (props?.color && props.color.trim() == "")) {
             switch (props.color) {
                 default:
-                    props.color = defaults.stripe;
+                    props.color = this.defaults.stripe;
                     break;
             }
         } else {
-            props.color = defaults.stripe;
+            props.color = this.defaults.stripe;
         }
-
-        super({
-            description: "Something got stuffed up here..."
-        })
 
         // Inbound footer message
         let haveFooterMsg = props?.footer?.msg
@@ -63,7 +80,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         // Footer
         if(footerMsgNotNone) {
             // If we have an inbound footer
-            if(DEV || havePages) {
+            if(this.DEV || havePages) {
                 // If we need to repurpose the footer
                 // Append sent footer message to description
                 if(props.description != "") {
@@ -74,18 +91,18 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // Hack in my stuff to differentiate
-        if (DEV) {
+        if (this.DEV) {
             // Custom user footer
-            props.color = GLOBALS["stripe"]
-            props.footer = GLOBALS.footer
+            props.color = this.GLOBALS["stripe"]
+            props.footer = this.GLOBALS.footer
             this.setTimestamp()
         } else if((!haveFooterMsg) || (haveFooterMsg && (!footerMsgNotNone))) {
             // Default footer
-            props.footer = defaults.footer
+            props.footer = this.defaults.footer
         }
         if (props?.footer?.msg) {
-            if (!(props.footer.msg.includes(PACKAGE.version))) {
-                props.footer.msg += ` [v${PACKAGE.version}]`
+            if (!(props.footer.msg.includes(this.PACKAGE.version))) {
+                props.footer.msg += ` [v${this.PACKAGE.version}]`
             }
             this.setFooter(props.footer.msg, props.footer.image)
         }
@@ -107,7 +124,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         //  Custom Thumbnail: Bot as Author
         //  Custom Thumbnail & Custom Author: No Bot
 
-        let bot = { name: "Bot", avatar: defaults.thumbnail.trim() }
+        let bot = { name: "Bot", avatar: this.defaults.thumbnail.trim() }
         if (!(props?.players)) {
             props.players = {
                 bot: bot

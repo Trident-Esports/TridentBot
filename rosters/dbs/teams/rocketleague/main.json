@@ -7,9 +7,7 @@
   "members": {
     "coach": {
       "title": "Coach",
-      "users": [
-        "enigma"
-      ]
+      "users": []
     },
     "main": {
       "title": "Main",

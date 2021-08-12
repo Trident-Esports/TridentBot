@@ -4,14 +4,16 @@ const fs = require('fs')
 
 module.exports = class ModHelpCommand extends ModCommand {
     constructor() {
-        super({
-            name: "mod",
-            category: "information",
-            description: "Mod Help",
-            flags: {
-                user: "unapplicable"
+        super(
+            {
+                name: "mod",
+                category: "information",
+                description: "Mod Help",
+                flags: {
+                    user: "unapplicable"
+                }
             }
-        })
+        )
     }
 
     async action(client, message) {
@@ -23,6 +25,14 @@ module.exports = class ModHelpCommand extends ModCommand {
             "single": null
         }
 
+        // Bail if we fail to get help data
+        if (!mod_commands) {
+            this.error = true
+            this.props.description = "Failed to get Help Data."
+            return
+        }
+
+        // If we've got a search term
         if(this.inputData.args) {
             if(this.inputData.args[0]) {
                 search["term"] = this.inputData.args[0]
@@ -33,16 +43,19 @@ module.exports = class ModHelpCommand extends ModCommand {
             }
         }
 
+        // Search for the term
         if(search.term) {
-            if(Object.keys(mod_commands).indexOf(search.term) !== -1) {
+            if(Object.keys(mod_commands).includes(search.term)) {
+                // If it matches a section, load that section
                 let key = search.term
                 mod_commands = {
                     key: mod_commands[key]
                 }
                 scope = "section"
             } else {
-                for(let [section, commands] of Object.entries(helpData)) {
-                    if(Object.keys(commands.commands).indexOf(search.term) !== -1) {
+                // If it doesn't match a section, see if it matches a single command
+                for(let [section, commands] of Object.entries(mod_commands)) {
+                    if(Object.keys(commands.commands).includes(search.term)) {
                         let key = section
                         mod_commands = {
                             key: mod_commands[key]
@@ -53,6 +66,7 @@ module.exports = class ModHelpCommand extends ModCommand {
             }
         }
 
+        // Build the thing
         for(let [section, sectionAttrs] of Object.entries(mod_commands)) {
             this.props.fields = []
             this.props.fields.push(
@@ -76,9 +90,10 @@ module.exports = class ModHelpCommand extends ModCommand {
                     )
                 }
             }
-            this.pages.push(new VillansEmbed(this.props))
+            this.pages.push(new VillansEmbed({...this.props}))
         }
 
+        // If Production, send in DM
         if (!(this.DEV)) {
             this.channel = message.author
         }

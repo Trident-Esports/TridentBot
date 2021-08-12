@@ -7,8 +7,8 @@ BaseCommand
   GameCommand
 
 */
-
 const VillainsCommand = require('./vcommand.class');
+
 const fs = require('fs');
 
 module.exports = class GameCommand extends VillainsCommand {
@@ -17,7 +17,12 @@ module.exports = class GameCommand extends VillainsCommand {
     //FIXME: If this.category is "premium" do special handling
     constructor(comprops = {}, props = {}) {
         // Create a parent object
-        super({...comprops}, {...props})
+        super(
+            {...comprops},
+            {...props}
+        )
+
+        // Load requested extensions
         if (comprops?.extensions) {
             for (let extension of comprops.extensions) {
                 // [key, path] = await this.db_key(extension)
@@ -32,7 +37,16 @@ module.exports = class GameCommand extends VillainsCommand {
                 this[key] = require(path)
             }
         }
+
+        // Get list of game emojis
         this.emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
+
+        // Bail if we fail to get game emojis data
+        if (!(this.emojis)) {
+            this.error = true
+            this.props.description = "Failed to get Game Emojis data."
+            return
+        }
     }
 
     get emojis() {
@@ -42,6 +56,7 @@ module.exports = class GameCommand extends VillainsCommand {
         this.#emojis = emojis
     }
 
+    // Standardize DB keys for MongoDB management
     async db_key(extension) {
         let key = extension + "Model"
         let path = "../../models/" + extension + "Schema"
@@ -54,6 +69,7 @@ module.exports = class GameCommand extends VillainsCommand {
         return [key, path]
     }
 
+    // Standardize query for MongoDB management
     async db_query(userID, model) {
         let pieces = await this.db_key(model)
         model = pieces[0]
@@ -70,6 +86,8 @@ module.exports = class GameCommand extends VillainsCommand {
         }
     }
 
+    // Standardize transform command for MongoDB management
+    //FIXME: Inventory Model doesn't get modified at all ???
     async db_transform(userID, type, amount) {
         let amounts = {}
         let method = "$inc"

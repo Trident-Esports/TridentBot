@@ -12,15 +12,26 @@ module.exports = class StoreCommand extends GameCommand {
             description: 'View the store',
             extensions: ["profile", "levels", "health"]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
-        let itemData = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
+        // Get shop stock information
+        let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
+
+        // Bail if we fail to get shop stock information
+        if(!STOCKDATA) {
+            this.error = true
+            this.description = "Couldn't get shop stock information."
+            return
+        }
 
         this.props.fields = []
 
-        for (let [items, itemsAttr] of Object.entries(itemData)) {
+        // Build the thing
+        for (let [items, itemsAttr] of Object.entries(STOCKDATA)) {
             let value = itemsAttr
             for (let [item, itemAttr] of Object.entries(value)) {
                 let names = [];

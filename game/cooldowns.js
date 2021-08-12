@@ -13,17 +13,30 @@ module.exports = {
     permissions: [],
     description: "Checks the user's cooldowns",
     async execute(message) {
-
-        let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-        let DEV = GLOBALS.DEV;
-
-        let stripe = defaults["stripe"]
-
         let props = {
             "title": "***Cooldowns***",
             "url": "https://discord.com/KKYdRbZcPT"
         }
+
+        let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
+        // Bail if we fail to get server profile information
+        if (!GLOBALS) {
+            // this.error = true
+            // this.props.description = "Failed to get server profile information."
+            return
+        }
+
+        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
+        // Bail if we fail to get default bot information
+        if (!defaults) {
+            // this.error = true
+            // this.props.description = "Failed to get default bot information."
+            return
+        }
+        let DEV = GLOBALS.DEV;
+
+        let stripe = defaults["stripe"]
+
         switch (stripe) {
             default:
                 stripe = "#B2EE17";
