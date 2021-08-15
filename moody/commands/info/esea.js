@@ -115,12 +115,12 @@ module.exports = class ESEACommand extends VillainsCommand {
                     match.us = {
                         name: record[headings.match.indexOf("Us Name")],
                         id: record[headings.match.indexOf("Us ID")],
-                        score: parseInt(record[headings.match.indexOf("Us Score")])
+                        score: record[headings.match.indexOf("Us Score")]
                     }
                     match.them = {
                         name: record[headings.match.indexOf("Them Name")],
                         id: record[headings.match.indexOf("Them ID")],
-                        score: parseInt(record[headings.match.indexOf("Them Score")])
+                        score: record[headings.match.indexOf("Them Score")]
                     }
                     match.players = []
                     match.scoreKeys = {
@@ -140,15 +140,20 @@ module.exports = class ESEACommand extends VillainsCommand {
                     match.status = "incomplete"
                     match.winner = ""
                     match.result = emoji
-                    if((match.us.score > 0) || (match.them.score > 0)) {
+                    if(
+                        (parseInt(match.us.score) > 0) ||
+                        (parseInt(match.them.score) > 0) ||
+                        (["W","L","T","F"].indexOf(match.us.score) > -1) ||
+                        (["W","L","T","F"].indexOf(match.them.score) > -1)
+                    ) {
                         match.status = "complete"
-                        if(match.us.score > match.them.score) {
+                        if((parseInt(match.us.score) > parseInt(match.them.score)) || (match.us.score == "W")) {
                             match.winner = match.us.name
                             match.result = "🟩"
-                        } else if(match.us.score < match.them.score) {
+                        } else if((parseInt(match.us.score) < parseInt(match.them.score)) || (match.them.score == "W")) {
                             match.winner = match.them.name
                             match.result = "🟥"
-                        } else if(match.us.score == match.them.score) {
+                        } else if((parseInt(match.us.score) == parseInt(match.them.score)) || (match.us.score == "T") || (match.them.score == "T")) {
                             match.winner = "tie"
                             match.result = "🟨"
                         }
