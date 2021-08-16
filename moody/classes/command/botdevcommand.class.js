@@ -1,24 +1,34 @@
-//FIXME: Unused?
-
-/*
-
-Command for Bot Devs only
-
-BaseCommand
- VillainsCommand
-  BotDevCommand
-
-*/
-
 const VillainsCommand = require('./vcommand.class');
-const VillainsEmbed = require('./vembed.class');
+
 const fs = require('fs');
 
+/**
+ * Build a Command for BotDevs only
+ *
+ * @class
+ * @constructor
+ * @public
+ */
 module.exports = class BotDevCommand extends VillainsCommand {
-    constructor(comprops = {}, props = { title: {}, description: "" }) {
-        super(comprops)
-        this.props = props
+    /**
+     * @type {string[]} - List of userids as provided by server profile database file
+     * @private
+     */
+    #USERIDS; // Private: USERIDS
 
+    /**
+     *
+     * @param {Object.<string, any>} comprops - List of command properties from child class
+     * @param {Object.<string, any>} props - Local list of command properties
+     */
+    constructor(comprops = {}, props = { title: {}, description: "" }) {
+        // Create a parent object
+        super(
+            {...comprops},
+            {...props}
+        )
+
+        // Load requested extensions
         if (comprops?.extensions) {
             for (let extension of comprops.extensions) {
                 let key = extension + "Model"
@@ -32,41 +42,52 @@ module.exports = class BotDevCommand extends VillainsCommand {
                 this[key] = require(inc)
             }
         }
-    }
 
-    async action(client, message, args) {
-        // do nothing; command overrides this
-        if(APPROVED_USERIDS) {
-            // do the action
-        } else {
-            // describe the action
+        // Get botdev-defined list of userids of BotDevs
+        /**
+         * @type {string[]} - List of userids as provided by server profile database file
+         * @public
+         */
+        this.USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8")).botDevs
+
+        // Bail if we fail to get UserIDs list
+        if (!(this.USERIDS)) {
+            this.USERIDS = { botDevs: [], botWhite: [] }
+            this.error = true
+            this.props.description = "Failed to get UserIDs list."
+            return
         }
     }
 
-    async build(client, message, args) {
-        this.action(client, message, args)
+    /**
+     * Get USERIDS
+     *
+     * @returns {string[]} - List of saved userids
+     */
+    get USERIDS() {
+        return this.#USERIDS
+    }
+    /**
+     * Set USERIDS
+     *
+     * @param {string[]} USERIDS - List of userids to set
+     */
+    set USERIDS(USERIDS) {
+        this.#USERIDS = USERIDS
     }
 
-    async run(client, message, args) {
-        let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8"))
-
-        /*
-
-        Mike
-        Noongar
-        Prime
-
-        */
-
-        if(USERIDS.botDevs.indexOf(message.author.id) == -1) {
+    /**
+      * @param {Client} client - Discord Client object
+      * @param {Message} message - Message that called the command
+     */
+    async build(client, message) {
+        // Bail if not valid UserID
+        if(this.USERIDS.indexOf(message.author.id) == -1) {
             this.error = true
             this.props.description = this.errors.botDevOnly.join("\n")
+            return
         } else {
-            this.build(client, message, args)
+            await this.action(client, message)
         }
-
-        let embed = new VillainsEmbed(this.props)
-
-        await message.channel.send(embed)
     }
 }

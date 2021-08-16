@@ -1,101 +1,119 @@
-/*
-
-BaseCommand
- VillainsCommand
-  QuestionnaireCommand
-
-*/
-
 const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('../embed/vembed.class');
-const fs = require('fs');
 
+/**
+ * Command for getting reaction votes for a question/suggestion/survey
+ *
+ * @class
+ * @constructor
+ * @public
+ */
 module.exports = class QuestionnaireCommand extends VillainsCommand {
-    /*
+    /**
+     * @type {Object.<string, string>}} - List of emojis for use in Game Commands
+     * @private
+     */
+    #emojis;
+    /**
+     * @type {string}} - Channel name to send message to
+     * @private
+     */
+    #channelName;
 
-    constructor(comprops = {}, props = {})
-    run()
-     build()
-      action()
-     send()
-
-    */
-    #emoji; // Private: Emojis to use
+    /**
+     *
+     * @param {Object.<string, any>} comprops - List of command properties from child class
+     */
     constructor(comprops = {}) {
         // Create a parent object
-        super(comprops)
+        super(
+            {...comprops}
+        )
 
-        this.emoji = comprops?.emoji ? comprops.emoji : [ "👍", "👎" ];
+        this.emojis = comprops?.emojis ? comprops.emojis : [ "👍", "👎" ];
         this.channelName = comprops?.channelName ? comprops.channelName : "suggestions"
     }
 
-    get emoji() {
-        return this.#emoji;
+    /**
+     * Get emojis
+     *
+     * @returns {Object.<string, string>} - List of emoji shortcuts
+     */
+    get emojis() {
+        return this.#emojis;
     }
-    set emoji(emoji) {
-        this.#emoji = emoji
-    }
-
-    async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
-        let channelID = 0
-        let channel = null
-
-        // Get channel IDs for this guild
-        if (Object.keys(channelIDs).includes(message.guild.id)) {
-            // If the channel type exists
-            if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
-                // Get the ID
-                channelID = channelIDs[message.guild.id][channelType]
-            }
-        }
-
-        // If the ID is not a number, search for a named channel
-        if (isNaN(channelID)) {
-            channel = message.guild.channels.cache.find(c => c.name === channelID);
-        } else {
-            // Else, search for a numbered channel
-            channel = message.guild.channels.cache.find(c => c.id === channelID);
-        }
-
-        return channel
+    /**
+     * Set emojis
+     *
+     * @param {Object.<string, string>} emojis - List of emoji shortcuts to set
+     */
+    set emojis(emojis) {
+        this.#emojis = emojis
     }
 
+    /**
+     * Get Channel name
+     *
+     * @returns {string} - Get Channel name
+     */
+    get channelName() {
+        return this.#channelName;
+    }
+    /**
+     * Set Channel name
+     *
+     * @param {string} channelName - Set Channel name
+     */
+    set channelName(channelName) {
+        this.#channelName = channelName
+    }
+
+    /**
+     * Build pre-flight characteristics of AdminCommand
+     *
+     * @param {Client} client - Discord Client object
+     * @param {Message} message - Message that called the command
+     */
     async build(client, message) {
         // Delete user-sent message
         message.delete()
 
+        // Bail if no topic sent
+        // Need a topic to build Questionnaire for
         if (this.inputData.args.length <= 0 || this.inputData.args[0].trim() == "") {
             this.error = true
             this.props.description = "No topic sent!"
+            return
         } else {
             this.props.description = this.inputData.args.join(" ")
         }
 
-        if (!(this.error)) {
-            this.channel = await this.getChannel(message, this.channelName)
+        // Get channel object to send message to
+        this.channel = await this.getChannel(message, this.channelName)
 
-            if (!this.channel) {
-                this.error = true
-                this.props.description = this.props.caption.text + " channel doesn't exist!"
-            }
+        // Bail if we couldn't get a channel object
+        if (!this.channel) {
+            this.error = true
+            this.props.description = this.props.caption.text + " channel doesn't exist!"
+            return
         }
 
-        if(!(this.error)) {
-            this.action(client, message)
-        }
+        this.action(client, message)
     }
 
+    /**
+     * Execute command and build embed
+     *
+     * @param {Client} client - Discord Client object
+     * @param {Message} message - Message that called the command
+     */
     async action(client, message) {
-        let embed = new VillainsEmbed(this.props)
-
-        if(!(this.error)) {
-            this.null = true
-            await this.send(message, embed).then(async (msg) => {
-                for (let emoji of this.emoji) {
-                    await msg.react(emoji)
-                }
-            })
-        }
+        this.null = true
+        //TODO: Add a .then() to VillainsCommand's run()
+        await this.send(message, new VillainsEmbed({...this.props})).then(async (msg) => {
+            for (let emoji of this.emojis) {
+                await msg.react(emoji)
+            }
+        })
     }
 }

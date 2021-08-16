@@ -1,39 +1,59 @@
-/*
-
-BaseCommand
- VillainsCommand
-  TicketCommand
-
-*/
-
 const VillainsCommand = require('./vcommand.class');
 
+/**
+ * Build a Command for Helpline Tickets
+ *
+ * @class
+ * @constructor
+ * @public
+ */
 module.exports = class TicketCommand extends VillainsCommand {
-    /*
+    /**
+     * @type {Object.<string, string>}} - List of emojis for use in Game Commands
+     * @private
+     */
+    #emojis;
 
-    constructor(comprops = {}, props = {})
-    run()
-     build()
-      action()
-     send()
-
-    */
-    #emoji; // Private: Emojis to use
+    /**
+     *
+     * @param {Object.<string, any>} comprops - List of command properties from child class
+     */
     constructor(comprops = {}) {
         // Create a parent object
-        super(comprops)
+        super(
+            {...comprops}
+        )
 
-        this.emoji = comprops?.emoji ? comprops.emoji : [ "🔒", "⛔" ];
+        // Set default emojis
+        // Lock/Delete
+        this.emojis = comprops?.emojis ? comprops.emojis : [ "🔒", "⛔" ];
+        // Set parentID, default to General Tickets category on Villains Esports server
         this.parentID = comprops?.parentID ? comprops.parentID : "828158895024766986"
     }
 
-    get emoji() {
-        return this.#emoji;
+    /**
+     * Get emojis
+     *
+     * @returns {Object.<string, string>} - List of emoji shortcuts
+     */
+    get emojis() {
+        return this.#emojis;
     }
-    set emoji(emoji) {
-        this.#emoji = emoji
+    /**
+     * Set emojis
+     *
+     * @param {Object.<string, string>} emojis - List of emoji shortcuts to set
+     */
+    set emojis(emojis) {
+        this.#emojis = emojis
     }
 
+    /**
+     * Execute command and build embed
+     *
+     * @param {Client} client - Discord Client object
+     * @param {Message} message - Message that called the command
+     */
     async action(client, message) {
         // Create Ticket Channel
         const channel = await message.guild.channels.create(`ticket: ${message.author.tag}`)
@@ -65,11 +85,13 @@ module.exports = class TicketCommand extends VillainsCommand {
                 await reactionMessage.react(emoji)
             }
         } catch (err) {
+            // Bail if we couldn't initialize reacts
             channel.send("Error sending emojis!")
             throw err;
         }
 
         // Create a Collector
+        //TODO: Figure out what this hasPermission() and {dispose} actually do
         const collector = reactionMessage.createReactionCollector(
             (reaction, user) => message.guild.members.cache.find(
                 (member) => member.id === user.id

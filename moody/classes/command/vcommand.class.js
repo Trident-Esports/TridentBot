@@ -15,26 +15,71 @@ TODO:
  Roster
 
 */
-
 const { BaseCommand } = require('a-djs-handler');
-const VillainsEmbed = require('../embed/vembed.class');
-const SlimEmbed = require('../embed/vslimbed.class');
-const pagination = require('discord.js-pagination');
+const VillainsEmbed = require('../classes/vembed.class');
+const SlimEmbed = require('../classes/vslimbed.class');
 
+const pagination = require('discord.js-pagination');
 const fs = require('fs');
 
+/**
+ * Build a Villains-branded Command
+ *
+ * @class
+ * @constructor
+ * @public
+ */
 module.exports = class VillainsCommand extends BaseCommand {
+    /**
+     * @type {boolean} - Development Mode?
+     * @private
+     */
     #DEV;       // Private: DEV flag
+    /**
+     * @type {Object.<string, any>} - List of properties for embed manipulation
+     * @private
+     */
     #props;     // Private: Props to send to VillainsEmbed
+    /**
+     * @type {Array.<MessageEmbed>} - Array of embeds to print as pages or singly
+     * @private
+     */
     #pages;     // Private: Pages to print
+    /**
+     * @type {Object.<string, string>} - Flags for user management
+     * @private
+     */
     #flags;     // Private: Flags for user management
+    /**
+     * @type {boolean} - Set to true if we threw an error
+     * @private
+     */
     #error;     // Private: Error Thrown
+    /**
+     * @type {Object.<string, string>} - Global Error Message strings
+     * @private
+     */
     #errors;    // Private: Global Error Message strings
+    /**
+     * @type {Channel} - Channel to send embeds to
+     * @private
+     */
     #channel;   // Private: Channel to send VillainsEmbed to
+    /**
+     * @type {Object.<string, any>} - Processed input data
+     * @private
+     */
     #inputData; // Private: Command Inputs
 
+    /**
+     *
+     * @param {Object.<string, any>} comprops - List of command properties from child class
+     * @param {Object.<string, any>} props - Local list of command properties
+     */
     constructor(comprops = {}, props = {}) {
-        super(comprops)
+        super(
+            {...comprops}
+        )
 
         this.props = {...props}
 
@@ -85,6 +130,31 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.error = false
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
         this.inputData = {}
+
+        // Bail if we fail to get server profile information
+        if (!GLOBALS) {
+            this.error = true
+            this.props.description = "Failed to get server profile information."
+            return
+        }
+        // Bail if we fail to get bot default information
+        if (!DEFAULTS) {
+            this.error = true
+            this.props.description = "Failed to get bot default information."
+            return
+        }
+        // Bail if we fail to get command prefix
+        if (!this.prefix) {
+            this.error = true
+            this.props.description = "Failed to get command prefix."
+            return
+        }
+        // Bail if we fail to get error message information
+        if (!(this.errors)) {
+            this.error = true
+            this.props.description = "Failed to get error message information."
+            return
+        }
     }
 
     get DEV() {
@@ -143,6 +213,46 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.#inputData = inputData
     }
 
+    /**
+     *
+     * @param {Message} message - Message that called the command
+     * @param {string} channelType - Key for channel to get from database
+     * @returns {Channel} - Found channel object
+     */
+    async getChannel(message, channelType) {
+        // Get botdev-defined list of channelIDs/channelNames
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelID = this.channelName
+        let channel = null
+
+        if (channelIDs) {
+            // Get channel IDs for this guild
+            if (Object.keys(channelIDs).includes(message.guild.id)) {
+                // If the channel type exists
+                if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
+                    // Get the ID
+                    channelID = channelIDs[message.guild.id][channelType]
+                }
+            }
+        }
+
+        // If the ID is not a number, search for a named channel
+        if (isNaN(channelID)) {
+            channel = message.guild.channels.cache.find(c => c.name === channelID);
+        } else {
+            // Else, search for a numbered channel
+            channel = message.guild.channels.cache.find(c => c.id === channelID);
+        }
+
+        return channel
+    }
+
+    /**
+     *
+     * @param {Message} message - Message that called the command
+     * @param {string[]} args - Command-line args
+     * @param {Object.<string, string>} flags - Flags for user management
+     */
     async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
         let foundHandles = { players: {}, invalid: false, flags: flags }
 
@@ -212,6 +322,16 @@ module.exports = class VillainsCommand extends BaseCommand {
             // If Bot has been specified as a Valid source
             // Get Bot whitelist
             let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json","utf8"))
+            // Bail if we fail to get UserIDs list
+            if (!USERIDS) {
+                this.error = true
+                this.props.description = "Failed to get UserIDs list."
+                return
+            }
+            // Fake an empty Bot Whitelist
+            if (!(USERIDS?.botWhite)) {
+                USERIDS["botWhite"] = []
+            }
             if (["default","required","optional"].includes(this.flags.bot)) {
                 // Do... something?
             } else if (loaded?.bot && loaded.bot && (USERIDS?.botWhite.indexOf(loaded.id) == -1)) {
@@ -307,6 +427,12 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.props.description = foundHandles?.description ? foundHandles.description : this.props.description
     }
 
+    /**
+     * Execute command and build embed
+     *
+     * @param {Client} client - Discord Client object
+     * @param {Message} message - Message that called the command
+     */
     async action(client, message) {
         // Do nothing; command overrides this
         // If the thing doesn't modify anything, don't worry about DEV flag
@@ -318,19 +444,34 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
     }
 
+    /**
+     * Build pre-flight characteristics of AdminCommand
+     *
+     * @param {Client} client - Discord Client object
+     * @param {Message} message - Message that called the command
+     */
     async build(client, message, cmd) {
         if(!(this.error)) {
             await this.action(client, message, cmd)
         }
     }
 
-    async send(message, pages, emoji = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
+    /**
+     * Send pages to Discord Client
+     *
+     * @param {Message} message - Message that called the command
+     * @param {VillainsEmbed[]} pages - Pages to send to client
+     * @param {string[]} emojis - Emoji for pagination
+     * @param {string} timeout - Timeout for disabling pagination
+     * @param {boolean} forcepages - Force pagination
+     */
+    async send(message, pages, emojis = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
         if (!this.channel) {
             this.channel = message.channel
         }
         // If pages are being forced, set defaults
         if (forcepages) {
-            emoji = ["◀️", "▶️"]
+            emojis = ["◀️", "▶️"]
             timeout = "600000"
         }
 
@@ -343,19 +484,19 @@ module.exports = class VillainsCommand extends BaseCommand {
                 // Else, set up for pagination
                 // Sanity check for emoji pageturners
                 let filler = "🤡"
-                if (emoji.length !== 2) {
-                    if (emoji.length == 1) {
-                        emoji.push(filler)
-                    } else if (emoji.length >= 3) {
-                        emoji = emoji.slice(0,2)
+                if (emojis.length !== 2) {
+                    if (emojis.length == 1) {
+                        emojis.push(filler)
+                    } else if (emojis.length >= 3) {
+                        emojis = emojis.slice(0,2)
                     }
                 }
-                if (emoji[0] == emoji[1]) {
-                    emoji = emoji.slice(0,1)
-                    emoji.push(filler)
+                if (emojis[0] == emojis[1]) {
+                    emojis = emojis.slice(0,1)
+                    emojis.push(filler)
                 }
                 // Send the pages
-                return await pagination(message, pages, emoji, timeout)
+                return await pagination(message, pages, emojis, timeout)
             }
         } else {
             // Else, it's just an embed, send it
@@ -363,11 +504,22 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
     }
 
+    /**
+     * Run the command
+     *
+     * @param {Client} client - Discord Client object
+     * @param {Message} message - Message that called the command
+     * @param {string[]} args - Command-line args
+     * @param {string} cmd - Actual command name used (alias here if alias used)
+     */
     async run(client, message, args, cmd) {
+        // Process arguments
         await this.processArgs(message, args, this.flags)
 
+        // Build the thing
         await this.build(client, message, cmd)
 
+        // If we have an error, make it errortastic
         if (this.error) {
             if (this.props?.title) {
                 this.props.title.text = "Error"
@@ -376,14 +528,18 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
         }
 
+        // If we just got an embed, let's check to see if it's a full page or slim page
+        // Toss it in pages as a single page
         if(this.pages.length == 0) {
             if(this.props?.full && this.props.full) {
-                this.pages.push(new VillainsEmbed(this.props))
+                this.pages.push(new VillainsEmbed({...this.props}))
             } else {
-                this.pages.push(new SlimEmbed(this.props))
+                this.pages.push(new SlimEmbed({...this.props}))
             }
         }
 
+        // this.null is to be set if we've already sent the page(s) somewhere else
+        // Not setting this.null after sending the page(s) will send the page(s) again
         if ((!(this?.null)) || (this?.null && (!(this.null)))) {
             await this.send(message, this.pages)
         }
