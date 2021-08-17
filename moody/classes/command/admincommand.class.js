@@ -3,22 +3,22 @@ const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 
 /**
- * Build a Command for Admins only
- *
  * @class
- * @constructor
+ * @classdesc Build a Command for Admins-only
+ * @this {AdminCommand}
+ * @extends {VillainsCommand}
  * @public
  */
 module.exports = class AdminCommand extends VillainsCommand {
     /**
-     * @type {string[]} - List of roles as provided by server profile database file
+     * @type {Array.<string>} List of roles as provided by server profile database file
      * @private
      */
     #ROLES; // Private: ROLES
 
     /**
-     * constructor()
-     * @param {...any} args - List of command properties from child class
+     * Constructor
+     * @param {...any} args List of command properties from child class
      */
     constructor(...args) {
         // Create a parent object
@@ -37,7 +37,7 @@ module.exports = class AdminCommand extends VillainsCommand {
         // Get botdev-defined list of roles groupings
         /**
          * List of roles as provided by server profile database file
-         * @type {string[]}
+         * @type {Array.<string>}
          * @public
          */
         this.ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
@@ -54,7 +54,7 @@ module.exports = class AdminCommand extends VillainsCommand {
     /**
      * Get ROLES
      *
-     * @returns {string[]} - List of saved roles
+     * @returns {Array.<string>} List of saved roles
      */
     get ROLES() {
         return this.#ROLES
@@ -62,16 +62,12 @@ module.exports = class AdminCommand extends VillainsCommand {
     /**
      * Set ROLES
      *
-     * @param {string[]} ROLES - List of roles to set
+     * @param {Array.<string>} ROLES List of roles to set
      */
     set ROLES(ROLES) {
         this.#ROLES = ROLES
     }
 
-    /**
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
-     */
     async build(client, message) {
         let APPROVED_ROLES = this.ROLES["admin"]
         // Bail if we don't have intended Approved Roles data

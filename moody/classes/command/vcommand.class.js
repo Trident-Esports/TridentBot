@@ -1,20 +1,3 @@
-/*
-
-Branded Generic Command Handler
-
-BaseCommand
- VillainsCommand
-
-TODO:
- Game
-  Blackjack
-  Fight
-  Rob
- Matches
- Purge
- Roster
-
-*/
 const { BaseCommand } = require('a-djs-handler');
 const VillainsEmbed = require('../classes/vembed.class');
 const SlimEmbed = require('../classes/vslimbed.class');
@@ -23,66 +6,103 @@ const pagination = require('discord.js-pagination');
 const fs = require('fs');
 
 /**
- * Build a Villains-branded Command
- *
  * @class
- * @constructor
+ * @classdesc Build a Villains-branded Command
+ * @this {VillainsCommand}
+ * @extends {BaseCommand}
  * @public
  */
 module.exports = class VillainsCommand extends BaseCommand {
     /**
-     * @type {boolean} - Development Mode?
+     * @type {boolean} Development Mode?
      * @private
      */
     #DEV;       // Private: DEV flag
     /**
-     * @type {Object.<string, any>} - List of properties for embed manipulation
+     * @type {Object.<string, any>} List of properties for embed manipulation
      * @private
      */
     #props;     // Private: Props to send to VillainsEmbed
     /**
-     * @type {Array.<MessageEmbed>} - Array of embeds to print as pages or singly
+     * @type {Array.<MessageEmbed>} Array of embeds to print as pages or singly
      * @private
      */
     #pages;     // Private: Pages to print
     /**
-     * @type {Object.<string, string>} - Flags for user management
+     * @type {Object.<string, string>} Flags for user management
      * @private
      */
     #flags;     // Private: Flags for user management
     /**
-     * @type {boolean} - Set to true if we threw an error
+     * @type {boolean} Set to true if we threw an error
      * @private
      */
     #error;     // Private: Error Thrown
     /**
-     * @type {Object.<string, string>} - Global Error Message strings
+     * @type {Object.<string, string>} Global Error Message strings
      * @private
      */
     #errors;    // Private: Global Error Message strings
     /**
-     * @type {Channel} - Channel to send embeds to
+     * @type {Channel} Channel to send embeds to
      * @private
      */
     #channel;   // Private: Channel to send VillainsEmbed to
     /**
-     * @type {Object.<string, any>} - Processed input data
+     * @type {Object.<string, any>} Processed input data
      * @private
      */
     #inputData; // Private: Command Inputs
 
     /**
-     *
-     * @param {Object.<string, any>} comprops - List of command properties from child class
-     * @param {Object.<string, any>} props - Local list of command properties
+     * @typedef {Object} EmbedField
+     * @property {string} name Field Name
+     * @property {string} value Field Value
+     * @property {boolean} inline Inline?
+     */
+    /**
+     * @typedef {Object} Player Player
+     * @property {string} name The name
+     * @property {string} url The URL
+     * @property {string} avatar The Avatar
+     */
+    /**
+     * @typedef {Object} EmbedProps Embed Properties
+     * @property {boolean}                      full                    Print Full Embed
+     * @property {string}                       color                   Stripe color
+     * @property {{text: string}}               caption                 Caption text
+     * @property {{text: string, url: string}}  title                   Title text & url
+     * @property {string}                       thumbnail               Thumbnail url
+     * @property {string}                       description             Body text
+     * @property {Array.<EmbedField>}           fields                  Embed Fields
+     * @property {string}                       image                   Body Image
+     * @property {{msg: string, image: string}} footer                  Footer text & image
+     * @property {number | boolean}             timestamp               Timestamp for footer
+     * @property {boolean}                      error                   Print error format
+     * @property {{bot: Player, user: Player, target: Player}} players  Players
+     */
+
+    /**
+     * Constructor
+     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {EmbedProps} props              Local list of command properties
      */
     constructor(comprops = {}, props = {}) {
+        // Create a parent object
         super(
             {...comprops}
         )
 
+        /**
+         * Embed Properties
+         * @type {EmbedProps}
+         */
         this.props = {...props}
 
+        /**
+         * Force full Embed
+         * @type {boolean}
+         */
         if (!(this?.props?.full)) {
             this.props.full = true
         }
@@ -124,11 +144,38 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
         const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+
+        /**
+         * Development Mode?
+         * @type {boolean}
+         */
         this.DEV = GLOBALS.DEV
+
+        /**
+         * Command prefix
+         * @type {string}
+         */
         this.prefix = DEFAULTS.prefix
+
+        /**
+         * List of pages of Embeds
+         * @type {Array.<(VillainsEmbed | SlimEmbed)>}
+         */
         this.pages = []
+
+        /**
+         * Print Error
+         * @type {boolean}
+         */
         this.error = false
+
+        /**
+         * Global Error Strings
+         * @type {Object.<string, string>}
+         */
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
+
+        /** @type {Object.<string, any>} Data gathered from input management */
         this.inputData = {}
 
         // Bail if we fail to get server profile information
@@ -215,9 +262,9 @@ module.exports = class VillainsCommand extends BaseCommand {
 
     /**
      *
-     * @param {Message} message - Message that called the command
-     * @param {string} channelType - Key for channel to get from database
-     * @returns {Channel} - Found channel object
+     * @param {Message} message Message that called the command
+     * @param {string} channelType Key for channel to get from database
+     * @returns {Channel} Found channel object
      */
     async getChannel(message, channelType) {
         // Get botdev-defined list of channelIDs/channelNames
@@ -249,9 +296,9 @@ module.exports = class VillainsCommand extends BaseCommand {
 
     /**
      *
-     * @param {Message} message - Message that called the command
-     * @param {string[]} args - Command-line args
-     * @param {Object.<string, string>} flags - Flags for user management
+     * @param {Message} message Message that called the command
+     * @param {Array.<string>} args Command-line args
+     * @param {Object.<string, string>} flags Flags for user management
      */
     async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
         let foundHandles = { players: {}, invalid: false, flags: flags }
@@ -430,8 +477,8 @@ module.exports = class VillainsCommand extends BaseCommand {
     /**
      * Execute command and build embed
      *
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
+     * @param {Client} client Discord Client object
+     * @param {Message} message Message that called the command
      */
     async action(client, message) {
         // Do nothing; command overrides this
@@ -445,10 +492,10 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     /**
-     * Build pre-flight characteristics of AdminCommand
+     * Build pre-flight characteristics of Command
      *
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
+     * @param {Client} client Discord Client object
+     * @param {Message} message Message that called the command
      */
     async build(client, message, cmd) {
         if(!(this.error)) {
@@ -459,11 +506,11 @@ module.exports = class VillainsCommand extends BaseCommand {
     /**
      * Send pages to Discord Client
      *
-     * @param {Message} message - Message that called the command
-     * @param {VillainsEmbed[]} pages - Pages to send to client
-     * @param {string[]} emojis - Emoji for pagination
-     * @param {string} timeout - Timeout for disabling pagination
-     * @param {boolean} forcepages - Force pagination
+     * @param {Message} message Message that called the command
+     * @param {Array.<VillainsEmbed>} pages Pages to send to client
+     * @param {Array.<string>} emojis Emoji for pagination
+     * @param {string} timeout Timeout for disabling pagination
+     * @param {boolean} forcepages Force pagination
      */
     async send(message, pages, emojis = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
         if (!this.channel) {
@@ -507,10 +554,10 @@ module.exports = class VillainsCommand extends BaseCommand {
     /**
      * Run the command
      *
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
-     * @param {string[]} args - Command-line args
-     * @param {string} cmd - Actual command name used (alias here if alias used)
+     * @param {Client} client Discord Client object
+     * @param {Message} message Message that called the command
+     * @param {Array.<string>} args Command-line args
+     * @param {string} cmd Actual command name used (alias here if alias used)
      */
     async run(client, message, args, cmd) {
         // Process arguments

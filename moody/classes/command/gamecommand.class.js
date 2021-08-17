@@ -3,24 +3,24 @@ const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 
 /**
- * Build a uniform set of Commands for Villains Minigame
- *
  * @class
- * @constructor
+ * @classdesc Build a uniform set of Commands for Villains Minigame
+ * @this {GameCommand}
+ * @extends {VillainsCommand}
  * @public
  */
 module.exports = class GameCommand extends VillainsCommand {
     /**
-     * @type {Object.<string, string>}} - List of emojis for use in Game Commands
+     * @type {Object.<string, string>} List of emojis for use in Game Commands
      * @private
      */
     #emojis; // Private: Emojis
 
     //FIXME: If this.category is "premium" do special handling
     /**
-     *
-     * @param {Object.<string, any>} comprops - List of command properties from child class
-     * @param {Object.<string, any>} props - Local list of command properties
+     * Constructor
+     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {Object.<string, any>} props Local list of command properties
      */
     constructor(comprops = {}, props = {}) {
         // Create a parent object
@@ -47,7 +47,7 @@ module.exports = class GameCommand extends VillainsCommand {
 
         // Get list of game emojis
         /**
-         * @type {Object.<string, string>} - List of emojis for use in Game Commands
+         * @type {Object.<string, string>} List of emojis for use in Game Commands
          * @public
          */
         this.emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
@@ -63,7 +63,7 @@ module.exports = class GameCommand extends VillainsCommand {
     /**
      * Get emojis
      *
-     * @returns {Object.<string, string>} - List of emoji shortcuts
+     * @returns {Object.<string, string>} List of emoji shortcuts
      */
     get emojis() {
         return this.#emojis
@@ -71,13 +71,17 @@ module.exports = class GameCommand extends VillainsCommand {
     /**
      * Set emojis
      *
-     * @param {Object.<string, string>} emojis - List of emoji shortcuts to set
+     * @param {Object.<string, string>} emojis List of emoji shortcuts to set
      */
     set emojis(emojis) {
         this.#emojis = emojis
     }
 
-    // Standardize DB keys for MongoDB management
+    /**
+     * Standardize DB keys for MongoDB management
+     * @param {string} extension Extension type to load
+     * @returns {Array.<string>} Extension data
+     */
     async db_key(extension) {
         let key = extension + "Model"
         let path = "../../models/" + extension + "Schema"
@@ -90,7 +94,12 @@ module.exports = class GameCommand extends VillainsCommand {
         return [key, path]
     }
 
-    // Standardize query for MongoDB management
+    /**
+     * Standardize query for MongoDB management
+     * @param {string} userID UserID
+     * @param {string} model Model Type
+     * @returns {*} Query result
+     */
     async db_query(userID, model) {
         let pieces = await this.db_key(model)
         model = pieces[0]
@@ -107,8 +116,14 @@ module.exports = class GameCommand extends VillainsCommand {
         }
     }
 
-    // Standardize transform command for MongoDB management
     //FIXME: Inventory Model doesn't get modified at all ???
+    /**
+     * Standardize transform command for MongoDB management
+     * @param {string} userID UserID
+     * @param {string} type Transform type
+     * @param {number} amount Transform amount
+     * @returns {*} True if level-up
+     */
     async db_transform(userID, type, amount) {
         let amounts = {}
         let method = "$inc"

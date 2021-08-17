@@ -1,10 +1,10 @@
 const ModCommand = require('./modcommand.class');
 
 /**
- * Build a Command for IRC Voice mods only
- *
  * @class
- * @constructor
+ * @classdesc Build a Command for IRC Voice mods only
+ * @this {IRCVoiceCommand}
+ * @extends {ModCommand}
  * @public
  */
 module.exports = class IRCVoiceCommand extends ModCommand {

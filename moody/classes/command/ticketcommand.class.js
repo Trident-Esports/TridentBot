@@ -1,22 +1,22 @@
 const VillainsCommand = require('./vcommand.class');
 
 /**
- * Build a Command for Helpline Tickets
- *
  * @class
- * @constructor
+ * @classdesc Build a Command for Helpline Tickets
+ * @this {TicketCommand}
+ * @extends {VillainsCommand}
  * @public
  */
 module.exports = class TicketCommand extends VillainsCommand {
     /**
-     * @type {Object.<string, string>}} - List of emojis for use in Game Commands
+     * @type {Object.<string, string>} List of emojis for use in Game Commands
      * @private
      */
     #emojis;
 
     /**
-     *
-     * @param {Object.<string, any>} comprops - List of command properties from child class
+     * Constructor
+     * @param {Object.<string, any>} comprops List of command properties from child class
      */
     constructor(comprops = {}) {
         // Create a parent object
@@ -34,7 +34,7 @@ module.exports = class TicketCommand extends VillainsCommand {
     /**
      * Get emojis
      *
-     * @returns {Object.<string, string>} - List of emoji shortcuts
+     * @returns {Object.<string, string>} List of emoji shortcuts
      */
     get emojis() {
         return this.#emojis;
@@ -42,18 +42,12 @@ module.exports = class TicketCommand extends VillainsCommand {
     /**
      * Set emojis
      *
-     * @param {Object.<string, string>} emojis - List of emoji shortcuts to set
+     * @param {Object.<string, string>} emojis List of emoji shortcuts to set
      */
     set emojis(emojis) {
         this.#emojis = emojis
     }
 
-    /**
-     * Execute command and build embed
-     *
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
-     */
     async action(client, message) {
         // Create Ticket Channel
         const channel = await message.guild.channels.create(`ticket: ${message.author.tag}`)

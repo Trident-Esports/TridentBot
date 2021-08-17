@@ -4,15 +4,15 @@ const GameCommand = require('./gamecommand.class');
 const fs = require('fs')
 
 /**
- * Build a Shop Command for Villains Minigame
- *
  * @class
- * @constructor
+ * @classdesc Build a Shop Command for Villains Minigame
+ * @this {ShopCommand}
+ * @extends {GameCommand}
  * @public
  */
 module.exports = class ShopCommand extends GameCommand {
     /**
-     *
+     * Constructor
      * @param {Object.<string, any>} comprops - List of command properties from child class
      */
     constructor(comprops = {}) {
@@ -32,12 +32,6 @@ module.exports = class ShopCommand extends GameCommand {
         )
     }
 
-    /**
-     * Execute command and build embed
-     *
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
-     */
     async action(client, message) {
         // Get loaded target
         const loaded = this.inputData.loaded

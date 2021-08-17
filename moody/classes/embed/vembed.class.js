@@ -1,22 +1,46 @@
-/*
-
-Branded Generic Embed Handler
-
-MessageEmbed
- VillainsEmbed
-
-*/
-
-const fs = require('fs');
 const { MessageEmbed } = require('discord.js');
+const fs = require('fs');
 
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
-let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
-let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-let DEV = GLOBALS.DEV
-
+/**
+ * @class
+ * @classdesc Build a Villains-branded Embed
+ * @this {VillainsEmbed}
+ * @extends {MessageEmbed}
+ * @public
+ */
 module.exports = class VillainsEmbed extends MessageEmbed {
-    // Sanity checks
+    /**
+     * @typedef {Object} EmbedField
+     * @property {string} name Field Name
+     * @property {string} value Field Value
+     * @property {boolean} inline Inline?
+     */
+    /**
+     * @typedef {Object} Player Player
+     * @property {string} name The name
+     * @property {string} url The URL
+     * @property {string} avatar The Avatar
+     */
+    /**
+     * @typedef {Object} EmbedProps Embed Properties
+     * @property {boolean}                      full                    Print Full Embed
+     * @property {string}                       color                   Stripe color
+     * @property {{text: string}}               caption                 Caption text
+     * @property {{text: string, url: string}}  title                   Title text & url
+     * @property {string}                       thumbnail               Thumbnail url
+     * @property {string}                       description             Body text
+     * @property {Array.<EmbedField>}           fields                  Embed Fields
+     * @property {string}                       image                   Body Image
+     * @property {{msg: string, image: string}} footer                  Footer text & image
+     * @property {number | boolean}             timestamp               Timestamp for footer
+     * @property {boolean}                      error                   Print error format
+     * @property {{bot: Player, user: Player, target: Player}} players  Players
+     */
+
+    /**
+     * Constructor
+     * @param {EmbedProps} props Local list of command properties
+     */
     constructor(props = {}) {
         if (
           (
@@ -37,19 +61,60 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             props.timestamp = true
         }
 
+        super(
+            {
+                description: "Something got stuffed up here..."
+            }
+        )
+
+        try {
+            /**
+             * Global properties
+             * @type {Object.<string, any>}
+             */
+            this.GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        } catch(err) {
+            console.log("VEmbed: PROFILE manifest not found!")
+            process.exit(1)
+        }
+
+        try {
+            /**
+             * Package properties
+             * @type {Object.<string, any>}
+             */
+            this.PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
+        } catch(err) {
+            console.log("VEmbed: PACKAGE manifest not found!")
+            process.exit(1)
+        }
+
+        try {
+            /**
+             * Profile properties
+             * @type {Object.<string, any>}
+             */
+            this.defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+        } catch(err) {
+            console.log("VEmbed: DEFAULTS manifest not found!")
+            process.exit(1)
+        }
+
+        /**
+         * Development Mode?
+         * @type {boolean}
+         */
+        this.DEV = this.GLOBALS.DEV
+
         if ((!(props?.color)) || (props?.color && props.color.trim() == "")) {
             switch (props.color) {
                 default:
-                    props.color = defaults.stripe;
+                    props.color = this.defaults.stripe;
                     break;
             }
         } else {
-            props.color = defaults.stripe;
+            props.color = this.defaults.stripe;
         }
-
-        super({
-            description: "Something got stuffed up here..."
-        })
 
         // Inbound footer message
         let haveFooterMsg = props?.footer?.msg
@@ -63,7 +128,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         // Footer
         if(footerMsgNotNone) {
             // If we have an inbound footer
-            if(DEV || havePages) {
+            if(this.DEV || havePages) {
                 // If we need to repurpose the footer
                 // Append sent footer message to description
                 if(props.description != "") {
@@ -74,18 +139,18 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // Hack in my stuff to differentiate
-        if (DEV) {
+        if (this.DEV) {
             // Custom user footer
-            props.color = GLOBALS["stripe"]
-            props.footer = GLOBALS.footer
+            props.color = this.GLOBALS["stripe"]
+            props.footer = this.GLOBALS.footer
             this.setTimestamp()
         } else if((!haveFooterMsg) || (haveFooterMsg && (!footerMsgNotNone))) {
             // Default footer
-            props.footer = defaults.footer
+            props.footer = this.defaults.footer
         }
         if (props?.footer?.msg) {
-            if (!(props.footer.msg.includes(PACKAGE.version))) {
-                props.footer.msg += ` [v${PACKAGE.version}]`
+            if (!(props.footer.msg.includes(this.PACKAGE.version))) {
+                props.footer.msg += ` [v${this.PACKAGE.version}]`
             }
             this.setFooter(props.footer.msg, props.footer.image)
         }
@@ -107,7 +172,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         //  Custom Thumbnail: Bot as Author
         //  Custom Thumbnail & Custom Author: No Bot
 
-        let bot = { name: "Bot", avatar: defaults.thumbnail.trim() }
+        let bot = { name: "Bot", avatar: this.defaults.thumbnail.trim() }
         if (!(props?.players)) {
             props.players = {
                 bot: bot

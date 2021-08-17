@@ -3,23 +3,23 @@ const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 
 /**
- * Build a Command for BotDevs only
- *
  * @class
- * @constructor
+ * @classdesc Build a Command for BotDevs-only
+ * @this {BotDevCommand}
+ * @extends {VillainsCommand}
  * @public
  */
 module.exports = class BotDevCommand extends VillainsCommand {
     /**
-     * @type {string[]} - List of userids as provided by server profile database file
+     * @type {Array.<string>} - List of userids as provided by server profile database file
      * @private
      */
     #USERIDS; // Private: USERIDS
 
     /**
-     *
-     * @param {Object.<string, any>} comprops - List of command properties from child class
-     * @param {Object.<string, any>} props - Local list of command properties
+     * Constructor
+     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {EmbedProps} props              Local list of command properties
      */
     constructor(comprops = {}, props = { title: {}, description: "" }) {
         // Create a parent object
@@ -45,7 +45,7 @@ module.exports = class BotDevCommand extends VillainsCommand {
 
         // Get botdev-defined list of userids of BotDevs
         /**
-         * @type {string[]} - List of userids as provided by server profile database file
+         * @type {Array.<string>} - List of userids as provided by server profile database file
          * @public
          */
         this.USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8")).botDevs
@@ -62,7 +62,7 @@ module.exports = class BotDevCommand extends VillainsCommand {
     /**
      * Get USERIDS
      *
-     * @returns {string[]} - List of saved userids
+     * @returns {Array.<string>} - List of saved userids
      */
     get USERIDS() {
         return this.#USERIDS
@@ -70,16 +70,12 @@ module.exports = class BotDevCommand extends VillainsCommand {
     /**
      * Set USERIDS
      *
-     * @param {string[]} USERIDS - List of userids to set
+     * @param {Array.<string>} USERIDS - List of userids to set
      */
     set USERIDS(USERIDS) {
         this.#USERIDS = USERIDS
     }
 
-    /**
-      * @param {Client} client - Discord Client object
-      * @param {Message} message - Message that called the command
-     */
     async build(client, message) {
         // Bail if not valid UserID
         if(this.USERIDS.indexOf(message.author.id) == -1) {

@@ -2,27 +2,27 @@ const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('../embed/vembed.class');
 
 /**
- * Command for getting reaction votes for a question/suggestion/survey
- *
  * @class
- * @constructor
+ * @classdesc Command for getting reaction votes for a question/suggestion/survey
+ * @this {QuestionnaireCommand}
+ * @extends {VillainsCommand}
  * @public
  */
 module.exports = class QuestionnaireCommand extends VillainsCommand {
     /**
-     * @type {Object.<string, string>}} - List of emojis for use in Game Commands
+     * @type {Object.<string, string>} List of emojis for use in Game Commands
      * @private
      */
     #emojis;
     /**
-     * @type {string}} - Channel name to send message to
+     * @type {string} Channel name to send message to
      * @private
      */
     #channelName;
 
     /**
-     *
-     * @param {Object.<string, any>} comprops - List of command properties from child class
+     * Constructor
+     * @param {Object.<string, any>} comprops List of command properties from child class
      */
     constructor(comprops = {}) {
         // Create a parent object
@@ -37,7 +37,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
     /**
      * Get emojis
      *
-     * @returns {Object.<string, string>} - List of emoji shortcuts
+     * @returns {Object.<string, string>} List of emoji shortcuts
      */
     get emojis() {
         return this.#emojis;
@@ -45,7 +45,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
     /**
      * Set emojis
      *
-     * @param {Object.<string, string>} emojis - List of emoji shortcuts to set
+     * @param {Object.<string, string>} emojis List of emoji shortcuts to set
      */
     set emojis(emojis) {
         this.#emojis = emojis
@@ -54,7 +54,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
     /**
      * Get Channel name
      *
-     * @returns {string} - Get Channel name
+     * @returns {string} Get Channel name
      */
     get channelName() {
         return this.#channelName;
@@ -62,18 +62,12 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
     /**
      * Set Channel name
      *
-     * @param {string} channelName - Set Channel name
+     * @param {string} channelName Set Channel name
      */
     set channelName(channelName) {
         this.#channelName = channelName
     }
 
-    /**
-     * Build pre-flight characteristics of AdminCommand
-     *
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
-     */
     async build(client, message) {
         // Delete user-sent message
         message.delete()
@@ -101,12 +95,6 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
         this.action(client, message)
     }
 
-    /**
-     * Execute command and build embed
-     *
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
-     */
     async action(client, message) {
         this.null = true
         //TODO: Add a .then() to VillainsCommand's run()

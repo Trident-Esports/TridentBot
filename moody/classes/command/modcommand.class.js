@@ -1,17 +1,17 @@
 const AdminCommand = require('./admincommand.class');
 
 /**
- * Build a Command for Mods only
- *
  * @class
- * @constructor
+ * @classdesc Build a Command for Mods-only
+ * @this {ModCommand}
+ * @extends {AdminCommand}
  * @public
  */
 module.exports = class ModCommand extends AdminCommand {
     /**
-     *
-     * @param {Object.<string, any>} comprops - List of command properties from child class
-     * @param {Object.<string, any>} props - Local list of command properties
+     * Constructor
+     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {EmbedProps} props Local list of command properties
      */
     constructor(comprops = {}, props = {}) {
         // Create a parent object
@@ -21,12 +21,6 @@ module.exports = class ModCommand extends AdminCommand {
         )
     }
 
-    /**
-     * Build pre-flight characteristics of AdminCommand
-     *
-     * @param {Client} client - Discord Client object
-     * @param {Message} message - Message that called the command
-     */
     async build(client, message) {
         let APPROVED_ROLES = this.ROLES["admin"].concat(this.ROLES["mod"])
 
