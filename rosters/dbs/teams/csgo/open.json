@@ -3,6 +3,12 @@
   "title": "CSGO Open Roster",
   "aliases": ["csor"],
   "url": "https://play.esea.net/teams/8772583",
+  "team": {
+    "esea": {
+      "teamID": "8772583",
+      "#note": "NYI"
+    }
+  },
   "members": {
     "main": {
       "title": "Main",
