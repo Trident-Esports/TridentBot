@@ -81,6 +81,12 @@ module.exports = (client, message, args) => {
                 if (profile.team?.teamID) {
                     matchIDs.push(profile.team.teamID)
                 }
+                if (profile.team?.lpl?.tourneyID) {
+                    matchIDs.push(profile.team.lpl.tourneyID)
+                }
+                if (profile.team?.lpl?.teamID) {
+                    matchIDs.push(profile.team.lpl.teamID)
+                }
                 let scheduleCommand = {
                     name: profile.aliases[0] + 's',
                     title: profile.title.replace("Roster","Schedule"),
@@ -95,7 +101,14 @@ module.exports = (client, message, args) => {
                 }
                 client.commands.set(scheduleCommand.name, scheduleCommand);
 
-                if (profile?.team?.teamID && profile?.league?.game && profile?.league?.level) {
+                if ((profile?.team?.teamID || profile?.team?.lpl?.teamID) && profile?.league?.game && profile?.league?.level) {
+                    let teamID = 0
+                    if (profile?.team?.teamID) {
+                        teamID = profile.team.teamID
+                    }
+                    if (profile?.team?.lpl?.teamID) {
+                        teamID = profile.team.lpl.teamID
+                    }
                     let leagueCommand = {
                         name: profile.aliases[0] + 'l',
                         title: profile.title.replace("Roster", "League Schedule"),
@@ -103,7 +116,7 @@ module.exports = (client, message, args) => {
                             let command = new LeagueCommand().run(
                                 client,
                                 message,
-                                [ profile.league.game, profile.league.level, profile.team.teamID ]
+                                [ profile.league.game, profile.league.level, teamID ]
                             )
                         }
                     }

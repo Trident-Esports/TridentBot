@@ -112,10 +112,24 @@ module.exports = class MatchesCommand extends VillainsCommand {
                     let files = walk(locPath)
                     for (let file of files) {
                         let fData = JSON.parse(fs.readFileSync(file, "utf8"))
+                        let tourneyID = 0
+                        let teamID = 0
+                        if (fData?.team?.tourneyID) {
+                            tourneyID = fData.team.tourneyID
+                        }
+                        if (fData?.team?.lpl?.tourneyID) {
+                            tourneyID = fData.team.lpl.tourneyID
+                        }
                         if (fData?.team?.teamID) {
+                            teamID = fData.team.teamID
+                        }
+                        if (fData?.team?.lpl?.teamID) {
+                            teamID = fData.team.lpl.teamID
+                        }
+                        if (teamID > 0) {
                             let handlerpath = "/team/"
                             let filepath = fData.team.teamID
-                            if (fData?.team?.tourneyID) {
+                            if (tourneyID > 0) {
                                 handlerpath = "/tourney/"
                                 filepath = fData.team.tourneyID + '/' + filepath
                             }

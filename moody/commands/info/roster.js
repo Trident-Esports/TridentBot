@@ -105,18 +105,32 @@ module.exports = class RosterCommand extends VillainsCommand {
             if (profile?.url && profile.url != "") {
                 props.caption.url = profile.url
             }
+            let tourneyID = 0
+            let teamID = 0
+            if (profile?.team?.tourneyID) {
+                tourneyID = profile.team.tourneyID
+            }
+            if (profile?.team?.lpl?.tourneyID) {
+                tourneyID = profile.team.lpl.tourneyID
+            }
             if (profile?.team?.teamID) {
+                teamID = profile.team.teamID
+            }
+            if (profile?.team?.lpl?.teamID) {
+                teamID = profile.team.lpl.teamID
+            }
+            if (teamID > 0) {
                 let url = "http://villainsoce.mymm1.com/"
                 let name = "LPL Team #"
-                if(profile?.team?.tourneyID) {
-                    url += "tourney/" + profile.team.tourneyID + '/'
-                    name += profile.team.tourneyID + '/'
+                if(tourneyID > 0) {
+                    url += "tourney/" + tourneyID + '/'
+                    name += tourneyID + '/'
                 }
-                if(!(profile?.team?.tourneyID)) {
+                if(tourneyID == 0) {
                     url += "team/"
                 }
-                url += profile.team.teamID
-                name += profile.team.teamID
+                url += teamID
+                name += teamID
                 props.description += `*[${name}](${url} '${url}')*`
                 props.caption.url = url
             }
@@ -132,9 +146,16 @@ module.exports = class RosterCommand extends VillainsCommand {
             }
 
             // Team Avatar
+            let avatar = ""
             if (profile?.team?.avatar && profile.team.avatar != "") {
+                avatar = profile.team.avatar
+            }
+            if (profile?.team?.lpl?.avatar && profile.team.lpl.avatar != "") {
+                avatar = profile.team.lpl.avatar
+            }
+            if (avatar != "") {
                 props.players.target = {...props.players.user}
-                props.players.target.avatar = profile.team.avatar
+                props.players.target.avatar = avatar
             }
 
             let rosterEmbed = new VillainsEmbed({...props})
