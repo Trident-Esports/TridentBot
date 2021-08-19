@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsEmbed = require('../../classes/embed/vembed.class')
 const VillainsEvent = require('../../classes/event/vevent.class')
 

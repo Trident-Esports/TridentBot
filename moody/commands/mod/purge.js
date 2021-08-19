@@ -1,3 +1,5 @@
+//@ts-check
+
 const { BaseCommand } = require('a-djs-handler');
 const SlimEmbed = require('../../classes/embed/vslimbed.class');
 const fs = require('fs');
@@ -20,7 +22,7 @@ module.exports = class PurgeCommand extends BaseCommand {
         }
 
         let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
-        let APPROVED_ROLES = ROLES["admin","mod"]
+        let APPROVED_ROLES = ROLES["admin"].concat(ROLES["mod"])
         let [ min, max ] = [ 1, 100 ]
         let duration = ""
 

@@ -1,3 +1,5 @@
+//@ts-check
+
 const GameCommand = require('../../classes/command/gamecommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 

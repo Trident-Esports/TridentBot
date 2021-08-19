@@ -1,3 +1,5 @@
+//@ts-check
+
 const GameCommand = require('../../classes/command/gamecommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 
@@ -38,7 +40,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
         this.thumbnail = "https://media.tenor.com/images/60b3d58b8161ad9b03675abf301e8fb4/tenor.gif"
 
         if (!(this.error)) {
-            let gambledAmount = this.inputData.args && this.inputData.args[0] && (!(isNaN(this.inputData.args[0]))) ? parseInt(this.inputData.args[0]) : -1
+            let gambledAmount = this.inputData.args && this.inputData.args[0] && (!(isNaN(this.inputData.args[0]))) ? this.inputData.args[0] : -1
             let minGamble = 500
 
             if (gambledAmount < minGamble) {

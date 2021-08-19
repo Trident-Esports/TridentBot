@@ -161,7 +161,7 @@ module.exports = class ATMCommand extends GameCommand {
         if (amount == 'all') {
             amount = reserve
         } else if (amount == 'half') {
-            amount = reserve / 2
+            amount = Math.floor(reserve / 2)
         } else {
             amount = parseInt(amount)
         }

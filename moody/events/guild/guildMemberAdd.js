@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsEmbed = require('../../classes/embed/vembed.class')
 const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
@@ -73,6 +75,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
                 }
                 const embed = new VillainsEmbed(props);
 
+                // @ts-ignore
                 await channel.send(embed);
             } catch (err) {
                 throw (err);

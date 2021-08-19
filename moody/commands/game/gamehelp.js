@@ -1,3 +1,5 @@
+//@ts-check
+
 const GameCommand = require('../../classes/command/gamecommand.class');
 const fs = require('fs');
 

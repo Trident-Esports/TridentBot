@@ -1,3 +1,5 @@
+//@ts-check
+
 const ModCommand = require('../../classes/command/modcommand.class');
 
 module.exports = class KickCommand extends ModCommand {

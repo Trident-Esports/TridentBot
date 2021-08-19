@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 const dasu = require('dasu');
@@ -208,7 +210,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
 
                         if (json?.team_avatar && json.team_avatar != "") {
-                            embed.setAuthor(title, defaults.thumbnail, url)
+                            embed.setAuthor(title, defaults.thumbnail, url.toString())
                             embed.setThumbnail(json.team_avatar)
                         } else {
                             embed.setTitle(title)
@@ -273,6 +275,6 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 pages.push(embed)
             }
         }
-        super.send(message, pages, [], "", true)
+        super.send(message, pages, [], 0, true)
     }
 }

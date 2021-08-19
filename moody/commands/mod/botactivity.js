@@ -1,3 +1,5 @@
+//@ts-check
+
 const AdminCommand = require('../../classes/command/admincommand.class');
 
 // AdminCommand

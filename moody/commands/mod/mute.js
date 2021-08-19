@@ -1,3 +1,5 @@
+//@ts-check
+
 const IRCVoiceCommand = require('../../classes/command/ircvoicecommand.class');
 const ms = require('ms');
 
@@ -25,7 +27,7 @@ module.exports = class MuteCommand extends IRCVoiceCommand {
             member.roles.remove(mainRole.id)
             member.roles.add(muteRole.id)
             this.props.description = `<@${member.id}> has been muted`
-            let duration = args[1] ? args[1] : 0
+            let duration = this.inputData.args[1] ? this.inputData.args[1] : 0
             if(duration > 0) {
                 this.props.description += ` for ${ms(ms(duration))}`
             }
@@ -33,7 +35,7 @@ module.exports = class MuteCommand extends IRCVoiceCommand {
             setTimeout(function() {
                 member.roles.remove(muteRole.id)
                 member.roles.add(mainRole.id)
-            }, ms(duration))
+            }, parseInt(ms(duration)))
         } else {
             // Describe the thing
             this.props.description = `<@${member.id}> *would be* **muted** if this wasn't in DEV Mode`

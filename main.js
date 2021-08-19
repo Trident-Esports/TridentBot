@@ -1,3 +1,5 @@
+//@ts-check
+
 const Discord = require('discord.js'); // Base Discord module
 const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
 
@@ -11,17 +13,18 @@ const Levels = require('discord-xp') // Discord Game XP
 
 //Login Tokens
 const fs = require('fs');
-SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
+let SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
 
 const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"));
 
 const prefix = DEFAULTS.prefix // Default prefix
 
 try {
+    // @ts-ignore
     Levels.setURL(SENSITIVE.client.mongoDB);
 } catch {
     console.log("MongoDB: Failed to connect!");
-    return;
+    process.exit(1);
 }
 
 client.commands = new Discord.Collection();
@@ -40,7 +43,7 @@ client.events = new Discord.Collection();
 mongoose.connect(
         SENSITIVE.client.mongoDB,
         {
-            useNewURLParser: true,
+            useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false
         })
@@ -59,9 +62,9 @@ const handler = new Handler(client, {
     commandsPath: __dirname + "/moody/commands",
     eventsPath: __dirname + "/moody/events",
     owners: [
-        532192409757679618, // Noongar
-        263968998645956608, // Mike
-        692180465242603591  // Prime
+        "532192409757679618", // Noongar
+        "263968998645956608", // Mike
+        "692180465242603591"  // Prime
     ]
 });
 (async () => {

@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsEmbed = require('../../classes/embed/vembed.class')
 const ModCommand = require('../../classes/command/modcommand.class');
 const db = require('../../../models/warns')

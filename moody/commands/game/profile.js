@@ -1,3 +1,5 @@
+//@ts-check
+
 const GameCommand = require('../../classes/command/gamecommand.class');
 
 module.exports = class ProfileCommand extends GameCommand {
@@ -33,6 +35,7 @@ module.exports = class ProfileCommand extends GameCommand {
                     inline: true
                 },
                 {
+                    // @ts-ignore
                     name: `${this.emojis.xp}${levelData.xp.toLocaleString("en-AU")} / ${this.Levels.xpFor(levelData.level + 1).toLocaleString("en-AU")}`,
                     value: "XP",
                     inline: true

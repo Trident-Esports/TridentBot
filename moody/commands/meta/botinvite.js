@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
 let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))

@@ -1,3 +1,5 @@
+//@ts-check
+
 const IRCVoiceCommand = require('../../classes/command/ircvoicecommand.class');
 
 //FIXME: Like Mute

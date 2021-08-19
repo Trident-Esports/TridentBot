@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class BonkCommand extends VillainsCommand {

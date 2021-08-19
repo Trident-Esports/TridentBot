@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
 

@@ -1,3 +1,5 @@
+//@ts-check
+
 const ModCommand = require('../../classes/command/modcommand.class');
 const db = require('../../../models/warns')
 

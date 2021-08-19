@@ -1,3 +1,5 @@
+//@ts-check
+
 const QuestionnaireCommand = require('../../classes/command/questionnairecommand.class');
 
 module.exports = class SuggestionsCommand extends QuestionnaireCommand {

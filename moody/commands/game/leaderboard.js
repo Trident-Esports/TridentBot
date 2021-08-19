@@ -1,3 +1,5 @@
+//@ts-check
+
 const GameCommand = require('../../classes/command/gamecommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 
@@ -19,12 +21,16 @@ module.exports = class LeaderboardCommand extends GameCommand {
     }
 
     async action(client, message) {
+        // @ts-ignore
         const rawLeaderboard = await this.Levels.fetchLeaderboard(1,10); // We grab top 10 users with most xp in the current server.
 
         if (rawLeaderboard.length < 1) {
-            return reply("Nobody's on the leaderboard yet.");
+            this.error = true
+            this.props.description = "Nobody's on the leaderboard yet."
+            return
         }
 
+        // @ts-ignore
         const leaderboard = await this.Levels.computeLeaderboard(client, rawLeaderboard, true); // We process the leaderboard.
 
         let props = this.props

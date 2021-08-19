@@ -1,3 +1,5 @@
+//@ts-check
+
 const BotActivityCommand = require('./botactivity')
 const AdminCommand = require('../../classes/command/admincommand.class');
 
@@ -20,6 +22,6 @@ module.exports = class BotLiveCommand extends AdminCommand {
             this.inputData.args.join(" ")
         ]
         let botActivity = new BotActivityCommand()
-        botActivity.run(client, message, args)
+        botActivity.run(client, message, args, null, "")
     }
 }

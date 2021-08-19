@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
 let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))

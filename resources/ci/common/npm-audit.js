@@ -1,3 +1,5 @@
+//@ts-check
+
 const { spawn } = require("child_process")
 
 // alias spawn

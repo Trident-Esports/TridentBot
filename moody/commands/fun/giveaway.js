@@ -1,3 +1,5 @@
+//@ts-check
+
 const QuestionnaireCommand = require('../../classes/command/questionnairecommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 const { DiscordAPIError } = require('discord.js');
@@ -46,7 +48,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
     async action(client, message) {
         let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
-        let APPROVED_ROLES = ROLES["admin", "mod"]
+        let APPROVED_ROLES = ROLES["admin"].concat(ROLES["mod"])
 
         if (!message.member.roles.cache.some(r => APPROVED_ROLES.includes(r.name))) {
             this.error = true
@@ -70,7 +72,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
             // this.props.description.push(`Duration: ${duration} ms`)
 
-            if ((!(duration)) || isNaN(duration)) {
+            if ((!(duration)) || typeof duration == "string") {
                 this.error = true
                 this.props.description = `Please enter an amount of time for the Giveaway to go for. '${duration}' given.`
             }
@@ -99,20 +101,20 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                         // this.props.description.push(`Now:      ${Date.now()} ms`)
 
                         // Date.now() // In Milliseconds
-                        let end = parseInt((Date.now() + parseInt(duration)) / 1000) // In Seconds
+                        let end = Math.floor((Date.now() + parseInt(duration)) / 1000) // In Seconds
 
                         // this.props.description.push(`End:      ${end} s\``)
 
                         this.props.title.text = product
                         this.props.description.push(
-                            `React with ${this.emoji[0]} to enter!`,
+                            `React with ${this.emojis[0]} to enter!`,
                             `Ends: <t:${end}:f>`,                     // In Seconds
                             `Hosted By: ${message.author}`
                         )
 
                         this.null = true
                         await this.send(message, new VillainsEmbed(this.props)).then(async (msg) => {
-                            for (let emoji of this.emoji) {
+                            for (let emoji of this.emojis) {
                                 await msg.react(emoji)
                             }
 
@@ -120,7 +122,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
                             const FILTER = (reaction, user) => {
                                 return (
-                                    reaction.emoji.name === this.emoji[0] &&
+                                    reaction.emoji.name === this.emojis[0] &&
                                     (!user.bot) &&
                                     // (user.id !== message.author.id) &&
                                     true

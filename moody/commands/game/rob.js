@@ -1,3 +1,5 @@
+//@ts-check
+
 const GameCommand = require('../../classes/command/gamecommand.class');
 
 // ATMCommand: User to User, like Give
@@ -37,7 +39,7 @@ module.exports = class RobCommand extends GameCommand {
             ]
             let final = options[
                 Math.floor(
-                    Math.random() * parseInt(options.length)
+                    Math.random() * options.length
                 )
             ]
 
@@ -64,7 +66,7 @@ module.exports = class RobCommand extends GameCommand {
 
                 // Gold Reward: 100 - 1500
                 let [minReward, maxReward] = [100, 1500]
-                const amount = Math.floor(Math.random() * (maxReward - minReward)) + minReward
+                let amount = Math.floor(Math.random() * (maxReward - minReward)) + minReward
 
                 // Ding?
                 let hasLeveledUP = false

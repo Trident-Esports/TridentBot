@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillansEmbed = require('../../classes/embed/vembed.class')
 const ModCommand = require('../../classes/command/modcommand.class')
 const fs = require('fs')
@@ -41,7 +43,7 @@ module.exports = class ModHelpCommand extends ModCommand {
                 }
                 scope = "section"
             } else {
-                for(let [section, commands] of Object.entries(helpData)) {
+                for(let [section, commands] of Object.entries(mod_commands)) {
                     if(Object.keys(commands.commands).indexOf(search.term) !== -1) {
                         let key = section
                         mod_commands = {

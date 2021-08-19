@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
 
@@ -36,6 +38,7 @@ module.exports = class GuildMemberRemoveEvent extends VillainsEvent {
                 let rules = [
                     `<@${member.id}> has just become a **Hero**.`
                 ]
+                // @ts-ignore
                 await channel.send(rules.join("\n"))
             } catch (err) {
                 throw (err);

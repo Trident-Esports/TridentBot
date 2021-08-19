@@ -1,3 +1,5 @@
+//@ts-check
+
 const ATMCommand = require('../../classes/command/atmcommand.class');
 
 module.exports = class WithdrawCommand extends ATMCommand {

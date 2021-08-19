@@ -1,3 +1,5 @@
+//@ts-check
+
 const VillainsCommand = require('../../classes/command/vcommand.class')
 const VillansEmbed = require('../../classes/embed/vembed.class')
 const fs = require('fs')

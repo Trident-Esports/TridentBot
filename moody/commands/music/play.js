@@ -1,3 +1,5 @@
+//@ts-check
+
 const BotActivityCommand = require('../mod/botactivity');
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
@@ -134,7 +136,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 }
                 if (activityType != "streaming") {
                     let ba = new BotActivityCommand({ null: true })
-                    ba.run(client, message, [])
+                    ba.run(client, message, [], null, "")
                 }
 
                 // Nuke Bot
@@ -169,7 +171,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 }
                 if (activityType != "streaming") {
                     let ba = new BotActivityCommand({ null: true })
-                    ba.run(client, message, [ "listening", song.title ])
+                    ba.run(client, message, [ "listening", song.title ], null, "")
                 }
 
                 if (this.now_playing && (!(this.now_playing.deleted))) {
