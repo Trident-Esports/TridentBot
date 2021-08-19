@@ -5,6 +5,18 @@ const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
 
 const client = new MoodyClient({
     partials: ["MESSAGE", "CHANNEL", "REACTION"]
+    // discord.js v13
+    // intents: [
+    //     new Discord.Intents(
+    //         [
+    //             Discord.Intents.FLAGS.GUILDS,
+    //             Discord.Intents.FLAGS.GUILD_MESSAGES,
+    //             Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    //             Discord.Intents.FLAGS.DIRECT_MESSAGES,
+    //             Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+    //         ]
+    //     )
+    // ]
 });  // Discord Client object
 
 const mongoose = require('mongoose'); // Mongoose

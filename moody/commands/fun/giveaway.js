@@ -130,6 +130,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                             };
 
                             // this.props.description.push(`Collector: ${duration} ms\``)
+                            // const COLLECTOR = msg.createReactionCollector({FILTER, // discord.js v13
                             const COLLECTOR = msg.createReactionCollector(FILTER, {
                                 max: (this.DEV) ? winnersnum : 5000, //FIXME: This is winnersnum for testing
                                 time: parseInt(duration) // In Milliseconds
@@ -210,6 +211,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                         }
                                     })
                                 }
+                                // msg.channel.send({ embeds: [embed] }); // discord.js v13
                                 msg.channel.send(embed);
                             });
                         })

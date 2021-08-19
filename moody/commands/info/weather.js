@@ -81,6 +81,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
                 ]
             }
             let embed = new VillainsEmbed(props)
+            // message.channel.send({ embeds: [embed] })
             message.channel.send(embed)
         })
         this.null = true

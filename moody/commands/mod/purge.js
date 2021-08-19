@@ -54,6 +54,7 @@ module.exports = class PurgeCommand extends BaseCommand {
         }
 
         let embed = new SlimEmbed(props)
+        // await message.channel.send({ embeds: [embed] }) // discord.js v13
         await message.channel.send(embed)
             .then(msg => {
                 setTimeout(() => msg.delete(), ms(duration))

@@ -552,6 +552,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             // If it's just one and we're not forcing pages, just send the embed
             if ((pages.length <= 1) && !forcepages) {
                 // @ts-ignore
+                // return this.channel.send({ embeds: [pages[0]] }) // discord.js v13
                 return this.channel.send(pages[0])
             } else {
                 // Else, set up for pagination
@@ -569,11 +570,15 @@ module.exports = class VillainsCommand extends BaseCommand {
                     emojis.push(filler)
                 }
                 // Send the pages
+                // return await pagination(message, pages, emojis, timeout) // discord.js v13
+                //FIXME: discord-pagination doesn't support discord.js v13 yet
+                //TODO: Check on discord-pagination and see if it supports discord.js v13 yet
                 return await pagination(message, pages, emojis, timeout)
             }
         } else {
             // Else, it's just an embed, send it
             // @ts-ignore
+            // return this.channel.send({ embeds: [ pages ] }) // discord.js v13
             return this.channel.send(pages)
         }
     }

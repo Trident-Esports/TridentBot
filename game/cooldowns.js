@@ -77,6 +77,7 @@ module.exports = {
             console.log(cd)
         }
 
+        // message.channel.send({ embeds: [cooldownEmbed] }); // discord.js v13
         message.channel.send(cooldownEmbed);
     }
 

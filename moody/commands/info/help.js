@@ -10,6 +10,7 @@ module.exports = class HelpCommand extends VillainsCommand {
     constructor() {
         super({
             name: "help",
+            aliases: [ "h" ],
             category: "information",
             description: "Bot Help"
         })

@@ -138,6 +138,7 @@ module.exports = (client, message, args) => {
                 }
                 props.description = desc
                 let embed = new VillainsEmbed(props)
+                // message.channel.send({ embeds: [embed] }); // discord.js v13
                 message.channel.send(embed);
             }
         }

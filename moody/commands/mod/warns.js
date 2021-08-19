@@ -46,6 +46,7 @@ module.exports = class WarnsCommand extends ModCommand {
                     props.description = this.errors.noProfile
                 }
                 let embed = new VillainsEmbed(props)
+                // message.channel.send({ embeds: [embed] }) // discord.js v13
                 message.channel.send(embed)
             })
             this.null = true

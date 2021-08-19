@@ -19,7 +19,7 @@ module.exports = class FightCommand extends GameCommand {
     }
 
     async action(client, message) {
-        // return message.channel.send("Temporarily disabled.")
+        // return message.channel.send({ content: "Temporarily disabled." })
 
         /*
         User:   Invalid
@@ -67,6 +67,7 @@ module.exports = class FightCommand extends GameCommand {
             )
         }
 
+        // const COLLECTOR = message.channel.createMessageCollector({FILTER, // discord.js v13
         const COLLECTOR = message.channel.createMessageCollector(FILTER, {
             max: 1,
             time: 30 * 1000 // 30 seconds

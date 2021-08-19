@@ -36,7 +36,7 @@ module.exports = class GameCommand extends VillainsCommand {
             for (let extension of comprops.extensions) {
                 // [key, path] = await this.db_key(extension)
                 let key = extension + "Model"
-                let path = "../../models/" + extension + "Schema"
+                let path = "../../../models/" + extension + "Schema"
                 if (extension == "levels") {
                     key = "Levels"
                     path = "discord-xp"
@@ -121,9 +121,9 @@ module.exports = class GameCommand extends VillainsCommand {
     //FIXME: Inventory Model doesn't get modified at all ???
     /**
      * Standardize transform command for MongoDB management
-     * @param {string}                                              userID  UserID
+     * @param {string}                    userID  UserID
      * @param {(Object | Array | string)} type    Transform type
-     * @param {(Object | Array | number)}    amount  Transform amount
+     * @param {(Object | Array | number)} amount  Transform amount
      * @returns {Promise<*>} True if level-up
      */
     async db_transform(userID, type, amount = 0) {

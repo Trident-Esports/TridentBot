@@ -125,7 +125,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 msg += "`" + this.prefix + "matches [all|incomplete|complete|next]`" + "\n"
                 msg += "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
                 msg += "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                return message.channel.send(msg)
+                return message.channel.send({ content: msg })
             }
         }
 

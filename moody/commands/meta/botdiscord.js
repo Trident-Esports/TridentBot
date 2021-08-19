@@ -25,7 +25,7 @@ module.exports = class BotDiscordInviteCommand extends VillainsCommand {
             url += "https://discord.gg/"
             url += defaults.discord.invites.bot.code
             this.props.description = `***[Join VillainsBot's Discord!](${url} '${url}')***`
-            // message.channel.send(url)
+            // message.channel.send({ content: url })
         } else {
             this.error = true
             this.props.description = "No invite code found in defaults."

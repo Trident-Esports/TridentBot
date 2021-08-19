@@ -74,7 +74,7 @@ module.exports = class TicketCommand extends VillainsCommand {
         )
 
         // Send Welcome Message to Ticket Channel
-        const reactionMessage = await channel.send("Thank you for contacting support!")
+        const reactionMessage = await channel.send({ content: "Thank you for contacting support!" })
 
         try {
             for (let emoji of this.emojis) {
@@ -82,7 +82,7 @@ module.exports = class TicketCommand extends VillainsCommand {
             }
         } catch (err) {
             // Bail if we couldn't initialize reacts
-            channel.send("Error sending emojis!")
+            channel.send({ content: "Error sending emojis!" })
             throw err;
         }
 
@@ -100,12 +100,12 @@ module.exports = class TicketCommand extends VillainsCommand {
             switch (reaction.emoji.name) {
                 // Lock channel
                 case this.emojis[0]:
-                    channel.send("Locking channel!");
+                    channel.send({ content: "Locking channel!" });
                     channel.updateOverwrite(message.author, { SEND_MESSAGE: false });
                     break;
                 // Delete channel
                 case this.emojis[1]:
-                    channel.send("Deleting this channel in 5 seconds!");
+                    channel.send({ content: "Deleting this channel in 5 seconds!" });
                     setTimeout(() => channel.delete(), 5000);
                     break;
             }

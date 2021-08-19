@@ -44,6 +44,7 @@ module.exports = class SearchCommand extends GameCommand {
             return chosenLocations.some((answer) => answer.split(" ").pop().toLowerCase() === m.content.split(" ").pop().toLowerCase()) && m.author.id === loaded.id;
         };
 
+        // const COLLECTOR = message.channel.createMessageCollector({FILTER, // discord.js v13
         const COLLECTOR = message.channel.createMessageCollector(FILTER, {
             max: 1,
             time: 25000

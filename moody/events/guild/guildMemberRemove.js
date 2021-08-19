@@ -39,6 +39,7 @@ module.exports = class GuildMemberRemoveEvent extends VillainsEvent {
                     `<@${member.id}> has just become a **Hero**.`
                 ]
                 // @ts-ignore
+                // await channel.send({ content: rules.join("\n") }) // discord.js v13
                 await channel.send(rules.join("\n"))
             } catch (err) {
                 throw (err);

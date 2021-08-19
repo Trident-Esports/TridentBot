@@ -76,6 +76,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
                 const embed = new VillainsEmbed(props);
 
                 // @ts-ignore
+                // await channel.send({ embeds: [embed] }); // discord.js v13
                 await channel.send(embed);
             } catch (err) {
                 throw (err);

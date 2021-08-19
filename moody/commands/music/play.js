@@ -3,7 +3,7 @@
 const BotActivityCommand = require('../mod/botactivity');
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
-const { DiscordAPIError } = require('discord.js');
+const { DiscordAPIError, Permissions } = require('discord.js');
 
 //TODO: Spotify Playlists
 const ytdl = require('ytdl-core');
@@ -72,7 +72,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 // Get Bot perms for channel
                 console.log("Music: Checking Bot's Perms")
                 const permissions = this.voice_channel.permissionsFor(message.client.user);
-                if ((!(permissions.has('CONNECT' || 'SPEAK')))) {
+                if ((!(permissions.has(Permissions.FLAGS.CONNECT || Permissions.FLAGS.SPEAK)))) {
                     this.error = true
                     this.props.description = `<@${client.user.id}> doesn't have permission to join the voice channel that you're in.`
                     console.log("Music: !!! Bot doesn't have perms to channel !!!")

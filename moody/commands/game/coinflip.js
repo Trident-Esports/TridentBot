@@ -77,6 +77,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                         return shortvars.some((answer) => answer.charAt(0).toLowerCase() === m.content.charAt(0).toLowerCase()) && m.author.id === loaded.id;
                     };
 
+                    // const COLLECTOR = message.channel.createMessageCollector({FILTER, // discord.js v13
                     const COLLECTOR = message.channel.createMessageCollector(FILTER, {
                         max: 1,
                         time: 15000

@@ -17,7 +17,7 @@ module.exports = class BanCommand extends ModCommand {
 
     async action(client, message) {
         // Convert to Guild Member
-        const member = message.guild.member(this.inputData.loaded)
+        const member = message.guild.members.cache.get(this.inputData.loaded.id)
         if(! this.DEV) {
             // Do the thing
             member.ban({ reason:this.inputData.args.join(" ") })
