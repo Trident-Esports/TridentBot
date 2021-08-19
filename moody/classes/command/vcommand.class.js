@@ -1,6 +1,9 @@
-const { BaseCommand } = require('a-djs-handler');
-const VillainsEmbed = require('../classes/vembed.class');
-const SlimEmbed = require('../classes/vslimbed.class');
+// @ts-check
+
+const { Channel, Client, Message, MessageEmbed } = require('discord.js');
+const { BaseCommand, ClientUtil } = require('a-djs-handler');
+const VillainsEmbed = require('../embed/vembed.class');
+const SlimEmbed = require('../embed/vslimbed.class');
 
 const pagination = require('discord.js-pagination');
 const fs = require('fs');
@@ -39,7 +42,7 @@ module.exports = class VillainsCommand extends BaseCommand {
      */
     #error;     // Private: Error Thrown
     /**
-     * @type {Object.<string, string>} Global Error Message strings
+     * @type {Object.<string, Array.<string>>} Global Error Message strings
      * @private
      */
     #errors;    // Private: Global Error Message strings
@@ -48,6 +51,11 @@ module.exports = class VillainsCommand extends BaseCommand {
      * @private
      */
     #channel;   // Private: Channel to send VillainsEmbed to
+    /**
+     * @type {string} Channel to send embeds to
+     * @private
+     */
+    #channelName;   // Private: Channel to send VillainsEmbed to
     /**
      * @type {Object.<string, any>} Processed input data
      * @private
@@ -67,7 +75,7 @@ module.exports = class VillainsCommand extends BaseCommand {
      * @property {string} avatar The Avatar
      */
     /**
-     * @typedef {Object} EmbedProps Embed Properties
+     * @typedef {Object.<string, any>} EmbedProps Embed Properties
      * @property {boolean}                      full                    Print Full Embed
      * @property {string}                       color                   Stripe color
      * @property {{text: string}}               caption                 Caption text
@@ -90,6 +98,7 @@ module.exports = class VillainsCommand extends BaseCommand {
     constructor(comprops = {}, props = {}) {
         // Create a parent object
         super(
+            // @ts-ignore
             {...comprops}
         )
 
@@ -171,7 +180,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         /**
          * Global Error Strings
-         * @type {Object.<string, string>}
+         * @type {Object.<string, Array.<string>>}
          */
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
 
@@ -253,6 +262,13 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.#channel = channel
     }
 
+    get channelName() {
+        return this.#channelName
+    }
+    set channelName(channelName) {
+        this.#channelName = channelName
+    }
+
     get inputData() {
         return this.#inputData
     }
@@ -264,7 +280,7 @@ module.exports = class VillainsCommand extends BaseCommand {
      *
      * @param {Message} message Message that called the command
      * @param {string} channelType Key for channel to get from database
-     * @returns {Channel} Found channel object
+     * @returns {Promise.<Channel>} Found channel object
      */
     async getChannel(message, channelType) {
         // Get botdev-defined list of channelIDs/channelNames
@@ -284,7 +300,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
 
         // If the ID is not a number, search for a named channel
-        if (isNaN(channelID)) {
+        if (typeof channelID == "string") {
             channel = message.guild.channels.cache.find(c => c.name === channelID);
         } else {
             // Else, search for a numbered channel
@@ -301,7 +317,7 @@ module.exports = class VillainsCommand extends BaseCommand {
      * @param {Object.<string, string>} flags Flags for user management
      */
     async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
-        let foundHandles = { players: {}, invalid: false, flags: flags }
+        let foundHandles = { players: {}, invalid: "", flags: flags }
 
         let user = message.author
         let mention = message.mentions.members.first()
@@ -343,8 +359,16 @@ module.exports = class VillainsCommand extends BaseCommand {
             // Otherwise, just gracefully degrade to our current Target
             loaded = tmp ? search.first() : loaded
             if (tmp && loaded) {
-                debugout.push(`Terms:`.padEnd(padding) + `[Nick:${loaded.nickname}] [UName:${loaded.user.username}]`)
-                loaded = loaded.user
+                // @ts-ignore
+                if (loaded?.nickname) {
+                    // @ts-ignore
+                    debugout.push(`Terms:`.padEnd(padding) + `[Nick:${loaded.nickname}] [UName:${loaded.user.username}]`)
+                }
+                // @ts-ignore
+                if (loaded?.user) {
+                    // @ts-ignore
+                    loaded = loaded.user
+                }
                 foundHandles.search = loaded
                 foundHandles.loadedType = "search"
                 // debugout.push(`Search:`.padEnd(padding) + `<@${loaded.id}>`)
@@ -390,7 +414,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             foundHandles.loaded = loaded
 
             // Set Loaded as Target Player
-            if (foundHandles.invalid === false) {
+            if (foundHandles.invalid == "") {
                 foundHandles.players.target = {
                     name: loaded.username,
                     avatar: loaded.displayAvatarURL({ format: "png", dynamic: true })
@@ -444,7 +468,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
 
         // Errors based on Invalid Source
-        if (foundHandles?.invalid && foundHandles.invalid !== false) {
+        if (foundHandles?.invalid && foundHandles.invalid != "") {
             this.error = true
             foundHandles.title = { text: "Error" };
             switch (foundHandles.invalid) {
@@ -479,8 +503,9 @@ module.exports = class VillainsCommand extends BaseCommand {
      *
      * @param {Client} client Discord Client object
      * @param {Message} message Message that called the command
+     * @param {string} cmd Command name/alias sent
      */
-    async action(client, message) {
+    async action(client, message, cmd) {
         // Do nothing; command overrides this
         // If the thing doesn't modify anything, don't worry about DEV flag
         // If the thing does modify stuff, use DEV flag to describe action instead of performing it
@@ -507,25 +532,26 @@ module.exports = class VillainsCommand extends BaseCommand {
      * Send pages to Discord Client
      *
      * @param {Message} message Message that called the command
-     * @param {Array.<VillainsEmbed>} pages Pages to send to client
+     * @param {Array.<(VillainsEmbed | MessageEmbed)> | VillainsEmbed} pages Pages to send to client
      * @param {Array.<string>} emojis Emoji for pagination
-     * @param {string} timeout Timeout for disabling pagination
+     * @param {number} timeout Timeout for disabling pagination
      * @param {boolean} forcepages Force pagination
      */
-    async send(message, pages, emojis = ["◀️", "▶️"], timeout = "600000", forcepages = false) {
+    async send(message, pages, emojis = ["◀️", "▶️"], timeout = 600000, forcepages = false) {
         if (!this.channel) {
             this.channel = message.channel
         }
         // If pages are being forced, set defaults
         if (forcepages) {
             emojis = ["◀️", "▶️"]
-            timeout = "600000"
+            timeout = 600000
         }
 
         // If we have an array of page(s)
         if (Array.isArray(pages)) {
             // If it's just one and we're not forcing pages, just send the embed
             if ((pages.length <= 1) && !forcepages) {
+                // @ts-ignore
                 return this.channel.send(pages[0])
             } else {
                 // Else, set up for pagination
@@ -547,6 +573,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
         } else {
             // Else, it's just an embed, send it
+            // @ts-ignore
             return this.channel.send(pages)
         }
     }
@@ -557,9 +584,12 @@ module.exports = class VillainsCommand extends BaseCommand {
      * @param {Client} client Discord Client object
      * @param {Message} message Message that called the command
      * @param {Array.<string>} args Command-line args
+     * @param {ClientUtil} util
      * @param {string} cmd Actual command name used (alias here if alias used)
+     * @returns {Promise.<any>}
      */
-    async run(client, message, args, cmd) {
+    // @ts-ignore
+    async run(client, message, args, util, cmd) {
         // Process arguments
         await this.processArgs(message, args, this.flags)
 

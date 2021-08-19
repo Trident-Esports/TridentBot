@@ -1,3 +1,5 @@
+// @ts-check
+
 const ModCommand = require('./modcommand.class');
 
 /**

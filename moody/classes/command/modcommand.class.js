@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const AdminCommand = require('./admincommand.class');
 
 /**

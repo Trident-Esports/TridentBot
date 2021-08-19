@@ -39,7 +39,7 @@ module.exports = class SlimEmbed extends VillainsEmbed {
 
     /**
      * Constructor
-     * @param {EmbedProps} props Local list of command properties
+     * @param {(EmbedProps | Object.<any>)} props Local list of command properties
      */
     constructor(props = {}) {
         if(props?.title?.text && props.title.text.trim() != "" && props.title.text.trim() != "<NONE>") {

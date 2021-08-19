@@ -1,3 +1,5 @@
+// @ts-check
+
 const VillainsCommand = require('./vcommand.class');
 
 const fs = require('fs');
@@ -37,14 +39,14 @@ module.exports = class AdminCommand extends VillainsCommand {
         // Get botdev-defined list of roles groupings
         /**
          * List of roles as provided by server profile database file
-         * @type {Array.<string>}
+         * @type {Object.<[x:string], Array.<string>>}
          * @public
          */
         this.ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
 
         // Bail if we don't have Roles information
         if (!this.ROLES) {
-            this.ROLES = { "admin": [], "mod": [], "rules": "", "member": "", "muted": "" }
+            this.ROLES = { "admin": [""], "mod": [""], "rules": "", "member": "", "muted": "" }
             this.error = true
             this.props.description = "Failed to get Roles information."
             return
@@ -54,7 +56,7 @@ module.exports = class AdminCommand extends VillainsCommand {
     /**
      * Get ROLES
      *
-     * @returns {Array.<string>} List of saved roles
+     * @returns {Object.<[x:string], Array.<string>>} List of saved roles
      */
     get ROLES() {
         return this.#ROLES
@@ -62,7 +64,7 @@ module.exports = class AdminCommand extends VillainsCommand {
     /**
      * Set ROLES
      *
-     * @param {Array.<string>} ROLES List of roles to set
+     * @param {Object.<[x:string], Array.<string>>} ROLES List of roles to set
      */
     set ROLES(ROLES) {
         this.#ROLES = ROLES

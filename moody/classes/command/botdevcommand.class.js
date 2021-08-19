@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 const VillainsCommand = require('./vcommand.class');
 
 const fs = require('fs');
@@ -45,14 +47,14 @@ module.exports = class BotDevCommand extends VillainsCommand {
 
         // Get botdev-defined list of userids of BotDevs
         /**
-         * @type {Array.<string>} - List of userids as provided by server profile database file
+         * @type {Object.<[x:string], Array.<string>>} - List of userids as provided by server profile database file
          * @public
          */
         this.USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8")).botDevs
 
         // Bail if we fail to get UserIDs list
         if (!(this.USERIDS)) {
-            this.USERIDS = { botDevs: [], botWhite: [] }
+            this.USERIDS = { "botDevs": [""], "botWhite": [""] }
             this.error = true
             this.props.description = "Failed to get UserIDs list."
             return
@@ -62,7 +64,7 @@ module.exports = class BotDevCommand extends VillainsCommand {
     /**
      * Get USERIDS
      *
-     * @returns {Array.<string>} - List of saved userids
+     * @returns {Object.<[x:string], Array.<string>>} - List of saved userids
      */
     get USERIDS() {
         return this.#USERIDS
@@ -70,7 +72,7 @@ module.exports = class BotDevCommand extends VillainsCommand {
     /**
      * Set USERIDS
      *
-     * @param {Array.<string>} USERIDS - List of userids to set
+     * @param {Object.<[x:string], Array.<string>>} USERIDS - List of userids to set
      */
     set USERIDS(USERIDS) {
         this.#USERIDS = USERIDS
@@ -80,6 +82,7 @@ module.exports = class BotDevCommand extends VillainsCommand {
         // Bail if not valid UserID
         if(this.USERIDS.indexOf(message.author.id) == -1) {
             this.error = true
+            // @ts-ignore
             this.props.description = this.errors.botDevOnly.join("\n")
             return
         } else {

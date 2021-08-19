@@ -1,3 +1,5 @@
+// @ts-check
+
 const VillainsCommand = require('./vcommand.class');
 
 const fs = require('fs');
@@ -80,7 +82,7 @@ module.exports = class GameCommand extends VillainsCommand {
     /**
      * Standardize DB keys for MongoDB management
      * @param {string} extension Extension type to load
-     * @returns {Array.<string>} Extension data
+     * @returns {Promise.<Array.<string>>} Extension data
      */
     async db_key(extension) {
         let key = extension + "Model"
@@ -98,7 +100,7 @@ module.exports = class GameCommand extends VillainsCommand {
      * Standardize query for MongoDB management
      * @param {string} userID UserID
      * @param {string} model Model Type
-     * @returns {*} Query result
+     * @returns {Promise<*>} Query result
      */
     async db_query(userID, model) {
         let pieces = await this.db_key(model)
@@ -119,12 +121,12 @@ module.exports = class GameCommand extends VillainsCommand {
     //FIXME: Inventory Model doesn't get modified at all ???
     /**
      * Standardize transform command for MongoDB management
-     * @param {string} userID UserID
-     * @param {string} type Transform type
-     * @param {number} amount Transform amount
-     * @returns {*} True if level-up
+     * @param {string}                                              userID  UserID
+     * @param {(Object | Array | string)} type    Transform type
+     * @param {(Object | Array | number)}    amount  Transform amount
+     * @returns {Promise<*>} True if level-up
      */
-    async db_transform(userID, type, amount) {
+    async db_transform(userID, type, amount = 0) {
         let amounts = {}
         let method = "$inc"
         if (typeof type === "object") {

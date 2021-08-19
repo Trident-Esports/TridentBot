@@ -1,3 +1,5 @@
+// @ts-check
+
 const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('../embed/vembed.class');
 
@@ -10,7 +12,7 @@ const VillainsEmbed = require('../embed/vembed.class');
  */
 module.exports = class QuestionnaireCommand extends VillainsCommand {
     /**
-     * @type {Object.<string, string>} List of emojis for use in Game Commands
+     * @type {Array.<string>} List of emojis for use in Game Commands
      * @private
      */
     #emojis;
@@ -37,7 +39,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
     /**
      * Get emojis
      *
-     * @returns {Object.<string, string>} List of emoji shortcuts
+     * @returns {Array.<string>} List of emoji shortcuts
      */
     get emojis() {
         return this.#emojis;
@@ -45,7 +47,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
     /**
      * Set emojis
      *
-     * @param {Object.<string, string>} emojis List of emoji shortcuts to set
+     * @param {Array.<string>} emojis List of emoji shortcuts to set
      */
     set emojis(emojis) {
         this.#emojis = emojis

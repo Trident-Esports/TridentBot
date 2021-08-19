@@ -39,7 +39,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
 
     /**
      * Constructor
-     * @param {EmbedProps} props Local list of command properties
+     * @param {(EmbedProps | Object.<any>)} props Local list of command properties
      */
     constructor(props = {}) {
         if (

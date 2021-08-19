@@ -1,3 +1,4 @@
+// @ts-check
 
 const GameCommand = require('./gamecommand.class');
 
@@ -44,12 +45,14 @@ module.exports = class ShopCommand extends GameCommand {
         // Bail if we failed to get inventory data
         if (!inventoryData) {
             this.error = true
+            // @ts-ignore
             this.props.description = this.errors.game.mongoDB.noInventory.join("\n")
             return
         }
         // Bail if we failed to get profile data
         if (!profileData) {
             this.error = true
+            // @ts-ignore
             this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
             return
         }
@@ -172,7 +175,7 @@ module.exports = class ShopCommand extends GameCommand {
         if (item) {
             if (["Buy"].includes(this.props.caption.text)) {
                 // Buy
-                let cost = parseInt(item.value) * parseInt(quantity)
+                let cost = parseInt(item.value) * quantity
 
                 // Bail if we can't afford it
                 if (gold < cost) {

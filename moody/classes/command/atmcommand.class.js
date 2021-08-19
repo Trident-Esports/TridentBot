@@ -1,3 +1,5 @@
+// @ts-check
+
 const GameCommand = require('./gamecommand.class');
 
 const fs = require('fs');
@@ -79,6 +81,7 @@ module.exports = class ATMCommand extends GameCommand {
             // Bail if member doesn't have Approved Roles
             if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
                 this.error = true
+                // @ts-ignore
                 this.props.description = this.errors.adminOnly.join("\n")
                 return
             }
@@ -103,6 +106,7 @@ module.exports = class ATMCommand extends GameCommand {
         // Bail if can't get user data
         if (!profileData) {
             this.error = true
+            // @ts-ignore
             this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
             return
         }
@@ -126,13 +130,14 @@ module.exports = class ATMCommand extends GameCommand {
                 // Bail if can't get target data
                 if (!targetData) {
                     this.error = true
+                    // @ts-ignore
                     this.props.description = this.errors.game.mongoDB.noProfile.join("\n")
                     return
                 }
             } else {
                 // Bail if no target sent
                 this.error = true
-                this.props.description = `You need to specify a player to ${props.caption.text} Gold.`
+                this.props.description = `You need to specify a player to ${this.props.caption.text} Gold.`
                 return
             }
         }
@@ -154,18 +159,18 @@ module.exports = class ATMCommand extends GameCommand {
 
         // Calculate proper amount
         if (amount == 'all') {
-            amount = parseInt(reserve)
+            amount = reserve
         } else if (amount == 'half') {
-            amount = parseInt(reserve / 2)
+            amount = reserve / 2
         } else {
             amount = parseInt(amount)
         }
         // Deposit/Give/Withdraw: Can't transfer more than you've got
         // Bail if not enough gold
         if (["Deposit","Give","Withdraw"].includes(this.props.caption.text)) {
-            if (parseInt(amount) > parseInt(reserve)) {
+            if (parseInt(amount) > reserve) {
                 this.error = true
-                this.props.description = `You only have ${this.emojis.gold}${parseInt(reserve).toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
+                this.props.description = `You only have ${this.emojis.gold}${reserve.toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
                 return
             }
         }

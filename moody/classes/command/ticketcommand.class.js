@@ -1,3 +1,5 @@
+// @ts-check
+
 const VillainsCommand = require('./vcommand.class');
 
 /**
@@ -9,7 +11,7 @@ const VillainsCommand = require('./vcommand.class');
  */
 module.exports = class TicketCommand extends VillainsCommand {
     /**
-     * @type {Object.<string, string>} List of emojis for use in Game Commands
+     * @type {Array.<string>} List of emojis for use in Game Commands
      * @private
      */
     #emojis;
@@ -34,7 +36,7 @@ module.exports = class TicketCommand extends VillainsCommand {
     /**
      * Get emojis
      *
-     * @returns {Object.<string, string>} List of emoji shortcuts
+     * @returns {Array.<string>} List of emoji shortcuts
      */
     get emojis() {
         return this.#emojis;
@@ -42,7 +44,7 @@ module.exports = class TicketCommand extends VillainsCommand {
     /**
      * Set emojis
      *
-     * @param {Object.<string, string>} emojis List of emoji shortcuts to set
+     * @param {Array.<string>} emojis List of emoji shortcuts to set
      */
     set emojis(emojis) {
         this.#emojis = emojis
@@ -75,7 +77,7 @@ module.exports = class TicketCommand extends VillainsCommand {
         const reactionMessage = await channel.send("Thank you for contacting support!")
 
         try {
-            for (let emoji of this.emoji) {
+            for (let emoji of this.emojis) {
                 await reactionMessage.react(emoji)
             }
         } catch (err) {
@@ -97,12 +99,12 @@ module.exports = class TicketCommand extends VillainsCommand {
         collector.on("collect", (reaction, user) => {
             switch (reaction.emoji.name) {
                 // Lock channel
-                case this.emoji[0]:
+                case this.emojis[0]:
                     channel.send("Locking channel!");
                     channel.updateOverwrite(message.author, { SEND_MESSAGE: false });
                     break;
                 // Delete channel
-                case this.emoji[1]:
+                case this.emojis[1]:
                     channel.send("Deleting this channel in 5 seconds!");
                     setTimeout(() => channel.delete(), 5000);
                     break;
