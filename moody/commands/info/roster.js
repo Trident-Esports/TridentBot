@@ -3,6 +3,29 @@ const fs = require('fs');
 const TeamListingCommand = require('../../classes/teamlistingcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 
+function walk(dir, filext = ".json") {
+    let results = [];
+    if (fs.existsSync(dir)) {
+        let list = fs.readdirSync(dir);
+        list.forEach(function (file) {
+            file = dir + '/' + file;
+            let stat = fs.statSync(file);
+            if (stat && stat.isDirectory()) {
+                /* Recurse into a subdirectory */
+                results = results.concat(walk(file));
+            } else {
+                /* Is a JSON file */
+                if (file.endsWith(".json")) {
+                    results.push(file);
+                }
+            }
+        });
+    } else {
+        console.log(`FS Walk: '${dir}' doesn't exist!`);
+    }
+    return results;
+}
+
 module.exports = class RosterCommand extends TeamListingCommand {
     constructor() {
         super(
@@ -46,11 +69,11 @@ module.exports = class RosterCommand extends TeamListingCommand {
                 profiles.push(filepath)
             } else {
                 // show game
-                profiles = this.walk(filepath)
+                profiles = walk(filepath)
             }
         } else {
             // show all
-            profiles = this.walk(filepath)
+            profiles = walk(filepath)
         }
 
         let pages = []
