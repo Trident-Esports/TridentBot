@@ -45,12 +45,18 @@ module.exports = class RosterCommand extends VillainsCommand {
         }
 
         if (gameID != "") {
-            if (gameID.startsWith("val")) {
-                // val
-                gameID = "val"
+            if (gameID.startsWith("cs")) {
+                // cs -> csgo
+                gameID = "csgo"
+            } else if (gameID.startsWith("r6")) {
+                // r6 -> r6s
+                gameID = "r6s"
             } else if (gameID == "rl") {
                 // rl -> rocketleague
                 gameID = "rocketleague"
+            } else if (gameID.startsWith("val")) {
+                // valorant -> val
+                gameID = "val"
             }
             filepath += '/' + gameID
             if (teamType != "") {
