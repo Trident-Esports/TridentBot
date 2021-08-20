@@ -6,22 +6,27 @@ const dasu = require('dasu');
 
 function walk(dir) {
     let results = [];
-    let list = fs.readdirSync(dir);
-    list.forEach(function (file) {
-        file = dir + '/' + file;
-        let stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) {
-            /* Recurse into a subdirectory */
-            results = results.concat(walk(file));
-        } else {
-            /* Is a JSON file */
-            if (file.endsWith(".json")) {
-                results.push(file);
+    if (fs.existsSync(dir)) {
+        let list = fs.readdirSync(dir);
+        list.forEach(function (file) {
+            file = dir + '/' + file;
+            let stat = fs.statSync(file);
+            if (stat && stat.isDirectory()) {
+                /* Recurse into a subdirectory */
+                results = results.concat(walk(file));
+            } else {
+                /* Is a JSON file */
+                if (file.endsWith(".json")) {
+                    results.push(file);
+                }
             }
-        }
-    });
+        });
+    } else {
+        console.log(`FS Walk: '${dir}' doesn't exist!`);
+    }
     return results;
 }
+
 module.exports = class MatchesCommand extends VillainsCommand {
     constructor() {
         super(
