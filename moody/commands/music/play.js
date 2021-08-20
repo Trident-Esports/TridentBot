@@ -234,7 +234,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 try {
                     const songInfo = await ytdl.getInfo(inputURL);
                     song = {
-                        title: songInfo.videoDetails.title,
+                        title: await this.sanitizeMarkdown(songInfo.videoDetails.title),
                         url: songInfo.videoDetails.video_url,
                         user: user
                     };
@@ -250,6 +250,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                         inputURL = inputURL.slice(0,inputURL.indexOf('&'))
                     }
                     const playlistInfo = await ytpl(inputURL);
+                    playlistInfo.title = await this.sanitizeMarkdown(playlistInfo.title)
 
                     this.props.description = `Playlist **${playlistInfo.title}** added to queue by` + ` [*<@${message.author.id}>*] `
                     await this.send(message, new VillainsEmbed({...this.props}));
@@ -369,7 +370,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                         // If we got something, package it
                         if (video) {
                             song = {
-                                title: video.title,
+                                title: await this.sanitizeMarkdown(video.title),
                                 url: video.url,
                                 user: user
                             };
@@ -401,14 +402,13 @@ module.exports = class PlayCommand extends VillainsCommand {
 
                 if (video) {
                     song = {
-                        title: video.title,
+                        title: await this.sanitizeMarkdown(video.title),
                         url: video.url,
                         user: user
                     };
                 } else {
                     this.error = true
                     this.props.description = "Error finding song."
-                    return
                 }
             }
 

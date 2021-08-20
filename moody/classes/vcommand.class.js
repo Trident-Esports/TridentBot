@@ -203,6 +203,11 @@ module.exports = class VillainsCommand extends BaseCommand {
         return channel
     }
 
+    async sanitizeMarkdown(input) {
+        let output = input.replace(/[\*\_\~\`]/g, '\\$&')
+        return output
+    }
+
     async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
         let foundHandles = { players: {}, invalid: false, flags: flags }
 
