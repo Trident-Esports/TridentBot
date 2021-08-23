@@ -1,4 +1,3 @@
-const fs = require('fs');
 const TeamListingCommand = require('../../classes/teamlistingcommand.class');
 
 module.exports = class MatchCommand extends TeamListingCommand {
