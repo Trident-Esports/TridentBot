@@ -1,0 +1,26 @@
+{
+  "stripe": "default",
+  "title": "CSGO Challenger Roster",
+  "aliases": ["cscr"],
+  "url": "https://letsplay.live/team/255677",
+  "team": {
+    "teamID": "255677",
+    "lpl": {
+      "teamID": "255677",
+      "#note": "NYI"
+    }
+  },
+  "members": {
+    "main": {
+      "title": "Main",
+      "users": [
+        "tex",
+        "zorbot",
+        "jtr",
+        "rackem",
+        "xternalz",
+        "mysterio"
+      ]
+    }
+  }
+}

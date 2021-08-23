@@ -105,7 +105,7 @@ module.exports = class RosterCommand extends VillainsCommand {
                 props.caption.url = profile.url
             }
             if (profile?.team?.teamID) {
-                let url = "http://villainsoce.mymm1.com/"
+                let url = "http://tridentoce.mymm1.com/"
                 let name = "LPL Team #"
                 if(profile?.team?.tourneyID) {
                     url += "tourney/" + profile.team.tourneyID + '/'
