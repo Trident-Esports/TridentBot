@@ -2,7 +2,6 @@
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
-let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 
 module.exports = class BotInviteCommand extends VillainsCommand {
     constructor() {
@@ -20,6 +19,8 @@ module.exports = class BotInviteCommand extends VillainsCommand {
     }
 
     async action(client, message) {
+        let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+
         let url = ""
         if(
           defaults?.bot?.clientID &&

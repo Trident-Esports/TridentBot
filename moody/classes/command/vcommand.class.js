@@ -151,8 +151,15 @@ module.exports = class VillainsCommand extends BaseCommand {
             this.null = true
         }
 
-        const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
-        const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+        let GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        const defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+        GLOBALS = (
+            GLOBALS?.profile &&
+            GLOBALS?.profiles &&
+            GLOBALS.profile in GLOBALS.profiles
+        ) ?
+            GLOBALS.profiles[GLOBALS.profile]:
+            defaults
 
         /**
          * Development Mode?
@@ -164,7 +171,7 @@ module.exports = class VillainsCommand extends BaseCommand {
          * Command prefix
          * @type {string}
          */
-        this.prefix = DEFAULTS.prefix
+        this.prefix = defaults.prefix
 
         /**
          * List of pages of Embeds
@@ -194,7 +201,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             return
         }
         // Bail if we fail to get bot default information
-        if (!DEFAULTS) {
+        if (!defaults) {
             this.error = true
             this.props.description = "Failed to get bot default information."
             return

@@ -25,11 +25,10 @@ const Levels = require('discord-xp') // Discord Game XP
 
 //Login Tokens
 const fs = require('fs');
-let SENSITIVE = JSON.parse(fs.readFileSync("SENSITIVE.json", "utf8"));
+let SENSITIVE = JSON.parse(fs.readFileSync("./SENSITIVE.json", "utf8"));
 
 const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"));
-
-const prefix = DEFAULTS.prefix // Default prefix
+const prefix = DEFAULTS?.prefix ? DEFAULTS.prefix : "." // Default prefix
 
 try {
     // @ts-ignore

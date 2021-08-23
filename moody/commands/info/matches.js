@@ -129,8 +129,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
             }
         }
 
-        let emojiIDs = JSON.parse(fs.readFileSync("dbs/emojis.json","utf8"))
-        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json","utf8"))
+        let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 
         let pages = []
 

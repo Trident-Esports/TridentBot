@@ -73,6 +73,14 @@ module.exports = class VillainsEmbed extends MessageEmbed {
              * @type {Object.<string, any>}
              */
             this.GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+            const defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+            this.GLOBALS = (
+                this.GLOBALS?.profile &&
+                this.GLOBALS?.profiles &&
+                this.GLOBALS.profile in this.GLOBALS.profiles
+            ) ?
+                this.GLOBALS.profiles[this.GLOBALS.profile]:
+                defaults
         } catch(err) {
             console.log("VEmbed: PROFILE manifest not found!")
             process.exit(1)

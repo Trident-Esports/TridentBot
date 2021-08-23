@@ -52,7 +52,7 @@ module.exports = class GameCommand extends VillainsCommand {
          * @type {Object.<string, string>} List of emojis for use in Game Commands
          * @public
          */
-        this.emojis = JSON.parse(fs.readFileSync("game/dbs/emojis.json", "utf8"));
+        this.emojis = JSON.parse(fs.readFileSync("./game/dbs/emojis.json", "utf8"));
 
         // Bail if we fail to get game emojis data
         if (!(this.emojis)) {

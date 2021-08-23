@@ -2,7 +2,6 @@
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
-let GLOBALS = JSON.parse(fs.readFileSync("PROFILE.json", "utf8"))
 
 module.exports = class DiscordInviteCommand extends VillainsCommand {
     constructor() {
@@ -20,6 +19,15 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
     }
 
     async action(client, message) {
+        let GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        const defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+        GLOBALS = (
+            GLOBALS?.profile &&
+            GLOBALS?.profiles &&
+            GLOBALS.profile in GLOBALS.profiles
+        ) ?
+            GLOBALS.profiles[GLOBALS.profile]:
+            defaults
         let url = ""
         if(GLOBALS?.discord?.invites?.home?.code) {
             url += "https://discord.gg/"

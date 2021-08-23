@@ -25,8 +25,6 @@ let walk = function (dir) {
     return results;
 }
 
-let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json", "utf8"))
-
 module.exports = (client, message, args) => {
     let dir = "./rosters"
     const rosters_profiles = walk(dir)

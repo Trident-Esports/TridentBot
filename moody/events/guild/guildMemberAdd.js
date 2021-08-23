@@ -18,7 +18,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
         const channel = await this.getChannel(member, "welcome")
 
         // Message Channels
-        let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+        let ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
         // Add Minion Role
         let welcomeRole = ROLES.member;
         welcomeRole = member.guild.roles.cache.find(role => role.name === welcomeRole);

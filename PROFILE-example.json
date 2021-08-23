@@ -1,9 +1,14 @@
 {
-    "DEV": true,
-    "name": "Villain",
-    "stripe": "#B217EE",
-    "footer": {
-        "image": "https://raw.githubusercontent.com/BlackyChan1800/VillainsBot/a68df5fe1f1d5cb601b1f3a5fc171a327622148b/images/avatars/villains.gif",
-        "msg": "This bot is being Tested by Villain"
+    "profile": "villain",
+    "profiles": {
+        "villain": {
+            "DEV": true,
+            "name": "Villain",
+            "stripe": "#B217EE",
+            "footer": {
+                "image": "https://raw.githubusercontent.com/BlackyChan1800/VillainsBot/a68df5fe1f1d5cb601b1f3a5fc171a327622148b/images/avatars/villains.gif",
+                "msg": "This bot is being Tested by Villain"
+            }
+        }
     }
 }

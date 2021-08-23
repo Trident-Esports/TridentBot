@@ -58,7 +58,7 @@ module.exports = class ShopCommand extends GameCommand {
         }
 
         // Get shop stock information
-        let STOCKDATA = JSON.parse(fs.readFileSync("game/dbs/items.json", "utf8"))
+        let STOCKDATA = JSON.parse(fs.readFileSync("./game/dbs/items.json", "utf8"))
 
         // Bail if we fail to get shop item stock information
         if (!STOCKDATA) {

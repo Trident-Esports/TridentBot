@@ -18,9 +18,8 @@ function formatUnicorn(str, args) {
 };
 
 module.exports = async (Discord, client, message) => {
-
-    const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
-    const prefix = DEFAULTS.prefix; // Default Prefix
+    const defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+    const prefix = defaults?.prefix ? defaults.prefix : "." // Default prefix
 
     //FIXME: Obsolete?
     if (message.author.bot) {
