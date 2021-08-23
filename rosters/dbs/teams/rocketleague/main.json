@@ -7,15 +7,13 @@
   "members": {
     "coach": {
       "title": "Coach",
-      "users": [
-        "enigma"
-      ]
+      "users": []
     },
     "main": {
       "title": "Main",
       "users": [
-        "aimz",
         "gus",
+        "rotor",
         "scarth"
       ]
     },

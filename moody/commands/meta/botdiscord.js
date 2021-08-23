@@ -1,7 +1,6 @@
 const VillainsCommand = require('../../classes/vcommand.class');
 
 const fs = require('fs');
-let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 
 module.exports = class BotDiscordInviteCommand extends VillainsCommand {
     constructor() {
@@ -15,19 +14,29 @@ module.exports = class BotDiscordInviteCommand extends VillainsCommand {
                 text: "Bot Discord"
             }
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 
     async action(client, message) {
         let url = ""
+        let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+
+        if (!defaults) {
+            this.error = true
+            this.props.description = "Failed to get bot defaults information."
+            return
+        }
+
         if(defaults?.discord?.invites?.bot?.code) {
-            url += "https://discord.gg/"
-            url += defaults.discord.invites.bot.code
+            url += `https://discord.gg/${defaults.discord.invites.bot.code}`
             this.props.description = `***[Join VillainsBot's Discord!](${url} '${url}')***`
-            // message.channel.send(url)
         } else {
             this.error = true
             this.props.description = "No invite code found in defaults."
+            return
         }
     }
 }

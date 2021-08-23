@@ -4,7 +4,15 @@
   "aliases": ["vcr"],
   "url": "https://discord.com/channels/788021898146742292/788558005917450251/813235908031676436",
   "team": {
-    "teamID": "262205"
+    "teamID": "262205",
+    "lpl": {
+      "teamID": "262205",
+      "#note": "NYI"
+    },
+    "vlr.gg": {
+      "teamID": "4693",
+      "#note": "NYI"
+    }
   },
   "league": {
     "game": "valorant",

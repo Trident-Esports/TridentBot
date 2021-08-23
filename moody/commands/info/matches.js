@@ -1,18 +1,43 @@
-const fs = require('fs');
-const dasu = require('dasu');
 const TeamListingCommand = require('../../classes/teamlistingcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const fs = require('fs');
+
+function walk(dir, filext = ".json") {
+    let results = [];
+    if (fs.existsSync(dir)) {
+        let list = fs.readdirSync(dir);
+        list.forEach(function (file) {
+            file = dir + '/' + file;
+            let stat = fs.statSync(file);
+            if (stat && stat.isDirectory()) {
+                /* Recurse into a subdirectory */
+                results = results.concat(walk(file));
+            } else {
+                /* Is a JSON file */
+                if (file.endsWith(".json")) {
+                    results.push(file);
+                }
+            }
+        });
+    } else {
+        console.log(`FS Walk: '${dir}' doesn't exist!`);
+    }
+    return results;
+}
 
 module.exports = class MatchesCommand extends TeamListingCommand {
     constructor() {
-        super({
-            name: "matches",
-            category: "information",
-            description: "Call match listings"
-        })
+        super(
+            {
+                name: "matches",
+                aliases: [ "match" ],
+                category: "information",
+                description: "Call match listings"
+            }
+        )
     }
 
-    async run(client, message, args) {
+    async action(client, message, cmd) {
+        let args = this.inputData.args;
         let profile = {
             "team": {}
         }
@@ -63,48 +88,56 @@ module.exports = class MatchesCommand extends TeamListingCommand {
                         // invalid span
                         // return all spans for teamID
                         validSpan = false
+                        if (cmd == "match") {
+                            handlerpath = "/match/"
+                            profiles[""] = [ handlerpath + filepath + ".json" ]
+                            validSpan = true
+                        }
                     }
                     if (!validSpan) {
                         for (let span of [ "all", "complete", "incomplete", "next" ]) {
                             profiles[span] = [ handlerpath + filepath + '-' + span + ".json" ]
                         }
                     }
-                } else {  // first arg is text
-                    if (["all","complete","completed","incomplete","next"].includes(args[0].toLowerCase())) {
-                        // this is a valid span
-                        // return all rosters for span
-                        let span = args[0].toLowerCase()
-                        if (span == "completed") {
-                            span = "complete"
+                } else if (["all","complete","completed","incomplete","next"].includes(args[0].toLowerCase())) {
+                    // first arg is text
+                    // this is a valid span
+                    // return all rosters for span
+                    let span = args[0].toLowerCase()
+                    if (span == "completed") {
+                        span = "complete"
+                    }
+                    if (!profiles[span]) {
+                        profiles[span] = []
+                    }
+                    let locPath = "./rosters/dbs/teams"
+                    let files = walk(locPath)
+                    for (let file of files) {
+                        let fData = JSON.parse(fs.readFileSync(file, "utf8"))
+                        let tourneyID = 0
+                        let teamID = 0
+                        if (fData?.team?.tourneyID) {
+                            tourneyID = fData.team.tourneyID
                         }
-                        if (!profiles[span]) {
-                            profiles[span] = []
+                        if (fData?.team?.lpl?.tourneyID) {
+                            tourneyID = fData.team.lpl.tourneyID
                         }
-                        let locPath = "./rosters/dbs/teams"
-                        let files = this.walk(locPath)
-                        for (let file of files) {
-                            let fData = JSON.parse(fs.readFileSync(file, "utf8"))
-                            if (fData?.team?.teamID) {
-                                let handlerpath = "/team/"
-                                let filepath = fData.team.teamID
-                                if (fData?.team?.tourneyID) {
-                                    handlerpath = "/tourney/"
-                                    filepath = fData.team.tourneyID + '/' + filepath
-                                }
-                                profiles[span].push(
-                                    handlerpath + filepath + '-' + span + ".json"
-                                )
+                        if (fData?.team?.teamID) {
+                            teamID = fData.team.teamID
+                        }
+                        if (fData?.team?.lpl?.teamID) {
+                            teamID = fData.team.lpl.teamID
+                        }
+                        if (teamID > 0) {
+                            let handlerpath = "/team/"
+                            let filepath = fData.team.teamID
+                            if (tourneyID > 0) {
+                                handlerpath = "/tourney/"
+                                filepath = fData.team.tourneyID + '/' + filepath
                             }
                         }
                     }
                 }
-            } else {
-                // something got stuffed up
-                let msg = `${message.author}, the correct usage is:` + "\n"
-                msg += "`" + this.prefix + "matches [all|incomplete|complete|next]`" + "\n"
-                msg += "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                msg += "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`" + "\n"
-                return message.channel.send(msg)
             }
         }
 
@@ -135,6 +168,20 @@ module.exports = class MatchesCommand extends TeamListingCommand {
                 pages.push(embed)
             }
         }
-        super.send(message, pages, [], "", true)
+
+        if (pages.length) {
+            await this.send(message, pages, [], "", true)
+            this.null = true
+        } else {
+            // something got stuffed up
+            this.error = true
+            this.props.description = [
+                `${message.author}, the correct usage is:`,
+                "`" + this.prefix + "matches [all|incomplete|complete|next]`",
+                "`" + this.prefix + "matches <LPL teamID> [all|incomplete|complete|next]`",
+                "`" + this.prefix + "matches <LPL tourneyID> <LPL teamID> [all|incomplete|complete|next]`"
+            ].join("\n")
+            return
+        }
     }
 }

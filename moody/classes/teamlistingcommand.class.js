@@ -10,31 +10,11 @@ BaseCommand
 const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('./vembed.class');
 const dasu = require('dasu');
-const fs = require('fs');
 
 module.exports = class TeamListingCommand extends VillainsCommand {
     constructor(...args) {
         // Create a parent object
         super(...args)
-    }
-
-    async walk(dir, filext = ".json") {
-        let results = [];
-        let list = fs.readdirSync(dir);
-        list.forEach(function (file) {
-            file = dir + '/' + file;
-            let stat = fs.statSync(file);
-            if (stat && stat.isDirectory()) {
-                /* Recurse into a subdirectory */
-                results = results.concat(walk(file));
-            } else {
-                /* Is a JSON file */
-                if (file.endsWith(filext)) {
-                    results.push(file);
-                }
-            }
-        });
-        return results;
     }
 
     async makeReq(emojis, props, params) {
@@ -191,7 +171,7 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                 }
             } catch(e) {
                 console.log(e)
-                // console.log(`Malformed JSON:${url}`)
+                // console.log(`Malformed JSON: ${params[2]}`)
             }
         });
         return embed

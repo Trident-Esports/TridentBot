@@ -9,7 +9,6 @@
       }
   },
   "bot": {
-      "clientID": "828317713256415252",
       "scope": "bot",
       "permissions": "8589934591"
   },

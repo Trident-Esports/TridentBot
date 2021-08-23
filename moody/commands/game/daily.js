@@ -8,27 +8,27 @@ module.exports = class DailyCommand extends GameCommand {
             description: 'Gain some Gold',
             extensions: [ "profile" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
+        // Get loaded target
         const loaded = this.inputData.loaded
 
-        if (!(this.error)) {
+        // Gold Reward: 30000 - 30000
+        let [minReward, maxReward] = [30000, 30000]
+        const randomNumber = Math.floor(Math.random() * (maxReward - minReward)) + minReward;
 
-            // Gold Reward: 30000 - 30000
-            let [minReward, maxReward] = [30000, 30000]
-            const randomNumber = Math.floor(Math.random() * (maxReward - minReward)) + minReward;
+        await this.db_transform(loaded.id, "gold", randomNumber)
 
-            await this.db_transform(loaded.id, "gold", randomNumber)
-
-            this.props.description = `*<@${loaded.id}> has checked into the Lair for the Day and received...*`
-            this.props.fields = [
-                {
-                    name: `${this.emojis.gold}${randomNumber.toLocaleString("en-AU")}`,
-                    value: "Gold"
-                }
-            ]
-        }
+        this.props.description = `*<@${loaded.id}> has checked into the Lair for the Day and received...*`
+        this.props.fields = [
+            {
+                name: `${this.emojis.gold}${randomNumber.toLocaleString("en-AU")}`,
+                value: "Gold"
+            }
+        ]
     }
 }

@@ -23,6 +23,12 @@
               "noongar1800"
           ]
       },
+      "csgo": {
+          "title": "Counter-Strike: Global Offensive",
+          "users": [
+              "harryhaz1"
+          ]
+      },
       "r6s": {
           "title": "Rainbow Six Seige",
           "users": [
@@ -37,6 +43,7 @@
           "title": "VALORANT",
           "users": [
               "guessmonster",
+              "monka",
               "queen"
           ]
       }

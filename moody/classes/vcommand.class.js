@@ -15,12 +15,11 @@ TODO:
  Roster
 
 */
-
 const { BaseCommand } = require('a-djs-handler');
 const VillainsEmbed = require('../classes/vembed.class');
 const SlimEmbed = require('../classes/vslimbed.class');
-const pagination = require('discord.js-pagination');
 
+const pagination = require('discord.js-pagination');
 const fs = require('fs');
 
 module.exports = class VillainsCommand extends BaseCommand {
@@ -34,7 +33,9 @@ module.exports = class VillainsCommand extends BaseCommand {
     #inputData; // Private: Command Inputs
 
     constructor(comprops = {}, props = {}) {
-        super(comprops)
+        super(
+            {...comprops}
+        )
 
         this.props = {...props}
 
@@ -77,7 +78,13 @@ module.exports = class VillainsCommand extends BaseCommand {
             this.null = true
         }
 
-        const GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        let GLOBALS = null
+        try {
+            GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        } catch(err) {
+            console.log("VCommand: PROFILE manifest not found!")
+            process.exit(1)
+        }
         const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
         this.DEV = GLOBALS.DEV
         this.prefix = DEFAULTS.prefix
@@ -85,6 +92,31 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.error = false
         this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
         this.inputData = {}
+
+        // Bail if we fail to get server profile information
+        if (!GLOBALS) {
+            this.error = true
+            this.props.description = "Failed to get server profile information."
+            return
+        }
+        // Bail if we fail to get bot default information
+        if (!DEFAULTS) {
+            this.error = true
+            this.props.description = "Failed to get bot default information."
+            return
+        }
+        // Bail if we fail to get command prefix
+        if (!this.prefix) {
+            this.error = true
+            this.props.description = "Failed to get command prefix."
+            return
+        }
+        // Bail if we fail to get error message information
+        if (!(this.errors)) {
+            this.error = true
+            this.props.description = "Failed to get error message information."
+            return
+        }
     }
 
     get DEV() {
@@ -141,6 +173,39 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
     set inputData(inputData) {
         this.#inputData = inputData
+    }
+
+    async getChannel(message, channelType) {
+        // Get botdev-defined list of channelIDs/channelNames
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelID = this.channelName
+        let channel = null
+
+        if (channelIDs) {
+            // Get channel IDs for this guild
+            if (Object.keys(channelIDs).includes(message.guild.id)) {
+                // If the channel type exists
+                if (Object.keys(channelIDs[message.guild.id]).includes(channelType)) {
+                    // Get the ID
+                    channelID = channelIDs[message.guild.id][channelType]
+                }
+            }
+        }
+
+        // If the ID is not a number, search for a named channel
+        if (isNaN(channelID)) {
+            channel = message.guild.channels.cache.find(c => c.name === channelID);
+        } else {
+            // Else, search for a numbered channel
+            channel = message.guild.channels.cache.find(c => c.id === channelID);
+        }
+
+        return channel
+    }
+
+    async sanitizeMarkdown(input) {
+        let output = input.replace(/[\*\_\~\`]/g, '\\$&')
+        return output
     }
 
     async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
@@ -212,6 +277,16 @@ module.exports = class VillainsCommand extends BaseCommand {
             // If Bot has been specified as a Valid source
             // Get Bot whitelist
             let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json","utf8"))
+            // Bail if we fail to get UserIDs list
+            if (!USERIDS) {
+                this.error = true
+                this.props.description = "Failed to get UserIDs list."
+                return
+            }
+            // Fake an empty Bot Whitelist
+            if (!(USERIDS?.botWhite)) {
+                USERIDS["botWhite"] = []
+            }
             if (["default","required","optional"].includes(this.flags.bot)) {
                 // Do... something?
             } else if (loaded?.bot && loaded.bot && (USERIDS?.botWhite.indexOf(loaded.id) == -1)) {
@@ -364,10 +439,13 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     async run(client, message, args, cmd) {
+        // Process arguments
         await this.processArgs(message, args, this.flags)
 
+        // Build the thing
         await this.build(client, message, cmd)
 
+        // If we have an error, make it errortastic
         if (this.error) {
             if (this.props?.title) {
                 this.props.title.text = "Error"
@@ -376,14 +454,18 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
         }
 
+        // If we just got an embed, let's check to see if it's a full page or slim page
+        // Toss it in pages as a single page
         if(this.pages.length == 0) {
             if(this.props?.full && this.props.full) {
-                this.pages.push(new VillainsEmbed(this.props))
+                this.pages.push(new VillainsEmbed({...this.props}))
             } else {
-                this.pages.push(new SlimEmbed(this.props))
+                this.pages.push(new SlimEmbed({...this.props}))
             }
         }
 
+        // this.null is to be set if we've already sent the page(s) somewhere else
+        // Not setting this.null after sending the page(s) will send the page(s) again
         if ((!(this?.null)) || (this?.null && (!(this.null)))) {
             await this.send(message, this.pages)
         }

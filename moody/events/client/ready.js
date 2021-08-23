@@ -7,7 +7,13 @@ module.exports = class ReadyEvent extends BaseEvent {
     }
 
     async run(handler) {
-        let GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json","utf8"))
+        let GLOBALS = null
+        try {
+            GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+        } catch(err) {
+            console.log("Ready Event: PROFILE manifest not found!")
+            process.exit(1)
+        }
         let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
         let DEV = GLOBALS.DEV
 
