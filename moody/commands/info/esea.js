@@ -99,7 +99,7 @@ module.exports = class ESEACommand extends VillainsCommand {
             }
         }
 
-        let matchData = { overall: { ct: 0, t: 0 } }
+        let matchData = { overall: { ct: 0, t: 0, win: 0, loss: 0, tie: 0 } }
         let matchID = "NaN"
         let match = {}
         for(let record of cellData) {
@@ -150,12 +150,15 @@ module.exports = class ESEACommand extends VillainsCommand {
                         if((parseInt(match.us.score) > parseInt(match.them.score)) || (match.us.score == "W")) {
                             match.winner = match.us.name
                             match.result = "🟩"
+                            matchData.overall.win++
                         } else if((parseInt(match.us.score) < parseInt(match.them.score)) || (match.them.score == "W")) {
                             match.winner = match.them.name
                             match.result = "🟥"
+                            matchData.overall.loss++
                         } else if((parseInt(match.us.score) == parseInt(match.them.score)) || (match.us.score == "T") || (match.them.score == "T")) {
                             match.winner = "tie"
                             match.result = "🟨"
+                            matchData.overall.tie++
                         }
                     }
                     match.timestamp = record[headings.match.indexOf("Timestamp")]
@@ -261,9 +264,32 @@ module.exports = class ESEACommand extends VillainsCommand {
                         name: "T🟧",
                         value: matchData.overall.t,
                         inline: true
+                    },
+                    {
+                        name: "*",
+                        value: "*",
+                        inline: true
                     }
                 )
             }
+            console.log(matchData.overall)
+            this.props.fields.push(
+                {
+                    name: "W🟩",
+                    value: matchData.overall.win + "",
+                    inline: true
+                },
+                {
+                    name: "L🟥",
+                    value: matchData.overall.loss + "",
+                    inline: true
+                },
+                {
+                    name: "T🟨",
+                    value: matchData.overall.tie + "",
+                    inline: true
+                }
+            )
             let embed = new VillainsEmbed({...this.props})
             this.send(message, embed)
             this.null = true
