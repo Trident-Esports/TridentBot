@@ -13,14 +13,13 @@
       },
       "social media": {
           "title": "Social Media",
-          "users": [
-              "hackermans"
-          ]
+          "users": []
       },
       "events":{
           "title": "Events",
           "users": [
-              "noongar1800"
+              "noongar1800",
+              "dazza"
           ]
       },
       "csgo": {
@@ -42,7 +41,6 @@
       "val": {
           "title": "VALORANT",
           "users": [
-              "guessmonster",
               "monka",
               "queen"
           ]
