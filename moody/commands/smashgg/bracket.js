@@ -1,4 +1,5 @@
 const VillainsCommand = require('../../classes/vcommand.class');
+const VillainsEmbed = require('../../classes/vembed.class');
 const { GraphQLClient } = require('graphql-request');
 const fs = require('fs');
 
@@ -47,6 +48,7 @@ module.exports = class SmashGGBracket extends VillainsCommand {
             event(id: ${variables.eventId}) {
               id
               name
+              slug
               standings(query: {
                 page: ${variables.page},
                 perPage: ${variables.perPage}
@@ -79,6 +81,7 @@ module.exports = class SmashGGBracket extends VillainsCommand {
             event(id: ${variables.eventId}) {
               id
               name
+              slug
               sets(
                 page: ${variables.page}
                 perPage: ${variables.perPage}
@@ -151,7 +154,8 @@ module.exports = class SmashGGBracket extends VillainsCommand {
         })
 
         // Get Event ID
-        let data = await this.getTournamentBySlug(GQLClient, "3v3-villains-90-rocket-league-tournament")
+        let tourneySlug = "3v3-villains-90-rocket-league-tournament"
+        let data = await this.getTournamentBySlug(GQLClient, tourneySlug)
         const eventID = data.tournament.events[0].id
 
         // Get Event Standings
@@ -161,6 +165,10 @@ module.exports = class SmashGGBracket extends VillainsCommand {
         let event = {
           id: data.event.id,
           name: data.event.name,
+          slug: {
+            tournament: tourneySlug,
+            event: data.event.slug
+          },
           teams: {},
           sets: {}
         }
@@ -173,34 +181,107 @@ module.exports = class SmashGGBracket extends VillainsCommand {
 
         // Save Set IDs, Teams
         for(let node of data.event.sets.nodes) {
-            if (!((node.id + "").includes("preview_"))) {
-                event.sets[node.id] = {id: node.id}
-                event.sets[node.id]["slots"] = {}
-                event.sets[node.id]["score"] = {}
+            if (node.slots.length > 0) {
+                let setID = node.id
+                let keyID = setID
+                if ((setID + "").includes("preview_")) {
+                    setID = setID.match("preview_([^_]+)")[1]
+                    keyID = keyID.match("preview_(.*)")[1]
+                }
+                event.sets[keyID] = {id: setID, node_id: node.id}
+                event.sets[keyID]["slots"] = {}
+                event.sets[keyID]["score"] = {}
                 for (let slot of node.slots) {
                     if (slot?.id && slot?.entrant?.id) {
-                        event.sets[node.id]["slots"][slot.id.toString()] = slot.entrant.id
+                        let slotID = slot.id
+                        if ((slot.id + "").includes("preview_")) {
+                            slotID = slot.id.match("preview_(.*)")[1]
+                        }
+                        event.sets[keyID]["slots"][slotID] = slot.entrant.id
                     }
                 }
-                let set = await this.getSetStats(GQLClient, node.id)
-                event.sets[node.id]["completedAt"] = set.set.completedAt
-                event.sets[node.id]["startedAt"] = set.set.startedAt
-                event.sets[node.id]["state"] = set.set.state
-                // console.log(JSON.stringify(set,undefined,2))
-                for (let sSlot of set.set.slots) {
-                    if (sSlot?.standing?.stats?.score) {
-                        let teamID = event.sets[node.id]["slots"][sSlot.id]
-                        if (teamID) {
-                            event.sets[node.id]["score"][teamID.toString()] = sSlot.standing.stats.score.value
+                if (Object.keys(event.sets[keyID]["slots"]).length > 0) {
+                    let set = await this.getSetStats(GQLClient, setID)
+                    if (set.set) {
+                        event.sets[keyID]["completedAt"] = set.set.completedAt
+                        event.sets[keyID]["startedAt"] = set.set.startedAt
+                        event.sets[keyID]["state"] = set.set.state
+                        // console.log(JSON.stringify(set,undefined,2))
+                        for (let sSlot of set.set.slots) {
+                            if (sSlot?.standing?.stats?.score) {
+                                let teamID = event.sets[keyID]["slots"][sSlot.id]
+                                if (teamID) {
+                                    event.sets[keyID]["score"][teamID.toString()] = sSlot.standing.stats.score.value
+                                }
+                            }
                         }
                     }
+                } else {
+                    delete event.sets[keyID]
                 }
             }
         }
 
-        // Print Response
-        // console.log(JSON.stringify(data,undefined,2))
+        this.props.description = []
+        this.props.description.push("***Teams***")
 
-        console.log(event)
+        let teamsByPlacement = Object.values(event.teams).slice(0).sort(function(a,b) {
+            if (a.placement == b.placement) {
+                let x = a.name.toLowerCase()
+                let y = b.name.toLowerCase()
+                return x < y ? -1 : x > y ? 1 : 0
+            } else {
+                return a.placement - b.placement
+            }
+        })
+        for (let team of teamsByPlacement) {
+            let url = "https://smash.gg/tournament/" + event.slug.tournament + "/event/0/entrant/" + team.id
+            this.props.description.push(`\`${(team.placement + "").padStart(3,' ')}\` [${team.name}](${url} '${url}')`)
+        }
+        this.send(message, new VillainsEmbed(this.props))
+
+        this.props.description = []
+        this.props.description.push("***Sets***")
+        let i = 0
+        for (let [setID, set] of Object.entries(event.sets)) {
+            let teams = ""
+            let scores = set?.completedAt ? "Final Score: " : "Score: "
+            let toggle = 0
+            for (let [slotID, teamID] of Object.entries(set.slots)) {
+                let team = event.teams[teamID]
+                let score = teamID in set.score ? set.score[teamID] : 0
+                let url = "https://smash.gg/tournament/" + event.slug.tournament + "/event/0/entrant/" + team.id
+                teams += `[${team.name}](${url} '${url}')`
+                scores += `${score}`
+                if (toggle % 2 == 0) {
+                    teams += " 🆚 "
+                    scores += '-'
+                }
+                i++
+                toggle++
+            }
+
+            this.props.description.push(teams)
+
+            if (set?.startedAt) {
+                let url = "https://smash.gg/" + event.slug.event + "/set/" + set.id
+                scores = `[${scores}](${url} '${url}')`
+            }
+
+            this.props.description.push(`${scores}`)
+
+            if (set?.startedAt) {
+                this.props.description.push(`<t:${set.startedAt}:f>`)
+            }
+
+            this.props.description.push("")
+
+            if (i % (5 * 2) == 0) {
+                this.pages.push(new VillainsEmbed(this.props))
+                this.props.description = ["***Sets***"]
+            }
+        }
+        this.send(message, this.pages)
+        this.null = true
     }
 }
