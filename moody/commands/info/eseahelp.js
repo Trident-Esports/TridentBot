@@ -2,14 +2,14 @@ const VillainsCommand = require('../../classes/vcommand.class')
 const VillansEmbed = require('../../classes/vembed.class')
 const fs = require('fs')
 
-module.exports = class EventHelpCommand extends VillainsCommand {
+module.exports = class EseaHelpCommand extends VillainsCommand {
     constructor() {
         super(
             {
-                name: "eventhelp",
-                aliases: [ 'evh' ],
+                name: "eseahelp",
+                aliases: [ 'eseah' ],
                 category: "information",
-                description: "Bot Event Help"
+                description: "Esea Bot Help"
             }
         )
     }
@@ -19,12 +19,12 @@ module.exports = class EventHelpCommand extends VillainsCommand {
             `This is a list of the commands and help for VillainsBot Events.`,
             `If you would like General or MiniGame Help use \`${this.prefix}help\` or \`${this.prefix}gamehelp\``
         ]
-        let eventhelpData = JSON.parse(fs.readFileSync("./dbs/eventhelp.json", "utf8"))
+        let eseahelpData = JSON.parse(fs.readFileSync("./dbs/eseahelp.json", "utf8"))
 
         // Bail if we fail to get mod help data
-        if (!eventhelpData) {
+        if (!eseahelpData) {
             this.error = true
-            this.props.description = "Failed to get Event Help Data."
+            this.props.description = "Failed to get Esea Help Data."
             return
         }
 
@@ -48,20 +48,20 @@ module.exports = class EventHelpCommand extends VillainsCommand {
 
         // Search for the term
         if(search.term) {
-            if(Object.keys(eventhelpData).includes(search.term)) {
+            if(Object.keys(eseahelpData).includes(search.term)) {
                 // If it matches a section, load that section
                 let key = search.term
-                helpData = {
-                    key: eventhelpData[key]
+                eseahelpData = {
+                    key: eseahelpData[key]
                 }
                 scope = "section"
             } else {
                 // If it doesn't match a section, see if it matches a single command
-                for(let [section, commands] of Object.entries(eventhelpData)) {
+                for(let [section, commands] of Object.entries(eseahelpData)) {
                     if(Object.keys(commands.commands).includes(search.term)) {
                         let key = section
-                        eventhelpData = {
-                            key: eventhelpData[key]
+                        eseahelpData = {
+                            key: eseahelpData[key]
                         }
                         scope = "single"
                     }
@@ -70,17 +70,17 @@ module.exports = class EventHelpCommand extends VillainsCommand {
         }
 
         // Build the thing
-        for(let [section, sectionAttrs] of Object.entries(eventhelpData)) {
+        for(let [section, sectionAttrs] of Object.entries(eseahelpData)) {
             this.props.fields = []
             this.props.fields.push(
                 {
                     name: `**${sectionAttrs.section}**`,
-                    value: sectionAttrs.eventhelp
+                    value: sectionAttrs.eseahelp
                 }
             )
             for(let [command, commandAttrs] of Object.entries(sectionAttrs.commands)) {
                 if((["all", "section"].includes(scope)) || (scope == "single" && command == search.term)) {
-                    let value = `_${commandAttrs.eventhelp.join("\n")}_`
+                    let value = `_${commandAttrs.eseahelp.join("\n")}_`
                     if("aliases" in commandAttrs) {
                         value += "\n"
                         value += `[Aliases: \`${commandAttrs.aliases.join("\`, \`")}\`]`
