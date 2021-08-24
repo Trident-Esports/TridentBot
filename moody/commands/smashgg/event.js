@@ -3,12 +3,12 @@ const VillainsEmbed = require('../../classes/vembed.class');
 const { GraphQLClient } = require('graphql-request');
 const fs = require('fs');
 
-module.exports = class SmashGGBracket extends VillainsCommand {
+module.exports = class SmashGGEvent extends VillainsCommand {
     constructor() {
         let comprops = {
-            name: "smashbracket",
+            name: "smashevent",
             category: "smashgg",
-            description: "SmashGG Bracket Listing",
+            description: "SmashGG Event Listing",
         }
         super(
             {...comprops}
