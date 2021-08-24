@@ -7,6 +7,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
     constructor() {
         let comprops = {
             name: "smashevent",
+            aliases: ["smash"],
             category: "smashgg",
             description: "SmashGG Event Listing",
         }

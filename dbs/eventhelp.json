@@ -1,0 +1,20 @@
+{
+    "commands": {
+        "section": "COMMANDS",
+        "eventhelp": "List of commands",
+        "commands": {
+            "eventhelp": {
+                "aliases": ["evh"],
+                "eventhelp": [
+                    "Brings up this menu."
+                ]
+            },
+            "smashevent": {
+                "aliases": ["smash"],
+                "eventhelp": [
+                    "Shows the current event on smash.gg including teams and games."
+                ]
+            }
+        }
+    }
+}
