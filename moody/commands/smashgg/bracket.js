@@ -121,6 +121,15 @@ module.exports = class SmashGGBracket extends VillainsCommand {
               completedAt
               startedAt
               state
+              fullRoundText
+              identifier
+              phaseGroup {
+                id
+                phase {
+                  id
+                  name
+                }
+              }
               slots {
                 id
                 standing {
@@ -172,6 +181,12 @@ module.exports = class SmashGGBracket extends VillainsCommand {
           teams: {},
           sets: {}
         }
+
+        this.props.caption = {
+            text: event.name,
+            url: "https://smash.gg/" + event.slug.event
+        }
+
         // Save Team IDs, Names & Placements
         for(let node of data.event.standings.nodes) {
             event.teams[node.entrant.id] = {id: node.entrant.id, name: node.entrant.name, placement: node.placement}
@@ -188,7 +203,10 @@ module.exports = class SmashGGBracket extends VillainsCommand {
                     setID = setID.match("preview_([^_]+)")[1]
                     keyID = keyID.match("preview_(.*)")[1]
                 }
-                event.sets[keyID] = {id: setID, node_id: node.id}
+                event.sets[keyID] = {
+                    id: setID,
+                    node_id: node.id
+                }
                 event.sets[keyID]["slots"] = {}
                 event.sets[keyID]["score"] = {}
                 for (let slot of node.slots) {
@@ -202,10 +220,13 @@ module.exports = class SmashGGBracket extends VillainsCommand {
                 }
                 if (Object.keys(event.sets[keyID]["slots"]).length > 0) {
                     let set = await this.getSetStats(GQLClient, setID)
-                    if (set.set) {
+                    if (set?.set) {
                         event.sets[keyID]["completedAt"] = set.set.completedAt
                         event.sets[keyID]["startedAt"] = set.set.startedAt
                         event.sets[keyID]["state"] = set.set.state
+                        event.sets[keyID]["fullRoundText"] = set.set.fullRoundText
+                        event.sets[keyID]["identifier"] = set.set.identifier
+                        event.sets[keyID]["phaseGroup"] = set.set.phaseGroup
                         // console.log(JSON.stringify(set,undefined,2))
                         for (let sSlot of set.set.slots) {
                             if (sSlot?.standing?.stats?.score) {
@@ -242,9 +263,10 @@ module.exports = class SmashGGBracket extends VillainsCommand {
 
         this.props.description = []
         this.props.description.push("***Sets***")
+        let lastRoundText = ""
         let i = 0
         for (let [setID, set] of Object.entries(event.sets)) {
-            let teams = ""
+            let teams = set?.identifier ? `\`${set.identifier}\` ` : ""
             let scores = set?.completedAt ? "Final Score: " : "Score: "
             let toggle = 0
             for (let [slotID, teamID] of Object.entries(set.slots)) {
@@ -259,6 +281,13 @@ module.exports = class SmashGGBracket extends VillainsCommand {
                 }
                 i++
                 toggle++
+            }
+
+            if (set?.fullRoundText) {
+                if (lastRoundText != set.fullRoundText) {
+                    this.props.description.push(`__*${set.fullRoundText}*__`)
+                }
+                lastRoundText = set.fullRoundText
             }
 
             this.props.description.push(teams)
