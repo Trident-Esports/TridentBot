@@ -1,4 +1,5 @@
 const VillainsCommand = require('../../classes/vcommand.class');
+const fs = require('fs');
 
 module.exports = class SocialsCommand extends VillainsCommand {
     constructor() {
@@ -13,7 +14,7 @@ module.exports = class SocialsCommand extends VillainsCommand {
                 'twitter'
             ],
             category: "info",
-            description: "Socials for Villains",
+            description: "Social Media Links",
         }
         super(
             {...comprops}
@@ -21,7 +22,15 @@ module.exports = class SocialsCommand extends VillainsCommand {
     }
 
     async action(client, message) {
-        let url = "https://linktr.ee/Villainsesc"
-        this.props.description = `***[Follow Villains Esports Socials!](${url} '${url}')***`
+        const data = JSON.parse(fs.readFileSync("./dbs/" + message.guild.id + "/data.json","utf8"))
+        if (data?.socials) {
+            this.props.description = []
+            for (let [,link] of Object.entries(data.socials)) {
+                console.log(link)
+                let url = link.url
+                let text = link.text
+                this.props.description.push(`***[${text}](${url} '${url}')***`)
+            }
+        }
     }
 }

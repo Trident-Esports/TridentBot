@@ -36,17 +36,6 @@ module.exports = class AdminCommand extends VillainsCommand {
                 this.flags[source] = "invalid"
             }
         }
-
-        // Get botdev-defined list of roles groupings
-        this.ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
-
-        // Bail if we don't have Roles information
-        if (!this.ROLES) {
-            this.ROLES = { "admin": [], "mod": [], "rules": "", "member": "", "muted": "" }
-            this.error = true
-            this.props.description = "Failed to get Roles information."
-            return
-        }
     }
 
     get ROLES() {
@@ -57,6 +46,17 @@ module.exports = class AdminCommand extends VillainsCommand {
     }
 
     async build(client, message) {
+        // Get botdev-defined list of roles groupings
+        this.ROLES = JSON.parse(fs.readFileSync("./dbs/" + message.guild.id + "/roles.json", "utf8"))
+
+        // Bail if we don't have Roles information
+        if (!this.ROLES) {
+            this.ROLES = { "admin": [], "mod": [], "rules": "", "member": "", "muted": "" }
+            this.error = true
+            this.props.description = "Failed to get Roles information."
+            return
+        }
+
         let APPROVED_ROLES = this.ROLES["admin"]
         // Bail if we don't have intended Approved Roles data
         if (!APPROVED_ROLES) {

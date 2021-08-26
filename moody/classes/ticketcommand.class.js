@@ -8,6 +8,7 @@ BaseCommand
 
 */
 const VillainsCommand = require('./vcommand.class');
+const fs = require('fs');
 
 module.exports = class TicketCommand extends VillainsCommand {
     /*
@@ -29,8 +30,7 @@ module.exports = class TicketCommand extends VillainsCommand {
         // Set default emojis
         // Lock/Delete
         this.emoji = comprops?.emoji ? comprops.emoji : [ "🔒", "⛔" ];
-        // Set parentID, default to General Tickets category on Villains Esports server
-        this.parentID = comprops?.parentID ? comprops.parentID : "828158895024766986"
+        this.parentID = comprops?.parentID ? comprops.parentID : ""
     }
 
     get emoji() {
@@ -40,12 +40,26 @@ module.exports = class TicketCommand extends VillainsCommand {
         this.#emoji = emoji
     }
 
+    async build(client, message, cmd) {
+        const tickets = JSON.parse(fs.readFileSync("./dbs/" + message.guild.id + "/tickets.json","utf8"))
+        if (this.parentID in Object.keys(tickets)) {
+            if (tickets[this.parentID]?.parentID) {
+                this.parentID = tickets[this.parentID].parentID
+            }
+        }
+        if (this.parentID.length < 10) {
+            this.parentID = tickets.generic.parentID
+        }
+        if(!(this.error)) {
+            await this.action(client, message, cmd)
+        }
+    }
+
     async action(client, message) {
         // Create Ticket Channel
-        const channel = await message.guild.channels.create(`ticket: ${message.author.tag}`)
+        const parent = message.guild.channels.cache.find(c => c.id == this.parentID)
+        const channel = await message.guild.channels.create(`ticket: ${message.author.tag}`, { parent: parent.id })
 
-        // Set the parent channel
-        channel.setParent(this.parentID)
         // Set guild privs
         channel.updateOverwrite(
             message.guild.id,

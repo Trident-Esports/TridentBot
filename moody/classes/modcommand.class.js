@@ -9,6 +9,7 @@ BaseCommand
 
 */
 const AdminCommand = require('./admincommand.class');
+const fs = require('fs');
 
 module.exports = class ModCommand extends AdminCommand {
     /*
@@ -29,6 +30,9 @@ module.exports = class ModCommand extends AdminCommand {
     }
 
     async build(client, message) {
+        // Get botdev-defined list of roles groupings
+        this.ROLES = JSON.parse(fs.readFileSync("./dbs/" + message.guild.id + "/roles.json", "utf8"))
+
         let APPROVED_ROLES = this.ROLES["admin"].concat(this.ROLES["mod"])
 
         // Bail if member doesn't have Approved Roles

@@ -7,7 +7,7 @@ module.exports = class TheBoysTicketCommand extends TicketCommand {
             name: "tbticket",
             category: "meta",
             description: "The Boys' Ticket",
-            parentID: "828154951834271765"
+            parentID: "guys"
         }
         super(
             {...comprops}

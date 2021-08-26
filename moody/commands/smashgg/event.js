@@ -164,9 +164,9 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         })
 
         // Get Event ID
-        let tourneySlug = "3v3-villains-90-rocket-league-tournament"
+        let tourneySlug = sGGdata.tourney.slug
         let data = await this.getTournamentBySlug(GQLClient, tourneySlug)
-        const eventID = data.tournament.events[0].id
+        const eventID = data.tournament.events[sGGdata.event.idx].id
 
         // Get Event Standings
         data = await this.getEventStandings(GQLClient, eventID)

@@ -15,14 +15,22 @@ module.exports = class ESEACommand extends VillainsCommand {
     async action(client, message) {
         const SENSITIVE = JSON.parse(fs.readFileSync("./SENSITIVE.json", "utf8"))
         const apiKey = SENSITIVE?.google?.apiKey ? SENSITIVE.google.apiKey : ""
+
+        // Load workbook
+        let docID = SENSITIVE?.google?.sheets?.csgo?.esea ? SENSITIVE.google.sheets.csgo.esea : ""
+
         let wantedMatch = 0
         let wantedSpan = "all"
-        if(this?.inputData?.args[0]) {
-            let arg = this.inputData.args[0]
+        for (let arg of this.inputData.args) {
             if(["all","complete","incomplete","next"].includes(arg)) {
                 wantedSpan = arg
+                console.log("ESEA Span:",arg)
             } else if(!(isNaN(arg))) {
                 wantedMatch = arg
+                console.log("ESEA Match:",arg)
+            } else if(arg.length > 10) {
+                docID = arg
+                console.log("ESEA Sheet:",arg)
             }
         }
 
@@ -33,11 +41,10 @@ module.exports = class ESEACommand extends VillainsCommand {
             return
         }
 
-        // Load workbook
-        let docID = SENSITIVE?.google?.sheets?.csgo?.esea ? SENSITIVE.google.sheets.csgo.esea : ""
         if (docID == "") {
             this.error = true
             this.props.description = "No Google Sheet ID found!"
+            return
         }
         const wb = new GoogleSpreadsheet(docID)
         wb.useApiKey(apiKey)
@@ -272,7 +279,6 @@ module.exports = class ESEACommand extends VillainsCommand {
                     }
                 )
             }
-            console.log(matchData.overall)
             this.props.fields.push(
                 {
                     name: "W🟩",

@@ -17,7 +17,6 @@ BaseCommand
 const GameCommand = require('./gamecommand.class');
 
 const fs = require('fs');
-let ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
 module.exports = class ATMCommand extends GameCommand {
     constructor(comprops = {}) {
         // Create a parent object
@@ -68,7 +67,7 @@ module.exports = class ATMCommand extends GameCommand {
         if (["Refund", "Steal"].includes(this.props.caption.text)) {
             // Get botdev-defined list of roles groupings
 
-            let ROLES = JSON.parse(fs.readFileSync("dbs/roles.json", "utf8"))
+            let ROLES = JSON.parse(fs.readFileSync("./dbs/" + message.guild.id + "/roles.json", "utf8"))
             // Bail if we fail to get Roles information
             if (!ROLES) {
                 this.error = true
