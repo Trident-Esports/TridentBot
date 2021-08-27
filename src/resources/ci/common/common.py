@@ -5,7 +5,7 @@ import sys  # default system info
 from my_path import get_py_path
 
 CI_SETTINGS = {}
-with(open(os.path.join("resources","app","meta","manifests","ci.json"))) as ci_settings_file:
+with(open(os.path.join(".","src","resources","app","meta","manifests","ci.json"))) as ci_settings_file:
   CI_SETTINGS = json.load(ci_settings_file)
 
 UBUNTU_VERSIONS = CI_SETTINGS["common"]["common"]["ubuntu"]
