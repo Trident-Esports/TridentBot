@@ -37,7 +37,7 @@ module.exports = class GameCommand extends VillainsCommand {
                 this[key] = require(path)
             }
         }
-        this.emojis = JSON.parse(fs.readFileSync("./game/dbs/emojis.json", "utf8"));
+        this.emojis = JSON.parse(fs.readFileSync("./src/game/dbs/emojis.json", "utf8"));
     }
 
     get emojis() {

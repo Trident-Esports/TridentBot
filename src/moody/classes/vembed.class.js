@@ -38,7 +38,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         )
 
         try {
-            this.GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+            this.GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
         } catch(err) {
             console.log("VEmbed: PROFILE manifest not found!")
             process.exit(1)
@@ -52,7 +52,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         try {
-            this.defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+            this.defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         } catch(err) {
             console.log("VEmbed: DEFAULTS manifest not found!")
             process.exit(1)

@@ -3,7 +3,7 @@ const VillainsCommand = require('../../classes/vcommand.class');
 const fs = require('fs');
 let GLOBALS = null
 try {
-    GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+    GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
 } catch(err) {
     console.log("Helpline: PROFILE manifest not found!")
     process.exit(1)

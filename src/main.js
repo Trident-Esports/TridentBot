@@ -1,8 +1,10 @@
-const Discord = require('discord.js'); // Base Discord module
+const { Client, Intents, Collection } = require('discord.js'); // Base Discord module
 const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
+require('dotenv').config()
 
 const client = new MoodyClient({
-    partials: ["MESSAGE", "CHANNEL", "REACTION"]
+    partials: ["MESSAGE", "CHANNEL", "REACTION"],
+    intents: [ Intents.FLAGS.GUILDS ]
 });  // Discord Client object
 
 const mongoose = require('mongoose'); // Mongoose
@@ -14,7 +16,7 @@ const fs = require('fs');
 
 let SENSITIVE = null
 try {
-    SENSITIVE = JSON.parse(fs.readFileSync("./SENSITIVE.json", "utf8"));
+    SENSITIVE = JSON.parse(fs.readFileSync("./src/SENSITIVE.json", "utf8"));
 } catch (err) {
     console.log("Main: SENSITIVE manifest not found!")
     process.exit(1)
@@ -26,7 +28,7 @@ if (!SENSITIVE) {
     return
 }
 
-const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"));
+const DEFAULTS = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"));
 
 // Bail if we fail to get server profile information
 if (!DEFAULTS) {
@@ -48,8 +50,8 @@ try {
     process.exit(1)
 }
 
-client.commands = new Discord.Collection();
-client.events = new Discord.Collection();
+client.commands = new Collection();
+client.events = new Collection();
 
 // Load Handlers
 [
@@ -57,7 +59,7 @@ client.events = new Discord.Collection();
     'game_handler',
     'rosters_handler'
 ].forEach(handler => {
-    require(`./handlers/${handler}`)(client, Discord);
+    require(`./handlers/${handler}`)(client);
 })
 
 // Connect to DB
@@ -79,7 +81,7 @@ mongoose.connect(
 console.log("---")
 const handler = new Handler(client, {
     prefix: prefix,
-    token: SENSITIVE.client.login,
+    token: process.env.client_login,
     commandsPath: __dirname + "/moody/commands",
     eventsPath: __dirname + "/moody/events",
     owners: [

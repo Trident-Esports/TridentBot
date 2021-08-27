@@ -80,17 +80,17 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         let GLOBALS = null
         try {
-            GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
+            GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
         } catch(err) {
             console.log("VCommand: PROFILE manifest not found!")
             process.exit(1)
         }
-        const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+        const DEFAULTS = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         this.DEV = GLOBALS.DEV
         this.prefix = DEFAULTS.prefix
         this.pages = []
         this.error = false
-        this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
+        this.errors = JSON.parse(fs.readFileSync("./src/dbs/errors.json", "utf8"))
         this.inputData = {}
 
         // Bail if we fail to get server profile information
@@ -177,7 +177,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
     async getChannel(message, channelType) {
         // Get botdev-defined list of channelIDs/channelNames
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelIDs = JSON.parse(fs.readFileSync("./src/dbs/channels.json","utf8"))
         let channelID = this.channelName
         let channel = null
 
@@ -276,7 +276,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             // If Loaded is a Bot
             // If Bot has been specified as a Valid source
             // Get Bot whitelist
-            let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json","utf8"))
+            let USERIDS = JSON.parse(fs.readFileSync("./src/dbs/userids.json","utf8"))
             // Bail if we fail to get UserIDs list
             if (!USERIDS) {
                 this.error = true
