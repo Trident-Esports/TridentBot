@@ -8,7 +8,7 @@ module.exports = class GuildMemberRemoveEvent extends BaseEvent {
     }
 
     async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/" + reaction.message.guild.id + "/channels.json","utf8"))
         let channelID = 0
         let channel = null
 
@@ -58,6 +58,8 @@ module.exports = class GuildMemberRemoveEvent extends BaseEvent {
 
         if (channel) {
             try {
+                // Put into guild profile document
+                // <@${member.user.id}> -> %%user%%
                 let rules = [
                     `<@${member.id}> has just become a **Hero**.`
                 ]

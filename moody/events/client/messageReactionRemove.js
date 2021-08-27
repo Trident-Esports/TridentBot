@@ -8,7 +8,7 @@ module.exports = class MessageReactionRemoveEvent extends BaseEvent {
     }
 
     async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/" + message.guild.id + "/channels.json","utf8"))
         let channelID = 0
         let channel = null
 
@@ -38,7 +38,7 @@ module.exports = class MessageReactionRemoveEvent extends BaseEvent {
         if (user.bot) return
         if (!reaction.message.guild) return
 
-        let RULES_ROLE = JSON.parse(fs.readFileSync("./dbs/roles.json","utf8"))["rules"]
+        let RULES_ROLE = JSON.parse(fs.readFileSync("./dbs/" + reaction.message.guild.id + "/roles.json","utf8"))["rules"]
         if (RULES_ROLE) {
             RULES_ROLE = reaction.message.guild.roles.cache.find(role => role.name === RULES_ROLE)
             if (RULES_ROLE) {

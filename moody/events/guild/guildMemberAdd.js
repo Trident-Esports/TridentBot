@@ -13,7 +13,7 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
     }
 
     async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelIDs = JSON.parse(fs.readFileSync("./dbs/" + reaction.message.guild.id + "/channels.json","utf8"))
         let channelID = 0
         let channel = null
 
@@ -41,7 +41,7 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
         const channel = await this.getChannel(member, "welcome")
 
         // Message Channels
-        let ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
+        let ROLES = JSON.parse(fs.readFileSync("./dbs/" + reaction.message.guild.id + "/roles.json", "utf8"))
         // Add Minion Role
         let welcomeRole = ROLES.member;
         welcomeRole = member.guild.roles.cache.find(role => role.name === welcomeRole);
@@ -85,6 +85,11 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
 
             try {
                 let rules = [
+                    // Put into guild profile document
+                    // <@${member.user.id}> -> %%user%%
+                    // ${member.guild.name} -> %%guild%%
+                    // ${RULES_CHANNEL.toString()} -> %%rulesChannel%%
+                    // ${ROLES_CHANNEL.toString()} -> %%rolesChannel%%
                     `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
                     "**Are you ready to become a Super Villain?**",
                     "",
@@ -93,7 +98,7 @@ module.exports = class GuildMemberAddEvent extends BaseEvent {
                     `Also to access the server channels, please go to ${ROLES_CHANNEL.toString()}.`
                 ]
                 let props = {
-                    title: "Welcome to ${member.guild.name}",
+                    title: `Welcome to ${member.guild.name}`,
                     description: rules.join("\n")
                 }
 

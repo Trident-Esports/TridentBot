@@ -38,10 +38,10 @@ module.exports = class MessageEvent extends BaseEvent {
 
             // No Special Case
             return
-        } else if (message.content == handler.options.prefix) {
+        } else if (message.content.trim() == handler.options.prefix.trim()) {
             // Message is only prefix
             let props = {
-                caption: { text: "VillainsBot" },
+                caption: { text: handler.client.user.username },
                 title: { text: "Error" },
                 description: "Please send a proper command."
             }
