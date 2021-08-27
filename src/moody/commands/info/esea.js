@@ -2,6 +2,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const VillainsCommand = require('../../classes/vcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 const fs = require('fs');
+require('dotenv').config()
 
 module.exports = class ESEACommand extends VillainsCommand {
     constructor() {
@@ -13,11 +14,10 @@ module.exports = class ESEACommand extends VillainsCommand {
     }
 
     async action(client, message) {
-        const SENSITIVE = JSON.parse(fs.readFileSync("./SENSITIVE.json", "utf8"))
-        const apiKey = SENSITIVE?.google?.apiKey ? SENSITIVE.google.apiKey : ""
+        const apiKey = process.env.google_apiKey
 
         // Load workbook
-        let docID = SENSITIVE?.google?.sheets?.csgo?.esea ? SENSITIVE.google.sheets.csgo.esea : ""
+        let docID = process.env.google_sheets_vln_csgo_esea
 
         let wantedMatch = 0
         let wantedSpan = "all"
@@ -273,8 +273,8 @@ module.exports = class ESEACommand extends VillainsCommand {
                         inline: true
                     },
                     {
-                        name: "*",
-                        value: "*",
+                        name: "\u200B",
+                        value: "\u200B",
                         inline: true
                     }
                 )

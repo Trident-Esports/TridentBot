@@ -64,7 +64,7 @@ client.events = new Collection();
 
 // Connect to DB
 mongoose.connect(
-        SENSITIVE.client.mongoDB,
+        process.env.client_mongoDB,
         {
             useNewURLParser: true,
             useUnifiedTopology: true,

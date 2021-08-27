@@ -2,6 +2,7 @@ const VillainsCommand = require('../../classes/vcommand.class');
 const VillainsEmbed = require('../../classes/vembed.class');
 const { GraphQLClient } = require('graphql-request');
 const fs = require('fs');
+require('dotenv').config()
 
 module.exports = class SmashGGEvent extends VillainsCommand {
     constructor() {
@@ -159,7 +160,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         const endpoint = "https://api.smash.gg/gql/alpha"
         const GQLClient = new GraphQLClient(endpoint, {
             headers: {
-                "Authorization": "Bearer " + SENSITIVE.smashGG.apiKey
+                "Authorization": "Bearer " + process.env.smashGG_apiKey
             }
         })
 
