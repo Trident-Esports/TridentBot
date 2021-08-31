@@ -42,10 +42,9 @@ module.exports = class AdminCommand extends VillainsCommand {
          * @type {Object.<[x:string], Array.<string>>}
          * @public
          */
-        this.ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
-
-        // Bail if we don't have Roles information
-        if (!this.ROLES) {
+        try {
+            this.ROLES = JSON.parse(fs.readFileSync("./src/dbs/roles.json", "utf8"))
+        } catch {
             this.ROLES = { "admin": [""], "mod": [""], "rules": "", "member": "", "muted": "" }
             this.error = true
             this.props.description = "Failed to get Roles information."
@@ -86,6 +85,6 @@ module.exports = class AdminCommand extends VillainsCommand {
             return
         }
 
-        await this.action(client, message)
+        await this.action(client, message, "")
     }
 }

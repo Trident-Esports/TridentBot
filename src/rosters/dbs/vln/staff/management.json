@@ -13,12 +13,7 @@
       },
       "social media": {
           "title": "Social Media",
-<<<<<<< HEAD:src/rosters/dbs/staff/management.json
-          "users": [
-          ]
-=======
           "users": []
->>>>>>> src:src/rosters/dbs/vln/staff/management.json
       },
       "events":{
           "title": "Events",

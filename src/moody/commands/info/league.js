@@ -1,8 +1,8 @@
-const VillainsCommand = require('../../classes/vcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const VillainsCommand = require('../../classes/command/vcommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 
-const fs = require('fs');
 const dasu = require('dasu');
+const fs = require('fs');
 
 module.exports = class LeagueCommand extends VillainsCommand {
     constructor() {
@@ -27,7 +27,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
 
         profiles.league = [ handlerpath + '/' + leagueGame + '/' + leagueLevel + '/' + teamID + '.json' ]
 
-        let defaults = JSON.parse(fs.readFileSync("dbs/defaults.json","utf8"))
+        let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json","utf8"))
 
         let pages = []
 

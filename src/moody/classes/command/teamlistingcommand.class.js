@@ -8,7 +8,7 @@ BaseCommand
 
 */
 const VillainsCommand = require('./vcommand.class');
-const VillainsEmbed = require('./vembed.class');
+const VillainsEmbed = require('../embed/vembed.class');
 const dasu = require('dasu');
 
 module.exports = class TeamListingCommand extends VillainsCommand {

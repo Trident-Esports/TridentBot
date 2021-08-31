@@ -5,26 +5,6 @@ const { BaseCommand, ClientUtil } = require('a-djs-handler');
 const VillainsEmbed = require('../embed/vembed.class');
 const SlimEmbed = require('../embed/vslimbed.class');
 
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
-=======
-BaseCommand
- VillainsCommand
-
-TODO:
- Game
-  Blackjack
-  Fight
-  Rob
- Matches
- Purge
- Roster
-
-*/
-const { BaseCommand } = require('a-djs-handler');
-const VillainsEmbed = require('../classes/vembed.class');
-const SlimEmbed = require('../classes/vslimbed.class');
-
->>>>>>> src:src/moody/classes/vcommand.class.js
 const pagination = require('discord.js-pagination');
 const fs = require('fs');
 
@@ -116,7 +96,6 @@ module.exports = class VillainsCommand extends BaseCommand {
      * @param {EmbedProps} props              Local list of command properties
      */
     constructor(comprops = {}, props = {}) {
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
         // Create a parent object
         super(
             // @ts-ignore
@@ -127,12 +106,6 @@ module.exports = class VillainsCommand extends BaseCommand {
          * Embed Properties
          * @type {EmbedProps}
          */
-=======
-        super(
-            {...comprops}
-        )
-
->>>>>>> src:src/moody/classes/vcommand.class.js
         this.props = {...props}
 
         /**
@@ -178,22 +151,6 @@ module.exports = class VillainsCommand extends BaseCommand {
             this.null = true
         }
 
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
-        let GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
-        const defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
-        GLOBALS = (
-            GLOBALS?.profile &&
-            GLOBALS?.profiles &&
-            GLOBALS.profile in GLOBALS.profiles
-        ) ?
-            GLOBALS.profiles[GLOBALS.profile]:
-            defaults
-
-        /**
-         * Development Mode?
-         * @type {boolean}
-         */
-=======
         let GLOBALS = null
         try {
             GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
@@ -202,14 +159,13 @@ module.exports = class VillainsCommand extends BaseCommand {
             process.exit(1)
         }
         const DEFAULTS = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
->>>>>>> src:src/moody/classes/vcommand.class.js
         this.DEV = GLOBALS.DEV
 
         /**
          * Command prefix
          * @type {string}
          */
-        this.prefix = defaults.prefix
+        this.prefix = DEFAULTS.prefix
 
         /**
          * List of pages of Embeds
@@ -222,18 +178,14 @@ module.exports = class VillainsCommand extends BaseCommand {
          * @type {boolean}
          */
         this.error = false
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
 
         /**
          * Global Error Strings
          * @type {Object.<string, Array.<string>>}
          */
-        this.errors = JSON.parse(fs.readFileSync("./dbs/errors.json", "utf8"))
+        this.errors = JSON.parse(fs.readFileSync("./src/dbs/errors.json", "utf8"))
 
         /** @type {Object.<string, any>} Data gathered from input management */
-=======
-        this.errors = JSON.parse(fs.readFileSync("./src/dbs/errors.json", "utf8"))
->>>>>>> src:src/moody/classes/vcommand.class.js
         this.inputData = {}
 
         // Bail if we fail to get server profile information
@@ -243,11 +195,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             return
         }
         // Bail if we fail to get bot default information
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
-        if (!defaults) {
-=======
         if (!DEFAULTS) {
->>>>>>> src:src/moody/classes/vcommand.class.js
             this.error = true
             this.props.description = "Failed to get bot default information."
             return
@@ -329,7 +277,6 @@ module.exports = class VillainsCommand extends BaseCommand {
         this.#inputData = inputData
     }
 
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
     /**
      *
      * @param {Message} message Message that called the command
@@ -338,12 +285,7 @@ module.exports = class VillainsCommand extends BaseCommand {
      */
     async getChannel(message, channelType) {
         // Get botdev-defined list of channelIDs/channelNames
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
-=======
-    async getChannel(message, channelType) {
-        // Get botdev-defined list of channelIDs/channelNames
-        let channelIDs = JSON.parse(fs.readFileSync("./src/dbs/channels.json","utf8"))
->>>>>>> src:src/moody/classes/vcommand.class.js
+        let channelIDs = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/channels.json","utf8"))
         let channelID = this.channelName
         let channel = null
 
@@ -359,11 +301,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
 
         // If the ID is not a number, search for a named channel
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
         if (typeof channelID == "string") {
-=======
-        if (isNaN(channelID)) {
->>>>>>> src:src/moody/classes/vcommand.class.js
             channel = message.guild.channels.cache.find(c => c.name === channelID);
         } else {
             // Else, search for a numbered channel
@@ -373,20 +311,17 @@ module.exports = class VillainsCommand extends BaseCommand {
         return channel
     }
 
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
+    async sanitizeMarkdown(input) {
+        let output = input.replace(/[\*\_\~\`]/g, '\\$&')
+        return output
+    }
+
     /**
      *
      * @param {Message} message Message that called the command
      * @param {Array.<string>} args Command-line args
      * @param {Object.<string, string>} flags Flags for user management
      */
-=======
-    async sanitizeMarkdown(input) {
-        let output = input.replace(/[\*\_\~\`]/g, '\\$&')
-        return output
-    }
-
->>>>>>> src:src/moody/classes/vcommand.class.js
     async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
         let foundHandles = { players: {}, invalid: "", flags: flags }
 
@@ -463,13 +398,11 @@ module.exports = class VillainsCommand extends BaseCommand {
             // If Loaded is a Bot
             // If Bot has been specified as a Valid source
             // Get Bot whitelist
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
-            let USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json","utf8"))
-=======
-            let USERIDS = JSON.parse(fs.readFileSync("./src/dbs/userids.json","utf8"))
->>>>>>> src:src/moody/classes/vcommand.class.js
-            // Bail if we fail to get UserIDs list
-            if (!USERIDS) {
+            let USERIDS = {}
+            try {
+                USERIDS = JSON.parse(fs.readFileSync("./src/dbs/userids.json","utf8"))
+            } catch {
+                // Bail if we fail to get UserIDs list
                 this.error = true
                 this.props.description = "Failed to get UserIDs list."
                 return
@@ -658,7 +591,6 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
     }
 
-<<<<<<< HEAD:src/moody/classes/command/vcommand.class.js
     /**
      * Run the command
      *
@@ -671,9 +603,6 @@ module.exports = class VillainsCommand extends BaseCommand {
      */
     // @ts-ignore
     async run(client, message, args, util, cmd) {
-=======
-    async run(client, message, args, cmd) {
->>>>>>> src:src/moody/classes/vcommand.class.js
         // Process arguments
         await this.processArgs(message, args, this.flags)
 

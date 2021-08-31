@@ -22,7 +22,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
     }
 
     async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelIDs = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/channels.json","utf8"))
         let channelID = 0
         let channel = null
 
@@ -47,7 +47,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
     }
 
     async action(client, message) {
-        let ROLES = JSON.parse(fs.readFileSync("./dbs/roles.json", "utf8"))
+        let ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
         let APPROVED_ROLES = ROLES["admin"].concat(ROLES["mod"])
 
         if (!message.member.roles.cache.some(r => APPROVED_ROLES.includes(r.name))) {

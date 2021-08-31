@@ -50,10 +50,10 @@ module.exports = class BotDevCommand extends VillainsCommand {
          * @type {Object.<[x:string], Array.<string>>} - List of userids as provided by server profile database file
          * @public
          */
-        this.USERIDS = JSON.parse(fs.readFileSync("./dbs/userids.json", "utf8")).botDevs
-
-        // Bail if we fail to get UserIDs list
-        if (!(this.USERIDS)) {
+        try {
+            this.USERIDS = JSON.parse(fs.readFileSync("./src/dbs/userids.json", "utf8")).botDevs
+        } catch {
+            // Bail if we fail to get UserIDs list
             this.USERIDS = { "botDevs": [""], "botWhite": [""] }
             this.error = true
             this.props.description = "Failed to get UserIDs list."

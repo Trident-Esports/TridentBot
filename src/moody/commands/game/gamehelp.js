@@ -22,7 +22,7 @@ module.exports = class GameHelpCommand extends GameCommand {
     async action(client, message) {
         if (!(this.error)) {
             // Get help data
-            let helpData = JSON.parse(fs.readFileSync("./game/dbs/help.json","utf8"))
+            let helpData = JSON.parse(fs.readFileSync("./src/game/dbs/help.json","utf8"))
 
             // If we're loading a section
             let loadSection = this.inputData.args && this.inputData.args[0] && this.inputData.args[0] != "" ? this.inputData.args[0].toLowerCase() : ""

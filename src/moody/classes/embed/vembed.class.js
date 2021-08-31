@@ -1,4 +1,3 @@
-<<<<<<< HEAD:src/moody/classes/embed/vembed.class.js
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
 
@@ -9,19 +8,6 @@ const fs = require('fs');
  * @extends {MessageEmbed}
  * @public
  */
-=======
-/*
-
-Branded Generic Embed Handler
-
-MessageEmbed
- VillainsEmbed
-
-*/
-const { MessageEmbed } = require('discord.js');
-const fs = require('fs');
-
->>>>>>> src:src/moody/classes/vembed.class.js
 module.exports = class VillainsEmbed extends MessageEmbed {
     /**
      * @typedef {Object} EmbedField
@@ -82,13 +68,12 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         )
 
         try {
-<<<<<<< HEAD:src/moody/classes/embed/vembed.class.js
             /**
              * Global properties
              * @type {Object.<string, any>}
              */
-            this.GLOBALS = JSON.parse(fs.readFileSync("./PROFILE.json", "utf8"))
-            const defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+            this.GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
             this.GLOBALS = (
                 this.GLOBALS?.profile &&
                 this.GLOBALS?.profiles &&
@@ -96,22 +81,16 @@ module.exports = class VillainsEmbed extends MessageEmbed {
             ) ?
                 this.GLOBALS.profiles[this.GLOBALS.profile]:
                 defaults
-=======
-            this.GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
->>>>>>> src:src/moody/classes/vembed.class.js
         } catch(err) {
             console.log("VEmbed: PROFILE manifest not found!")
             process.exit(1)
         }
 
         try {
-<<<<<<< HEAD:src/moody/classes/embed/vembed.class.js
             /**
              * Package properties
              * @type {Object.<string, any>}
              */
-=======
->>>>>>> src:src/moody/classes/vembed.class.js
             this.PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
         } catch(err) {
             console.log("VEmbed: PACKAGE manifest not found!")
@@ -119,27 +98,20 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         try {
-<<<<<<< HEAD:src/moody/classes/embed/vembed.class.js
             /**
              * Profile properties
              * @type {Object.<string, any>}
              */
-            this.defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
-=======
             this.defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
->>>>>>> src:src/moody/classes/vembed.class.js
         } catch(err) {
             console.log("VEmbed: DEFAULTS manifest not found!")
             process.exit(1)
         }
 
-<<<<<<< HEAD:src/moody/classes/embed/vembed.class.js
         /**
          * Development Mode?
          * @type {boolean}
          */
-=======
->>>>>>> src:src/moody/classes/vembed.class.js
         this.DEV = this.GLOBALS.DEV
 
         if ((!(props?.color)) || (props?.color && props.color.trim() == "")) {

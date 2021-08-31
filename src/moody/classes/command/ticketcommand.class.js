@@ -1,7 +1,5 @@
-<<<<<<< HEAD:src/moody/classes/command/ticketcommand.class.js
 // @ts-check
 
-=======
 /*
 
 Command for Ticket Helpline
@@ -11,7 +9,6 @@ BaseCommand
   TicketCommand
 
 */
->>>>>>> src:src/moody/classes/ticketcommand.class.js
 const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 
@@ -41,14 +38,9 @@ module.exports = class TicketCommand extends VillainsCommand {
 
         // Set default emojis
         // Lock/Delete
-<<<<<<< HEAD:src/moody/classes/command/ticketcommand.class.js
         this.emojis = comprops?.emojis ? comprops.emojis : [ "🔒", "⛔" ];
         // Set parentID, default to General Tickets category on Villains Esports server
         this.parentID = comprops?.parentID ? comprops.parentID : "828158895024766986"
-=======
-        this.emoji = comprops?.emoji ? comprops.emoji : [ "🔒", "⛔" ];
-        this.parentID = comprops?.parentID ? comprops.parentID : ""
->>>>>>> src:src/moody/classes/ticketcommand.class.js
     }
 
     /**
@@ -69,7 +61,7 @@ module.exports = class TicketCommand extends VillainsCommand {
     }
 
     async build(client, message, cmd) {
-        const tickets = JSON.parse(fs.readFileSync("./dbs/" + message.guild.id + "/tickets.json","utf8"))
+        const tickets = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/tickets.json","utf8"))
         if (this.parentID in Object.keys(tickets)) {
             if (tickets[this.parentID]?.parentID) {
                 this.parentID = tickets[this.parentID].parentID
@@ -79,7 +71,7 @@ module.exports = class TicketCommand extends VillainsCommand {
             this.parentID = tickets.generic.parentID
         }
         if(!(this.error)) {
-            await this.action(client, message, cmd)
+            await this.action(client, message)
         }
     }
 
@@ -114,11 +106,7 @@ module.exports = class TicketCommand extends VillainsCommand {
             }
         } catch (err) {
             // Bail if we couldn't initialize reacts
-<<<<<<< HEAD:src/moody/classes/command/ticketcommand.class.js
             channel.send({ content: "Error sending emojis!" })
-=======
-            channel.send("Error sending emojis!")
->>>>>>> src:src/moody/classes/ticketcommand.class.js
             throw err;
         }
 

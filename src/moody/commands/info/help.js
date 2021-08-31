@@ -23,7 +23,7 @@ module.exports = class HelpCommand extends VillainsCommand {
             `This is a list of the commands and help for VillainsBot.`,
             `If you would like a list of commands for the MiniGame please type \`${this.prefix}gamehelp\``
         ]
-        let helpData = JSON.parse(fs.readFileSync("./dbs/help.json", "utf8"))
+        let helpData = JSON.parse(fs.readFileSync("./src/dbs/help.json", "utf8"))
 
         // Bail if we fail to get mod help data
         if (!helpData) {

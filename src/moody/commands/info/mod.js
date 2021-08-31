@@ -19,7 +19,7 @@ module.exports = class ModHelpCommand extends ModCommand {
     }
 
     async action(client, message) {
-        let mod_commands = JSON.parse(fs.readFileSync("./dbs/mod.json", "utf8"))
+        let mod_commands = JSON.parse(fs.readFileSync("./src/dbs/mod.json", "utf8"))
 
         let scope = "all"
         let search = {

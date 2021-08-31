@@ -1,7 +1,7 @@
 //@ts-check
 
-const TeamListingCommand = require('../../classes/teamlistingcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const TeamListingCommand = require('../../classes/command/teamlistingcommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 const fs = require('fs');
 
 function walk(dir, filext = ".json") {
@@ -43,7 +43,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
         let teamType = args[1] ? args[1].toLowerCase() : ""
         let filepath = "./rosters/dbs"
         let profiles = []
-        let socials = JSON.parse(fs.readFileSync("./rosters/dbs/socials/users.json", "utf8"))
+        let socials = JSON.parse(fs.readFileSync("./src/rosters/dbs/socials/users.json", "utf8"))
 
         if (gameID.indexOf("staff") == -1) {
             filepath += "/teams"
@@ -82,7 +82,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
         for (filepath of profiles) {
             let props = { caption: {}, author: {}, players: {} }
             let profile = JSON.parse(fs.readFileSync(filepath, "utf8"))
-            let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+            let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
 
             // Title
             props.caption.text = profile.title
@@ -174,7 +174,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
             // Team Members
             if (profile?.members) {
                 if (filepath.includes("teams")) {
-                    let management = JSON.parse(fs.readFileSync("./rosters/dbs/staff/management.json","utf8"))
+                    let management = JSON.parse(fs.readFileSync("./src/rosters/dbs/staff/management.json","utf8"))
                     if (management?.members) {
                         if (Object.keys(management.members).includes(emojiKey)) {
                             if (management.members[emojiKey]?.users) {

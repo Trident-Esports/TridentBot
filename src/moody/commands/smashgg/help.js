@@ -1,5 +1,5 @@
-const VillainsCommand = require('../../classes/vcommand.class')
-const VillansEmbed = require('../../classes/vembed.class')
+const VillainsCommand = require('../../classes/command/vcommand.class')
+const VillansEmbed = require('../../classes/embed/vembed.class')
 const fs = require('fs')
 
 module.exports = class EventHelpCommand extends VillainsCommand {
@@ -19,7 +19,7 @@ module.exports = class EventHelpCommand extends VillainsCommand {
             `This is a list of the commands and help for VillainsBot Events.`,
             `If you would like General or MiniGame Help use \`${this.prefix}help\` or \`${this.prefix}gamehelp\``
         ]
-        let eventhelpData = JSON.parse(fs.readFileSync("./dbs/eventhelp.json", "utf8"))
+        let eventhelpData = JSON.parse(fs.readFileSync("./src/dbs/eventhelp.json", "utf8"))
 
         // Bail if we fail to get mod help data
         if (!eventhelpData) {

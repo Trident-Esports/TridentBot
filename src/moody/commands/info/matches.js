@@ -129,7 +129,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
             }
         }
 
-        let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+        let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
 
         let pages = []
 

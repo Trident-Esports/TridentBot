@@ -22,10 +22,8 @@ module.exports = class BotInviteCommand extends VillainsCommand {
     }
 
     async action(client, message) {
-        let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
-
         let url = ""
-        let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+        let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
 
         if (!defaults) {
             this.error = true

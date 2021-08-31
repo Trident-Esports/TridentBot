@@ -1,7 +1,5 @@
-<<<<<<< HEAD:src/moody/classes/command/gamecommand.class.js
 // @ts-check
 
-=======
 /*
 
 Command that conditionally loads extensions for MongoDB
@@ -11,7 +9,6 @@ BaseCommand
   GameCommand
 
 */
->>>>>>> src:src/moody/classes/gamecommand.class.js
 const VillainsCommand = require('./vcommand.class');
 
 const fs = require('fs');
@@ -58,14 +55,13 @@ module.exports = class GameCommand extends VillainsCommand {
                 this[key] = require(path)
             }
         }
-<<<<<<< HEAD:src/moody/classes/command/gamecommand.class.js
 
         // Get list of game emojis
         /**
          * @type {Object.<string, string>} List of emojis for use in Game Commands
          * @public
          */
-        this.emojis = JSON.parse(fs.readFileSync("./game/dbs/emojis.json", "utf8"));
+        this.emojis = JSON.parse(fs.readFileSync("./src/game/dbs/emojis.json", "utf8"));
 
         // Bail if we fail to get game emojis data
         if (!(this.emojis)) {
@@ -73,9 +69,6 @@ module.exports = class GameCommand extends VillainsCommand {
             this.props.description = "Failed to get Game Emojis data."
             return
         }
-=======
-        this.emojis = JSON.parse(fs.readFileSync("./src/game/dbs/emojis.json", "utf8"));
->>>>>>> src:src/moody/classes/gamecommand.class.js
     }
 
     /**
@@ -95,15 +88,11 @@ module.exports = class GameCommand extends VillainsCommand {
         this.#emojis = emojis
     }
 
-<<<<<<< HEAD:src/moody/classes/command/gamecommand.class.js
     /**
      * Standardize DB keys for MongoDB management
      * @param {string} extension Extension type to load
      * @returns {Promise.<Array.<string>>} Extension data
      */
-=======
-    // Standardize DB keys for MongoDB management
->>>>>>> src:src/moody/classes/gamecommand.class.js
     async db_key(extension) {
         let key = extension + "Model"
         let path = "../../models/" + extension + "Schema"
@@ -116,16 +105,12 @@ module.exports = class GameCommand extends VillainsCommand {
         return [key, path]
     }
 
-<<<<<<< HEAD:src/moody/classes/command/gamecommand.class.js
     /**
      * Standardize query for MongoDB management
      * @param {string} userID UserID
      * @param {string} model Model Type
      * @returns {Promise<*>} Query result
      */
-=======
-    // Standardize query for MongoDB management
->>>>>>> src:src/moody/classes/gamecommand.class.js
     async db_query(userID, model) {
         let pieces = await this.db_key(model)
         model = pieces[0]
@@ -142,7 +127,6 @@ module.exports = class GameCommand extends VillainsCommand {
         }
     }
 
-<<<<<<< HEAD:src/moody/classes/command/gamecommand.class.js
     //FIXME: Inventory Model doesn't get modified at all ???
     /**
      * Standardize transform command for MongoDB management
@@ -152,11 +136,6 @@ module.exports = class GameCommand extends VillainsCommand {
      * @returns {Promise<*>} True if level-up
      */
     async db_transform(userID, type, amount = 0) {
-=======
-    // Standardize transform command for MongoDB management
-    //FIXME: Inventory Model doesn't get modified at all ???
-    async db_transform(userID, type, amount) {
->>>>>>> src:src/moody/classes/gamecommand.class.js
         let amounts = {}
         let method = "$inc"
         if (typeof type === "object") {

@@ -1,4 +1,4 @@
-const TeamListingCommand = require('../../classes/teamlistingcommand.class');
+const TeamListingCommand = require('../../classes/command/teamlistingcommand.class');
 
 module.exports = class MatchCommand extends TeamListingCommand {
     constructor() {

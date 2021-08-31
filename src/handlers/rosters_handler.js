@@ -5,7 +5,7 @@ const fs = require('fs');
 const MatchesCommand = require('../moody/commands/info/matches')
 const LeagueCommand = require('../moody/commands/info/league')
 const RosterCommand = require('../moody/commands/info/roster')
-const VillainsEmbed = require('../moody/classes/vembed.class');
+const VillainsEmbed = require('../moody/classes/embed/vembed.class');
 
 let walk = function (dir) {
     let results = [];
@@ -29,7 +29,9 @@ let walk = function (dir) {
 let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
 
 module.exports = (client, message, args) => {
-    let dir = "./src/rosters"
+    let dir = "./src/rosters/dbs"
+    let org = "vln"
+    dir += '/' + org
     const rosters_profiles = walk(dir)
     let roster_aliases = {}
 

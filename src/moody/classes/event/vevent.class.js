@@ -19,7 +19,7 @@ module.exports = class VillainsEvent extends BaseEvent {
      * @returns {Promise.<Channel>}
      */
     async getChannel(message, channelType) {
-        let channelIDs = JSON.parse(fs.readFileSync("./dbs/channels.json","utf8"))
+        let channelIDs = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/channels.json","utf8"))
         let channelID = ""
         let channel = null
 

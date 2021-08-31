@@ -1,5 +1,5 @@
-const VillainsCommand = require('../../classes/vcommand.class');
-const VillainsEmbed = require('../../classes/vembed.class');
+const VillainsCommand = require('../../classes/command/vcommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 const { GraphQLClient } = require('graphql-request');
 const fs = require('fs');
 require('dotenv').config()
