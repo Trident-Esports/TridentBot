@@ -17,6 +17,9 @@ module.exports = class FootCommand extends VillainsCommand {
                 msg: "Foot Footer!"
             }
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 }

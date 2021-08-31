@@ -10,6 +10,8 @@ module.exports = class BuyCommand extends ShopCommand {
             description: 'Buy an Item from the Store',
             extensions: [ "inventory", "profile" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 }

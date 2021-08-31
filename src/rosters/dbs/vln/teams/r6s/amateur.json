@@ -1,0 +1,39 @@
+{
+  "stripe": "default",
+  "title": "R6S Amateur Roster",
+  "aliases": ["r6ar"],
+  "url": "https://discord.com/channels/788021898146742292/788558005917450251/815180306952880158",
+  "team": {
+    "teamID": "262468",
+    "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/320506_t1_cgau-11k-oP-v633V7Jgsia-thumb.png",
+    "lpl": {
+      "teamID": "262468",
+      "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/320506_t1_cgau-11k-oP-v633V7Jgsia-thumb.png",
+      "#note": "NYI"
+    }
+  },
+  "#url": "#rosters: R6S Amateur",
+  "members": {
+    "coach": {
+      "title": "Coach",
+      "users": []
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "cloudfulla",
+        "fxulty",
+        "kingerss",
+        "linxx",
+        "voon"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+        "milo",
+        "error"
+      ]
+    }
+  }
+}

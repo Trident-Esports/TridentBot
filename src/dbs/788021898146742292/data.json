@@ -1,0 +1,18 @@
+{
+  "socials": [
+    {
+      "text": "Follow Villains Esports Socials!",
+      "url": "https://linktr.ee/Villainsesc"
+    }
+  ],
+  "smashgg": {
+    "fall2021": {
+      "tourney": {
+        "slug": "3v3-villains-90-rocket-league-tournament"
+      },
+      "event": {
+        "idx": 0
+      }
+    }
+  }
+}

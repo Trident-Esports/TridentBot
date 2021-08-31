@@ -1,22 +1,13 @@
 //@ts-check
 
 const Discord = require('discord.js'); // Base Discord module
+const { Client, Intents, Collection } = require('discord.js'); // Base Discord module
 const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
+require('dotenv').config()
 
 const client = new MoodyClient({
-    partials: ["MESSAGE", "CHANNEL", "REACTION"]
-    // discord.js v13
-    // intents: [
-    //     new Discord.Intents(
-    //         [
-    //             Discord.Intents.FLAGS.GUILDS,
-    //             Discord.Intents.FLAGS.GUILD_MESSAGES,
-    //             Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-    //             Discord.Intents.FLAGS.DIRECT_MESSAGES,
-    //             Discord.Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
-    //         ]
-    //     )
-    // ]
+    partials: ["MESSAGE", "CHANNEL", "REACTION"],
+    // intents: [ Intents.FLAGS.GUILDS ]
 });  // Discord Client object
 
 const mongoose = require('mongoose'); // Mongoose
@@ -25,21 +16,46 @@ const Levels = require('discord-xp') // Discord Game XP
 
 //Login Tokens
 const fs = require('fs');
-let SENSITIVE = JSON.parse(fs.readFileSync("./SENSITIVE.json", "utf8"));
 
-const DEFAULTS = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"));
-const prefix = DEFAULTS?.prefix ? DEFAULTS.prefix : "." // Default prefix
+let SENSITIVE = null
+try {
+    SENSITIVE = JSON.parse(fs.readFileSync("./src/SENSITIVE.json", "utf8"));
+} catch (err) {
+    console.log("Main: SENSITIVE manifest not found!")
+    process.exit(1)
+}
+
+// Bail if we fail to get secrets file
+if (!SENSITIVE) {
+    console.log("Failed to get secrets file.")
+    process.exit(1)
+}
+
+const DEFAULTS = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"));
+
+// Bail if we fail to get server profile information
+if (!DEFAULTS) {
+    console.log("Failed to get server profile information.")
+    process.exit(1)
+}
+
+const prefix = DEFAULTS.prefix // Default prefix
+// Bail if we fail to get command prefix
+if (!prefix) {
+    console.log("Failed to get command prefix.")
+    process.exit(1)
+}
 
 try {
     // @ts-ignore
     Levels.setURL(SENSITIVE.client.mongoDB);
 } catch {
-    console.log("MongoDB: Failed to connect!");
-    process.exit(1);
+    console.log("MongoDB: Failed to connect!")
+    process.exit(1)
 }
 
-client.commands = new Discord.Collection();
-client.events = new Discord.Collection();
+client.commands = new Collection();
+client.events = new Collection();
 
 // Load Handlers
 [
@@ -47,12 +63,12 @@ client.events = new Discord.Collection();
     'game_handler',
     'rosters_handler'
 ].forEach(handler => {
-    require(`./handlers/${handler}`)(client, Discord);
+    require(`./handlers/${handler}`)(client);
 })
 
 // Connect to DB
 mongoose.connect(
-        SENSITIVE.client.mongoDB,
+        process.env.client_mongoDB,
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
@@ -69,7 +85,7 @@ mongoose.connect(
 console.log("---")
 const handler = new Handler(client, {
     prefix: prefix,
-    token: SENSITIVE.client.login,
+    token: process.env.client_login,
     commandsPath: __dirname + "/moody/commands",
     eventsPath: __dirname + "/moody/events",
     owners: [

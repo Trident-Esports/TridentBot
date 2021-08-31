@@ -10,6 +10,8 @@ module.exports = class SuggestionsCommand extends QuestionnaireCommand {
             category: "meta",
             description: "Suggestions"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 }

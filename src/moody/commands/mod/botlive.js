@@ -10,7 +10,9 @@ module.exports = class BotLiveCommand extends AdminCommand {
             category: "admin",
             description: "Make bot Go Live"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async run(client, message, args) {
@@ -18,7 +20,7 @@ module.exports = class BotLiveCommand extends AdminCommand {
         let twitchID = this.inputData.args.shift()
         args = [
             "watching",
-            "https://twitch.tv/" + twitchID,
+            `https://twitch.tv/${twitchID}`,
             this.inputData.args.join(" ")
         ]
         let botActivity = new BotActivityCommand()

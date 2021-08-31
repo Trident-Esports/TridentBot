@@ -12,7 +12,9 @@ module.exports = class WeatherCommand extends VillainsCommand {
             category: "information",
             description: "Check your weather!"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
@@ -22,7 +24,12 @@ module.exports = class WeatherCommand extends VillainsCommand {
         }
         let args = this.inputData.args
         let props = { caption: {}, players: { user: {}, bot: {} } }
-        let search = this.inputData.args.join(" ")
+        let search = this.inputData.args.join(" ").trim()
+        if (search == "") {
+            this.error = true
+            this.props.description = "Please specify a location."
+            return
+        }
         weather.find({
             search: search,
             degreeType: degreeType
@@ -80,10 +87,12 @@ module.exports = class WeatherCommand extends VillainsCommand {
                     }
                 ]
             }
-            let embed = new VillainsEmbed(props)
+            let embed = new VillainsEmbed({...props})
             // message.channel.send({ embeds: [embed] })
             message.channel.send(embed)
         })
+        // We'll handle sending it
+        // SELFHANDLE: Inline Callback
         this.null = true
     }
 }

@@ -40,15 +40,14 @@ module.exports = class MessageEvent extends VillainsEvent {
 
             // No Special Case
             return
-        } else if (message.content == handler.options.prefix) {
+        } else if (message.content.trim() == handler.options.prefix.trim()) {
             // Message is only prefix
             let props = {
-                caption: { text: "VillainsBot" },
+                caption: { text: handler.client.user.username },
                 title: { text: "Error" },
                 description: "Please send a proper command."
             }
-            let embed = new VillainsEmbed(props);
-            message.channel.send(embed)
+            message.channel.send(new VillainsEmbed({...props}))
             return;
         }
 

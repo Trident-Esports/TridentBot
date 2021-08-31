@@ -35,6 +35,8 @@ module.exports = class GuildMemberRemoveEvent extends VillainsEvent {
 
         if (channel) {
             try {
+                // Put into guild profile document
+                // <@${member.user.id}> -> %%user%%
                 let rules = [
                     `<@${member.id}> has just become a **Hero**.`
                 ]

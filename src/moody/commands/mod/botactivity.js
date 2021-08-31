@@ -14,13 +14,16 @@ module.exports = class BotActivityCommand extends AdminCommand {
                 user: "unapplicable"
             }
         }
-        props = Object.assign(props,
-        {
+        props = {
+            ...props,
             caption: {
                 text: "Bot Activity"
             }
-        })
-        super(comprops, props)
+        }
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 
     async action(client, message) {

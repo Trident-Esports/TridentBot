@@ -1,12 +1,9 @@
 {
   "admin": [
-    "MEGAMIND",
     "Overlords",
     "Evil Council"
   ],
   "mod": [
-    "Mod",
-    "Moderator",
     "Evil Mod"
   ],
   "rules": "Accepted Values",

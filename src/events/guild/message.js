@@ -18,7 +18,7 @@ function formatUnicorn(str, args) {
 };
 
 module.exports = async (Discord, client, message) => {
-    const defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+    const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
     const prefix = defaults?.prefix ? defaults.prefix : "." // Default prefix
 
     //FIXME: Obsolete?
@@ -73,8 +73,7 @@ module.exports = async (Discord, client, message) => {
             ]
         }
 
-        let embed = new VillainsEmbed(props)
-        message.channel.send(embed)
+        message.channel.send(new VillainsEmbed({...props}))
     }
 
     let healthData;

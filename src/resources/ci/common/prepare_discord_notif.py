@@ -8,7 +8,7 @@ import sys                            # exit command
 from argparse import ArgumentParser   # for argument variables
 
 CI_SETTINGS = {}
-with(open(os.path.join(".","resources","app","meta","manifests","ci.json"))) as ci_settings_file:
+with(open(os.path.join(".","src","resources","app","meta","manifests","ci.json"))) as ci_settings_file:
   CI_SETTINGS = json.load(ci_settings_file)
 
 # default stuff

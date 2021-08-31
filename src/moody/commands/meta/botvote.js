@@ -14,14 +14,14 @@ module.exports = class BotVoteCommand extends VillainsCommand {
                 text: "Bot Vote"
             }
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 
     async action(client, message) {
-        let url = ""
-        url += "https://top.gg/bot/"
-        url += "828317713256415252"
-        url += "/vote"
+        let url = `https://top.gg/bot/${client.user.id}/vote`
         this.props.description = `***[Vote for @VillainsBot on top.gg!](${url} '${url}')***`
 
         this.props.footer = {

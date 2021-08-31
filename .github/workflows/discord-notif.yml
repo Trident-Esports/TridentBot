@@ -29,4 +29,4 @@ jobs:
         env:
           DISCORD_WEBHOOK_UPDATES: ${{ secrets.DISCORD_WEBHOOK_UPDATES }}
         run: |
-          python ./resources/ci/common/prepare_discord_notif.py
+          python ./src/resources/ci/common/prepare_discord_notif.py

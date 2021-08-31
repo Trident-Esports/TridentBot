@@ -11,7 +11,9 @@ module.exports = class WarnCommand extends ModCommand {
             category: "admin",
             description: "Warns user"
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
@@ -21,6 +23,7 @@ module.exports = class WarnCommand extends ModCommand {
         if (!user) {
             this.error = true
             this.props.description = this.errors.cantActionSelf
+            return
         }
 
         const reason = this.inputData.args.join(" ")
@@ -35,37 +38,36 @@ module.exports = class WarnCommand extends ModCommand {
         if (!reason) {
             this.error = true
             this.props.description = this.errors.noReason
+            return
         }
 
-        if(!(this.error)) {
-            db.findOne({
-                guildID: message.guild.id,
-                user: user.id
-            }, async (err, data) => {
-                if (err) throw err;
+        db.findOne({
+            guildID: message.guild.id,
+            user: user.id
+        }, async (err, data) => {
+            if (err) throw err;
 
-                if (!data) {
-                    data = new db({
-                        guildID: message.guild.id,
-                        user: user.id,
-                        content: [{
-                            moderator: message.author.id,
-                            reason: reason
-                        }]
-                    })
-                } else {
-                    const obj = {
+            if (!data) {
+                data = new db({
+                    guildID: message.guild.id,
+                    user: user.id,
+                    content: [{
                         moderator: message.author.id,
                         reason: reason
-                    }
-                    if (!obj.reason) {
-                        data = false
-                    } else {
-                        data.content.push(obj)
-                    }
+                    }]
+                })
+            } else {
+                const obj = {
+                    moderator: message.author.id,
+                    reason: reason
                 }
-                data.save()
-            });
-        }
+                if (!obj.reason) {
+                    data = false
+                } else {
+                    data.content.push(obj)
+                }
+            }
+            data.save()
+        });
     }
 }

@@ -13,6 +13,9 @@ module.exports = class PingCommand extends VillainsCommand {
             title: { text: "Pong!" },
             image: "https://thumbs.gfycat.com/VariableNervousAfricancivet-small.gif"
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 }

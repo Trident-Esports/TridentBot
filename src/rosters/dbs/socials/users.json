@@ -43,12 +43,10 @@
     "twitch": "cloudfulla",
     "twitter": "cloudfulla"
   },
-  "creeky": {
-  },
-  "crash": {
-  },
+  "creeky": {},
+  "crash": {},
   "crima": {
-    "twitter":"kiliancrima"
+    "twitter": "kiliancrima"
   },
   "damien": {
     "twitch": "damienzsr1"
@@ -98,8 +96,7 @@
     "twitter": "subtleglitch_",
     "twitch": "thesubtleglitch"
   },
-  "glny": {
-  },
+  "glny": {},
   "griteo": {
     "twitter": "griteo_r6",
     "twitch": "griteo_r6"
@@ -222,11 +219,6 @@
     "twitch": "nhelvyy",
     "twitter": "nhelvyy1"
   },
-  "noongar1800": {
-    "instagram": "chriscelenzave",
-    "twitch": "noongar1800",
-    "twitter": "chrisc237"
-  },
   "olivia": {
     "instagram": "heyyitsoli",
     "twitch": "olimonte182",
@@ -246,11 +238,16 @@
     "twitch": "pichua",
     "twitter": "pichua_"
   },
-  "phoebe": {
-  },
+  "phoebe": {},
   "pocket": {
     "steam": "pocket_sack",
     "twitter": "pocket_val"
+  },
+  "pokerface": {
+    "stylized": "PokerFace",
+    "instagram": "chriscelenzave",
+    "twitch": "pokerface0430",
+    "twitter": "chrisc237"
   },
   "prime": {
     "stylized": "PrimeWarGamer",
@@ -332,7 +329,7 @@
     "twitch": "elluzionzz",
     "twitter": "elluzionzz"
   },
-  "sotto" : {
+  "sotto": {
     "twitter": "",
     "twitch": "ahhsotto"
   },

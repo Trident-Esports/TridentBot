@@ -13,6 +13,6 @@ const exec = async (commands) => {
 // use like this
 exec(
     [
-        "node --unhandled-rejections=strict ."
+        "node --unhandled-rejections=strict ./src/main.js"
     ]
 )

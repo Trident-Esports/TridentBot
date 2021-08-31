@@ -11,6 +11,8 @@ module.exports = class SurveyCommand extends QuestionnaireCommand {
             channelName: "survey",
             emoji: [ "✅", "❌" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 }

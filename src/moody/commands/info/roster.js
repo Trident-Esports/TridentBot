@@ -1,35 +1,41 @@
 //@ts-check
 
-const VillainsCommand = require('../../classes/command/vcommand.class');
-const VillainsEmbed = require('../../classes/embed/vembed.class');
+const TeamListingCommand = require('../../classes/teamlistingcommand.class');
+const VillainsEmbed = require('../../classes/vembed.class');
 const fs = require('fs');
 
-function walk(dir) {
+function walk(dir, filext = ".json") {
     let results = [];
-    let list = fs.readdirSync(dir);
-    list.forEach(function (file) {
-        file = dir + '/' + file;
-        let stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) {
-            /* Recurse into a subdirectory */
-            results = results.concat(walk(file));
-        } else {
-            /* Is a JSON file */
-            if (file.endsWith(".json")) {
-                results.push(file);
+    if (fs.existsSync(dir)) {
+        let list = fs.readdirSync(dir);
+        list.forEach(function (file) {
+            file = dir + '/' + file;
+            let stat = fs.statSync(file);
+            if (stat && stat.isDirectory()) {
+                /* Recurse into a subdirectory */
+                results = results.concat(walk(file));
+            } else {
+                /* Is a JSON file */
+                if (file.endsWith(filext)) {
+                    results.push(file);
+                }
             }
-        }
-    });
+        });
+    } else {
+        console.log(`FS Walk: '${dir}' doesn't exist!`);
+    }
     return results;
 }
 
-module.exports = class RosterCommand extends VillainsCommand {
+module.exports = class RosterCommand extends TeamListingCommand {
     constructor() {
-        super({
-            name: "roster",
-            category: "information",
-            description: "Display a roster"
-        })
+        super(
+            {
+                name: "roster",
+                category: "information",
+                description: "Display a roster"
+            }
+        )
     }
 
     async run(client, message, args) {
@@ -44,12 +50,18 @@ module.exports = class RosterCommand extends VillainsCommand {
         }
 
         if (gameID != "") {
-            if (gameID.startsWith("val")) {
-                // val
-                gameID = "val"
+            if (gameID.startsWith("cs")) {
+                // cs -> csgo
+                gameID = "csgo"
+            } else if (gameID.startsWith("r6")) {
+                // r6 -> r6s
+                gameID = "r6s"
             } else if (gameID == "rl") {
                 // rl -> rocketleague
                 gameID = "rocketleague"
+            } else if (gameID.startsWith("val")) {
+                // valorant -> val
+                gameID = "val"
             }
             filepath += '/' + gameID
             if (teamType != "") {
@@ -104,18 +116,32 @@ module.exports = class RosterCommand extends VillainsCommand {
             if (profile?.url && profile.url != "") {
                 props.caption.url = profile.url
             }
+            let tourneyID = 0
+            let teamID = 0
+            if (profile?.team?.tourneyID) {
+                tourneyID = profile.team.tourneyID
+            }
+            if (profile?.team?.lpl?.tourneyID) {
+                tourneyID = profile.team.lpl.tourneyID
+            }
             if (profile?.team?.teamID) {
-                let url = "http://tridentoce.mymm1.com/"
+                teamID = profile.team.teamID
+            }
+            if (profile?.team?.lpl?.teamID) {
+                teamID = profile.team.lpl.teamID
+            }
+            if (teamID > 0) {
+                let url = "http://villainsoce.mymm1.com/"
                 let name = "LPL Team #"
-                if(profile?.team?.tourneyID) {
-                    url += "tourney/" + profile.team.tourneyID + '/'
-                    name += profile.team.tourneyID + '/'
+                if(tourneyID > 0) {
+                    url += "tourney/" + tourneyID + '/'
+                    name += tourneyID + '/'
                 }
-                if(!(profile?.team?.tourneyID)) {
+                if(tourneyID == 0) {
                     url += "team/"
                 }
-                url += profile.team.teamID
-                name += profile.team.teamID
+                url += teamID
+                name += teamID
                 props.description += `*[${name}](${url} '${url}')*`
                 props.caption.url = url
             }
@@ -131,12 +157,19 @@ module.exports = class RosterCommand extends VillainsCommand {
             }
 
             // Team Avatar
+            let avatar = ""
             if (profile?.team?.avatar && profile.team.avatar != "") {
+                avatar = profile.team.avatar
+            }
+            if (profile?.team?.lpl?.avatar && profile.team.lpl.avatar != "") {
+                avatar = profile.team.lpl.avatar
+            }
+            if (avatar != "") {
                 props.players.target = {...props.players.user}
-                props.players.target.avatar = profile.team.avatar
+                props.players.target.avatar = avatar
             }
 
-            let rosterEmbed = new VillainsEmbed(props)
+            let rosterEmbed = new VillainsEmbed({...props})
 
             // Team Members
             if (profile?.members) {

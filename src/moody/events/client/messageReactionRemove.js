@@ -15,7 +15,7 @@ module.exports = class MessageReactionRemoveEvent extends VillainsEvent {
         if (user.bot) return
         if (!reaction.message.guild) return
 
-        let RULES_ROLE = JSON.parse(fs.readFileSync("./dbs/roles.json","utf8"))["rules"]
+        let RULES_ROLE = JSON.parse(fs.readFileSync("./dbs/" + reaction.message.guild.id + "/roles.json","utf8"))["rules"]
         if (RULES_ROLE) {
             RULES_ROLE = reaction.message.guild.roles.cache.find(role => role.name === RULES_ROLE)
             if (RULES_ROLE) {

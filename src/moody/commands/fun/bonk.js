@@ -14,7 +14,9 @@ module.exports = class BonkCommand extends VillainsCommand {
                 bot: "invalid"
             }
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {

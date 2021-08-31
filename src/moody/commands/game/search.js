@@ -12,12 +12,16 @@ module.exports = class SearchCommand extends GameCommand {
             description: 'Choose your search location and have a chance at some gold!',
             extensions: ["profile", "levels", "health"]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
+        // Get loaded target
         const loaded = this.inputData.loaded
 
+        // XP Reward: 50 - 200
         const randomXP = Math.floor(Math.random() * 200) + 50;
         const hasLeveledUP = await this.db_transform(loaded.id, "xp", randomXP);
 
@@ -31,25 +35,35 @@ module.exports = class SearchCommand extends GameCommand {
             "Abandoned Mine",
         ];
 
+        // Pick 3 random locations
         let chosenLocations = LOCATIONS.sort(() => Math.random() - Math.random()).slice(0, 3);
 
         this.props.title = { text: "Which location would you like to search? 🔍" }
         this.props.description = `\`${chosenLocations.join("`" + "\n" + "`")}\``
 
+        // Gold Reward: 100 - 1000
         const RANDOM_NUMBER = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
+        // Minion Reward: 1 - 10
         const RANDOM_MINIONS = Math.floor(Math.random() * 10) + 1;
+        // Health Cost: 1 - 10
         let Health_Loss = Math.floor(Math.random() * 10) + 1;
 
+        // Match answer
         const FILTER = (m) => {
-            return chosenLocations.some((answer) => answer.split(" ").pop().toLowerCase() === m.content.split(" ").pop().toLowerCase()) && m.author.id === loaded.id;
+            return chosenLocations.some(
+                (answer) => answer.split(" ").pop().toLowerCase() === m.content.split(" ").pop().toLowerCase()
+            ) &&
+            m.author.id === loaded.id;
         };
 
         // const COLLECTOR = message.channel.createMessageCollector({FILTER, // discord.js v13
+        // 25 seconds to collect
         const COLLECTOR = message.channel.createMessageCollector(FILTER, {
             max: 1,
             time: 25000
         });
 
+        // Special stripes
         this.props["success"] = {
             "color": "#00FF00"
         }
@@ -72,6 +86,7 @@ module.exports = class SearchCommand extends GameCommand {
 
             this.props.title.text = `${loaded.username} searched the ${location} 🕵️`
 
+            // Ding message
             if (hasLeveledUP) {
                 const user = await this.db_query(loaded.id, "levels");
                 let reward = {
@@ -90,6 +105,7 @@ module.exports = class SearchCommand extends GameCommand {
                 ].join(" • ")
             }
 
+            // Success
             if (number <= success) {
                 // Gold Increase
                 await this.db_transform(loaded.id, "gold", RANDOM_NUMBER)
@@ -109,6 +125,7 @@ module.exports = class SearchCommand extends GameCommand {
                     }
                 ]
             } else if (number <= fail) {
+                // Fail
                 // Gold Decrease
                 await this.db_transform(loaded.id, "gold", -RANDOM_NUMBER)
 
@@ -132,6 +149,7 @@ module.exports = class SearchCommand extends GameCommand {
                 ]
 
             } else if (number <= special) {
+                // ??? PROFIT
                 // Minions Increase
                 await this.db_transform(loaded.id, "minions", RANDOM_MINIONS)
 
@@ -154,7 +172,9 @@ module.exports = class SearchCommand extends GameCommand {
                     }
                 ]
             }
-            this.send(message, new VillainsEmbed(this.props))
+            // We'll handle sending it
+            // SELFHANDLE: Collector Collected
+            this.send(message, new VillainsEmbed({...this.props}))
             this.null = true
         });
 
@@ -173,7 +193,10 @@ module.exports = class SearchCommand extends GameCommand {
                         inline: true
                     }
                 ]
-                this.send(message, new VillainsEmbed(this.props))
+
+                // We'll handle sending it
+                // SELFHANDLE: Collector Timed Out
+                this.send(message, new VillainsEmbed({...this.props}))
                 this.null = true
             }
         });

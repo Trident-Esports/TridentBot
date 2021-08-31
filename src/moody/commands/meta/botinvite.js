@@ -15,26 +15,38 @@ module.exports = class BotInviteCommand extends VillainsCommand {
                 text: "Bot Invite"
             }
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 
     async action(client, message) {
         let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
 
         let url = ""
+        let defaults = JSON.parse(fs.readFileSync("./dbs/defaults.json", "utf8"))
+
+        if (!defaults) {
+            this.error = true
+            this.props.description = "Failed to get bot defaults information."
+            return
+        }
+
         if(
-          defaults?.bot?.clientID &&
+          client?.user?.id &&
           defaults?.bot?.scope &&
           defaults?.bot?.permissions
         ) {
             url += "https://discord.com/oauth2/authorize"
-            url += "?client_id=" + defaults.bot.clientID
+            url += "?client_id=" + client.user.id
             url += "&scope=" + defaults.bot.scope
             url += "&permissions=" + defaults.bot.permissions
             this.props.description = `***[Invite @VillainsBot to your Discord!](${url} '${url}')***`
         } else {
             this.error = true
             this.props.description = "No invite link found in defaults."
+            return
         }
     }
 }

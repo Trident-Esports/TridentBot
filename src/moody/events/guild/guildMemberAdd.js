@@ -62,6 +62,11 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
 
             try {
                 let rules = [
+                    // Put into guild profile document
+                    // <@${member.user.id}> -> %%user%%
+                    // ${member.guild.name} -> %%guild%%
+                    // ${RULES_CHANNEL.toString()} -> %%rulesChannel%%
+                    // ${ROLES_CHANNEL.toString()} -> %%rolesChannel%%
                     `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
                     "**Are you ready to become a Super Villain?**",
                     "",
@@ -70,10 +75,9 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
                     `Also to access the server channels, please go to ${ROLES_CHANNEL.toString()}.`
                 ]
                 let props = {
-                    title: "Welcome to ${member.guild.name}",
+                    title: `Welcome to ${member.guild.name}`,
                     description: rules.join("\n")
                 }
-                const embed = new VillainsEmbed(props);
 
                 // @ts-ignore
                 // await channel.send({ embeds: [embed] }); // discord.js v13

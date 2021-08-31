@@ -27,7 +27,10 @@ module.exports = class BotGuildsCommand extends AdminCommand {
                 text: "Bot Guilds"
             }
         }
-        super(comprops, props)
+        super(
+            {...comprops},
+            {...props}
+        )
     }
 
     async action(client, message) {

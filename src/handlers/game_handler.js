@@ -5,7 +5,7 @@ const fs = require('fs');
 
 module.exports = (client) => {
     // Get list of files
-    const game_files = fs.readdirSync('./game').filter(file => file.endsWith('.js'));
+    const game_files = fs.readdirSync('./src/game').filter(file => file.endsWith('.js'));
 
     // Cycle through files
     for (const file of game_files) {

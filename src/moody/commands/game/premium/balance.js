@@ -11,12 +11,16 @@ module.exports = class BalanceCommand extends GameCommand {
             description: 'Checks the Users Balance',
             extensions: [ "profile" ]
         }
-        super(comprops)
+        super(
+            {...comprops}
+        )
     }
 
     async action(client, message) {
+        // Get loaded target
         const loaded = this.inputData.loaded
 
+        // Get loaded profile data
         const profileData = await this.db_query(loaded.id, "profile")
 
         this.props.description = `This is <@${loaded.id}>'s Balance`
