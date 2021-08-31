@@ -1,0 +1,16 @@
+{
+  "stripe": "default",
+  "title": "Owners",
+  "aliases": ["owners"],
+  "members": {
+    "owner": {
+      "title": "Owners",
+      "users": [
+        "blackjackfx",
+        "queen",
+        "scubasteve",
+        "ty"
+      ]
+    }
+  }
+}

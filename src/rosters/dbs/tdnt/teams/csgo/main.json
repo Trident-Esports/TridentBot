@@ -1,0 +1,17 @@
+{
+  "stripe": "default",
+  "title": "CSGO Roster",
+  "aliases": ["csr"],
+  "members": {
+    "main": {
+      "title": "Main",
+      "users": [
+        "bridledhawk",
+        "fish",
+        "happyduckss",
+        "raim",
+        "yugiohaddict"
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "stripe": "default",
+  "title": "Management",
+  "aliases": ["management"],
+  "members": {
+    "caster": {
+      "title": "Casters",
+      "users": [
+        "scubasteve"
+      ]
+    },
+    "crm": {
+      "title": "Community Engagement",
+      "users": [
+        "pokerface"
+      ]
+    },
+    "content creator": {
+      "title": "Content Creators",
+      "users": [
+        "zenom"
+      ]
+    },
+    "discord": {
+      "title": "Discord",
+      "users": [
+        "miketrethewey"
+      ]
+    },
+    "social media": {
+      "title": "Social Media",
+      "users": [
+        "dania"
+      ]
+    },
+    "team": {
+      "title": "Team Operations",
+      "users": [
+        "clicker"
+      ]
+    }
+  }
+}

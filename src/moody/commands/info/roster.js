@@ -1,6 +1,6 @@
 //@ts-check
 
-const TeamListingCommand = require('../../classes/command/teamlistingcommand.class');
+const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 const fs = require('fs');
 
@@ -27,7 +27,7 @@ function walk(dir, filext = ".json") {
     return results;
 }
 
-module.exports = class RosterCommand extends TeamListingCommand {
+module.exports = class RosterCommand extends VillainsCommand {
     constructor() {
         super(
             {
@@ -39,7 +39,9 @@ module.exports = class RosterCommand extends TeamListingCommand {
     }
 
     async run(client, message, args) {
-        let org = "vln"
+        let guilds = JSON.parse(fs.readFileSync("./src/dbs/guilds.json","utf8"))
+        let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "vln"
+        org = "tdnt"
         let gameID = args[0] ? args[0].toLowerCase() : ""
         let teamType = args[1] ? args[1].toLowerCase() : ""
         let filepath = "./src/rosters/dbs"
@@ -175,15 +177,15 @@ module.exports = class RosterCommand extends TeamListingCommand {
 
             // Team Members
             if (profile?.members) {
-                if (filepath.includes("teams")) {
-                    let management = JSON.parse(fs.readFileSync("./src/rosters/dbs/" + org + "/staff/management.json","utf8"))
-                    if (management?.members) {
-                        if (Object.keys(management.members).includes(emojiKey)) {
-                            if (management.members[emojiKey]?.users) {
+                let management = JSON.parse(fs.readFileSync("./src/rosters/dbs/" + org + "/staff/management.json","utf8"))
+                if (management?.members) {
+                    for (let [groupName,] of Object.entries(profile.members)) {
+                        if (Object.keys(management.members).includes(groupName)) {
+                            if (management.members[groupName]?.users) {
                                 let newmembers = {
                                     managers: {
                                         title: "Manager",
-                                        users: management.members[emojiKey].users
+                                        users: management.members[groupName].users
                                     },
                                     ...profile.members
                                 }
@@ -192,7 +194,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
                         }
                     }
                 }
-                for (let [groupName, groupAttrs] of Object.entries(profile.members)) {
+                for (let [, groupAttrs] of Object.entries(profile.members)) {
                     let userSTR = ""
                     if (groupAttrs?.users?.length == 0) {
                         groupAttrs.users = [ "TBA" ]

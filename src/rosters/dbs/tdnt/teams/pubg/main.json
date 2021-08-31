@@ -1,0 +1,17 @@
+{
+  "stripe": "default",
+  "title": "PUBG Roster",
+  "aliases": ["pubgr"],
+  "members": {
+    "main": {
+      "title": "Main",
+      "users": [
+        "anothersavior",
+        "garfield",
+        "jam",
+        "millah",
+        "snow"
+      ]
+    }
+  }
+}

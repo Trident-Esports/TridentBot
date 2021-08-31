@@ -7,6 +7,9 @@
   "asdf": {
     "twitter": "csgo_doggo"
   },
+  "avalon": {
+    "twitter": "avalon_izanyan"
+  },
   "azmo": {
     "twitter": "azmorl"
   },
@@ -16,6 +19,11 @@
   "benstro": {
     "twitch": "benstrorl",
     "twitter": "benstro_"
+  },
+  "blackjackfx": {
+    "stylized": "BlackJackFx",
+    "twitch": "blackjackfx",
+    "twitter": "tridentesports"
   },
   "brew": {
     "twitch": "brewoce",
@@ -38,13 +46,25 @@
     "twitch": "chrisx888",
     "twitter": "chrisx_888"
   },
+  "clicker": {
+    "twitch": "clickernz"
+  },
   "cloudfulla": {
     "instagram": "jj_cloudfulla",
     "twitch": "cloudfulla",
     "twitter": "cloudfulla"
   },
-  "creeky": {},
-  "crash": {},
+  "codes": {
+    "twitter": "codyjaymedia"
+  },
+  "crash": {
+  },
+  "creeky": {
+  },
+  "crenuxe": {
+    "twitch": "crenux",
+    "twitter": "crenuxe"
+  },
   "crima": {
     "twitter": "kiliancrima"
   },
@@ -55,11 +75,24 @@
     "twitch": "dan22102",
     "twitter": "dan22102"
   },
+  "dania": {
+    "instagram": "",
+    "twitter": "",
+    "twitch": "dania77777777"
+  },
   "dazza": {
     "stylized": "DaZZa",
     "instagram": "darion.wong",
     "twitch": "pmdazza",
     "twitter": "vlndazza"
+  },
+  "docc": {
+    "twitch": "starpyurr",
+    "twitter": "starpyurr"
+  },
+  "emperorzk": {
+    "twitch": "emperor_zk",
+    "twitter": "emperor_zk"
   },
   "enigma": {
     "stylized": "ENiGMA",
@@ -80,6 +113,9 @@
     "instagram": "chanreq01",
     "twitter": "fluffy30483478"
   },
+  "garfield": {
+    "twitch": "garfieldlawl"
+  },
   "gem": {
     "twitter": "",
     "twitch": "",
@@ -96,7 +132,8 @@
     "twitter": "subtleglitch_",
     "twitch": "thesubtleglitch"
   },
-  "glny": {},
+  "glny": {
+  },
   "griteo": {
     "twitter": "griteo_r6",
     "twitch": "griteo_r6"
@@ -114,12 +151,6 @@
     "instagram": "angus_hall22",
     "twitch": "gussy_rl",
     "twitter": "angus66003225"
-  },
-  "hackermans": {
-    "stylized": "Dania",
-    "instagram": "",
-    "twitter": "",
-    "twitch": "dania77777777"
   },
   "harryhaz1": {
     "twitch": "harryhaz1",
@@ -159,8 +190,15 @@
   "klockzyy": {
     "twitter": "klockzyy"
   },
+  "koinz": {
+    "twitch": "kingkoinz",
+    "twitter": "taintedkoinz"
+  },
   "kr33pyy": {
     "twitter": "kr33pyy"
+  },
+  "legend": {
+    "twitch": "legendoce"
   },
   "lguns": {
     "stylized": "LGuns",
@@ -196,19 +234,23 @@
     "twitch": "miketrethewey",
     "twitter": "miketrethewey"
   },
+  "millah": {
+    "twitch": "millahh"
+  },
   "milo": {
     "instagram": "",
     "twitter": "",
     "twitch": "milodotdash"
+  },
+  "mishmanners": {
+    "twitch": "mishmanners",
+    "twitter": "mishmanners"
   },
   "monka": {
     "twitter": "monkaval"
   },
   "moth": {
     "twitter": "mothrl_"
-  },
-  "mysterio": {
-    "twitter": ""
   },
   "myth": {
     "instagram": "mattyt__",
@@ -218,6 +260,9 @@
   "nhelvyy": {
     "twitch": "nhelvyy",
     "twitter": "nhelvyy1"
+  },
+  "night": {
+    "twitch": "nightau"
   },
   "olivia": {
     "instagram": "heyyitsoli",
@@ -233,12 +278,17 @@
     "twitch": "orendascs",
     "twitter": "orendas_"
   },
+  "pandi": {
+    "twitch": "tridentpandi",
+    "twitter": "tridentpandi"
+  },
   "peachu": {
     "instagram": "sarah.holliday0",
     "twitch": "pichua",
     "twitter": "pichua_"
   },
-  "phoebe": {},
+  "phoebe": {
+  },
   "pocket": {
     "steam": "pocket_sack",
     "twitter": "pocket_val"
@@ -246,7 +296,7 @@
   "pokerface": {
     "stylized": "PokerFace",
     "instagram": "chriscelenzave",
-    "twitch": "pokerface0430",
+    "twitch": "noongar1800",
     "twitter": "chrisc237"
   },
   "prime": {
@@ -276,6 +326,9 @@
     "instagram": "james.robbo03",
     "twitch": "unknownrobbo",
     "twitter": "unknownrobbo"
+  },
+  "roninio": {
+    "twitch": "roninaus"
   },
   "rotor": {
     "stylized": "RoTor",
@@ -329,7 +382,10 @@
     "twitch": "elluzionzz",
     "twitter": "elluzionzz"
   },
-  "sotto": {
+  "snow": {
+    "twitch": "snow_lol"
+  },
+  "sotto" : {
     "twitter": "",
     "twitch": "ahhsotto"
   },
@@ -338,6 +394,9 @@
     "instagram": "siege_beyond",
     "twitch": "jorker123098",
     "twitter": "jorkerq5"
+  },
+  "squeakyboot": {
+    "twitch": "squeakyboot"
   },
   "stubs": {
     "twitch": "stubsdesigns",
@@ -353,6 +412,9 @@
     "instagram": "sutowoododan",
     "twitch": "sutodan",
     "twitter": "suwutowo"
+  },
+  "szamer": {
+    "twitch": "szamertwitch"
   },
   "t3rbo": {
     "stylized": "T 3 R B 0",
@@ -406,5 +468,9 @@
   "zyajin": {
     "twitch": "zyajin",
     "twitter": "zyajin"
+  },
+  "zzeenon": {
+    "twitch": "zzeenon",
+    "twitter": "zzeenon_"
   }
 }
