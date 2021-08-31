@@ -17,20 +17,6 @@ const Levels = require('discord-xp') // Discord Game XP
 //Login Tokens
 const fs = require('fs');
 
-let SENSITIVE = null
-try {
-    SENSITIVE = JSON.parse(fs.readFileSync("./src/SENSITIVE.json", "utf8"));
-} catch (err) {
-    console.log("Main: SENSITIVE manifest not found!")
-    process.exit(1)
-}
-
-// Bail if we fail to get secrets file
-if (!SENSITIVE) {
-    console.log("Failed to get secrets file.")
-    process.exit(1)
-}
-
 const DEFAULTS = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"));
 
 // Bail if we fail to get server profile information
@@ -48,7 +34,7 @@ if (!prefix) {
 
 try {
     // @ts-ignore
-    Levels.setURL(SENSITIVE.client.mongoDB);
+    Levels.setURL(process.env.client_mongoDB);
 } catch {
     console.log("MongoDB: Failed to connect!")
     process.exit(1)
@@ -89,7 +75,7 @@ const handler = new Handler(client, {
     commandsPath: __dirname + "/moody/commands",
     eventsPath: __dirname + "/moody/events",
     owners: [
-        "532192409757679618", // Noongar
+        "532192409757679618", // PokerFace
         "263968998645956608", // Mike
         "692180465242603591"  // Prime
     ]
