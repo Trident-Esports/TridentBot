@@ -21,9 +21,9 @@ module.exports = class LeagueCommand extends VillainsCommand {
         }
         let handlerpath = "/league/"
         let profiles = {}
-        let leagueGame = this.inputData.args[0] // valorant
-        let leagueLevel = this.inputData.args[1] // challenger
-        let teamID = this.inputData.args[2] // 262205
+        let leagueGame = this.inputData.args[0] ? this.inputData.args[0]  : "valorant" // valorant
+        let leagueLevel = this.inputData.args[1] ? this.inputData.args[1] : "challenger" // challenger
+        let teamID = this.inputData.args[2] ? this.inputData.args[2]      : 262205 // 262205
 
         profiles.league = [ handlerpath + '/' + leagueGame + '/' + leagueLevel + '/' + teamID + '.json' ]
 
@@ -164,7 +164,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
                         }
                     } catch(e) {
                         console.log(e)
-                        // console.log(`Malformed JSON:${url}`)
+                        console.log(`Malformed JSON:${url}`)
                     }
                 });
                 pages.push(embed)

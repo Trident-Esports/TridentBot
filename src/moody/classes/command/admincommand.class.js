@@ -42,14 +42,7 @@ module.exports = class AdminCommand extends VillainsCommand {
          * @type {Object.<[x:string], Array.<string>>}
          * @public
          */
-        try {
-            this.ROLES = JSON.parse(fs.readFileSync("./src/dbs/roles.json", "utf8"))
-        } catch {
-            this.ROLES = { "admin": [""], "mod": [""], "rules": "", "member": "", "muted": "" }
-            this.error = true
-            this.props.description = "Failed to get Roles information."
-            return
-        }
+        this.ROLES = {} // populate in build()
     }
 
     /**
@@ -70,6 +63,7 @@ module.exports = class AdminCommand extends VillainsCommand {
     }
 
     async build(client, message) {
+        this.ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
         let APPROVED_ROLES = this.ROLES["admin"]
         // Bail if we don't have intended Approved Roles data
         if (!APPROVED_ROLES) {

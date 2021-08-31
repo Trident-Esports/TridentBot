@@ -1,6 +1,7 @@
 // @ts-nocheck
 
 const AdminCommand = require('./admincommand.class');
+const fs = require('fs');
 
 /**
  * @class
@@ -24,6 +25,7 @@ module.exports = class ModCommand extends AdminCommand {
     }
 
     async build(client, message) {
+        this.ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
         let APPROVED_ROLES = this.ROLES["admin"].concat(this.ROLES["mod"])
 
         // Bail if member doesn't have Approved Roles

@@ -39,9 +39,11 @@ module.exports = class RosterCommand extends TeamListingCommand {
     }
 
     async run(client, message, args) {
+        let org = "vln"
         let gameID = args[0] ? args[0].toLowerCase() : ""
         let teamType = args[1] ? args[1].toLowerCase() : ""
-        let filepath = "./rosters/dbs"
+        let filepath = "./src/rosters/dbs"
+        filepath += '/' + org
         let profiles = []
         let socials = JSON.parse(fs.readFileSync("./src/rosters/dbs/socials/users.json", "utf8"))
 
@@ -88,7 +90,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
             props.caption.text = profile.title
 
             let emoji = ""
-            let emojiMatch = filepath.match(/(?:\.\/rosters\/dbs\/teams\/)([^\/]*)(.*)/)
+            let emojiMatch = filepath.match(/(?:\/teams\/)([^\/]*)(.*)/)
             let emojiKey = emojiMatch ? emojiMatch[1] : ""
             let emojiName = emojiKey
             if (emojiName == "val") {
@@ -174,7 +176,7 @@ module.exports = class RosterCommand extends TeamListingCommand {
             // Team Members
             if (profile?.members) {
                 if (filepath.includes("teams")) {
-                    let management = JSON.parse(fs.readFileSync("./src/rosters/dbs/staff/management.json","utf8"))
+                    let management = JSON.parse(fs.readFileSync("./src/rosters/dbs/" + org + "/staff/management.json","utf8"))
                     if (management?.members) {
                         if (Object.keys(management.members).includes(emojiKey)) {
                             if (management.members[emojiKey]?.users) {

@@ -153,9 +153,6 @@ module.exports = class SmashGGEvent extends VillainsCommand {
     }
 
     async action(client, message) {
-        // Get API Key
-        const SENSITIVE = JSON.parse(fs.readFileSync("./SENSITIVE.json", "utf8"))
-
         // Connect to SmashGG API
         const endpoint = "https://api.smash.gg/gql/alpha"
         const GQLClient = new GraphQLClient(endpoint, {
@@ -163,6 +160,22 @@ module.exports = class SmashGGEvent extends VillainsCommand {
                 "Authorization": "Bearer " + process.env.smashGG_apiKey
             }
         })
+
+        let tourneyData = this.inputData.args[0] ? this.inputData.args[0] : process.env.smashGG_tourneySlug
+        let eventData = this.inputData.args[1] ? this.inputData.args[1] : process.env.smashGG_eventIDX
+        let sGGdata = {
+            tourney: {
+                slug: tourneyData
+            },
+            event: {}
+        }
+
+        if (isNaN(parseInt(eventData))) {
+            sGGdata.event = { slug: eventData }
+        } else if (parseInt(eventData) > -1) {
+            let key = (eventData + "").length > 3 ? "id" : "idx"
+            sGGdata.event = { [ key ]: parseInt(eventData) }
+        }
 
         // Get Event ID
         let tourneySlug = sGGdata.tourney.slug
