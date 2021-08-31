@@ -26,11 +26,9 @@ let walk = function (dir) {
     return results;
 }
 
-let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
-
-module.exports = (client, message, args) => {
+module.exports = (client) => {
     let dir = "./src/rosters/dbs"
-    let org = "vln"
+    let org = "vln" //FIXME: Needs option
     dir += '/' + org
     const rosters_profiles = walk(dir)
     let roster_aliases = {}
@@ -135,11 +133,11 @@ module.exports = (client, message, args) => {
           title: "Team Lists",
           aliases: [ "teams" ]
         }
-        let teams = {
+        let teamsCommand = {
             name: profile.aliases[0],
             aliases: profile.aliases,
             description: profile.title,
-            async execute(message, client) {
+            async execute(message) {
                 let props = {
                     title: { text: profile.title }
                 }
@@ -182,6 +180,6 @@ module.exports = (client, message, args) => {
                 message.channel.send(embed);
             }
         }
-        client.commands.set(profile.aliases[0], teams);
+        client.commands.set(teamsCommand.name, teamsCommand);
     }
 }

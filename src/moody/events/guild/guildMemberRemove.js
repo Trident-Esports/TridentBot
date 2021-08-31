@@ -10,6 +10,11 @@ module.exports = class GuildMemberRemoveEvent extends VillainsEvent {
     }
 
     async run(handler, member) {
+        if (!(fs.existsSync("./srcs/dbs/" + member.guild.id))) {
+            console.log("Guild Member Remove:",member.guild.id,"not found!")
+            return
+        }
+
         const channel = await this.getChannel(member, "welcome")
 
         let consolePad = 20

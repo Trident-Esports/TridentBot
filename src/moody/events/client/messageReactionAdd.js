@@ -15,6 +15,11 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
         if (user.bot) return
         if (!reaction.message.guild) return
 
+        if (!(fs.existsSync("./srcs/dbs/" + reaction.message.guild.id))) {
+            console.log("Message Reaction Add:",reaction.message.guild.id,"not found!")
+            return
+        }
+
         let RULES_ROLE = JSON.parse(fs.readFileSync("./src/dbs/" + reaction.message.guild.id + "/roles.json","utf8"))["rules"]
         if (RULES_ROLE) {
             RULES_ROLE = reaction.message.guild.roles.cache.find(role => role.name === RULES_ROLE)
