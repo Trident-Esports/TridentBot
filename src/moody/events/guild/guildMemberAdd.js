@@ -15,7 +15,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
     }
 
     async run(handler, member) {
-        if (!(fs.existsSync("./srcs/dbs/" + member.guild.id))) {
+        if (!(fs.existsSync("./src/dbs/" + member.guild.id))) {
             console.log("Guild Member Add: Guild ID: Profiles",member.guild.id,"not found!")
             return
         }

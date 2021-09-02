@@ -10,7 +10,7 @@ module.exports = class GuildMemberRemoveEvent extends VillainsEvent {
     }
 
     async run(handler, member) {
-        if (!(fs.existsSync("./srcs/dbs/" + member.guild.id))) {
+        if (!(fs.existsSync("./src/dbs/" + member.guild.id))) {
             console.log("Guild Member Remove: Guild ID Profiles:",member.guild.id,"not found!")
             return
         }

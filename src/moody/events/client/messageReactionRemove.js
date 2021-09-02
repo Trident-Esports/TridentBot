@@ -15,7 +15,7 @@ module.exports = class MessageReactionRemoveEvent extends VillainsEvent {
         if (user.bot) return
         if (!reaction.message.guild) return
 
-        if (!(fs.existsSync("./srcs/dbs/" + reaction.message.guild.id))) {
+        if (!(fs.existsSync("./src/dbs/" + reaction.message.guild.id))) {
             console.log("Message Reaction Remove: Guild ID Profiles:",reaction.message.guild.id,"not found!")
             return
         }

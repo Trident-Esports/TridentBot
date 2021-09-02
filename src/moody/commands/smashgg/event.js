@@ -161,26 +161,38 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             }
         })
 
-        let tourneyData = this.inputData.args[0] ? this.inputData.args[0] : process.env.smashGG_tourneySlug
-        let eventData = this.inputData.args[1] ? this.inputData.args[1] : process.env.smashGG_eventIDX
-        let sGGdata = {
-            tourney: {
-                slug: tourneyData
-            },
-            event: {}
+        let guildSGGdata = null
+        try {
+            let guildData = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/data.json","utf8"))
+            if ("smashGG" in guildData) {
+                guildSGGdata = guildData.smashGG
+                if ("fall2021" in guildSGGdata) {
+                    guildSGGdata = guildSGGdata.fall2021
+                }
+            }
+        } catch (err) {
+            this.error = true
+            this.props.description = err
+            return
         }
 
-        if (isNaN(parseInt(eventData))) {
-            sGGdata.event = { slug: eventData }
-        } else if (parseInt(eventData) > -1) {
-            let key = (eventData + "").length > 3 ? "id" : "idx"
-            sGGdata.event = { [ key ]: parseInt(eventData) }
+        let tourneyData = ""
+        if (this.inputData.args[0]) {
+            tourneyData = this.inputData.args[0]
+        } else if ("tourney" in guildSGGdata) {
+            tourneyData = guildSGGdata.tourney
+        }
+        let eventData = ""
+        if (this.inputData.args[1]) {
+            eventData = this.inputData.args[1]
+        } else if ("event" in guildSGGdata) {
+            eventData = guildSGGdata.event
         }
 
         // Get Event ID
-        let tourneySlug = sGGdata.tourney.slug
+        let tourneySlug = guildSGGdata.tourney.slug
         let data = await this.getTournamentBySlug(GQLClient, tourneySlug)
-        const eventID = data.tournament.events[sGGdata.event.idx].id
+        const eventID = data.tournament.events[guildSGGdata.event.idx].id
 
         // Get Event Standings
         data = await this.getEventStandings(GQLClient, eventID)
@@ -201,6 +213,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             text: event.name,
             url: "https://smash.gg/" + event.slug.event
         }
+        this.props.players.author = this.props.caption
 
         // Save Team IDs, Names & Placements
         for(let node of data.event.standings.nodes) {
@@ -247,7 +260,11 @@ module.exports = class SmashGGEvent extends VillainsCommand {
                             if (sSlot?.standing?.stats?.score) {
                                 let teamID = event.sets[keyID]["slots"][sSlot.id]
                                 if (teamID) {
-                                    event.sets[keyID]["score"][teamID.toString()] = sSlot.standing.stats.score.value
+                                    let score = sSlot.standing.stats.score.value
+                                    if (score == -1) {
+                                        score = "DQ"
+                                    }
+                                    event.sets[keyID]["score"][teamID.toString()] = score
                                 }
                             }
                         }

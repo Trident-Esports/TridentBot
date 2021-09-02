@@ -236,12 +236,14 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // Author
-        let author = props?.caption?.text && props.caption.text.trim() != "" ? props.caption.text.trim() : avatars.author.name
+        let author = {}
+        author.name = props?.caption?.text && props.caption.text.trim() != "" ? props.caption.text.trim() : avatars.author.name
+        author.url = props?.caption?.url && props.caption.url.trim() != "" ? props.caption.url.trim() : avatars.author.url
         if (author) {
             this.setAuthor(
-                author,
+                author.name,
                 avatars.author.avatar,
-                avatars.author.url
+                author.url
             )
         }
 
