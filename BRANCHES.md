@@ -20,7 +20,9 @@
   * [`a-djs-handler`](https://www.npmjs.com/package/a-djs-handler) needs to be updated to `v13` for this to continue working.
     * Needs to use `Discord.Intents` declaration.
     * Alternatives include:
-      * [`advanced-command-handler`](https://www.npmjs.com/package/advanced-command-handler)
+      1. [`node-elisif`](https://github.com/Cannicide/node-elisif)
+        * `Discord.js` `v13` planned for upcoming version.
+      1. [`advanced-command-handler`](https://www.npmjs.com/package/advanced-command-handler)
         * `Discord.js` `v13` planned for module `v3.1`.
 
 * *`vevent`*
