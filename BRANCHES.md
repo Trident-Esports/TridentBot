@@ -34,6 +34,3 @@
     1. Roster updates get committed.
     1. `stable` merges into `metadata-updates`.
     1. `metadata-updates` merges back with `stable`.
-
-* *`buttons`*
-  * Old; try to integrate buttons into messages.
