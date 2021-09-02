@@ -63,7 +63,7 @@ module.exports = class PlayCommand extends VillainsCommand {
             console.log("Music: Pre-Flight Checks")
             // Get voice channel that caller is in
             this.voice_channel = message.member.voice.channel
-            if (!this.voice_channel) {
+            if (!(this.voice_channel)) {
                 this.error = true
                 this.props.description = 'You need to be connected to a voice channel to play music.'
             }

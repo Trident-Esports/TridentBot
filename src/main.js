@@ -46,39 +46,29 @@ try {
     // @ts-ignore
     Levels.setURL(process.env.client_mongoDB);
 } catch {
-    console.log("MongoDB: Failed to connect!")
+    console.log("MongoDB Levels: Failed to connect!")
     process.exit(1)
 }
 
-client.commands = new Collection();
-client.events = new Collection();
+(async () => {
+    client.commands = new Collection();
+    client.events = new Collection();
 
-// Load Handlers
-[
-    'event_handler',
-    'game_handler',
-    'rosters_handler'
-].forEach(handler => {
-    require(`./handlers/${handler}`)(client);
-})
-
-// Connect to DB
-mongoose.connect(
-        process.env.client_mongoDB,
-        {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false
-        })
-    .then(() => {
-        console.log("MongoDB: Connected!");
+    // Load Handlers
+    [
+        'event_handler',
+        'game_handler',
+        'mongo_handler',
+        'rosters_handler'
+    ].forEach(handler => {
+        require(`./handlers/${handler}`)(client);
     })
-    .catch((err) => {
-        console.log(err);
-    });
-// /mongoose
 
-console.log("---")
+    // connect to MongoDB
+    // @ts-ignore
+    await client.mongoConnect();
+})();
+
 const handler = new Handler(client, {
     prefix: prefix,
     token: process.env.client_login,
@@ -91,5 +81,6 @@ const handler = new Handler(client, {
     ]
 });
 (async () => {
+    console.log("---");
     await handler.start();
 })();

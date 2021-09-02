@@ -182,4 +182,5 @@ module.exports = (client) => {
         }
         client.commands.set(teamsCommand.name, teamsCommand);
     }
+    console.log("Registered Roster Commands.")
 }

@@ -48,8 +48,8 @@ module.exports = class PurgeCommand extends BaseCommand {
                     .then(messages => {
                         message.channel.bulkDelete(messages)
                     })
-                props.description = `Purging ${args[0]} messages.`
                 duration = "5s"
+                props.description = `Purging ${args[0]} messages in ${duration}.`
             }
         }
 

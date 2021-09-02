@@ -38,7 +38,10 @@ module.exports = class BotGuildsCommand extends AdminCommand {
         let locale = this.inputData.args && this.inputData.args[0] ? this.inputData.args[0] : "en-AU"
         let sorted = []
         for (let [guildID, guildData] of guilds) {
-            let owner = guildData.members.cache.get(guildData.ownerID).user
+            let owner = await guildData.members.fetch(guildData.ownerID)
+            if (owner?.user) {
+                owner = owner.user
+            }
             let bot = guildData.members.cache.get(client.user.id)
             sorted[bot.joinedTimestamp] = {
                 guild: {

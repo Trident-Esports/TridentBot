@@ -34,7 +34,7 @@ module.exports = class ReadyEvent extends VillainsEvent {
         }
         output.push(
             "Mongoose warning about collection.ensureIndex will be thrown.",
-            "Ready!",
+            "Bot is Ready!",
             ""
         )
         console.log(output.join("\n"))
