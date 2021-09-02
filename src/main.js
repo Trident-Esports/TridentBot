@@ -1,13 +1,23 @@
 //@ts-check
 
-const Discord = require('discord.js'); // Base Discord module
-const { Client, Intents, Collection } = require('discord.js'); // Base Discord module
+const { Intents, Collection } = require('discord.js'); // Base Discord module
 const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
 require('dotenv').config()
 
 const client = new MoodyClient({
-    partials: ["MESSAGE", "CHANNEL", "REACTION"],
-    // intents: [ Intents.FLAGS.GUILDS ]
+    partials: [ "MESSAGE", "CHANNEL", "REACTION" ],
+    ws: {
+        intents: [
+            Intents.FLAGS.GUILDS,
+            Intents.FLAGS.GUILD_MESSAGES,
+            Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+            Intents.FLAGS.DIRECT_MESSAGES,
+            Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+        ]
+    },
+    allowedMentions: {
+        parse: [ "users", "roles" ]
+    }
 });  // Discord Client object
 
 const mongoose = require('mongoose'); // Mongoose

@@ -16,7 +16,7 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
         if (!reaction.message.guild) return
 
         if (!(fs.existsSync("./srcs/dbs/" + reaction.message.guild.id))) {
-            console.log("Message Reaction Add:",reaction.message.guild.id,"not found!")
+            console.log("Message Reaction Add: Guild ID Profiles:",reaction.message.guild.id,"not found!")
             return
         }
 

@@ -9,6 +9,7 @@ BaseCommand
   TicketCommand
 
 */
+const { Permissions } = require('discord.js');
 const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 
@@ -82,6 +83,7 @@ module.exports = class TicketCommand extends VillainsCommand {
 
         // Set guild privs
         channel.updateOverwrite(
+        // channel.permissionOverwrites.edit( // discord.js v13
             message.guild.id,
             {
                 SEND_MESSAGE: false,
@@ -90,6 +92,7 @@ module.exports = class TicketCommand extends VillainsCommand {
         )
         // Set author privs
         channel.updateOverwrite(
+        // channel.permissionOverwrites.edit( // discord.js v13
             message.author,
             {
                 SEND_MESSAGE: true,
@@ -115,7 +118,7 @@ module.exports = class TicketCommand extends VillainsCommand {
         const collector = reactionMessage.createReactionCollector(
             (reaction, user) => message.guild.members.cache.find(
                 (member) => member.id === user.id
-            ).hasPermission("ADMINISTRATOR"),
+            ).permissions.has(Permissions.FLAGS.ADMINISTRATOR),
             { dispose: true }
         )
 
@@ -126,6 +129,7 @@ module.exports = class TicketCommand extends VillainsCommand {
                 case this.emojis[0]:
                     channel.send({ content: "Locking channel!" });
                     channel.updateOverwrite(message.author, { SEND_MESSAGE: false });
+                    // channel.permissionOverwrites.edit(message.author, { SEND_MESSAGE: false }); // discord.js v13
                     break;
                 // Delete channel
                 case this.emojis[1]:

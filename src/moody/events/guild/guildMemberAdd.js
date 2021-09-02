@@ -16,7 +16,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
 
     async run(handler, member) {
         if (!(fs.existsSync("./srcs/dbs/" + member.guild.id))) {
-            console.log("Guild Member Add:",member.guild.id,"not found!")
+            console.log("Guild Member Add: Guild ID: Profiles",member.guild.id,"not found!")
             return
         }
         const channel = await this.getChannel(member, "welcome")
