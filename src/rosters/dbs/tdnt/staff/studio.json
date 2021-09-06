@@ -1,0 +1,14 @@
+{
+  "stripe": "default",
+  "title": "Studio",
+  "aliases": ["studio"],
+  "members": {
+    "gfx": {
+      "title": "GFX",
+      "users": [
+        "avalon",
+        "codes"
+      ]
+    }
+  }
+}

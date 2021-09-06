@@ -1,7 +1,7 @@
 {
   "stripe": "default",
-  "title": "CSGO Open Roster",
-  "aliases": ["csor"],
+  "title": "CSGO ARCTIC Roster",
+  "aliases": ["csar"],
   "url": "https://play.esea.net/teams/8772583",
   "team": {
     "esea": {
@@ -14,17 +14,10 @@
       "title": "Main",
       "users": [
           "asdf",
+          "core",
           "mannygp",
           "masonn",
-          "orendas",
-          "sha"
-      ]
-    },
-    "sub": {
-      "title": "Sub",
-      "users": [
-          "atoms",
-          "isaiah"
+          "orendas"
       ]
     }
   }

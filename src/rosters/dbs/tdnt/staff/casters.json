@@ -1,0 +1,14 @@
+{
+  "stripe": "default",
+  "title": "Caster Roster",
+  "aliases": ["cr"],
+  "members": {
+    "caster": {
+      "title": "Caster",
+      "users": [
+        "emperorzk",
+        "scubasteve"
+      ]
+    }
+  }
+}

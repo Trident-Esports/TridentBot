@@ -28,7 +28,7 @@ let walk = function (dir) {
 
 module.exports = (client) => {
     let dir = "./src/rosters/dbs"
-    let org = "vln" //FIXME: Needs option
+    let org = "tdnt"
     dir += '/' + org
     const rosters_profiles = walk(dir)
     let roster_aliases = {}

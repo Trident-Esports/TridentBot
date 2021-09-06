@@ -1,0 +1,17 @@
+{
+  "stripe": "default",
+  "title": "CSGO Storm Roster",
+  "aliases": ["cssr"],
+  "members": {
+    "main": {
+      "title": "Main",
+      "users": [
+        "crenuxe",
+        "docc",
+        "night",
+        "roninio",
+        "zzeenon"
+      ]
+    }
+  }
+}

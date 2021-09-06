@@ -1,0 +1,14 @@
+{
+  "stripe": "default",
+  "title": "Community Engagement",
+  "aliases": ["crm"],
+  "members": {
+    "crm": {
+      "title": "Community Engagement",
+      "users": [
+        "avalon",
+        "pokerface"
+      ]
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "stripe": "default",
+  "title": "Content Creators",
+  "aliases": ["cc"],
+  "members": {
+    "content creator": {
+      "title": "Creator",
+      "users": [
+        "koinz",
+        "legend",
+        "mishmanners",
+        "pandi",
+        "squeakyboot",
+        "szamer",
+        "zenom"
+      ]
+    }
+  }
+}
