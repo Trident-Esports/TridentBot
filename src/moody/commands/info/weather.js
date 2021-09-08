@@ -45,7 +45,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
                 } else if(result === undefined || result.length === 0) {
                     props.description = "**Invalid** Location"
                 } else {
-                    props.description = "Something got stuffed up here..."
+                    props.description = ""
                 }
             } else {
                 let current = result[0].current;

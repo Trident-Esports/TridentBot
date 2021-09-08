@@ -126,7 +126,10 @@ module.exports = class VillainsCommand extends BaseCommand {
         } else if (props?.title) {
             this.props.title = props.title
         }
-        if (!(this?.props?.description)) {
+        let undefDesc = (!(this?.props?.description))
+        let emptyDesc = (!(undefDesc)) &&  (typeof this.props.description === "object")
+        let noDesc = (!(undefDesc)) && (this.props.description.trim() == "")
+        if (undefDesc || emptyDesc || noDesc) {
             this.props.description = ""
         }
         if (!(this?.props?.footer)) {
@@ -278,7 +281,7 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     /**
-     *
+     * Get Channel object based on general key name
      * @param {Message} message Message that called the command
      * @param {string} channelType Key for channel to get from database
      * @returns {Promise.<Channel>} Found channel object
@@ -311,6 +314,41 @@ module.exports = class VillainsCommand extends BaseCommand {
         return channel
     }
 
+    /**
+     * Return emoji if present, otherwise return emoji name
+     * @param {string} emojiKey
+     * @returns {Promise.<string>}
+     */
+    async getEmoji(emojiKey, emojis) {
+        let ret = ""
+
+        let emojiName = emojiKey
+        if (emojiName == "val") {
+            emojiName = "valorant"
+        }
+
+        let foundEmoji = false
+
+        let cachedEmoji = emojis.cache.find(emoji => emoji.name === emojiName)
+        if (cachedEmoji?.available) {
+            foundEmoji = true
+            ret += `${cachedEmoji}`;
+        }
+
+        if (!foundEmoji) {
+            if (emojiKey) {
+                ret += '[' + emojiKey + ']'
+            }
+        }
+
+        return ret
+    }
+
+    /**
+     * Sanitizes input for Markdown
+     * @param {string} input String to sanitize
+     * @returns {Promise.<string>}
+     */
     async sanitizeMarkdown(input) {
         let output = input.replace(/[\*\_\~\`]/g, '\\$&')
         return output
@@ -545,7 +583,7 @@ module.exports = class VillainsCommand extends BaseCommand {
      * @param {number} timeout Timeout for disabling pagination
      * @param {boolean} forcepages Force pagination
      */
-    async send(message, pages, emojis = ["◀️", "▶️"], timeout = 600000, forcepages = false) {
+    async send(message, pages = [new VillainsEmbed({"description":"No pages sent!"})], emojis = ["◀️", "▶️"], timeout = 600000, forcepages = false) {
         if (!this.channel) {
             this.channel = message.channel
         }

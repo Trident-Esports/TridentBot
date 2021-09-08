@@ -21,32 +21,14 @@ module.exports = class TeamListingCommand extends VillainsCommand {
         let req = dasu.req
         let embed = new VillainsEmbed({...props})
 
-        await req(params, function (err, res, data) {
+        await req(params, async function (err, res, data) {
             try {
                 let json = JSON.parse(data)
                 let game_details = json["events"]
                 let noMatches = Object.entries(game_details).length == 0
 
-                let emoji = ""
                 let emojiKey = json?.gameID?.detected ? json.gameID.detected : json.game
-                let emojiName = emojiKey
-                if (emojiName == "val") {
-                    emojiName = "valorant"
-                }
-
-                let foundEmoji = false
-
-                let cachedEmoji = emojis.cache.find(emoji => emoji.name === emojiName);
-                if (cachedEmoji?.available) {
-                    foundEmoji = true
-                    emoji += `${cachedEmoji}`;
-                }
-
-                if (!foundEmoji) {
-                    if (emojiKey) {
-                        emoji += '[' + emojiKey + "] "
-                    }
-                }
+                let emoji = await this.getEmoji(emojiKey, emojis)
 
                 if (!noMatches) {
                     props.description = ""

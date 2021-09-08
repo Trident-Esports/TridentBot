@@ -168,7 +168,15 @@ module.exports = class SmashGGEvent extends VillainsCommand {
                 guildSGGdata = guildData.smashGG
                 if ("fall2021" in guildSGGdata) {
                     guildSGGdata = guildSGGdata.fall2021
+                } else {
+                    this.error = true
+                    this.description = "No Fall2021 SmashGG data found!"
+                    return
                 }
+            } else {
+                this.error = true
+                this.description = "No SmashGG data found!"
+                return
             }
         } catch (err) {
             this.error = true
@@ -187,15 +195,40 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             eventData = this.inputData.args[1]
         } else if ("event" in guildSGGdata) {
             eventData = guildSGGdata.event
+        } else {
+            eventData = 0
+        }
+
+        if (tourneyData == "") {
+            this.error = true
+            this.description = "No Tourney ID found!"
+            return
+        }
+        if (eventData == "") {
+            this.error = true
+            this.description = "No Event ID found!"
         }
 
         // Get Event ID
         let tourneySlug = guildSGGdata.tourney.slug
-        let data = await this.getTournamentBySlug(GQLClient, tourneySlug)
+        let data = ""
+        try {
+            data = await this.getTournamentBySlug(GQLClient, tourneySlug)
+        } catch (err) {
+            this.error = true
+            this.props.description = err
+            return
+        }
         const eventID = data.tournament.events[guildSGGdata.event.idx].id
 
-        // Get Event Standings
-        data = await this.getEventStandings(GQLClient, eventID)
+        try {
+            // Get Event Standings
+            data = await this.getEventStandings(GQLClient, eventID)
+        } catch (err) {
+            this.error = true
+            this.props.description = err
+            return
+        }
 
         // Start Event Object
         let event = {
@@ -220,7 +253,13 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             event.teams[node.entrant.id] = {id: node.entrant.id, name: node.entrant.name, placement: node.placement}
         }
 
-        data = await this.getEventSets(GQLClient, eventID)
+        try {
+            data = await this.getEventSets(GQLClient, eventID)
+        } catch (err) {
+            this.error = true
+            this.props.description = err
+            return
+        }
 
         // Save Set IDs, Teams
         for(let node of data.event.sets.nodes) {
@@ -247,7 +286,14 @@ module.exports = class SmashGGEvent extends VillainsCommand {
                     }
                 }
                 if (Object.keys(event.sets[keyID]["slots"]).length > 0) {
-                    let set = await this.getSetStats(GQLClient, setID)
+                    let set = ""
+                    try {
+                        set = await this.getSetStats(GQLClient, setID)
+                    } catch (err) {
+                        this.error = true
+                        this.props.description = err
+                        return
+                    }
                     if (set?.set) {
                         event.sets[keyID]["completedAt"] = set.set.completedAt
                         event.sets[keyID]["startedAt"] = set.set.startedAt
@@ -290,6 +336,9 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         for (let team of teamsByPlacement) {
             let url = "https://smash.gg/tournament/" + event.slug.tournament + "/event/0/entrant/" + team.id
             this.props.description.push(`\`${(team.placement + "").padStart(3,' ')}\` [${team.name}](${url} '${url}')`)
+        }
+        if (teamsByPlacement.length == 0) {
+            this.props.description.push("No teams found!")
         }
         this.send(message, new VillainsEmbed(this.props))
 
@@ -342,7 +391,9 @@ module.exports = class SmashGGEvent extends VillainsCommand {
                 this.props.description = ["***Sets***"]
             }
         }
-        this.send(message, this.pages)
+        if (this.pages.length > 0) {
+            this.send(message, this.pages)
+        }
         this.null = true
     }
 }

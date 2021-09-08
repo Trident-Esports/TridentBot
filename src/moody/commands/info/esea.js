@@ -88,23 +88,8 @@ module.exports = class ESEACommand extends VillainsCommand {
             players: cellData[2]
         }
 
-        let emoji = ""
         let emojiKey = "csgo"
-        let emojiName = emojiKey
-
-        let foundEmoji = false
-
-        let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
-        if (cachedEmoji?.available) {
-            foundEmoji = true
-            emoji += `${cachedEmoji}`;
-        }
-
-        if (!foundEmoji) {
-            if (emojiKey) {
-                emoji += '[' + emojiKey + "] "
-            }
-        }
+        let emoji = await this.getEmoji(emojiKey, message.guild.emojis)
 
         let matchData = { overall: { ct: 0, t: 0, win: 0, loss: 0, tie: 0 } }
         let matchID = "NaN"

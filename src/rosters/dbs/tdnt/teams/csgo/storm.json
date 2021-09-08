@@ -2,6 +2,15 @@
   "stripe": "default",
   "title": "CSGO Storm Roster",
   "aliases": ["cssr"],
+  "team": {
+    "esea": {
+      "teamID": "8772390"
+    },
+    "lpl": {
+      "teamID": "262377",
+      "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/320886_t1_cgau-32k-Za-Trident-logo-Altugs-thumb.png"
+    }
+  },
   "members": {
     "main": {
       "title": "Main",

@@ -50,7 +50,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
                 // }
 
                 let props = []
-                props.description = "Something got stuffed up here..."
+                props.description = ""
                 props.title = { text: (span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule").trim(), url: "" }
                 props.url = url.toString().includes('-') ? url.toString().substr(0,url.toString().indexOf('-')) : url
                 let embed = await this.makeReq(message.guild.emojis, {...props}, {...params})

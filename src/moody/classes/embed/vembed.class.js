@@ -54,18 +54,18 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         if (props?.description && Array.isArray(props.description)) {
             props.description = props.description.join("\n")
         }
-        if ((!(props?.description)) || (props?.description && props.description.trim() == "")) {
+        let noDesc = (!(props?.description))
+        let undefDesc = (typeof props.description === "undefined")
+        let nullDesc = (!(noDesc || undefDesc)) && (props.description == null)
+        let emptyDesc = (!(noDesc || undefDesc)) && (props.description.trim() === "")
+        if (noDesc || undefDesc || nullDesc || emptyDesc) {
             props.description = "** **"
         }
         if (typeof props.timestamp === undefined) {
             props.timestamp = true
         }
 
-        super(
-            {
-                description: "Something got stuffed up here..."
-            }
-        )
+        super()
 
         try {
             /**
@@ -251,9 +251,6 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         this.setThumbnail(avatars.thumbnail.avatar)
 
         // Body Description
-        if (typeof props.description === "object") {
-            props.description = props.description.join("\n")
-        }
         this.setDescription(props.description)
 
         // Fields

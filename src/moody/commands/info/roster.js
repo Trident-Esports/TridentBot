@@ -40,7 +40,7 @@ module.exports = class RosterCommand extends VillainsCommand {
 
     async run(client, message, args) {
         let guilds = JSON.parse(fs.readFileSync("./src/dbs/guilds.json","utf8"))
-        let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "vln"
+        let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "tdnt"
         let gameID = args[0] ? args[0].toLowerCase() : ""
         let teamType = args[1] ? args[1].toLowerCase() : ""
         let filepath = "./src/rosters/dbs"
@@ -90,28 +90,9 @@ module.exports = class RosterCommand extends VillainsCommand {
             // Title
             props.caption.text = profile.title
 
-            let emoji = ""
             let emojiMatch = filepath.match(/(?:\/teams\/)([^\/]*)(.*)/)
             let emojiKey = emojiMatch ? emojiMatch[1] : ""
-            let emojiName = emojiKey
-            if (emojiName == "val") {
-                emojiName = "valorant"
-            }
-
-            let foundEmoji = false
-
-
-            let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
-            if (cachedEmoji?.available) {
-                foundEmoji = true
-                emoji += `${cachedEmoji}`;
-            }
-
-            if (!foundEmoji) {
-                if (emojiKey) {
-                    emoji += '[' + emojiKey + "] "
-                }
-            }
+            let emoji = await this.getEmoji(emojiKey, message.guild.emojis)
 
             props.description = emoji
 

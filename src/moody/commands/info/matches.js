@@ -152,39 +152,22 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 // }
 
                 let props = {
-                    description: "Something got stuffed up here..."
+                    description: ""
                 }
                 let title = span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule"
                 props.url = url.toString().includes('-') ? url.toString().substr(0,url.toString().indexOf('-')) : url
                 let embed = new VillainsEmbed(props)
 
-                await req(params, function (err, res, data) {
+                await req(params, async function (err, res, data) {
                     try {
                         let json = JSON.parse(data)
                         let game_details = json["events"]
 
                         let noMatches = Object.entries(game_details).length == 0
 
-                        let emoji = ""
                         let emojiKey = json?.gameID?.detected ? json.gameID.detected : json.game
-                        let emojiName = emojiKey
-                        if (emojiName == "val") {
-                            emojiName = "valorant"
-                        }
-
-                        let foundEmoji = false
-
-                        let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
-                        if (cachedEmoji?.available) {
-                            foundEmoji = true
-                            emoji += `${cachedEmoji}`;
-                        }
-
-                        if (!foundEmoji) {
-                            if (emojiKey) {
-                                emoji += '[' + emojiKey + "] "
-                            }
-                        }
+                        //FIXME: BAD BAD HACK!
+                        let emoji = await new VillainsCommand({name:""}).getEmoji(emojiKey, message.guild.emojis)
 
                         if (!noMatches) {
                             props.description = "__***" + emoji + json.team + "***__"

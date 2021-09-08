@@ -21,8 +21,8 @@
         "zenom"
       ]
     },
-    "discord": {
-      "title": "Discord",
+    "discorddev": {
+      "title": "Discord & Development",
       "users": [
         "miketrethewey"
       ]
@@ -31,6 +31,12 @@
       "title": "Social Media",
       "users": [
         "dania"
+      ]
+    },
+    "gfx": {
+      "title": "Studio",
+      "users": [
+        "zyajin"
       ]
     },
     "team": {

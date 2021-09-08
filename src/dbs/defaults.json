@@ -1,6 +1,6 @@
 {
   "prefix": "vln ",
-  "stripe": "#B2EE17",
+  "stripe": "#007FFF",
   "discord": {
       "invites": {
           "bot": {
@@ -13,8 +13,8 @@
       "permissions": "8589934591"
   },
   "footer": {
-    "image": "https://cdn.discordapp.com/icons/745409743593406634/e4a76b794ab96fd49ef59a4b7fbcce22.png?size=128",
-    "msg": "This bot was Created by Villains Dev Team"
+    "image": "https://cdn.discordapp.com/icons/745409743593406634/76ca5aead5a6fcf3dc8b82f2fd8cdc72.png?size=2048",
+    "msg": "This bot was Created by Trident Dev Team"
   },
-  "thumbnail": "https://cdn.discordapp.com/icons/788021898146742292/a_20e3a201ee809143ac5accdf97abe607.gif"
+  "thumbnail": "https://cdn.discordapp.com/icons/745409743593406634/76ca5aead5a6fcf3dc8b82f2fd8cdc72.png?size=2048"
 }

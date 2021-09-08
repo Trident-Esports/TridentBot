@@ -5,8 +5,7 @@
   "team": {
     "teamID": "262205",
     "lpl": {
-      "teamID": "262205",
-      "#note": "NYI"
+      "teamID": "262205"
     },
     "vlr.gg": {
       "teamID": "4693",
@@ -31,14 +30,7 @@
         "klockzyy",
         "maishiu",
         "marsh",
-        "myth",
-        "pocket"
-      ]
-    },
-    "sub": {
-      "title": "Sub",
-      "users": [
-        "prophet"
+        "myth"
       ]
     }
   }

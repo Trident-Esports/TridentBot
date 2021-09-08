@@ -1,7 +1,7 @@
 {
   "stripe": "default",
   "title": "Community Engagement",
-  "aliases": ["crm"],
+  "aliases": ["cem"],
   "members": {
     "crm": {
       "title": "Community Engagement",

@@ -3,12 +3,9 @@
   "title": "VALORANT Sirens Roster",
   "aliases": ["vsr"],
   "team": {
-    "teamID": "262275",
-    "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/320439_t1_cgau-10k-AM-Female-logorld-thumb.png",
     "lpl": {
       "teamID": "262275",
-      "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/320439_t1_cgau-10k-AM-Female-logorld-thumb.png",
-      "#note": "NYI"
+      "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/321069_t1_cgau-19k-mN-logo1vxl-thumb.png"
     }
   },
   "#url": "#rosters: VALORANT lists",
@@ -27,12 +24,6 @@
         "gem",
         "glitch",
         "maxxe"
-      ]
-    },
-    "sub": {
-      "title": "Sub",
-      "users": [
-        "scarscahhh"
       ]
     }
   }

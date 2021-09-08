@@ -1,6 +1,6 @@
 {
   "stripe": "default",
-  "title": "Caster Roster",
+  "title": "Casters",
   "aliases": ["cr"],
   "members": {
     "caster": {
