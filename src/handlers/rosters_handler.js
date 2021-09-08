@@ -145,7 +145,7 @@ module.exports = (client) => {
                 for (let [gameID, teams] of Object.entries(roster_aliases)) {
                     let emojiName = gameID;
                     if (emojiName == "staff") {
-                        emojiName = "V1LLA1N"
+                        emojiName = "logo_trident"
                     } else if (emojiName == "val") {
                         emojiName = "valorant";
                     }
