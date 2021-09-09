@@ -35,7 +35,7 @@ module.exports = class MessageEvent extends VillainsEvent {
                 if (message.author.bot || (blacklist.guildIDs.includes(message.guild.id))) {
                     return
                 }
-                message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
+                // message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
             }
 
             // No Special Case
