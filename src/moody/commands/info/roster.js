@@ -80,6 +80,13 @@ module.exports = class RosterCommand extends VillainsCommand {
             profiles = walk(filepath)
         }
 
+        if (profiles.length == 0) {
+            this.error = true
+            this.props.description = `No data for '${gameID}' found!`
+            this.send(message, new VillainsEmbed(this.props))
+            return
+        }
+
         let pages = []
 
         for (filepath of profiles) {
