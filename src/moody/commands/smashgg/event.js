@@ -188,13 +188,13 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         if (this.inputData.args[0]) {
             tourneyData = this.inputData.args[0]
         } else if ("tourney" in guildSGGdata) {
-            tourneyData = guildSGGdata.tourney
+            tourneyData = guildSGGdata.tourney.slug
         }
         let eventData = ""
         if (this.inputData.args[1]) {
             eventData = this.inputData.args[1]
         } else if ("event" in guildSGGdata) {
-            eventData = guildSGGdata.event
+            eventData = guildSGGdata.event.idx
         } else {
             eventData = 0
         }
@@ -211,6 +211,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
 
         // Get Event ID
         let tourneySlug = tourneyData
+        let eventIDX = eventdata
         let data = ""
         try {
             data = await this.getTournamentBySlug(GQLClient, tourneySlug)
@@ -219,7 +220,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             this.props.description = err
             return
         }
-        const eventID = data.tournament.events[guildSGGdata.event.idx].id
+        const eventID = data.tournament.events[eventIDX].id
 
         try {
             // Get Event Standings
