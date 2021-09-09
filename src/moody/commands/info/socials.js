@@ -15,13 +15,13 @@ module.exports = class SocialsCommand extends VillainsCommand {
                 'twitter'
             ],
             category: "info",
-            description: "Socials for Villains",
+            description: "Socials for Trident",
         }
         super(comprops)
     }
 
     async action(client, message) {
-        let url = "https://linktr.ee/Villainsesc"
-        this.props.description = `***[Follow Villains Esports Socials!](${url} '${url}')***`
+        let url = "https://linktr.ee/TridentEsports"
+        this.props.description = `***[Follow Trident Esports Socials!](${url} '${url}')***`
     }
 }

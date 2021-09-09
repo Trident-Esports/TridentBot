@@ -22,7 +22,7 @@ module.exports = class BotVoteCommand extends VillainsCommand {
 
     async action(client, message) {
         let url = `https://top.gg/bot/${client.user.id}/vote`
-        this.props.description = `***[Vote for @VillainsBot on top.gg!](${url} '${url}')***`
+        this.props.description = `***[Vote for @TridentBot on top.gg!](${url} '${url}')***`
 
         this.props.footer = {
             msg: "Prizes for Voting COMING SOON!"

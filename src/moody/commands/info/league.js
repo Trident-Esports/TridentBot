@@ -35,7 +35,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
             for (let filepath of files) {
                 let req = dasu.req
 
-                let url = new URL("http://villainsoce.mymm1.com:80" + filepath)
+                let url = new URL("http://tridentoce.mymm1.com:80" + filepath)
 
                 let params = {
                     method: 'GET',
