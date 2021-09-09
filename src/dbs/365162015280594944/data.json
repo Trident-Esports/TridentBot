@@ -1,0 +1,18 @@
+{
+  "socials": [
+    {
+      "text": "Follow Trident Esports' Socials!",
+      "url": "https://linktr.ee/TridentEsports"
+    }
+  ],
+  "smashGG": {
+    "fall2021": {
+      "tourney": {
+        "slug": "trident-50-valorant-tournament"
+      },
+      "event": {
+        "idx": 0
+      }
+    }
+  }
+}

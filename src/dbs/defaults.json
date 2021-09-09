@@ -1,0 +1,20 @@
+{
+  "prefix": "vln ",
+  "stripe": "#007FFF",
+  "discord": {
+      "invites": {
+          "bot": {
+              "code": "Gh2Jh5FpVS"
+          }
+      }
+  },
+  "bot": {
+      "scope": "bot",
+      "permissions": "8589934591"
+  },
+  "footer": {
+    "image": "https://cdn.discordapp.com/icons/745409743593406634/76ca5aead5a6fcf3dc8b82f2fd8cdc72.png?size=2048",
+    "msg": "This bot was Created by Trident Dev Team"
+  },
+  "thumbnail": "https://cdn.discordapp.com/icons/745409743593406634/76ca5aead5a6fcf3dc8b82f2fd8cdc72.png?size=2048"
+}

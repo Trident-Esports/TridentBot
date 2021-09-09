@@ -1,3 +1,5 @@
+//@ts-check
+
 const { spawn } = require("child_process")
 
 // alias spawn
@@ -13,6 +15,9 @@ const exec = async (commands) => {
 // use like this
 exec(
     [
-        "node --unhandled-rejections=strict ./src/main.js"
+        "npm audit",
+        "npm install --dry-run",
+        "npm update --dry-run",
+        "npm outdated"
     ]
 )

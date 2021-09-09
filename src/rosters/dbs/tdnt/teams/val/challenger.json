@@ -1,0 +1,42 @@
+{
+  "stripe": "default",
+  "title": "VALORANT Challenger Roster",
+  "aliases": ["vcr"],
+  "team": {
+    "teamID": "262205",
+    "lpl": {
+      "teamID": "262205"
+    },
+    "vlr.gg": {
+      "teamID": "4693",
+      "#note": "NYI"
+    }
+  },
+  "league": {
+    "game": "valorant",
+    "level": "challenger"
+  },
+  "#url": "#rosters: VALORANT listings",
+  "members": {
+    "coach": {
+      "title": "Coach",
+      "users": [
+        "crima"
+      ]
+    },
+    "captain": {
+      "title": "Captain",
+      "users": [],
+      "#note": "#FIXME: Need Captain"
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "klockzyy",
+        "maishiu",
+        "marsh",
+        "myth"
+      ]
+    }
+  }
+}

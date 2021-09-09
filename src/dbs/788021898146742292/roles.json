@@ -1,0 +1,12 @@
+{
+  "admin": [
+    "Overlords",
+    "Evil Council"
+  ],
+  "mod": [
+    "Evil Mod"
+  ],
+  "rules": "Accepted Values",
+  "member": "Minions",
+  "muted": "Muted"
+}
