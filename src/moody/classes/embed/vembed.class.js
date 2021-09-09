@@ -209,7 +209,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
                 avatar: props?.players?.target?.avatar && props.players.target.avatar.trim() != "" ? props.players.target.avatar.trim() : ""
             },
             thumbnail: {},
-            author: {}
+            author: { name: "" }
         }
 
         // Default; put Bot in Thumbnail
@@ -239,7 +239,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         let author = {}
         author.name = props?.caption?.text && props.caption.text.trim() != "" ? props.caption.text.trim() : avatars.author.name
         author.url = props?.caption?.url && props.caption.url.trim() != "" ? props.caption.url.trim() : avatars.author.url
-        if (author) {
+        if (author && author.name != "") {
             this.setAuthor(
                 author.name,
                 avatars.author.avatar,
