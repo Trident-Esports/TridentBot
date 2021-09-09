@@ -25,22 +25,22 @@ module.exports = class ProfileCommand extends GameCommand {
 
             if (!(profileData)) {
                 this.error = true
-                this.description = `No Profile Data found for <@${loaded.id}>!`
+                this.props.description = `No Profile Data found for <@${loaded.id}>!`
                 return
             }
             if (!(healthData)) {
                 this.error = true
-                this.description = `No Health Data found for <@${loaded.id}>!`
+                this.props.description = `No Health Data found for <@${loaded.id}>!`
                 return
             }
             if (!(XPBoostData)) {
                 this.error = true
-                this.description = `No XPBoost Data found for <@${loaded.id}>!`
+                this.props.description = `No XPBoost Data found for <@${loaded.id}>!`
                 return
             }
             if (!(levelData)) {
                 this.error = true
-                this.description = `No Level Data found for <@${loaded.id}>!`
+                this.props.description = `No Level Data found for <@${loaded.id}>!`
                 return
             }
 
