@@ -11,9 +11,11 @@
   },
   "#url": "#rosters: R6S Amateur",
   "members": {
-    "coach": {
-      "title": "Coach",
-      "users": []
+    "captain": {
+      "title": "Captain",
+      "users": [
+        "kingerss"
+      ]
     },
     "main": {
       "title": "Main",

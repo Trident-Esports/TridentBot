@@ -12,6 +12,12 @@
     }
   },
   "members": {
+    "captain": {
+      "title": "Captain",
+      "users": [
+        "mannygp"
+      ]
+    },
     "main": {
       "title": "Main",
       "users": [

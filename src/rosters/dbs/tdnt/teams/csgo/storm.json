@@ -12,6 +12,12 @@
     }
   },
   "members": {
+    "captain": {
+      "title": "Captain",
+      "users": [
+        "roninio"
+      ]
+    },
     "main": {
       "title": "Main",
       "users": [

@@ -9,6 +9,12 @@
     }
   },
   "members": {
+    "captain": {
+      "title": "Captain",
+      "users": [
+        "jam"
+      ]
+    },
     "main": {
       "title": "Main",
       "users": [
