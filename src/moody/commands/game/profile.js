@@ -23,6 +23,27 @@ module.exports = class ProfileCommand extends GameCommand {
             const XPBoostData = await this.db_query(loaded.id, "xpboost")
             const levelData = await this.db_query(loaded.id, "levels")
 
+            if (!(profileData)) {
+                this.error = true
+                this.description = `No Profile Data found for <@${loaded.id}>!`
+                return
+            }
+            if (!(healthData)) {
+                this.error = true
+                this.description = `No Health Data found for <@${loaded.id}>!`
+                return
+            }
+            if (!(XPBoostData)) {
+                this.error = true
+                this.description = `No XPBoost Data found for <@${loaded.id}>!`
+                return
+            }
+            if (!(levelData)) {
+                this.error = true
+                this.description = `No Level Data found for <@${loaded.id}>!`
+                return
+            }
+
             this.props.description = `This is <@${loaded.id}>'s Profile`
             this.props.fields = [
                 {
