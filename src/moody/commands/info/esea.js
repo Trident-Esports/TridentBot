@@ -46,9 +46,16 @@ module.exports = class ESEACommand extends VillainsCommand {
             this.props.description = "No Google Sheet ID found!"
             return
         }
-        const wb = new GoogleSpreadsheet(docID)
-        wb.useApiKey(apiKey)
-        await wb.loadInfo()
+        let wb = null
+        try {
+            wb = new GoogleSpreadsheet(docID)
+            wb.useApiKey(apiKey)
+            await wb.loadInfo()
+        } catch (err) {
+            this.error = true
+            this.props.description = "No Google Sheet ID found!"
+            return
+        }
 
         // Load sheet
         const sheet = wb.sheetsByIndex[0]

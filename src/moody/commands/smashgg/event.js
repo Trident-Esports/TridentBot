@@ -210,7 +210,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         }
 
         // Get Event ID
-        let tourneySlug = guildSGGdata.tourney.slug
+        let tourneySlug = tourneyData
         let data = ""
         try {
             data = await this.getTournamentBySlug(GQLClient, tourneySlug)
