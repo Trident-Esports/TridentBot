@@ -201,17 +201,17 @@ module.exports = class SmashGGEvent extends VillainsCommand {
 
         if (tourneyData == "") {
             this.error = true
-            this.description = "No Tourney ID found!"
+            this.props.description = "No Tourney ID found!"
             return
         }
         if (eventData == "") {
             this.error = true
-            this.description = "No Event ID found!"
+            this.props.description = "No Event ID found!"
         }
 
         // Get Event ID
         let tourneySlug = tourneyData
-        let eventIDX = eventdata
+        let eventIDX = eventData
         let data = ""
         try {
             data = await this.getTournamentBySlug(GQLClient, tourneySlug)
