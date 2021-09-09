@@ -1,9 +1,8 @@
 {
   "stripe": "default",
-  "title": "VALORANT Challenger Roster",
-  "aliases": ["vcr"],
+  "title": "VALORANT Legends Roster",
+  "aliases": ["vlr"],
   "team": {
-    "teamID": "262205",
     "lpl": {
       "teamID": "262205"
     },
