@@ -35,7 +35,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
 
         for (let [span, files] of Object.entries(profiles)) {
             for (let filepath of files) {
-                let url = new URL("http://villainsoce.mymm1.com:80" + filepath)
+                let url = new URL("http://tridentoce.mymm1.com:80" + filepath)
 
                 let params = {
                     method: 'GET',

@@ -122,7 +122,7 @@ module.exports = class RosterCommand extends VillainsCommand {
                 teamID = profile.team.lpl.teamID
             }
             if (teamID > 0) {
-                let url = "http://villainsoce.mymm1.com/"
+                let url = "http://tridentoce.mymm1.com/"
                 let name = "LPL Team #"
                 if(tourneyID > 0) {
                     url += "tourney/" + tourneyID + '/'

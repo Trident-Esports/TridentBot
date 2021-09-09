@@ -33,7 +33,7 @@ module.exports = class BotDiscordInviteCommand extends VillainsCommand {
 
         if(defaults?.discord?.invites?.bot?.code) {
             url += `https://discord.gg/${defaults.discord.invites.bot.code}`
-            this.props.description = `***[Join VillainsBot's Discord!](${url} '${url}')***`
+            this.props.description = `***[Join TridentBot's Discord!](${url} '${url}')***`
             // message.channel.send({ content: url })
         } else {
             this.error = true

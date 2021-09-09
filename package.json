@@ -1,11 +1,11 @@
 {
-  "name": "villainsbot",
-  "version": "1.1.8",
+  "name": "tridentbot",
+  "version": "1.2.0",
   "description": "",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/Trident-Esports/VillainsBot.git"
+    "url": "git://github.com/Trident-Esports/TridentBot.git"
   },
   "main": "main.js",
   "dependencies": {
@@ -29,6 +29,6 @@
   "scripts": {
     "test": "node --unhandled-rejections=strict ./src/main.js"
   },
-  "author": "ChristopherCelenza (PokerFace#6230)",
+  "author": "Trident Esports (https://github.com/Trident-Esports/)",
   "license": "ISC"
 }

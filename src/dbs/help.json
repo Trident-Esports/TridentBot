@@ -11,17 +11,17 @@
       },
       "invite": {
         "help": [
-          "Invite link to Villains Esports Discord."
+          "Invite link to Trident Esports Discord."
         ]
       },
       "discord": {
         "help": [
-          "Invite link to VillainsBot Discord."
+          "Invite link to TridentBot Discord."
         ]
       },
       "socials": {
         "help": [
-          "Link to all Villains Esports Socials."
+          "Link to all Trident Esports Socials."
         ]
       },
       "rules": {

@@ -58,11 +58,11 @@ module.exports = async (Discord, client, message) => {
         profile.save();
 
         let props = {
-            caption: { text: "VillainsBot" },
+            caption: { text: "TridentBot" },
             title: { text: "**WELCOME**" },
             fields: [
                 {
-                    name: `Welcome to VillainsBot, ${message.author}!`,
+                    name: `Welcome to TridentBot, ${message.author}!`,
                     value: [
                         "To start your journey, use `.beg`",
                         "To check your profile, use `.profile`",

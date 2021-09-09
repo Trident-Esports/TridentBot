@@ -38,7 +38,7 @@ module.exports = class PlayCommand extends VillainsCommand {
             category: 'music',
             description: 'Manages music',
         }
-        super(comprops, { caption: { text: "Villains Music" } })
+        super(comprops, { caption: { text: "Trident Music" } })
         this.connection = null
         this.song_queue = null
         this.now_playing = null

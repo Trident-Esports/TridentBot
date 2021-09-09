@@ -1,4 +1,4 @@
-# VillainsBot
+# TridentBot
 
 * Install [Node.js](https://nodejs.org/en/)
 * Update NPM: `npm update`

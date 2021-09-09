@@ -8,11 +8,11 @@
         "16.04": "xenial"
       },
       "repo": {
-        "title": "VillainsBot",
+        "title": "TridentBot",
         "username": "miketrethewey",
-        "repository": "VillainsBot"
+        "repository": "TridentBot"
       },
-      "filenames": [ "VillainsBot" ],
+      "filenames": [ "TridentBot" ],
       "filesize": 10,
       "actor": "MegaMan.EXE"
     },
