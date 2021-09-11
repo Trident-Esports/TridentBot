@@ -30,7 +30,12 @@ module.exports = class MessageReactionRemoveEvent extends VillainsEvent {
                 if (RULES_CHANNEL?.id) {
                     if (reaction.message.channel.id == RULES_CHANNEL.id) {
                         if (reaction.emoji.name === RULES_EMOJI) {
-                            await reaction.message.guild.members.cache.get(user.id).roles.remove(RULES_ROLE)
+                            const member = await reaction.message.guild.members.cache.get(user.id)
+                            if (!(member)) {
+                                console.log(`Message Reaction Remove: Member '${user.username}' not found!`)
+                                return
+                            }
+                            member.roles.remove(RULES_ROLE)
                         }
                     }
                 }
