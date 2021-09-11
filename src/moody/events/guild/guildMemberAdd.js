@@ -61,7 +61,6 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
         )
 
         if (channel) {
-            let ROLES_CHANNEL = await this.getChannel(member, "roles")
             let RULES_CHANNEL = await this.getChannel(member, "rules")
 
             try {
@@ -70,7 +69,6 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
                     // <@${member.user.id}> -> %%user%%
                     // ${member.guild.name} -> %%guild%%
                     // ${RULES_CHANNEL.toString()} -> %%rulesChannel%%
-                    // ${ROLES_CHANNEL.toString()} -> %%rolesChannel%%
                     `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
                     "",
                     `Please Read and Accept our ${RULES_CHANNEL.toString()}. This will provide access to the server.`,
@@ -84,7 +82,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
                 // await channel.send({ embeds: [embed] }); // discord.js v13
                 await channel.send(new VillainsEmbed({...props}));
             } catch (err) {
-                throw (err);
+                console.log(err);
             }
         }
     }
