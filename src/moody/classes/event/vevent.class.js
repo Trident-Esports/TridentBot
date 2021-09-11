@@ -33,11 +33,11 @@ module.exports = class VillainsEvent extends BaseEvent {
         }
 
         // If the ID is not a number, search for a named channel
-        if (typeof channelID == "string") {
+        if (isNaN(parseInt(channelID))) {
             channel = message.guild.channels.cache.find(c => c.name === channelID);
         } else {
             // Else, search for a numbered channel
-            channel = message.guild.channels.cache.find(c => c.id === channelID);
+            channel = message.guild.channels.cache.find(c => (c.id + "") === (channelID + ""));
         }
 
         return channel
