@@ -25,13 +25,6 @@ module.exports = class RulesCommand extends VillainsCommand {
             return
         }
 
-        for(let rule in rules) {
-            this.props.fields.push(
-                {
-                    name: "Rule " + (parseInt(rule) + 1),
-                    value: "`" + rules[rule] + "`"
-                }
-            )
-        }
+        this.props.description = rules.join("\n")
     }
 }

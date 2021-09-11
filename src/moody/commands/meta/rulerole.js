@@ -32,7 +32,7 @@ module.exports = class RulesRoleCommand extends VillainsCommand {
         this.props.description = [
             `Accepting the values will allow you to interact with the server.`,
             "",
-            "By selecting the reaction below, you are agreeing to Villains Values and will be punished according to how severely the values are broken."
+            "By selecting the reaction below, you are agreeing to Trident's Values and will be punished according to how severely the values are broken."
         ]
 
         // We'll handle sending it
