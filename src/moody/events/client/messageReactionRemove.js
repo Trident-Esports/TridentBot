@@ -27,8 +27,8 @@ module.exports = class MessageReactionRemoveEvent extends VillainsEvent {
                 let RULES_EMOJI = "✅"
                 let RULES_CHANNEL = await this.getChannel(reaction.message, "rules")
 
-                if (RULES_CHANNEL) {
-                    if (reaction.message.channel.id == RULES_CHANNEL) {
+                if (RULES_CHANNEL?.id) {
+                    if (reaction.message.channel.id == RULES_CHANNEL.id) {
                         if (reaction.emoji.name === RULES_EMOJI) {
                             await reaction.message.guild.members.cache.get(user.id).roles.remove(RULES_ROLE)
                         }
