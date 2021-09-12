@@ -43,7 +43,21 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
 
         if (reaction.message.channel.id == RULES_CHANNEL.id) {
             if (reaction.emoji.name === RULES_EMOJI) {
-                await reaction.message.guild.members.cache.get(user.id).roles.add(RULES_ROLE)
+                let member = null
+                try {
+                    member = await reaction.message.guild.members.cache.get(user.id)
+                } catch (err) {
+                    console.log(`Message Reaction Add: User: '${user.username}#${user.discriminator}' [ID:${user.id}] not found!`)
+                    console.log(err)
+                    return
+                }
+                try {
+                    member.roles.add(RULES_ROLE)
+                } catch (err) {
+                    console.log(`Message Reaction Add: Failed to add Role to User: '${user.username}#${user.discriminator}' [ID:${user.id}!`)
+                    console.log(err)
+                    return
+                }
             } else {
                 console.log("Message Reaction Add: Guild ID Rules Channel:",reaction.emoji.name,"!=",RULES_EMOJI)
             }
