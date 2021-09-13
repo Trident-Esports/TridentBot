@@ -363,8 +363,8 @@ module.exports = class VillainsCommand extends BaseCommand {
     async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
         let foundHandles = { players: {}, invalid: "", flags: flags }
 
-        let user = message.author
-        let mention = message.mentions.members.first()
+        let user = message?.author ? message.author : null
+        let mention = message?.mentions ? message.mentions.members.first() : null
         let search = (args && (args.length > 0) && (!(mention))) ? await message.guild.members.fetch({ query: args.join(" "), limit: 1 }) : undefined
         let loaded = undefined
         let padding = 9

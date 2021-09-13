@@ -2,30 +2,10 @@
 
 const { Intents, Collection } = require('discord.js'); // Base Discord module
 const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
-require('dotenv').config()
-
-const client = new MoodyClient({
-    partials: [ "MESSAGE", "CHANNEL", "REACTION" ],
-    ws: {
-        intents: [
-            Intents.FLAGS.GUILDS,
-            Intents.FLAGS.GUILD_MESSAGES,
-            Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-            Intents.FLAGS.DIRECT_MESSAGES,
-            Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
-        ]
-    },
-    allowedMentions: {
-        parse: [ "users", "roles" ]
-    }
-});  // Discord Client object
-
-const mongoose = require('mongoose'); // Mongoose
-
+const BotActivityCommand = require('./moody/commands/mod/botactivity'); // Bot Activity module
 const Levels = require('discord-xp') // Discord Game XP
-
-//Login Tokens
 const fs = require('fs');
+require('dotenv').config()
 
 const DEFAULTS = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"));
 
@@ -51,10 +31,31 @@ try {
 }
 
 (async () => {
+    // Create Client Object
+    const client = new MoodyClient({
+        partials: [ "MESSAGE", "CHANNEL", "REACTION" ],
+        ws: {
+            intents: [
+                Intents.FLAGS.GUILDS,
+                Intents.FLAGS.GUILD_MESSAGES,
+                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+                Intents.FLAGS.DIRECT_MESSAGES,
+                Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
+            ]
+        },
+        allowedMentions: {
+            parse: [ "users", "roles" ]
+        }
+    });  // Discord Client object
+
+    // Create a bucket for discord.js-style Commands
     client.commands = new Collection();
+    // Create a bucket for discord.js-style Events
     client.events = new Collection();
 
-    // Load Handlers
+    // Load discord.js-style Handlers
+    console.log("---");
+    console.log("D.JS-style");
     [
         'event_handler',
         'game_handler',
@@ -64,23 +65,29 @@ try {
         require(`./handlers/${handler}`)(client);
     })
 
-    // connect to MongoDB
+    // Connect to MongoDB
+    console.log("---");
     // @ts-ignore
     await client.mongoConnect();
-})();
 
-const handler = new Handler(client, {
-    prefix: prefix,
-    token: process.env.client_login,
-    commandsPath: __dirname + "/moody/commands",
-    eventsPath: __dirname + "/moody/events",
-    owners: [
-        "532192409757679618", // PokerFace
-        "263968998645956608", // Mike
-        "692180465242603591"  // Prime
-    ]
-});
-(async () => {
     console.log("---");
+    console.log("a-djs-style");
+    // Load a-djs-style Handlers
+    const handler = new Handler(client, {
+        prefix: prefix,
+        token: process.env.client_login,
+        commandsPath: __dirname + "/moody/commands",
+        eventsPath: __dirname + "/moody/events",
+        owners: [
+            "532192409757679618", // PokerFace
+            "263968998645956608", // Mike
+            "692180465242603591"  // Prime
+        ]
+    });
     await handler.start();
+
+    // Set Bot Activity Status
+    console.log("---");
+    let ba = new BotActivityCommand({ null: true })
+    await ba.run(client, null, [], null, "")
 })();
