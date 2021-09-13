@@ -250,8 +250,11 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             )
                         }
                     } catch(e) {
-                        console.log(e)
-                        // console.log(`Malformed JSON:${url}`)
+                        if (data.substring(0,1) === '<') {
+                            console.log(`Matches: Malformed JSON: ${url}`)
+                        } else {
+                            console.log(e)
+                        }
                     }
                 });
                 pages.push(embed)

@@ -63,7 +63,6 @@ module.exports = class MessageEvent extends VillainsEvent {
         if (!(command?.name)) {
             // Didn't find a name for submitted Command
             console.log(`No name found for command! '${cmd}' given.`)
-            console.log(command)
             return
         }
 

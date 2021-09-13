@@ -158,7 +158,6 @@ module.exports = async (Discord, client, message) => {
     } else {
         // Didn't find a name for submitted Command
         console.log(`No name found for command! '${cmd}' given`)
-        console.log(command)
         return
     }
 
