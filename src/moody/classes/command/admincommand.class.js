@@ -63,20 +63,22 @@ module.exports = class AdminCommand extends VillainsCommand {
     }
 
     async build(client, message) {
-        this.ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
-        let APPROVED_ROLES = this.ROLES["admin"]
-        // Bail if we don't have intended Approved Roles data
-        if (!APPROVED_ROLES) {
-            this.error = true
-            this.props.description = "Failed to get Approved Roles."
-            return
-        }
+        if (message) {
+            this.ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
+            let APPROVED_ROLES = this.ROLES["admin"]
+            // Bail if we don't have intended Approved Roles data
+            if (!APPROVED_ROLES) {
+                this.error = true
+                this.props.description = "Failed to get Approved Roles."
+                return
+            }
 
-        // Bail if member doesn't have Approved Roles
-        if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
-            this.error = true
-            this.props.description = this.errors.adminOnly
-            return
+            // Bail if member doesn't have Approved Roles
+            if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
+                this.error = true
+                this.props.description = this.errors.adminOnly
+                return
+            }
         }
 
         await this.action(client, message, "")
