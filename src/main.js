@@ -57,7 +57,7 @@ try {
     console.log("---");
     console.log("D.JS-style");
     [
-        'event_handler',
+        // 'event_handler',
         'game_handler',
         'mongo_handler',
         'rosters_handler'
