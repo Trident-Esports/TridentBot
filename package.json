@@ -7,7 +7,7 @@
     "type": "git",
     "url": "git://github.com/Trident-Esports/TridentBot.git"
   },
-  "main": "main.js",
+  "main": "./src/main.js",
   "dependencies": {
     "a-djs-handler": "<=1.1.1",
     "dasu": "^0.4.2",
@@ -27,7 +27,11 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node --unhandled-rejections=strict ./src/main.js"
+    "audit": "npm --version && node --version && npm audit && npm outdated",
+    "install": "npm --version && node --version && npm audit && npm-update && npm audit",
+    "run": "npm --version && node --version && npm audit && npm outdated && node --unhandled-rejections=strict ./src/main.js",
+    "update": "npm --version && node --version && npm audit && npm-update && npm audit",
+    "test": "npm --version && node --version && npm audit && npm outdated && node --unhandled-rejections=strict ./src/main.js"
   },
   "author": "Trident Esports (https://github.com/Trident-Esports/)",
   "license": "ISC"
