@@ -47,6 +47,9 @@ module.exports = class PlayCommand extends VillainsCommand {
     }
 
     async action(client, message, cmd) {
+        this.error = true
+        this.props.description = "Music Bot temporarily disabled until new version can be developed."
+        return
         // Pre-Flight Checks
         // Call Bot
         // Nuke Bot
