@@ -28,9 +28,9 @@
   "devDependencies": {},
   "scripts": {
     "audit": "npm --version && node --version && npm audit && npm outdated",
-    "install": "npm --version && node --version && npm audit && npm-update && npm audit",
+    "install": "npm --version && node --version && npm audit && npm update && npm audit",
     "run": "npm --version && node --version && npm audit && npm outdated && node --unhandled-rejections=strict ./src/main.js",
-    "update": "npm --version && node --version && npm audit && npm-update && npm audit",
+    "update": "npm --version && node --version && npm audit && npm update && npm audit",
     "test": "npm --version && node --version && npm audit && npm outdated && node --unhandled-rejections=strict ./src/main.js"
   },
   "author": "Trident Esports (https://github.com/Trident-Esports/)",
