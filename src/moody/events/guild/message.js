@@ -73,7 +73,7 @@ module.exports = class MessageEvent extends VillainsEvent {
             } else if (typeof command.run === "function") {
                 // If it's a a-djs-style func, run it
                 let adjs = new command.constructor()
-                adjs.run(handler.client, message, args, cmd)
+                adjs.run(handler.client, message, args, null, cmd)
             }
         }
     }
