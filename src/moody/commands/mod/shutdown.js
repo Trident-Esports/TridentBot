@@ -43,7 +43,8 @@ module.exports = class ShutDownCommand extends AdminCommand {
                         console.log(err, list)
                     }
 
-                    for(let [, procItem] of list) {
+                    for(let [, procItem] of Object.entries(list)) {
+                        console.log(`PM2: Process: ${procItem.name}`)
                         if (procItem.name == "run") {
                             pm2.restart(procItem.name, (err, proc) => {
                                 pm2.disconnect()
