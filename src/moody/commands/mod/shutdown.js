@@ -26,7 +26,9 @@ module.exports = class ShutDownCommand extends AdminCommand {
         this.props.description = `Shutting down <@${client.user.id}>.`
         this.pages.push(new VillainsEmbed({...this.props}))
         await this.send(message, this.pages)
+        console.log(`!!! Bot Shutdown by: ${message.author.tag} !!!`)
         try {
+            // @ts-ignore
             const pm2 = require('pm2')
             pm2.connect(function(err) {
                 if (err) {
@@ -38,14 +40,11 @@ module.exports = class ShutDownCommand extends AdminCommand {
                 pm2.list((err, list) => {
                     if (err) {
                         console.log("PM2: Error Listing Processes!")
-                    } else {
-                        console.log("PM2: Process List:")
-                        console.log(err, list)
                     }
 
                     for(let [, procItem] of Object.entries(list)) {
-                        console.log(`PM2: Process: ${procItem.name}`)
                         if (procItem.name == "run") {
+                            console.log(`!!! RESTART`)
                             pm2.restart(procItem.name, (err, proc) => {
                                 pm2.disconnect()
                             })
@@ -55,6 +54,7 @@ module.exports = class ShutDownCommand extends AdminCommand {
             })
         } catch (err) {
             // console.log(err)
+            console.log(`!!! SHUTDOWN`)
             process.exit(1337)
         }
     }
