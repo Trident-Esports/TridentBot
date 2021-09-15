@@ -23,9 +23,6 @@ module.exports = class ShutDownCommand extends AdminCommand {
     }
 
     async run(client, message, args, util, cmd) {
-        this.props.description = `Shutting down <@${client.user.id}>.`
-        this.pages.push(new VillainsEmbed({...this.props}))
-        await this.send(message, this.pages)
         console.log(`!!! Bot Shutdown by: ${message.author.tag} !!!`)
         try {
             // @ts-ignore
@@ -37,13 +34,16 @@ module.exports = class ShutDownCommand extends AdminCommand {
                     process.exit(2)
                 }
 
-                pm2.list((err, list) => {
+                pm2.list(async (err, list) => {
                     if (err) {
                         console.log("PM2: Error Listing Processes!")
                     }
 
                     for(let [, procItem] of Object.entries(list)) {
                         if (procItem.name == "run") {
+                            this.props.description = `Restarting <@${client.user.id}>.`
+                            this.pages.push(new VillainsEmbed({...this.props}))
+                            await this.send(message, this.pages)
                             console.log(`!!! RESTART`)
                             pm2.restart(procItem.name, (err, proc) => {
                                 pm2.disconnect()
@@ -53,7 +53,9 @@ module.exports = class ShutDownCommand extends AdminCommand {
                 })
             })
         } catch (err) {
-            // console.log(err)
+            this.props.description = `Shutting down <@${client.user.id}>.`
+            this.pages.push(new VillainsEmbed({...this.props}))
+            await this.send(message, this.pages)
             console.log(`!!! SHUTDOWN`)
             process.exit(1337)
         }
