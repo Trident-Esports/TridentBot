@@ -30,18 +30,26 @@ module.exports = class ShutDownCommand extends AdminCommand {
             const pm2 = require('pm2')
             pm2.connect(function(err) {
                 if (err) {
+                    console.log("PM2: Error Connecting!")
                     console.log(err)
                     process.exit(2)
                 }
 
                 pm2.list((err, list) => {
-                    console.log(err, list)
+                    if (err) {
+                        console.log("PM2: Error Listing Processes!")
+                    } else {
+                        console.log("PM2: Process List:")
+                        console.log(err, list)
+                    }
 
-                    // if (list.includes("run")) {
-                    //     pm2.restart("run", (err, proc) => {
-                    //         pm2.disconnect()
-                    //     })
-                    // }
+                    for(let [, procItem] of list) {
+                        if (procItem.name == "run") {
+                            pm2.restart(procItem.name, (err, proc) => {
+                                pm2.disconnect()
+                            })
+                        }
+                    }
                 })
             })
         } catch (err) {
