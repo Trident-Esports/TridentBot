@@ -26,6 +26,27 @@ module.exports = class ShutDownCommand extends AdminCommand {
         this.props.description = `Shutting down <@${client.user.id}>.`
         this.pages.push(new VillainsEmbed({...this.props}))
         await this.send(message, this.pages)
-        process.exit(1337)
+        try {
+            const pm2 = require('pm2')
+            pm2.connect(function(err) {
+                if (err) {
+                    console.log(err)
+                    process.exit(2)
+                }
+
+                pm2.list((err, list) => {
+                    console.log(err, list)
+
+                    // if (list.includes("run")) {
+                    //     pm2.restart("run", (err, proc) => {
+                    //         pm2.disconnect()
+                    //     })
+                    // }
+                })
+            })
+        } catch (err) {
+            // console.log(err)
+            process.exit(1337)
+        }
     }
 }
