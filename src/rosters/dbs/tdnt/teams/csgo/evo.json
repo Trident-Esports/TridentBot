@@ -11,17 +11,18 @@
   "members": {
     "captain": {
       "title": "Captain",
-      "users": [],
-      "#note": "#FIXME: Need Captain"
+      "users": [
+        "cry"
+      ]
     },
     "main": {
       "title": "Main",
       "users": [
-        "bridledhawk",
         "cry",
         "fish",
         "happyduckss",
-        "raim"
+        "raim",
+        "stosh"
       ]
     }
   }
