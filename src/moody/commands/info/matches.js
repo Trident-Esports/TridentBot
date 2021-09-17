@@ -101,16 +101,18 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         if (!profiles[span]) {
                             profiles[span] = []
                         }
-                        let locPath = "./rosters/dbs/teams"
+                        let guilds = JSON.parse(fs.readFileSync("./src/dbs/guilds.json","utf8"))
+                        let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "tdnt"
+                        let locPath = "./src/rosters/dbs/" + org + "/teams"
                         let files = walk(locPath)
                         for (let file of files) {
                             let fData = JSON.parse(fs.readFileSync(file, "utf8"))
-                            if (fData?.team?.teamID) {
+                            if (fData?.team?.lpl?.teamID) {
                                 let handlerpath = "/team/"
-                                let filepath = fData.team.teamID
-                                if (fData?.team?.tourneyID) {
+                                let filepath = fData.team.lpl.teamID
+                                if (fData?.team?.lpl?.tourneyID) {
                                     handlerpath = "/tourney/"
-                                    filepath = fData.team.tourneyID + '/' + filepath
+                                    filepath = fData.team.lpl.tourneyID + '/' + filepath
                                 }
                                 profiles[span].push(
                                     handlerpath + filepath + '-' + span + ".json"
