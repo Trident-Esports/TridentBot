@@ -19,6 +19,7 @@
     "graphql": "^15.5.3",
     "graphql-request": "^3.5.0",
     "mongoose": "<=5.13.8",
+    "pm2": "^5.1.1",
     "shelljs": "^0.8.4",
     "spotify-url-info": "^2.2.3",
     "weather-js": "^2.0.0",
