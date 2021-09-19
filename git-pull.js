@@ -1,4 +1,6 @@
 const shell = require('shelljs')
+const fs = require('fs')
+let PACKAGE = JSON.parse(fs.readFileSync("./package.json", "utf8"))
 
 shell.echo("GIT PULL")
 shell.echo("========")
