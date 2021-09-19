@@ -30,7 +30,8 @@
     "audit": "node ./src/resources/ci/common/run-audit.js",
     "local-install": "node ./src/resources/ci/common/run-install.js",
     "run": "node ./run.js",
-    "update": "node ./src/resources/ci/common/run-update.js"
+    "update": "node ./src/resources/ci/common/run-update.js",
+    "ver": "node ./src/resources/ci/common/ver.js"
   },
   "author": "Trident Esports (https://github.com/Trident-Esports/)",
   "license": "ISC"
