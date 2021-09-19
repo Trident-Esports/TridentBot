@@ -1,18 +1,11 @@
-const { spawn } = require("child_process")
+const shell = require('shelljs')
 
-// alias spawn
-const exec = async (commands) => {
-    if (!(Array.isArray(commands))) {
-        commands = [commands]
-    }
-    for (let command of commands) {
-        spawn(command, { stdio: "inherit", shell: true });
-    }
-}
+shell.exec("node ./src/resources/ci/common/ver.js")
+shell.echo()
 
-// use like this
-exec(
-    [
-        "npm run run"
-    ]
-)
+shell.exec("node ./src/resources/ci/common/npm/audit.js")
+shell.echo()
+
+shell.exec("node ./src/resources/ci/common/npm/outdated.js")
+
+shell.exec("node --unhandled-rejections=strict ./src/main.js")
