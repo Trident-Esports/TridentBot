@@ -1,95 +1,99 @@
 {
-  "commands": {
-    "section": "COMMANDS",
-    "help": "List of commands",
+    "preamble": [
+        "This is a list of the commands and help for TridentBot.",
+        "If you would like a list of commands for the MiniGame please type `%%prefix%%gamehelp`"
+    ],
     "commands": {
-      "help": {
-        "aliases": [ "h" ],
-        "help": [
-          "Brings up this menu."
-        ]
-      },
-      "invite": {
-        "help": [
-          "Invite link to Trident Esports Discord."
-        ]
-      },
-      "discord": {
-        "help": [
-          "Invite link to TridentBot Discord."
-        ]
-      },
-      "socials": {
-        "help": [
-          "Link to all Trident Esports Socials."
-        ]
-      },
-      "rules": {
-        "help": [
-          "List of rules for the server."
-        ]
-      },
-      "suggest": {
-        "help": [
-          "Make a suggestion for the server/bot/etc."
-        ]
-      },
-      "survey": {
-        "help": [
-          "Creates a yes/no survey for whatever you specify."
-        ]
-      },
-      "giveaway": {
-        "help": [
-          "Creates a giveaway for the topic of your choice with a specified number of winners.",
-          "Syntax: `<time>``<winners>``<product>`"
-        ]
-      }
+        "section": "COMMANDS",
+        "help": "List of commands",
+        "commands": {
+            "help": {
+                "aliases": [ "h" ],
+                "help": [
+                    "Brings up this menu."
+                ]
+            },
+            "invite": {
+                "help": [
+                    "Invite link to Trident Esports Discord."
+                ]
+            },
+            "discord": {
+                "help": [
+                    "Invite link to TridentBot Discord."
+                ]
+            },
+            "socials": {
+                "help": [
+                    "Link to all Trident Esports Socials."
+                ]
+            },
+            "rules": {
+                "help": [
+                    "List of rules for the server."
+                ]
+            },
+            "suggest": {
+                "help": [
+                    "Make a suggestion for the server/bot/etc."
+                ]
+            },
+            "survey": {
+                "help": [
+                    "Creates a yes/no survey for whatever you specify."
+                ]
+            },
+            "giveaway": {
+                "syntax": "%% <time> <winners> <product>",
+                "help": [
+                    "Creates a giveaway for the topic of your choice with a specified number of winners."
+                ]
+            }
+        }
+    },
+    "music": {
+        "section": "MUSIC COMMANDS",
+        "help": "List of commands for listening to music. Must be in a Voice Channel for these to work!",
+        "commands": {
+            "play": {
+                "aliases": [ "p" ],
+                "help": [
+                    "To play a song you specify"
+                ]
+            },
+            "skip": {
+                "aliases": [ "next" ],
+                "help": [
+                    "Skips to the next song in the queue"
+                ]
+            },
+            "stop": {
+                "help": [
+                    "Stops the music and makes the bot leave"
+                ]
+            },
+            "leave": {
+                "aliases": [ "nukebot" ],
+                "help": [
+                    "Tells the bot to leave your Voice Channel"
+                ]
+            }
+        }
+    },
+    "other": {
+        "section": "OTHER COMMANDS",
+        "help": "Extra commands",
+        "commands": {
+            "ping": {
+                "help": [
+                    "pong!"
+                ]
+            },
+            "weather": {
+                "help": [
+                    "Tells you the weather for the city provided"
+                ]
+            }
+        }
     }
-  },
-  "music": {
-    "section": "MUSIC COMMANDS",
-    "help": "List of commands for listening to music. Must be in a Voice Channel for these to work!",
-    "commands": {
-      "play": {
-        "aliases": [ "p" ],
-        "help": [
-          "To play a song you specify"
-        ]
-      },
-      "skip": {
-        "aliases": [ "next" ],
-        "help": [
-          "Skips to the next song in the queue"
-        ]
-      },
-      "stop": {
-        "help": [
-          "Stops the music and makes the bot leave"
-        ]
-      },
-      "leave": {
-        "aliases": [ "nukebot" ],
-        "help": [
-          "Tells the bot to leave your Voice Channel"
-        ]
-      }
-    }
-  },
-  "other": {
-    "section": "OTHER COMMANDS",
-    "help": "Extra commands",
-    "commands": {
-      "ping": {
-        "help": [
-          "pong!"
-        ]
-      },
-      "weather": {
-        "help": [
-          "Tells you the weather for the city provided"
-        ]
-      }
-    }
-  }
 }

@@ -1,71 +1,71 @@
 {
-  "commands": {
-    "section": "MOD COMMANDS",
-    "help": "List of Mod commands",
     "commands": {
-      "purge": {
-        "syntax": "%% <number>",
-        "help": [
-          "Deletes the last <number> messages sent in the current channel."
-        ]
-      },
-      "warn": {
-        "syntax": "%% <@mention> <reason>",
-        "help": [
-          "Warns a member for <reason>."
-        ]
-      },
-      "warns": {
-        "syntax": "%% <@mention>",
-        "help": [
-          "Lists the warns for a member."
-        ]
-      },
-      "rmvwarn": {
-        "syntax": "%% <@mention>",
-        "aliases": [ "remove-warn" ],
-        "help": [
-          "Removes a warn for a member."
-        ]
-      },
-      "clrwarn": {
-        "syntax": "%% <@mention>",
-        "aliases": [
-          "clearwarns",
-          "removewarns",
-          "remove-allwarns"
-        ],
-        "help": [
-          "Removes all warns for a member."
-        ]
-      },
-      "kick": {
-        "syntax": "%% <@mention>",
-        "help": [
-          "Kicks a member."
-        ]
-      },
-      "ban": {
-        "syntax": "%% <@mention>",
-        "help": [
-          "Bans a member."
-        ]
-      },
-      "mute": {
-        "syntax": "%% <@mention>",
-        "aliases": [
-          "silence"
-        ],
-        "help": [
-          "Mutes a member from sending messages."
-        ]
-      },
-      "unmute": {
-        "syntax": "%% <@mention>",
-        "help": [
-          "Unmutes a member."
-        ]
-      }
+        "section": "MOD COMMANDS",
+        "help": "List of Mod commands",
+        "commands": {
+            "purge": {
+                "syntax": "%% <number>",
+                "help": [
+                    "Deletes the last <number> messages sent in the current channel."
+                ]
+            },
+            "warn": {
+                "syntax": "%% <@mention> <reason>",
+                "help": [
+                    "Warns a member for <reason>."
+                ]
+            },
+            "warns": {
+                "syntax": "%% <@mention>",
+                "help": [
+                    "Lists the warns for a member."
+                ]
+            },
+            "rmvwarn": {
+                "syntax": "%% <@mention>",
+                "aliases": [ "remove-warn" ],
+                "help": [
+                    "Removes a warn for a member."
+                ]
+            },
+            "clrwarn": {
+                "syntax": "%% <@mention>",
+                "aliases": [
+                    "clearwarns",
+                    "removewarns",
+                    "remove-allwarns"
+                ],
+                "help": [
+                    "Removes all warns for a member."
+                ]
+            },
+            "kick": {
+                "syntax": "%% <@mention>",
+                "help": [
+                    "Kicks a member."
+                ]
+            },
+            "ban": {
+                "syntax": "%% <@mention>",
+                "help": [
+                    "Bans a member."
+                ]
+            },
+            "mute": {
+                "syntax": "%% <@mention>",
+                "aliases": [
+                    "silence"
+                ],
+                "help": [
+                    "Mutes a member from sending messages."
+                ]
+            },
+            "unmute": {
+                "syntax": "%% <@mention>",
+                "help": [
+                    "Unmutes a member."
+                ]
+            }
+        }
     }
-  }
 }
