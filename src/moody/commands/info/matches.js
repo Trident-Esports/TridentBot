@@ -172,10 +172,15 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         let emoji = await new VillainsCommand({name:""}).getEmoji(emojiKey, message.guild.emojis)
 
                         if (!noMatches) {
-                            props.description = "__***" + emoji + json.team + "***__"
-                            if (json?.team_url) {
-                                props.description = `[${props.description}](${json.team_url} '${json.team_url}')`
+                            props.description = ""
+                            if (json?.league_name) {
+                                props.description = "***" + json.league_name + "***" + "\n"
                             }
+                            let header = "__***" + emoji + json.team + "***__"
+                            if (json?.team_url) {
+                                header = `[${header}](${json.team_url} '${json.team_url}')`
+                            }
+                            props.description += header
 
                             let teamName = "LPL Team #"
                             let teamURL = "https://letsplay.live/"

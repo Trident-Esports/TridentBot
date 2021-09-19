@@ -25,8 +25,9 @@
     },
     "captain": {
       "title": "Captain",
-      "users": [],
-      "#note": "#FIXME: Need Captain"
+      "users": [
+        "marsh"
+      ]
     },
     "main": {
       "title": "Main",
