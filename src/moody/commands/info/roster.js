@@ -103,7 +103,7 @@ module.exports = class RosterCommand extends VillainsCommand {
 
             props.description = emoji
 
-            // Team URL
+            // LPL Team URL
             if (profile?.url && profile.url != "") {
                 props.caption.url = profile.url
             }
@@ -133,7 +133,25 @@ module.exports = class RosterCommand extends VillainsCommand {
                 }
                 url += teamID
                 name += teamID
-                props.description += `*[${name}](${url} '${url}')*`
+                props.description += `*[${name}](${url} '${url}')*` + "\n"
+                props.caption.url = url
+            }
+
+            // ESEA URL
+            emoji = await this.getEmoji("esea", message.guild.emojis)
+            teamID = 0
+            if (profile?.team?.esea?.teamID) {
+                teamID = profile.team.esea.teamID
+            }
+            if (teamID > 0) {
+                let url = "http://play.esea.net/"
+                let name = "ESEA Team #"
+                if(tourneyID == 0) {
+                    url += "teams/"
+                }
+                url += teamID
+                name += teamID
+                props.description += emoji + `*[${name}](${url} '${url}')*` + "\n"
                 props.caption.url = url
             }
 
@@ -166,7 +184,7 @@ module.exports = class RosterCommand extends VillainsCommand {
             if (profile?.members) {
                 let management = JSON.parse(fs.readFileSync("./src/rosters/dbs/" + org + "/staff/management.json","utf8"))
                 if (management?.members) {
-                    for (let [groupName,] of Object.entries(profile.members)) {
+                    for (let groupName of (Object.keys(profile.members).concat([emojiKey]))) {
                         if (Object.keys(management.members).includes(groupName)) {
                             if (management.members[groupName]?.users) {
                                 let newmembers = {

@@ -5,7 +5,9 @@
     "twitter": "xaimmzzzzrl"
   },
   "anothersavior": {
-    "stylized": "AnotherSavior"
+    "stylized": "AnotherSavior",
+    "twitch": "anothersavior",
+    "twitter": "anothersavior0"
   },
   "asdf": {
     "twitter": "csgo_doggo"
@@ -101,6 +103,10 @@
   "docc": {
     "twitch": "starpyurr",
     "twitter": "starpyurr"
+  },
+  "edlinn": {
+    "twitch": "edlinn",
+    "twitter": "edlinnoce"
   },
   "emperorzk": {
     "twitch": "emperor_zk",
@@ -426,6 +432,10 @@
   },
   "squeakyboot": {
     "twitch": "squeakyboot"
+  },
+  "stosh": {
+    "twitch": "stosh__",
+    "twitter": "stoshcs"
   },
   "stubs": {
     "twitch": "stubsdesigns",
