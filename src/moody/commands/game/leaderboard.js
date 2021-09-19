@@ -73,4 +73,10 @@ module.exports = class LeaderboardCommand extends GameCommand {
             props.fields = []
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new LeaderboardCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

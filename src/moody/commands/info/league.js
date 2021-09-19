@@ -105,9 +105,11 @@ module.exports = class LeagueCommand extends VillainsCommand {
                         }
 
                         for (let [timestamp, match] of Object.entries(game_details)) {
-                            if (!match) {
+                            if (!match || !match.discord.team || !match.discord.opponent) {
                                 noMatches = true
                                 continue
+                            } else {
+                                noMatches = false
                             }
 
                             let name = ""
@@ -122,7 +124,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
                             name += match.discord.team + " 🆚 " + match.discord.opponent
                             value += ": <t:" + match.discord.timestamp + ":f>" + "\n";
                             if(match.discord.timestamp < (60 * 60 * 24 * 5)) {
-                              value = ""
+                              value = "???"
                             }
                             embed.addField(name, value)
                         }
@@ -162,6 +164,24 @@ module.exports = class LeagueCommand extends VillainsCommand {
         if (pages.length) {
             await this.send(message, pages, [], "", true)
             this.null = true
+        }
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "valorant",
+          "valorant open",
+          "valorant evolution 262656"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new LeagueCommand()
+            dummy.props.footer.msg = args.join('|')
+            dummy.run(client, message, args, null, "")
         }
     }
 }

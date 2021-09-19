@@ -18,4 +18,22 @@ module.exports = class DepositCommand extends ATMCommand {
             {...comprops}
         )
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "0",
+          "-1",
+          "1"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ added ])
+            dummy = new DepositCommand()
+            dummy.props.footer.msg = args.join('|')
+            dummy.run(client, message, args, null, "")
+        }
+    }
 }

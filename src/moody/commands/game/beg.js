@@ -63,4 +63,10 @@ module.exports = class BegCommand extends GameCommand {
             ]
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new BegCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

@@ -244,4 +244,21 @@ module.exports = class RosterCommand extends VillainsCommand {
         }
         this.send(message, pages)
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "valorant",
+          "valorant sirens"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new RosterCommand()
+            dummy.props.footer.msg = args.join('|')
+            dummy.run(client, message, args)
+        }
+    }
 }

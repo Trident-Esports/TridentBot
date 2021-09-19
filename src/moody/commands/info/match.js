@@ -60,4 +60,21 @@ module.exports = class MatchCommand extends TeamListingCommand {
         }
         super.send(message, pages, [], "", true)
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "990184",
+          "990429"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ added ])
+            dummy = new MatchCommand()
+            dummy.props.footer.msg = args.join('|')
+            dummy.run(client, message, args)
+        }
+    }
 }

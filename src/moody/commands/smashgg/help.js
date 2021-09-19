@@ -10,7 +10,7 @@ module.exports = class EventHelpCommand extends HelpListingCommand {
                 aliases: [ 'evh' ],
                 category: "information",
                 description: "Bot Event Help",
-                helpslug: "eventhelp"
+                helpslug: "dbs/eventhelp"
             }
         )
     }

@@ -53,4 +53,10 @@ module.exports = class StoreCommand extends GameCommand {
             }
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new StoreCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

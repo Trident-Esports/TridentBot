@@ -95,4 +95,23 @@ module.exports = class WeatherCommand extends VillainsCommand {
         // SELFHANDLE: Inline Callback
         this.null = true
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "Sydney, Australia",
+          "Sydney, Australia F",
+          "97202",
+          "97202 F"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new WeatherCommand()
+            dummy.props.footer.msg = args.join('|')
+            dummy.run(client, message, args, null, "")
+        }
+    }
 }

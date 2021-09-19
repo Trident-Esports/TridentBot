@@ -42,4 +42,23 @@ module.exports = class BalanceCommand extends GameCommand {
             }
         ]
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          message.author.username,
+          message.author.id,
+          client.user.username,
+          "Wanrae"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ added ])
+            dummy = new BalanceCommand()
+            dummy.props.footer.msg = args.join('|')
+            dummy.run(client, message, args, null, "")
+        }
+    }
 }
