@@ -2,6 +2,7 @@
 
 const VillainsEmbed = require('../../classes/embed/vembed.class')
 const VillainsEvent = require('../../classes/event/vevent.class')
+const fs = require('fs')
 
 module.exports = class MessageEvent extends VillainsEvent {
     constructor() {
@@ -70,6 +71,24 @@ module.exports = class MessageEvent extends VillainsEvent {
 
         if (cmd == "testsuite") {
             if (message.channel.name != "testsuite-channel") { return }
+
+            let GLOBALS = null
+            const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
+            try {
+                GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+                GLOBALS = (
+                    GLOBALS?.profile &&
+                    GLOBALS?.profiles &&
+                    GLOBALS.profile in GLOBALS.profiles
+                ) ?
+                    GLOBALS.profiles[GLOBALS.profile]:
+                    defaults
+            } catch(err) {
+                console.log("VCommand: PROFILE manifest not found!")
+                process.exit(1)
+            }
+            if (!(GLOBALS.DEV)) { return }
+
             if (args.length > 0) {
                 commands = [
                     handler.client.commands.get(args[0]) ||
