@@ -269,4 +269,22 @@ module.exports = class MatchesCommand extends VillainsCommand {
         }
         super.send(message, pages, [], 0, true)
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "262890",
+          "262377",
+          "261418"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new MatchesCommand()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args)
+        }
+    }
 }

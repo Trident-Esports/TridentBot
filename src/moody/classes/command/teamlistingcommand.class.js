@@ -28,7 +28,7 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                 let noMatches = Object.entries(game_details).length == 0
 
                 let emojiKey = json?.gameID?.detected ? json.gameID.detected : json.game
-                let emoji = await this.getEmoji(emojiKey, emojis)
+                let emoji = this ? await this.getEmoji(emojiKey, emojis) : ('[' + emojiKey + "] ")
 
                 if (!noMatches) {
                     props.description = ""

@@ -22,4 +22,8 @@ module.exports = class FootCommand extends VillainsCommand {
             {...props}
         )
     }
+
+    async test(client, message, args) {
+        this.run(client, message, args, null, "")
+    }
 }

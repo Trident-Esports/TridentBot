@@ -28,4 +28,10 @@ module.exports = class BotVoteCommand extends VillainsCommand {
             msg: "Prizes for Voting COMING SOON!"
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new BotVoteCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

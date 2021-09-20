@@ -17,4 +17,10 @@ module.exports = class BlackjackCommand extends GameCommand {
             "`Coming Soon!`"
         ].join("\n")
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new BlackjackCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

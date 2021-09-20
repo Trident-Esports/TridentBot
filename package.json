@@ -1,6 +1,6 @@
 {
   "name": "tridentbot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "private": true,
   "repository": {
@@ -22,6 +22,7 @@
     "pm2": "^5.1.1",
     "shelljs": "^0.8.4",
     "spotify-url-info": "^2.2.3",
+    "timezone": "^1.0.23",
     "weather-js": "^2.0.0",
     "yt-search": "^2.10.1",
     "ytdl-core": "^4.9.1",

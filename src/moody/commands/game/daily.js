@@ -33,4 +33,10 @@ module.exports = class DailyCommand extends GameCommand {
             ]
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new DailyCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

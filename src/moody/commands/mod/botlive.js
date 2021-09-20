@@ -26,4 +26,23 @@ module.exports = class BotLiveCommand extends AdminCommand {
         let botActivity = new BotActivityCommand()
         botActivity.run(client, message, args, null, "")
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "villains_esc",
+          "tridentesports",
+          "villains_esc Rocket League",
+          "tridentesports VALORANT"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new BotLiveCommand()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args)
+        }
+    }
 }
