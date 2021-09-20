@@ -85,12 +85,15 @@ module.exports = class HelpListingCommand extends VillainsCommand {
             } else {
                 // If it doesn't match a section, see if it matches a single command
                 for(let [section, commands] of Object.entries(this.commands)) {
-                    if(Object.keys(commands.commands).includes(search.term)) {
-                        let key = section
-                        this.commands = {
-                            key: this.commands[key]
+                    if(commands.commands) {
+                        if(Object.keys(commands.commands).includes(search.term)) {
+                            let key = section
+                            this.commands = {
+                                key: this.commands[key]
+                            }
+                            scope = "single"
+                            break
                         }
-                        scope = "single"
                     }
                 }
             }

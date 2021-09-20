@@ -48,7 +48,7 @@ module.exports = (client) => {
             let gameID = fileparts[fileparts.length - 2]
             let filename = fileparts[fileparts.length - 1].replace(".json","")
 
-            if (Object.keys(roster_aliases).indexOf(gameID) == -1) {
+            if (!(Object.keys(roster_aliases).includes(gameID))) {
                 roster_aliases[gameID] = {}
             }
             roster_aliases[gameID][profile.aliases[0]] = {

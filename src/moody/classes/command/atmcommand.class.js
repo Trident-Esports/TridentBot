@@ -94,7 +94,7 @@ module.exports = class ATMCommand extends GameCommand {
 
         // Bail if invalid amount
         // Amount needs to be positive number, "all" or "half"
-        if ((isNaN(amount) && (["all","half"].indexOf(amount) == -1)) || (parseInt(amount) <= 0)) {
+        if ((isNaN(amount) && (!(["all","half"].includes(amount)))) || (parseInt(amount) <= 0)) {
             this.error = true
             this.props.description = `Amount must be a positive whole number, "all" or "half". '${amount}' given.`
             return

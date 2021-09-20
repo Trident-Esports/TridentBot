@@ -397,4 +397,22 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         }
         this.null = true
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "3v3-villains-90-rocket-league-tournament",
+          "twitch-troopers-splitgate-invitational",
+          "trident-50-valorant-tournament",
+          "300-bandits-on-wheels-gameworks-x-tactical-banditry-rocket-league-30"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new SmashGGEvent()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args, null, "")
+        }
+    }
 }

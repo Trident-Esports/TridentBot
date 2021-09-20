@@ -73,4 +73,10 @@ module.exports = class BotGuildsCommand extends AdminCommand {
             )
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new BotGuildsCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

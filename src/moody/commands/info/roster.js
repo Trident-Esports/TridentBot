@@ -48,7 +48,7 @@ module.exports = class RosterCommand extends VillainsCommand {
         let profiles = []
         let socials = JSON.parse(fs.readFileSync("./src/rosters/dbs/socials/users.json", "utf8"))
 
-        if (gameID.indexOf("staff") == -1) {
+        if (!(gameID.includes("staff"))) {
             filepath += "/teams"
         }
 
@@ -257,7 +257,7 @@ module.exports = class RosterCommand extends VillainsCommand {
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new RosterCommand()
-            dummy.props.footer.msg = args.join('|')
+            dummy.props.footer.msg = args.join(" | ")
             dummy.run(client, message, args)
         }
     }

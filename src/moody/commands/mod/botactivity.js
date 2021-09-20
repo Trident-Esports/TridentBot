@@ -77,9 +77,13 @@ module.exports = class BotActivityCommand extends AdminCommand {
                     activity = activityNames[activityID]
                 }
             } else if(this.inputData.args[0].trim() != "") {
+                // If arg[0] sent, if it's not a number, check to see if it's in the list
                 let activityName = this.inputData.args[0].trim()
-                if(activityNames.indexOf(activityName.toLowerCase()) == -1) {
+                if(!(activityNames.includes(activityName.toLowerCase()))) {
+                    // If it's not in the list, set to default
                     activity = defaultActivity
+                } else {
+                    activity = activityName
                 }
             }
             if(activity.toLowerCase() == "moo") {
@@ -95,7 +99,6 @@ module.exports = class BotActivityCommand extends AdminCommand {
 
         if(this.DEV) {
             console.log("New activity:".padEnd(padding),activity.toUpperCase())
-            console.log()
         }
 
         if (activity !== "") {
@@ -114,11 +117,41 @@ module.exports = class BotActivityCommand extends AdminCommand {
             } else if(activity == "competing") {
                 desc += " in"
             }
+            if(this.DEV) {
+                console.log("New Message:".padEnd(padding),desc.substr(desc.indexOf(':') + 1).trim() + " " + args.name)
+                console.log()
+            }
             desc += " "
             desc += "**"
             desc += args?.url ? `[${args.name}](${args.url} '${args.url}')` : args.name
             desc += "**"
             this.props.description = desc
+        }
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "0",
+          "2",
+          "playing",
+          "listening",
+          "0 VALORANT",
+          "5 eSports",
+          "playing VALORANT",
+          "competing eSports",
+          "watching https://twitch.tv/tridentesports VALORANT",
+          "streaming https://twitch.tv/tridentesports VALORANT",
+          ""
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new BotActivityCommand()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args, null, "")
         }
     }
 }

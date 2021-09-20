@@ -14,4 +14,20 @@ module.exports = class EventHelpCommand extends HelpListingCommand {
             }
         )
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "help"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new EventHelpCommand()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args, null, "")
+        }
+    }
 }
