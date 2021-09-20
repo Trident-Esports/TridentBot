@@ -9,8 +9,14 @@ module.exports = class EseaHelpCommand extends HelpListingCommand {
                 name: "eseahelp",
                 category: "information",
                 description: "ESEA Help",
-                helpslug: "eseahelp"
+                helpslug: "dbs/eseahelp"
             }
         )
+    }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new EseaHelpCommand()
+        dummy.run(client, message, [], null, "")
     }
 }

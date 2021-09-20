@@ -32,7 +32,10 @@ module.exports = class MessageEvent extends VillainsEvent {
                 ]
             }
             if (message.content.toLowerCase().includes('lol')) {
-                if (message.author.bot || (blacklist.guildIDs.includes(message.guild.id))) {
+                if (
+                  message.author.bot ||
+                  (blacklist.guildIDs.includes(message.guild.id))
+                ) {
                     return
                 }
                 // message.channel.send('https://i.kym-cdn.com/photos/images/newsfeed/002/052/362/aae.gif');
@@ -55,25 +58,50 @@ module.exports = class MessageEvent extends VillainsEvent {
         const args = message.content.slice(handler.options.prefix.length).split(/ +/);
 
         // Get Command
-        const cmd = args.shift().toLowerCase();
+        let cmd = args.shift().toLowerCase();
 
         // Search for Command
-        const command = handler.client.commands.get(cmd) || handler.client.commands.find(a => a.aliases && a.aliases.includes(cmd));
+        let command = handler.client.commands.get(cmd) ||
+            handler.client.commands.find(a => a.aliases && a.aliases.includes(cmd));
 
-        if (!(command?.name)) {
-            // Didn't find a name for submitted Command
-            console.log(`No name found for command! '${cmd}' given.`)
-            return
+        let commands = cmd != "testsuite" ?
+            [ command ] :
+            handler.client.commands.filter(command => typeof command.test === "function").values()
+
+        if (cmd == "testsuite") {
+            if (message.channel.name != "testsuite-channel") { return }
+            if (args.length > 0) {
+                commands = [
+                    handler.client.commands.get(args[0]) ||
+                    handler.client.commands.find(a => a.aliases && a.aliases.includes(args[0]))
+                ]
+            }
         }
 
-        if (command) {
-            if (typeof command.execute === "function") {
-                // If it's a discord.js-style func, execute it
-                command.execute(message, args, cmd)
-            } else if (typeof command.run === "function") {
-                // If it's a a-djs-style func, run it
-                let adjs = new command.constructor()
-                adjs.run(handler.client, message, args, null, cmd)
+        for(command of commands) {
+            if (!(command?.name)) {
+                // Didn't find a name for submitted Command
+                console.log(`No name found for command! '${cmd}' given.`)
+                return
+            }
+
+            if (command) {
+                if (cmd != "testsuite") {
+                    if (typeof command.execute === "function") {
+                        // If it's a discord.js-style func, execute it
+                        command.execute(message, args, cmd)
+                    } else if (typeof command.run === "function") {
+                        // If it's a a-djs-style func, run it
+                        let adjs = new command.constructor()
+                        adjs.run(handler.client, message, args, null, cmd)
+                    }
+                } else {
+                    if (typeof command.test === "function") {
+                        // If it's got a test func, test it
+                        let adjs = new command.constructor()
+                        adjs.test(handler.client, message, args, null, cmd)
+                    }
+                }
             }
         }
     }

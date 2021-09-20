@@ -59,4 +59,10 @@ module.exports = class UptimeCommand extends VillainsCommand {
           await this.timeConversion(uptime)
         ]
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new UptimeCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

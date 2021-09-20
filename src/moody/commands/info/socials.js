@@ -24,4 +24,10 @@ module.exports = class SocialsCommand extends VillainsCommand {
         let url = "https://linktr.ee/TridentEsports"
         this.props.description = `***[Follow Trident Esports Socials!](${url} '${url}')***`
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new SocialsCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

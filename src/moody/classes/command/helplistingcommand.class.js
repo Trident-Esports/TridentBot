@@ -34,7 +34,7 @@ module.exports = class HelpListingCommand extends VillainsCommand {
          * @type {Object.<string, any>} List of commands for printing
          * @public
          */
-        this.commands = JSON.parse(fs.readFileSync(`./src/dbs/${comprops.helpslug}.json`, "utf8"));
+        this.commands = JSON.parse(fs.readFileSync(`./src/${comprops.helpslug}.json`, "utf8"));
 
         // Bail if we fail to get game emojis data
         if (!(this.commands)) {
@@ -85,12 +85,15 @@ module.exports = class HelpListingCommand extends VillainsCommand {
             } else {
                 // If it doesn't match a section, see if it matches a single command
                 for(let [section, commands] of Object.entries(this.commands)) {
-                    if(Object.keys(commands.commands).includes(search.term)) {
-                        let key = section
-                        this.commands = {
-                            key: this.commands[key]
+                    if(commands.commands) {
+                        if(Object.keys(commands.commands).includes(search.term)) {
+                            let key = section
+                            this.commands = {
+                                key: this.commands[key]
+                            }
+                            scope = "single"
+                            break
                         }
-                        scope = "single"
                     }
                 }
             }

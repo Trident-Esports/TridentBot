@@ -10,8 +10,25 @@ module.exports = class HelpCommand extends HelpListingCommand {
                 aliases: [ 'h' ],
                 category: "information",
                 description: "Bot Help",
-                helpslug: "help"
+                helpslug: "dbs/help"
             }
         )
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "invite",
+          "giveaway"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new HelpCommand()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args, null, "")
+        }
     }
 }
