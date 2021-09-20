@@ -69,6 +69,7 @@ module.exports = class MessageEvent extends VillainsEvent {
             handler.client.commands.filter(command => typeof command.test === "function").values()
 
         if (cmd == "testsuite") {
+            if (message.channel.name != "testsuite-channel") { return }
             if (args.length > 0) {
                 commands = [
                     handler.client.commands.get(args[0]) ||
