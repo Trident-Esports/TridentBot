@@ -3,10 +3,14 @@
 const ATMCommand = require('../../classes/command/atmcommand.class');
 
 module.exports = class GiveCommand extends ATMCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'give',
-            description: 'Give gold to another user',
+            group: 'game',
+            memberName: 'give',
+            description: 'Give Gold to another user'
+        }
+        let props = {
             flags: {
                 user: "invalid",
                 target: "required",
@@ -14,7 +18,9 @@ module.exports = class GiveCommand extends ATMCommand {
             }
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {...props}
         )
     }
 }

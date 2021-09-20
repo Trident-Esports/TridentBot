@@ -5,17 +5,21 @@ const ModCommand = require('../../classes/command/modcommand.class');
 const db = require('../../../models/warns');
 
 module.exports = class RemoveLongestWarnCommand extends ModCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "removelongestwarn",
             aliases: [
                 'rmvlongestwarn',
                 'rmvlngstwrn'
             ],
-            category: "admin",
+            group: "admin",
+            memberName: "removelongestwarn",
             description: "Warns user"
         }
-        super(comprops)
+        super(
+            client,
+            {...comprops}
+        )
     }
 
     async action(client, message, args) {

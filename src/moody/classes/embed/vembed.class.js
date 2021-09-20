@@ -269,8 +269,8 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
 
         // Timestamp
-        if(props?.timestamp && props.timestamp) {
-            this.setTimestamp()
-        }
+        // if(props?.timestamp && props.timestamp) {
+        //     this.setTimestamp()
+        // }
     }
 }

@@ -13,6 +13,7 @@
     "dasu": "^0.4.2",
     "discord-xp": "^1.1.16",
     "discord.js": "<=12.5.3",
+    "discord.js-commando": "^0.12.3",
     "discord.js-pagination": "^1.0.3",
     "dotenv": "^10.0.0",
     "google-spreadsheet": "^3.1.15",

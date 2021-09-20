@@ -25,15 +25,19 @@ function walk(dir) {
 }
 
 module.exports = class MatchesCommand extends VillainsCommand {
-    constructor() {
-        super({
-            name: "matches",
-            category: "information",
-            description: "Call match listings"
-        })
+    constructor(client) {
+        super(
+            client,
+            {
+                name: "matches",
+                group: "info",
+                memberName: "matches",
+                description: "Call match listings"
+            }
+        )
     }
 
-    async run(client, message, args) {
+    async run(message, args) {
         let profile = {
             "team": {}
         }
@@ -270,7 +274,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
         super.send(message, pages, [], 0, true)
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [

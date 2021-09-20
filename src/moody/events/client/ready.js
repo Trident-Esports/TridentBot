@@ -8,7 +8,7 @@ module.exports = class ReadyEvent extends VillainsEvent {
         super('ready')
     }
 
-    async run(handler) {
+    async run(client) {
         let GLOBALS = null
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         try {
@@ -29,7 +29,7 @@ module.exports = class ReadyEvent extends VillainsEvent {
 
         let output = [
             "---",
-            `${handler.client.user.username} v${PACKAGE.version} is Online!`
+            `${client.user.username} v${PACKAGE.version} is Online!`
         ]
         if (DEV) {
             output.push(
@@ -37,7 +37,7 @@ module.exports = class ReadyEvent extends VillainsEvent {
             )
         } else {
             output.push(
-                `\*\*\* PRODUCTION MODE (${handler.client.user.username}) ENABLED \*\*\*`
+                `\*\*\* PRODUCTION MODE (${client.user.username}) ENABLED \*\*\*`
             )
         }
         output.push(

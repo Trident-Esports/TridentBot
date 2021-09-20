@@ -3,18 +3,24 @@
 const GameCommand = require('../../classes/command/gamecommand.class');
 
 module.exports = class ProfileCommand extends GameCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'profile',
             aliases: ["pr", "acc"],
-            category: 'game',
-            description: 'Check the User\'s Profile',
-            extensions: [ "profile", "health", "xpboost", "levels" ]
+            group: 'game',
+            memberName: 'profile',
+            description: 'Check a user\'s Profile'
         }
-        super(comprops)
+        super(
+            client,
+            {...comprops},
+            {
+                extensions: [ "profile", "health", "xpboost", "levels" ]
+            }
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {

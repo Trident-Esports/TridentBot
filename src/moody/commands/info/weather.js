@@ -5,19 +5,21 @@ const VillainsEmbed = require('../../classes/embed/vembed.class');
 const weather = require('weather-js');
 
 module.exports = class WeatherCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "weather",
             aliases: [ "w" ],
-            category: "information",
+            group: "info",
+            memberName: "weather",
             description: "Check your weather!"
         }
         super(
+            client,
             {...comprops}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let degreeType = "C"
         if (["C","F"].includes(this.inputData.args[this.inputData.args.length - 1].toUpperCase())) {
             degreeType = this.inputData.args.pop().toUpperCase()
@@ -96,7 +98,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
         this.null = true
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -111,7 +113,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new WeatherCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

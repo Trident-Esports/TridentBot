@@ -3,27 +3,29 @@
 const AdminCommand = require('../../classes/command/admincommand.class');
 
 module.exports = class BotAvatarCommand extends AdminCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "botavatar",
-            category: "meta",
-            description: "Bot Avatar",
-            flags: {
-                user: "unapplicable"
-            }
+            group: "meta",
+            memberName: "botavatar",
+            description: "Bot Avatar"
         }
         let props = {
+            flags: {
+                user: "unapplicable"
+            },
             caption: {
                 text: "Bot Avatar"
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let url = this.inputData.args[0].replace("<","").replace(">","")
         this.props.image = url
         try {

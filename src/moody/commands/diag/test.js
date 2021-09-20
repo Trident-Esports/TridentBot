@@ -3,15 +3,19 @@
 const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class TestCommand extends VillainsCommand {
-    constructor() {
-        super({
-            name: "test",
-            category: "diagnostic",
-            description: "This is a test command"
-        })
+    constructor(client) {
+        super(
+            client,
+            {
+                name: "test",
+                group: "diag",
+                memberName: "test",
+                description: "This is a test command"
+            }
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
         if (this.inputData.loaded) {
             this.props.description = `<@${this.inputData.loaded.id}>`
         }

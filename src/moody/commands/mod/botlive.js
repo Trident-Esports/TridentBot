@@ -4,13 +4,15 @@ const BotActivityCommand = require('./botactivity')
 const AdminCommand = require('../../classes/command/admincommand.class');
 
 module.exports = class BotLiveCommand extends AdminCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "botlive",
-            category: "admin",
+            group: "admin",
+            memberName: "botlive",
             description: "Make bot Go Live"
         }
         super(
+            client,
             {...comprops}
         )
     }
@@ -27,7 +29,7 @@ module.exports = class BotLiveCommand extends AdminCommand {
         botActivity.run(client, message, args, null, "")
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [

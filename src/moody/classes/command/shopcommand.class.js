@@ -1,5 +1,6 @@
 // @ts-check
 
+const { CommandInfo } = require('discord.js-commando');
 const GameCommand = require('./gamecommand.class');
 
 const fs = require('fs')
@@ -14,26 +15,30 @@ const fs = require('fs')
 module.exports = class ShopCommand extends GameCommand {
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops - List of command properties from child class
+     * @param {CommandInfo} comprops - List of command properties from child class
      */
-    constructor(comprops = {}) {
+    constructor(client, comprops, props) {
         // Create a parent object
         // All ShopCommands are 'game' category
         // All ShopCommands default to user required and all other targets are invalid
         super(
+            client,
             {
-                category: 'game',
+                group: 'game',
+                ...comprops
+            },
+            {
+                ...props,
                 flags: {
                     user: "required",
                     target: "invalid",
                     bot: "invalid"
-                },
-                ...comprops
+                }
             }
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         // Get loaded target
         const loaded = this.inputData.loaded
 

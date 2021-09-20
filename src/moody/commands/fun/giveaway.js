@@ -9,16 +9,23 @@ const ms = require('ms');
 
 // Giveaways
 module.exports = class GiveawayCommand extends QuestionnaireCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "giveaway",
-            category: "fun",
-            description: "Giveaways",
+            group: "fun",
+            memberName: "giveaway",
+            description: "Giveaways"
+        }
+        let props = {
             channelName: "giveaway",
             emoji: ["🎉"]
         }
 
-        super(comprops)
+        super(
+            client,
+            {...comprops},
+            {...props}
+        )
     }
 
     async getChannel(message, channelType) {
@@ -46,7 +53,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         return channel
     }
 
-    async action(client, message) {
+    async action(message) {
         let ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
         let APPROVED_ROLES = ROLES["admin"].concat(ROLES["mod"])
 

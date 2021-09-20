@@ -9,20 +9,24 @@ function ordinal(n) {
   return n + (s[(v-20)%10] || s[v] || s[0]);
 }
 module.exports = class LeaderboardCommand extends GameCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'leaderboard',
             aliases: ['lb', 'leader'],
-            category: 'game',
-            description: 'Check the Global Leaderboard',
-            extensions: [ "levels" ]
+            group: 'game',
+            memberName: 'leaderboard',
+            description: 'Check the Global Leaderboard'
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {
+                extensions: [ "levels" ]
+            }
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         // @ts-ignore
         // Get leaderboard
         const rawLeaderboard = await this.Levels.fetchLeaderboard(1,10); // We grab top 10 users with most xp in the current server.
@@ -74,7 +78,7 @@ module.exports = class LeaderboardCommand extends GameCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new LeaderboardCommand()
         dummy.run(client, message, [], null, "")

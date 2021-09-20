@@ -28,17 +28,19 @@ function walk(dir, filext = ".json") {
 }
 
 module.exports = class RosterCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         super(
+            client,
             {
                 name: "roster",
-                category: "information",
+                group: "info",
+                memberName: "roster",
                 description: "Display a roster"
             }
         )
     }
 
-    async run(client, message, args) {
+    async run(message, args) {
         let guilds = JSON.parse(fs.readFileSync("./src/dbs/guilds.json","utf8"))
         let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "tdnt"
         let gameID = args[0] ? args[0].toLowerCase() : ""
@@ -245,7 +247,7 @@ module.exports = class RosterCommand extends VillainsCommand {
         this.send(message, pages)
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [

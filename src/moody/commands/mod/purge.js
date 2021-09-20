@@ -1,21 +1,25 @@
 //@ts-check
 
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('../../classes/command/vcommand.class');
 const SlimEmbed = require('../../classes/embed/vslimbed.class');
 const fs = require('fs');
 const ms = require('ms');
 
 // ModCommand
-module.exports = class PurgeCommand extends BaseCommand {
-    constructor() {
-        super({
-            name: "purge",
-            category: "mod",
-            description: "Purge messages"
-        })
+module.exports = class PurgeCommand extends VillainsCommand {
+    constructor(client) {
+        super(
+            client,
+            {
+                name: "purge",
+                group: "mod",
+                memberName: "purge",
+                description: "Purge messages"
+            }
+        )
     }
 
-    async run(client, message, args) {
+    async run(message, args) {
         let props = {
             title: { text: "Purging messages..." },
             description: ""

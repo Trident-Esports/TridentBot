@@ -4,18 +4,25 @@ const GameCommand = require('../../classes/command/gamecommand.class');
 const fs = require('fs');
 
 module.exports = class InventoryCommand extends GameCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'inventory',
             aliases: ['i', 'inv'],
-            category: 'game',
-            description: 'Check a users Inventory',
+            group: 'game',
+            memberName: 'inventory',
+            description: 'Check a user\'s Inventory'
+        }
+        let props = {
             extensions: ["inventory"]
         }
-        super(comprops)
+        super(
+            client,
+            {...comprops},
+            {...props}
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
@@ -120,7 +127,7 @@ module.exports = class InventoryCommand extends GameCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -135,7 +142,7 @@ module.exports = class InventoryCommand extends GameCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new InventoryCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

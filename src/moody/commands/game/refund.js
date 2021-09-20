@@ -3,10 +3,15 @@
 const ATMCommand = require('../../classes/command/atmcommand.class');
 
 module.exports = class RefundCommand extends ATMCommand {
-    constructor() {
-        super({
-            name: 'refund',
-            description: 'Refund gold to a user'
-        });
+    constructor(client) {
+        super(
+            client,
+            {
+                name: 'refund',
+                group: 'game',
+                memberName: 'refund',
+                description: 'Refund Gold to a user'
+            }
+        );
     }
 };

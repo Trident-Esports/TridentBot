@@ -5,25 +5,30 @@ const VillainsEmbed = require('../../classes/embed/vembed.class');
 
 module.exports = class CoinFlipCommand extends GameCommand {
     //FIXME: Footer getting smudged?
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'coinflip',
             aliases: [ "cf" ],
-            category: 'game',
-            description: 'Flip a coin!',
-            extensions: [ "profile" ]
+            memberName: 'coinflip',
+            group: 'game',
+            description: 'Flip a coin!'
         }
         let props = {
+            extensions: [ "profile" ],
             caption: {
                 text: "Coin Flip"
             },
             title: {},
             thumbnail: ""
         }
-        super(comprops, props)
+        super(
+            client,
+            {...comprops},
+            {...props}
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
         const loaded = this.inputData.loaded
 
         if(!(this?.props?.title?.text)) {

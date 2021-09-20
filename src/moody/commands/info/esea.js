@@ -1,19 +1,22 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
-const fs = require('fs');
 require('dotenv').config()
 
 module.exports = class ESEACommand extends VillainsCommand {
-    constructor() {
-        super({
-            name: "esea",
-            category: "information",
-            description: "Get info about an ESEA game from a specified database"
-        })
+    constructor(client) {
+        super(
+            client,
+            {
+                name: "esea",
+                group: "info",
+                memberName: "esea",
+                description: "Get info about an ESEA game from a specified database"
+            }
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
         const apiKey = process.env.google_apiKey
 
         // Load workbook

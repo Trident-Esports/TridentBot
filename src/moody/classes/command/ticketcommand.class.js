@@ -10,6 +10,7 @@ BaseCommand
 
 */
 const { Permissions } = require('discord.js');
+const { CommandInfo } = require('discord.js-commando');
 const VillainsCommand = require('./vcommand.class');
 const fs = require('fs');
 
@@ -29,19 +30,21 @@ module.exports = class TicketCommand extends VillainsCommand {
 
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {CommandInfo} comprops List of command properties from child class
      */
-    constructor(comprops = {}) {
+    constructor(client, comprops, props) {
         // Create a parent object
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {...props}
         )
 
         // Set default emojis
         // Lock/Delete
-        this.emojis = comprops?.emojis ? comprops.emojis : [ "🔒", "⛔" ];
+        this.emojis = props?.emojis ? props.emojis : [ "🔒", "⛔" ];
         // Set parentID, default to General Tickets category on Villains Esports server
-        this.parentID = comprops?.parentID ? comprops.parentID : "828158895024766986"
+        this.parentID = props?.parentID ? props.parentID : "828158895024766986"
     }
 
     /**
@@ -76,7 +79,7 @@ module.exports = class TicketCommand extends VillainsCommand {
         }
     }
 
-    async action(client, message) {
+    async action(message) {
         // Create Ticket Channel
         const parent = message.guild.channels.cache.find(c => c.id == this.parentID)
         const channel = await message.guild.channels.create(`ticket: ${message.author.tag}`, { parent: parent.id })

@@ -11,10 +11,11 @@ try {
 }
 
 module.exports = class DiscordInviteCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "discord",
-            category: "meta",
+            group: "meta",
+            memberName: "discord",
             description: "Discord Invite"
         }
         let props = {
@@ -23,12 +24,13 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         GLOBALS = (
@@ -58,7 +60,7 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new DiscordInviteCommand()
         dummy.run(client, message, [], null, "")

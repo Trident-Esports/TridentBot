@@ -11,10 +11,11 @@ try {
 }
 
 module.exports = class HelplineEmbedCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "helpline",
-            category: "meta",
+            group: "meta",
+            memberName: "helpline",
             description: ""
         }
         let props = {
@@ -24,12 +25,13 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
             image: 'https://multiculturalmarriage.files.wordpress.com/2013/07/help-button-hi.png'
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let texts = {}
         try {
             texts = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/tickets.json", "utf8"))

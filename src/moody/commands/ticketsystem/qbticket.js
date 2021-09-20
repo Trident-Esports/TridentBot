@@ -3,15 +3,19 @@
 const TicketCommand = require('../../classes/command/ticketcommand.class');
 
 module.exports = class QueensTicketCommand extends TicketCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "qbticket",
-            category: "meta",
-            description: "Queen's Babies Ticket",
-            parentID: "gals"
+            group: "meta",
+            memberName: "qbticket",
+            description: "Queen's Babies Ticket"
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {
+                parentID: "gals"
+            }
         )
     }
 }

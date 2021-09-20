@@ -4,10 +4,11 @@ const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
 
 module.exports = class BotDiscordInviteCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "botdiscord",
-            category: "meta",
+            group: "meta",
+            memberName: "botdiscord",
             description: "Bot Discord Invite"
         }
         let props = {
@@ -16,12 +17,13 @@ module.exports = class BotDiscordInviteCommand extends VillainsCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let url = ""
         let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
 
@@ -42,7 +44,7 @@ module.exports = class BotDiscordInviteCommand extends VillainsCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new BotDiscordInviteCommand()
         dummy.run(client, message, [], null, "")

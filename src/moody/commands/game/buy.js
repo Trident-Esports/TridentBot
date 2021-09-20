@@ -4,19 +4,24 @@ const RefundCommand = require('../../commands/game/refund');
 const ShopCommand = require('../../classes/command/shopcommand.class');
 
 module.exports = class BuyCommand extends ShopCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'buy',
-            category: 'game',
-            description: 'Buy an Item from the Store',
+            group: 'game',
+            memberName: 'buy',
+            description: 'Buy an Item from the Store'
+        }
+        let props = {
             extensions: [ "inventory", "profile" ]
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {...props}
         )
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
 
         dummy = new RefundCommand()
@@ -53,7 +58,7 @@ module.exports = class BuyCommand extends ShopCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new BuyCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

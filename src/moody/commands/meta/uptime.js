@@ -3,10 +3,11 @@
 const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class UptimeCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "uptime",
-            category: "meta",
+            group: "meta",
+            memberName: "uptime",
             description: "Bot Uptime"
         }
         let props = {
@@ -15,6 +16,7 @@ module.exports = class UptimeCommand extends VillainsCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
@@ -52,7 +54,7 @@ module.exports = class UptimeCommand extends VillainsCommand {
         return portions.join(' ')
     }
 
-    async action(client, message) {
+    async action(message) {
         const uptime = client.uptime
         this.props.description = [
           `<@${client.user.id}> has been online for:`,
@@ -60,7 +62,7 @@ module.exports = class UptimeCommand extends VillainsCommand {
         ]
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new UptimeCommand()
         dummy.run(client, message, [], null, "")

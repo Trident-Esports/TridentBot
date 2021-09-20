@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+const { CommandInfo } = require('discord.js-commando');
 const AdminCommand = require('./admincommand.class');
 const fs = require('fs');
 
@@ -13,12 +14,13 @@ const fs = require('fs');
 module.exports = class ModCommand extends AdminCommand {
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {CommandInfo} comprops List of command properties from child class
      * @param {EmbedProps} props Local list of command properties
      */
-    constructor(comprops = {}, props = {}) {
+    constructor(client, comprops, props) {
         // Create a parent object
         super(
+            client,
             {...comprops},
             {...props}
         )

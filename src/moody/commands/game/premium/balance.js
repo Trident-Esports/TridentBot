@@ -3,20 +3,24 @@
 const GameCommand = require('../../../classes/command/gamecommand.class');
 
 module.exports = class BalanceCommand extends GameCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'balance',
             aliases: ['bal'],
-            category: 'premium',
-            description: 'Checks the Users Balance',
-            extensions: [ "profile" ]
+            group: 'game/premium',
+            memberName: 'balance',
+            description: 'Checks the Users Balance'
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {
+                extensions: [ "profile" ]
+            }
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         // Get loaded target
         const loaded = this.inputData.loaded
 
@@ -43,7 +47,7 @@ module.exports = class BalanceCommand extends GameCommand {
         ]
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -58,7 +62,7 @@ module.exports = class BalanceCommand extends GameCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new BalanceCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

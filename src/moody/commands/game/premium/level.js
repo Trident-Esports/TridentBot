@@ -3,17 +3,23 @@
 const GameCommand = require('../../../classes/command/gamecommand.class');
 
 module.exports = class LevelCommand extends GameCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'level',
             aliases: ['lvl'],
-            category: 'premium',
-            description: 'Checks the Users Level',
-            extensions: [ "levels", "xpboost" ]
+            group: 'game/premium',
+            memberName: 'level',
+            description: 'Checks the Users Level'
         }
-        super(comprops)
+        super(
+            client,
+            {...comprops},
+            {
+                extensions: [ "levels", "xpboost" ]
+            }
+        )
     }
-    async action(client, message) {
+    async action(message) {
         const loaded = this.inputData.loaded
 
         const levelData = await this.db_query(loaded.id, "levels");
@@ -47,7 +53,7 @@ module.exports = class LevelCommand extends GameCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -62,7 +68,7 @@ module.exports = class LevelCommand extends GameCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new LevelCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

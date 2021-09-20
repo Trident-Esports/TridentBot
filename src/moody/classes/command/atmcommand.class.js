@@ -1,5 +1,6 @@
 // @ts-check
 
+const { CommandInfo } = require('discord.js-commando');
 const GameCommand = require('./gamecommand.class');
 
 const fs = require('fs');
@@ -14,14 +15,15 @@ const fs = require('fs');
 module.exports = class ATMCommand extends GameCommand {
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops - List of command properties from child class
+     * @param {CommandInfo} comprops - List of command properties from child class
      */
-    constructor(comprops = {}) {
+    constructor(client, comprops, props) {
         super(
+            client,
+            {...comprops},
             {
-                category: 'game',
+                ...props,
                 extensions: [ "profile" ],
-                ...comprops
             }
         )
 
@@ -46,7 +48,7 @@ module.exports = class ATMCommand extends GameCommand {
         }
     }
 
-    async action(client, message) {
+    async action(message) {
         // Get loaded target
         const loaded = this.inputData.loaded
 

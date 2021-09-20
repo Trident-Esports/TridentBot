@@ -5,19 +5,21 @@ const ms = require('ms');
 
 //FIXME: Like Unmute
 module.exports = class MuteCommand extends IRCVoiceCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "mute",
             aliases: [ "silence" ],
-            category: "admin",
+            group: "admin",
+            memberName: "mute",
             description: "Mute user"
         }
         super(
+            client,
             {...comprops}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         const member = this.inputData.loaded
         let MEMBER_ROLE = this.ROLES["member"]
         let MUTED_ROLE = this.ROLES["muted"]

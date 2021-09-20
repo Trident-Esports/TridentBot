@@ -3,21 +3,25 @@
 const ModCommand = require('../../classes/command/modcommand.class');
 
 module.exports = class KickCommand extends ModCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "kick",
-            category: "admin",
-            description: "Kick user",
-            flags: {
-                bot: "optional"
-            }
+            group: "admin",
+            memberName: "kick",
+            description: "Kick user"
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {
+                flags: {
+                    bot: "optional"
+                }
+            }
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         const member = message.guild.members.cache.get(this.inputData.loaded.id)
 
         if (!member) {

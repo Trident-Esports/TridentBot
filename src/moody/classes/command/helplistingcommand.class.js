@@ -2,6 +2,7 @@
 
 const VillansEmbed = require('../embed/vembed.class')
 const VillainsCommand = require('./vcommand.class')
+const { CommandInfo } = require('discord.js-commando')
 const fs = require('fs')
 
 /**
@@ -20,12 +21,13 @@ module.exports = class HelpListingCommand extends VillainsCommand {
 
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {CommandInfo} comprops List of command properties from child class
      * @param {Object.<string, any>} props Local list of command properties
      */
-    constructor(comprops = {}, props = {}) {
+    constructor(client, comprops, props) {
         // Create a parent object
         super(
+            client,
             {...comprops},
             {...props}
         )
@@ -34,17 +36,17 @@ module.exports = class HelpListingCommand extends VillainsCommand {
          * @type {Object.<string, any>} List of commands for printing
          * @public
          */
-        this.commands = JSON.parse(fs.readFileSync(`./src/${comprops.helpslug}.json`, "utf8"));
+        this.commands = JSON.parse(fs.readFileSync(`./src/${props.helpslug}.json`, "utf8"));
 
         // Bail if we fail to get game emojis data
         if (!(this.commands)) {
             this.error = true
-            this.props.description = `Failed to get '${comprops.helpslug}' Help data.`
+            this.props.description = `Failed to get '${props.helpslug}' Help data.`
             return
         }
     }
 
-    async action(client, message) {
+    async action(message) {
         let scope = "all"
         let search = {
             "term": null,

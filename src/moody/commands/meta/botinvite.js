@@ -4,10 +4,11 @@ const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
 
 module.exports = class BotInviteCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "botinvite",
-            category: "meta",
+            group: "meta",
+            memberName: "botinvite",
             description: "Bot Invite"
         }
         let props = {
@@ -16,12 +17,13 @@ module.exports = class BotInviteCommand extends VillainsCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let url = ""
         let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
 
@@ -48,7 +50,7 @@ module.exports = class BotInviteCommand extends VillainsCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new BotInviteCommand()
         dummy.run(client, message, [], null, "")

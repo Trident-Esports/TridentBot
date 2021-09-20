@@ -5,22 +5,28 @@ const GameCommand = require('../../classes/command/gamecommand.class');
 // ATMCommand: User to User, like Give
 
 module.exports = class RobCommand extends GameCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'rob',
-            category: 'game',
-            description: 'Rob someone for Money',
-            extensions: ["levels", "profile"],
-            flags: {
-                user: "invalid",
-                target: "required",
-                bot: "invalid"
-            }
+            group: 'game',
+            memberName: 'rob',
+            description: 'Rob someone for Gold'
         }
-        super(comprops)
+        super(
+            client,
+            {...comprops},
+            {
+                extensions: ["levels", "profile"],
+                flags: {
+                    user: "invalid",
+                    target: "required",
+                    bot: "invalid"
+                }
+            }
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
         const user = message.author
         const target = this.inputData.loaded
 

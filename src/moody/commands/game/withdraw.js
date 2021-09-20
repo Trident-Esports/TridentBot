@@ -3,11 +3,13 @@
 const ATMCommand = require('../../classes/command/atmcommand.class');
 
 module.exports = class WithdrawCommand extends ATMCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'withdraw',
             aliases: ['wd','with'],
-            description: 'Withdraw gold from your bank',
+            group: 'game',
+            memberName: 'withdraw',
+            description: 'Withdraw Gold from your bank',
             flags: {
                 user: "default",
                 target: "invalid",
@@ -15,11 +17,12 @@ module.exports = class WithdrawCommand extends ATMCommand {
             }
         }
         super(
+            client,
             {...comprops}
         )
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -33,7 +36,7 @@ module.exports = class WithdrawCommand extends ATMCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new WithdrawCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

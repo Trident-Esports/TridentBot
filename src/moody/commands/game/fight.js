@@ -4,21 +4,27 @@ const GameCommand = require('../../classes/command/gamecommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 
 module.exports = class FightCommand extends GameCommand {
-    constructor() {
-        super({
-            name: 'fight',
-            aliases: ["battle"],
-            cooldown: 60 * 60,
-            category: 'game',
-            description: 'Choose your player to fight and get bragging rights',
-            extensions: ["levels", "profile"],
-            flags: {
-                user: "invalid"
+    constructor(client) {
+        super(
+            client,
+            {
+                name: 'fight',
+                aliases: ["battle"],
+                // cooldown: 60 * 60,
+                group: 'game',
+                memberName: 'fight',
+                description: 'Choose your player to fight and get bragging rights',
+            },
+            {
+              extensions: ["levels", "profile"],
+              flags: {
+                  user: "invalid"
+              }
             }
-        });
+        );
     }
 
-    async action(client, message) {
+    async action(message) {
         /*
         User:   Invalid
         Target: Valid

@@ -3,16 +3,20 @@
 const QuestionnaireCommand = require('../../classes/command/questionnairecommand.class');
 
 module.exports = class SurveyCommand extends QuestionnaireCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "survey",
-            category: "meta",
-            description: "Survey",
-            channelName: "survey",
-            emoji: [ "✅", "❌" ]
+            group: "meta",
+            memberName: "survey",
+            description: "Survey"
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {
+              channelName: "survey",
+              emoji: [ "✅", "❌" ]
+            }
         )
     }
 }

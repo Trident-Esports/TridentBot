@@ -3,14 +3,16 @@
 const QuestionnaireCommand = require('../../classes/command/questionnairecommand.class');
 
 module.exports = class SuggestionsCommand extends QuestionnaireCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "suggestions",
             aliases: [ "suggest", "suggestion" ],
-            category: "meta",
+            group: "meta",
+            memberName: "suggestions",
             description: "Suggestions"
         }
         super(
+            client,
             {...comprops}
         )
     }

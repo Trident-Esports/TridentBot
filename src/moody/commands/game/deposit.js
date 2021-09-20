@@ -3,11 +3,15 @@
 const ATMCommand = require('../../classes/command/atmcommand.class');
 
 module.exports = class DepositCommand extends ATMCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'deposit',
             aliases: ['dep'],
-            description: 'Deposit gold into your bank',
+            group: 'game',
+            memberName: 'deposit',
+            description: 'Deposit Gold into your Bank'
+        }
+        let props = {
             flags: {
                 user: "default",
                 target: "invalid",
@@ -15,11 +19,13 @@ module.exports = class DepositCommand extends ATMCommand {
             }
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {...props}
         )
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -33,7 +39,7 @@ module.exports = class DepositCommand extends ATMCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new DepositCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

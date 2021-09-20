@@ -5,14 +5,16 @@ const fs = require('fs');
 require('dotenv').config()
 
 module.exports = class SmashGGEvent extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "smashevent",
             aliases: ["smash"],
-            category: "smashgg",
+            group: "smashgg",
+            memberName: "smashevent",
             description: "SmashGG Event Listing",
         }
         super(
+            client,
             {...comprops}
         )
     }
@@ -152,7 +154,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         return await gqlclient.request(query)
     }
 
-    async action(client, message) {
+    async action(message) {
         // Connect to SmashGG API
         const endpoint = "https://api.smash.gg/gql/alpha"
         const GQLClient = new GraphQLClient(endpoint, {
@@ -398,7 +400,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         this.null = true
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -412,7 +414,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new SmashGGEvent()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

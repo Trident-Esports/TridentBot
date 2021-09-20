@@ -1,12 +1,14 @@
 //@ts-check
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
+const VillainsEmbed = require('../../classes/embed/vembed.class');
 
 module.exports = class FootCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "foot",
-            category: "diagnostic",
+            group: "diag",
+            memberName: "foot",
             description: "This is a footer command"
         }
         let props = {
@@ -18,12 +20,13 @@ module.exports = class FootCommand extends VillainsCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async test(client, message, args) {
-        this.run(client, message, args, null, "")
+    async test(message, args) {
+        this.run(message, args)
     }
 }

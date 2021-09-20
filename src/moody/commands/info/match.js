@@ -1,15 +1,19 @@
 const TeamListingCommand = require('../../classes/command/teamlistingcommand.class');
 
 module.exports = class MatchCommand extends TeamListingCommand {
-    constructor() {
-        super({
-            name: "match",
-            category: "information",
-            description: "Call single match listing"
-        })
+    constructor(client) {
+        super(
+            client,
+            {
+                name: "match",
+                group: "info",
+                memberName: "match",
+                description: "Call single match listing"
+            }
+        )
     }
 
-    async run(client, message, args) {
+    async run(message, args) {
         let profile = {
             "team": {}
         }
@@ -61,7 +65,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
         super.send(message, pages, [], "", true)
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [

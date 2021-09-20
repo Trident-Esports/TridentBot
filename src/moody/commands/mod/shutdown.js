@@ -5,11 +5,12 @@ const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 
 module.exports = class ShutDownCommand extends AdminCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "shutdown",
-            category: "meta",
+            group: "meta",
             aliases: [ "sh" ],
+            memberName: "shutdown",
             description: "Bot Shutdown"
         }
         let props = {
@@ -18,6 +19,7 @@ module.exports = class ShutDownCommand extends AdminCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )

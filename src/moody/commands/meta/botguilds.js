@@ -13,27 +13,29 @@ function ksort(obj){
 }
 
 module.exports = class BotGuildsCommand extends AdminCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "botguilds",
-            category: "meta",
-            description: "List Bot Guilds",
-            flags: {
-                user: "unapplicable"
-            }
+            group: "meta",
+            memberName: "botguilds",
+            description: "List Bot Guilds"
         }
         let props = {
+            flags: {
+                user: "unapplicable"
+            },
             caption: {
                 text: "Bot Guilds"
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let guilds = client.guilds.cache
         let locale = this.inputData.args && this.inputData.args[0] ? this.inputData.args[0] : "en-AU"
         let sorted = []
@@ -74,7 +76,7 @@ module.exports = class BotGuildsCommand extends AdminCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new BotGuildsCommand()
         dummy.run(client, message, [], null, "")

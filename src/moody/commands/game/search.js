@@ -5,19 +5,23 @@ const VillainsEmbed = require('../../classes/embed/vembed.class');
 
 module.exports = class SearchCommand extends GameCommand {
     //FIXME: Footer not updating?
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'search',
-            category: 'game',
-            description: 'Choose your search location and have a chance at some gold!',
-            extensions: ["profile", "levels", "health"]
+            group: 'game',
+            memberName: 'search',
+            description: 'Choose your search location and have a chance at some Gold!'
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {
+                extensions: ["profile", "levels", "health"]
+            }
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         // Get loaded target
         const loaded = this.inputData.loaded
 

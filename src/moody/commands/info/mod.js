@@ -3,12 +3,16 @@
 const HelpListingCommand = require('../../classes/command/helplistingcommand.class')
 
 module.exports = class ModHelpCommand extends HelpListingCommand {
-    constructor() {
+    constructor(client) {
         super(
+            client,
             {
                 name: "mod",
-                category: "information",
-                description: "Mod Help",
+                group: "info",
+                memberName: "mod",
+                description: "Mod Help"
+            },
+            {
                 flags: {
                     user: "unapplicable"
                 },
@@ -17,7 +21,7 @@ module.exports = class ModHelpCommand extends HelpListingCommand {
         )
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -30,7 +34,7 @@ module.exports = class ModHelpCommand extends HelpListingCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new ModHelpCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

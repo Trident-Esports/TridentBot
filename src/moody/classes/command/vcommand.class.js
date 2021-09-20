@@ -1,7 +1,8 @@
 // @ts-check
 
-const { Channel, Client, Message, MessageEmbed } = require('discord.js');
+const { Channel, Client, MessageEmbed } = require('discord.js');
 const { BaseCommand, ClientUtil } = require('a-djs-handler');
+const { Command, CommandInfo, CommandoMessage } = require('discord.js-commando');
 const VillainsEmbed = require('../embed/vembed.class');
 const SlimEmbed = require('../embed/vslimbed.class');
 
@@ -12,10 +13,10 @@ const fs = require('fs');
  * @class
  * @classdesc Build a Villains-branded Command
  * @this {VillainsCommand}
- * @extends {BaseCommand}
+ * @extends {Command}
  * @public
  */
-module.exports = class VillainsCommand extends BaseCommand {
+module.exports = class VillainsCommand extends Command {
     /**
      * @type {boolean} Development Mode?
      * @private
@@ -92,13 +93,14 @@ module.exports = class VillainsCommand extends BaseCommand {
 
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {CommandInfo} comprops List of command properties from child class
      * @param {EmbedProps} props              Local list of command properties
      */
-    constructor(comprops = {}, props = {}) {
+    constructor(client, comprops = { name: "", group: "", memberName: "", description: "" }, props = {}) {
         // Create a parent object
         super(
             // @ts-ignore
+            client,
             {...comprops}
         )
 
@@ -138,10 +140,10 @@ module.exports = class VillainsCommand extends BaseCommand {
         if (!(this?.props?.players)) {
             this.props.players = {}
         }
-        if (!(comprops?.flags)) {
+        if (!(this?.props?.flags)) {
             this.flags = {}
         } else {
-            this.flags = comprops.flags
+            this.flags = this.props.flags
         }
 
         for (let [player, setting] of Object.entries({user:"default",target:"optional",bot:"invalid",search:"valid"})) {
@@ -289,7 +291,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
     /**
      * Get Channel object based on general key name
-     * @param {Message} message Message that called the command
+     * @param {CommandoMessage} message Message that called the command
      * @param {string} channelType Key for channel to get from database
      * @returns {Promise.<Channel>} Found channel object
      */
@@ -362,8 +364,17 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     /**
+     * Sanitizes input for Markdown
+     * @param {Array.<string>|string} input String to sanitize
+     * @returns {string}
+     */
+    checkJoin(input) {
+        return typeof input === "object" ? input.join(" ") : input
+    }
+
+    /**
      *
-     * @param {Message} message Message that called the command
+     * @param {CommandoMessage} message Message that called the command
      * @param {Array.<string>} args Command-line args
      * @param {Object.<string, string>} flags Flags for user management
      */
@@ -371,8 +382,8 @@ module.exports = class VillainsCommand extends BaseCommand {
         let foundHandles = { players: {}, invalid: "", flags: flags }
 
         let user = message?.author ? message.author : null
-        let mention = message?.mentions ? message.mentions.members.first() : null
-        let search = (args && (args.length > 0) && (!(mention))) ? await message.guild.members.fetch({ query: args.join(" "), limit: 1 }) : undefined
+        let mention = message?.mentions?.members ? message.mentions.members.first() : null
+        let search = (args && (args.length > 0) && (!(mention))) ? await message.guild.members.fetch({ query: await this.checkJoin(args), limit: 1 }) : undefined
         let loaded = undefined
         let padding = 9
         let debugout = [ `Flags:`.padEnd(padding) + JSON.stringify(flags) ]
@@ -482,16 +493,17 @@ module.exports = class VillainsCommand extends BaseCommand {
         // If we used a Search Term, do our best to remove it from Args list
         try {
             if (args && args.length > 0) {
-                debugout.push(`Args:`.padEnd(padding) + `[${args.join(" ")}]`)
+                debugout.push(`Args:`.padEnd(padding) + `[${typeof args === "object" ? this.checkJoin(args) : args}]`)
                 let re = /(?:\<)(?<PingChan>[\@\#]{1})(?<UsrRole>[\!\&]?)(?<ItemID>[\d]*)(?:\>)/
-                let matches = args.join(" ").match(re)
+                let check = this.checkJoin(args)
+                let matches = check.match(re)
                 let cleansed = ""
                 // debugout.push(`Matches:`.padEnd(padding) + `${matches}`)
                 if (matches) {
                     matches.shift()
-                    cleansed = args.join(" ").trim().replace(`<${matches.join("")}>`,"")
+                    cleansed = this.checkJoin(args).trim().replace(`<${matches.join("")}>`,"")
                 } else {
-                    cleansed = args.join(" ").trim()
+                    cleansed = this.checkJoin(args).trim()
                     for (let check of [
                         `${loaded.username}#${loaded.discriminator}`,
                         loaded.username,
@@ -554,11 +566,9 @@ module.exports = class VillainsCommand extends BaseCommand {
     /**
      * Execute command and build embed
      *
-     * @param {Client} client Discord Client object
-     * @param {Message} message Message that called the command
-     * @param {string} cmd Command name/alias sent
+     * @param {CommandoMessage} message Message that called the command
      */
-    async action(client, message, cmd) {
+    async action(message) {
         // Do nothing; command overrides this
         // If the thing doesn't modify anything, don't worry about DEV flag
         // If the thing does modify stuff, use DEV flag to describe action instead of performing it
@@ -572,20 +582,19 @@ module.exports = class VillainsCommand extends BaseCommand {
     /**
      * Build pre-flight characteristics of Command
      *
-     * @param {Client} client Discord Client object
-     * @param {Message} message Message that called the command
+     * @param {CommandoMessage} message Message that called the command
      */
-    async build(client, message, cmd) {
+    async build(message) {
         if(!(this.error)) {
-            await this.action(client, message, cmd)
+            await this.action(message)
         }
     }
 
     /**
      * Send pages to Discord Client
      *
-     * @param {Message} message Message that called the command
-     * @param {Array.<(VillainsEmbed | MessageEmbed)> | VillainsEmbed} pages Pages to send to client
+     * @param {CommandoMessage} message Message that called the command
+     * @param {Array.<(VillainsEmbed | CommandoMessage)> | VillainsEmbed} pages Pages to send to client
      * @param {Array.<string>} emojis Emoji for pagination
      * @param {number} timeout Timeout for disabling pagination
      * @param {boolean} forcepages Force pagination
@@ -639,20 +648,17 @@ module.exports = class VillainsCommand extends BaseCommand {
     /**
      * Run the command
      *
-     * @param {Client} client Discord Client object
-     * @param {Message} message Message that called the command
+     * @param {CommandoMessage} message Message that called the command
      * @param {Array.<string>} args Command-line args
-     * @param {ClientUtil} util
-     * @param {string} cmd Actual command name used (alias here if alias used)
      * @returns {Promise.<any>}
      */
     // @ts-ignore
-    async run(client, message, args, util, cmd) {
+    async run(message, args) {
         // Process arguments
         await this.processArgs(message, args, this.flags)
 
         // Build the thing
-        await this.build(client, message, cmd)
+        await this.build(message)
 
         // If we have an error, make it errortastic
         if (this.error) {
@@ -676,7 +682,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         // this.null is to be set if we've already sent the page(s) somewhere else
         // Not setting this.null after sending the page(s) will send the page(s) again
         if ((!(this?.null)) || (this?.null && (!(this.null)))) {
-            await this.send(message, this.pages)
+            await message.embed(this.pages[0])
         }
     }
 }

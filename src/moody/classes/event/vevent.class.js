@@ -1,7 +1,8 @@
 //@ts-check
 
-const { Channel, Message } = require('discord.js');
+const { Channel } = require('discord.js');
 const { BaseEvent } = require('a-djs-handler');
+const { CommandoMessage } = require('discord.js-commando');
 const fs = require('fs')
 
 module.exports = class VillainsEvent extends BaseEvent {
@@ -14,7 +15,7 @@ module.exports = class VillainsEvent extends BaseEvent {
      */
     /**
      * Get channel object to send data to
-     * @param {Message} message Message that called the event
+     * @param {CommandoMessage} message Message that called the event
      * @param {string} channelType Channel type sought
      * @returns {Promise.<Channel>}
      */

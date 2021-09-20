@@ -3,7 +3,7 @@
 const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class SocialsCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "socials",
             aliases: [
@@ -14,18 +14,22 @@ module.exports = class SocialsCommand extends VillainsCommand {
                 'twitch',
                 'twitter'
             ],
-            category: "info",
+            group: "info",
+            memberName: "socials",
             description: "Socials for Trident",
         }
-        super(comprops)
+        super(
+            client,
+            {...comprops}
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
         let url = "https://linktr.ee/TridentEsports"
         this.props.description = `***[Follow Trident Esports Socials!](${url} '${url}')***`
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new SocialsCommand()
         dummy.run(client, message, [], null, "")

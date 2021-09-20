@@ -20,19 +20,20 @@ module.exports = class BotDevCommand extends VillainsCommand {
 
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {CommandInfo} comprops List of command properties from child class
      * @param {EmbedProps} props              Local list of command properties
      */
-    constructor(comprops = {}, props = { title: {}, description: "" }) {
+    constructor(client, comprops, props) {
         // Create a parent object
         super(
+            client,
             {...comprops},
             {...props}
         )
 
         // Load requested extensions
-        if (comprops?.extensions) {
-            for (let extension of comprops.extensions) {
+        if (props?.extensions) {
+            for (let extension of props.extensions) {
                 let key = extension + "Model"
                 let inc = "../../models/" + extension + "Schema"
                 if (extension == "levels") {

@@ -1,6 +1,7 @@
 // @ts-check
 
 const VillainsCommand = require('./vcommand.class');
+const { CommandInfo } = require('discord.js-commando');
 
 const fs = require('fs');
 
@@ -20,17 +21,19 @@ module.exports = class AdminCommand extends VillainsCommand {
 
     /**
      * Constructor
-     * @param {...any} args List of command properties from child class
+     * @param {CommandInfo} comprops  List of command properties from child class
      */
-    constructor(...args) {
+    constructor(client, comprops, props) {
         // Create a parent object
-        super(...args)
+        super(
+            client,
+            {...comprops}
+        )
+
+        this.flags = props?.flags ? props.flags : {}
 
         // Disable sources for AdminCommand and children
         for (let source of ["user", "search"]) {
-            if (!(this.flags)) {
-                this.flags = {}
-            }
             if ((!(source in this.flags)) || (this.flags[source] != "unapplicable")) {
                 this.flags[source] = "invalid"
             }

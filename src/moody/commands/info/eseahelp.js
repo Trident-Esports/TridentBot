@@ -3,18 +3,22 @@
 const HelpListingCommand = require('../../classes/command/helplistingcommand.class')
 
 module.exports = class EseaHelpCommand extends HelpListingCommand {
-    constructor() {
+    constructor(client) {
         super(
+            client,
             {
                 name: "eseahelp",
-                category: "information",
-                description: "ESEA Help",
+                group: "info",
+                memberName: "eseahelp",
+                description: "ESEA Help"
+            },
+            {
                 helpslug: "dbs/eseahelp"
             }
         )
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new EseaHelpCommand()
         dummy.run(client, message, [], null, "")

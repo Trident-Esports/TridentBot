@@ -2,6 +2,7 @@
 
 const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('../embed/vembed.class');
+const { CommandInfo } = require('discord.js-commando');
 
 /**
  * @class
@@ -24,16 +25,18 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
 
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {CommandInfo} comprops List of command properties from child class
      */
-    constructor(comprops = {}) {
+    constructor(client, comprops, props) {
         // Create a parent object
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {...props}
         )
 
-        this.emojis = comprops?.emojis ? comprops.emojis : [ "👍", "👎" ];
-        this.channelName = comprops?.channelName ? comprops.channelName : "suggestions"
+        this.emojis = props?.emojis ? props.emojis : [ "👍", "👎" ];
+        this.channelName = props?.channelName ? props.channelName : "suggestions"
     }
 
     /**
@@ -97,7 +100,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
         this.action(client, message)
     }
 
-    async action(client, message) {
+    async action(message) {
         this.null = true
         //TODO: Add a .then() to VillainsCommand's run()
         await this.send(message, new VillainsEmbed({...this.props})).then(async (msg) => {

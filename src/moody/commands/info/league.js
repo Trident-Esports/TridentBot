@@ -5,11 +5,13 @@ const dasu = require('dasu');
 const fs = require('fs');
 
 module.exports = class LeagueCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         super(
+            client,
             {
                 name: "league",
-                category: "information",
+                group: "info",
+                memberName: "league",
                 description: "Call league listings"
             }
         )
@@ -167,7 +169,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -181,7 +183,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new LeagueCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

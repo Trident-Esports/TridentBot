@@ -3,17 +3,23 @@
 const GameCommand = require('../../classes/command/gamecommand.class');
 
 module.exports = class BegCommand extends GameCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'beg',
-            category: 'game',
-            description: 'beg for gold',
-            extensions: [ "levels", "profile" ]
+            group: 'game',
+            memberName: 'beg',
+            description: 'Beg for Gold'
         }
-        super(comprops)
+        super(
+            client,
+            {...comprops},
+            {
+                extensions: [ "levels", "profile" ]
+            }
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
@@ -64,7 +70,7 @@ module.exports = class BegCommand extends GameCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new BegCommand()
         dummy.run(client, message, [], null, "")

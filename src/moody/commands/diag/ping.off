@@ -3,10 +3,11 @@
 const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class PingCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "ping",
-            category: "diagnostic",
+            group: "diag",
+            memberName: "ping",
             description: "This is a ping command"
         }
         let props = {
@@ -14,6 +15,7 @@ module.exports = class PingCommand extends VillainsCommand {
             image: "https://thumbs.gfycat.com/VariableNervousAfricancivet-small.gif"
         }
         super(
+            client,
             {...comprops},
             {...props}
         )

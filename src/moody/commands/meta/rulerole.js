@@ -4,11 +4,12 @@ const VillainsEmbed = require('../../classes/embed/vembed.class')
 // Works with Events: messageReactionAdd & messageReactionRemove
 
 module.exports = class RulesRoleCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "rulesrole",
             aliases: [ "rulerole", "rr" ],
-            category: "meta",
+            group: "meta",
+            memberName: "rulesrole",
             description: "Rules Role"
         }
         let props = {
@@ -17,13 +18,14 @@ module.exports = class RulesRoleCommand extends VillainsCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
         this.channelName = "rules"
     }
 
-    async action(client, message) {
+    async action(message) {
         let RULES_EMOJI = "✅"
         this.channel = await this.getChannel(message, "rules")
 

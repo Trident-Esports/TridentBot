@@ -4,10 +4,11 @@ const VillainsCommand = require('../../classes/command/vcommand.class');
 const tz = require('timezone');
 
 module.exports = class TimeCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "time",
-            category: "meta",
+            group: "meta",
+            memberName: "time",
             description: "Time"
         }
         let props = {
@@ -16,12 +17,13 @@ module.exports = class TimeCommand extends VillainsCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         const now = Date.now()
         const tzs = [
             "Australia/Perth",    // + 8
@@ -53,7 +55,7 @@ module.exports = class TimeCommand extends VillainsCommand {
         console.log(tmp)
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new TimeCommand()
         dummy.run(client, message, [], null, "")

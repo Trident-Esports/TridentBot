@@ -3,21 +3,25 @@
 const ModCommand = require('../../classes/command/modcommand.class');
 
 module.exports = class BanCommand extends ModCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "ban",
-            category: "admin",
-            description: "Ban user",
-            flags: {
-                bot: "optional"
-            }
+            group: "admin",
+            memberName: "ban",
+            description: "Ban user"
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {
+                flags: {
+                    bot: "optional"
+                }
+            }
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         // Convert to Guild Member
         const member = message.guild.members.cache.get(this.inputData.loaded.id)
 

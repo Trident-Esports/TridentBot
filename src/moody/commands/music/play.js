@@ -20,7 +20,7 @@ const { getPreview } = require("spotify-url-info");
 
 const queue = new Map()
 module.exports = class PlayCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'play',             // songSearch
             aliases: [
@@ -35,10 +35,15 @@ module.exports = class PlayCommand extends VillainsCommand {
                 'nukebot', 'leave',   // nukeBot
                 'cyclebot'            // cycleBot
             ],
-            category: 'music',
+            group: 'music',
+            memberName: 'play',
             description: 'Manages music',
         }
-        super(comprops, { caption: { text: "Trident Music" } })
+        super(
+            client,
+            {...comprops},
+            { caption: { text: "Trident Music" } }
+        )
         this.connection = null
         this.song_queue = null
         this.now_playing = null

@@ -1,23 +1,30 @@
 //@ts-check
 
-const { BaseCommand } = require('a-djs-handler');
+const VillainsCommand = require('../../classes/command/vcommand.class');
 const SlimEmbed = require('../../classes/embed/vslimbed.class');
 const fs = require('fs');
 const ms = require('ms');
 
 // ModCommand
-module.exports = class ClearCommand extends BaseCommand {
-    constructor() {
-        super({
-            name: "clear",
-            aliases: [ "cls" ],
-            category: "mod",
-            description: "Clear messages"
-        })
+module.exports = class ClearCommand extends VillainsCommand {
+    constructor(client) {
+        super(
+            client,
+            {
+                name: "clear",
+                aliases: [ "cls" ],
+                group: "mod",
+                memberName: "clear",
+                description: "Clear messages"
+            }
+        )
     }
 
-    async run(client, message, args) {
+    async run(message, args) {
         if (message.channel.name != "testsuite-channel") { return }
+        if (typeof args != "object") {
+            args = [args]
+        }
         let props = {
             title: { text: "Clearing messages..." },
             description: ""

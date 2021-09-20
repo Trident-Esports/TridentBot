@@ -3,10 +3,11 @@
 const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class BotVoteCommand extends VillainsCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "botvote",
-            category: "meta",
+            group: "meta",
+            memberName: "botvote",
             description: "Bot Vote"
         }
         let props = {
@@ -15,12 +16,13 @@ module.exports = class BotVoteCommand extends VillainsCommand {
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let url = `https://top.gg/bot/${client.user.id}/vote`
         this.props.description = `***[Vote for @TridentBot on top.gg!](${url} '${url}')***`
 
@@ -29,7 +31,7 @@ module.exports = class BotVoteCommand extends VillainsCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new BotVoteCommand()
         dummy.run(client, message, [], null, "")

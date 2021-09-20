@@ -3,12 +3,19 @@
 const ShopCommand = require('../../classes/command/shopcommand.class');
 
 module.exports = class UseCommand extends ShopCommand {
-    constructor() {
-        super({
-            name: 'use',
-            aliases: [ 'u' ],
-            description: 'Use your items',
-            extensions: ["levels", "profile", "inventory", "xpboost", "health"]
-        });
+    constructor(client) {
+        super(
+            client,
+            {
+                name: 'use',
+                aliases: [ 'u' ],
+                group: 'game',
+                memberName: 'use',
+                description: 'Use your Inventory',
+            },
+            {
+                extensions: ["levels", "profile", "inventory", "xpboost", "health"]
+            }
+        );
     }
 };

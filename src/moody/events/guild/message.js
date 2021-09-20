@@ -2,15 +2,16 @@
 
 const VillainsEmbed = require('../../classes/embed/vembed.class')
 const VillainsEvent = require('../../classes/event/vevent.class')
+const fs = require('fs')
 
 module.exports = class MessageEvent extends VillainsEvent {
     constructor() {
         super('message')
     }
 
-    async run(handler, message) {
+    async run(client, message) {
         // Check Prefix
-        if (message.content.slice(0,handler.options.prefix.length) !== handler.options.prefix) {
+        if (message.content.slice(0,client.options.commandPrefix.length) !== client.options.commandPrefix) {
             // Special Cases
 
             // Hi
@@ -43,10 +44,10 @@ module.exports = class MessageEvent extends VillainsEvent {
 
             // No Special Case
             return
-        } else if (message.content.trim() == handler.options.prefix.trim()) {
+        } else if (message.content.trim() == client.options.commandPrefix.trim()) {
             // Message is only prefix
             let props = {
-                caption: { text: handler.client.user.username },
+                caption: { text: client.user.username },
                 title: { text: "Error" },
                 description: "Please send a proper command."
             }
@@ -55,25 +56,41 @@ module.exports = class MessageEvent extends VillainsEvent {
         }
 
         // Get Args
-        const args = message.content.slice(handler.options.prefix.length).split(/ +/);
+        const args = message.content.slice(client.options.commandPrefix.length).split(/ +/);
 
         // Get Command
         let cmd = args.shift().toLowerCase();
 
         // Search for Command
-        let command = handler.client.commands.get(cmd) ||
-            handler.client.commands.find(a => a.aliases && a.aliases.includes(cmd));
+        let command = client.registry.commands.get(cmd) ||
+            client.registry.commands.find(a => a.aliases && a.aliases.includes(cmd));
 
         let commands = cmd != "testsuite" ?
             [ command ] :
-            handler.client.commands.filter(command => typeof command.test === "function").values()
+            client.registry.commands.filter(command => typeof command.test === "function").values()
 
         if (cmd == "testsuite") {
             if (message.channel.name != "testsuite-channel") { return }
+            let GLOBALS = null
+            const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
+            try {
+                GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+                GLOBALS = (
+                    GLOBALS?.profile &&
+                    GLOBALS?.profiles &&
+                    GLOBALS.profile in GLOBALS.profiles
+                ) ?
+                    GLOBALS.profiles[GLOBALS.profile]:
+                    defaults
+            } catch(err) {
+                console.log("VCommand: PROFILE manifest not found!")
+                process.exit(1)
+            }
+            if (!(GLOBALS.DEV)) { return }
             if (args.length > 0) {
                 commands = [
-                    handler.client.commands.get(args[0]) ||
-                    handler.client.commands.find(a => a.aliases && a.aliases.includes(args[0]))
+                    client.registry.commands.get(args[0]) ||
+                    client.registry.commands.find(a => a.aliases && a.aliases.includes(args[0]))
                 ]
             }
         }
@@ -81,7 +98,7 @@ module.exports = class MessageEvent extends VillainsEvent {
         for(command of commands) {
             if (!(command?.name)) {
                 // Didn't find a name for submitted Command
-                console.log(`No name found for command! '${cmd}' given.`)
+                // console.log(`No name found for command! '${cmd}' given.`)
                 return
             }
 
@@ -92,14 +109,14 @@ module.exports = class MessageEvent extends VillainsEvent {
                         command.execute(message, args, cmd)
                     } else if (typeof command.run === "function") {
                         // If it's a a-djs-style func, run it
-                        let adjs = new command.constructor()
-                        adjs.run(handler.client, message, args, null, cmd)
+                        let adjs = new command.constructor(client)
+                        adjs.run(message, args)
                     }
                 } else {
                     if (typeof command.test === "function") {
                         // If it's got a test func, test it
-                        let adjs = new command.constructor()
-                        adjs.test(handler.client, message, args, null, cmd)
+                        let adjs = new command.constructor(client)
+                        adjs.test(message, args)
                     }
                 }
             }

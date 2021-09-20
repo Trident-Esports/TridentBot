@@ -4,29 +4,32 @@ const AdminCommand = require('../../classes/command/admincommand.class');
 
 // AdminCommand
 module.exports = class BotActivityCommand extends AdminCommand {
-    constructor(props = {}) {
+    constructor(client, props = {}) {
         let comprops = {
             name: "botactivity",
             aliases: [ "ba" ],
-            category: "admin",
-            description: "Bot Activity setter",
-            flags: {
-                user: "unapplicable"
-            }
+            group: "admin",
+            memberName: "botactivity",
+            description: "Bot Activity setter"
         }
         props = {
             ...props,
+            flags: {
+                user: "unapplicable"
+            },
             caption: {
                 text: "Bot Activity"
             }
         }
         super(
+            client,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message) {
+        console.log(client)
         // Default supported activities
         let activityNames = [
             "playing",
@@ -129,7 +132,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -151,7 +154,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new BotActivityCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

@@ -4,20 +4,24 @@ const GameCommand = require('../../classes/command/gamecommand.class');
 const fs = require('fs');
 
 module.exports = class StoreCommand extends GameCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'store',
             aliases: ["shop"],
-            category: 'game',
-            description: 'View the store',
-            extensions: ["profile", "levels", "health"]
+            group: 'game',
+            memberName: 'store',
+            description: 'View the Store'
         }
         super(
-            {...comprops}
+            client,
+            {...comprops},
+            {
+                extensions: ["profile", "levels", "health"]
+            }
         )
     }
 
-    async action(client, message) {
+    async action(message) {
         let STOCKDATA = JSON.parse(fs.readFileSync("./src/game/dbs/items.json", "utf8"))
 
         this.props.fields = []
@@ -54,7 +58,7 @@ module.exports = class StoreCommand extends GameCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         dummy = new StoreCommand()
         dummy.run(client, message, [], null, "")

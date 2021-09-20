@@ -3,23 +3,28 @@
 const HelpListingCommand = require('../../classes/command/helplistingcommand.class');
 
 module.exports = class GameHelpCommand extends HelpListingCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: 'gamehelp',
             aliases: ['gh'],
-            category: 'game',
-            description: 'This is a help embed',
-            helpslug: 'game/dbs/help'
+            group: 'game',
+            memberName: 'gamehelp',
+            description: 'Game Help'
         }
         let props = {
+            helpslug: 'game/dbs/help',
             caption: {
                 text: "Game Help"
             }
         }
-        super(comprops, props)
+        super(
+            client,
+            {...comprops},
+            {...props}
+        )
     }
 
-    async test(client, message) {
+    async test(message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -34,7 +39,7 @@ module.exports = class GameHelpCommand extends HelpListingCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new GameHelpCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            dummy.run(message, args)
         }
     }
 }

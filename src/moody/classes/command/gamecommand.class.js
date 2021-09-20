@@ -10,6 +10,7 @@ BaseCommand
 
 */
 const VillainsCommand = require('./vcommand.class');
+const { CommandInfo } = require('discord.js-commando');
 
 const fs = require('fs');
 
@@ -30,19 +31,20 @@ module.exports = class GameCommand extends VillainsCommand {
     //FIXME: If this.category is "premium" do special handling
     /**
      * Constructor
-     * @param {Object.<string, any>} comprops List of command properties from child class
+     * @param {CommandInfo} comprops List of command properties from child class
      * @param {Object.<string, any>} props Local list of command properties
      */
-    constructor(comprops = {}, props = {}) {
+    constructor(client, comprops, props = {}) {
         // Create a parent object
         super(
+            client,
             {...comprops},
             {...props}
         )
 
         // Load requested extensions
-        if (comprops?.extensions) {
-            for (let extension of comprops.extensions) {
+        if (props?.extensions) {
+            for (let extension of props.extensions) {
                 // [key, path] = await this.db_key(extension)
                 let key = extension + "Model"
                 let path = "../../../models/" + extension + "Schema"

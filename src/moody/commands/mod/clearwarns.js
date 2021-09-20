@@ -5,20 +5,24 @@ const ModCommand = require('../../classes/command/modcommand.class');
 const db = require('../../../models/warns')
 
 module.exports = class ClearWarnsCommand extends ModCommand {
-    constructor() {
+    constructor(client) {
         let comprops = {
             name: "removewarns",
             aliases: [
                 "clearwarns",
                 "clrwarns"
             ],
-            category: "admin",
-            description: "Clears all user warns in server"
+            group: "admin",
+            memberName: "removewarns",
+            description: "Clears all warns in server for user"
         }
-        super(comprops)
+        super(
+            client,
+            {...comprops}
+        )
     }
 
-    async action(client, message) {
+    async action(message) {
 
         const user = this.inputData.loaded
 
