@@ -9,7 +9,8 @@ module.exports = class BotInviteCommand extends VillainsCommand {
             name: "botinvite",
             group: "meta",
             memberName: "botinvite",
-            description: "Bot Invite"
+            description: "Bot Invite",
+            guildOnly: true
         }
         let props = {
             caption: {

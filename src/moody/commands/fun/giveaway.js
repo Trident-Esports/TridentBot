@@ -14,7 +14,8 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
             name: "giveaway",
             group: "fun",
             memberName: "giveaway",
-            description: "Giveaways"
+            description: "Giveaways",
+            guildOnly: true
         }
         let props = {
             channelName: "giveaway",

@@ -8,7 +8,8 @@ module.exports = class GiveCommand extends ATMCommand {
             name: 'give',
             group: 'game',
             memberName: 'give',
-            description: 'Give Gold to another user'
+            description: 'Give Gold to another user',
+            guildOnly: true
         }
         let props = {
             flags: {

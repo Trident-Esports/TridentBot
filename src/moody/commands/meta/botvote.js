@@ -8,7 +8,8 @@ module.exports = class BotVoteCommand extends VillainsCommand {
             name: "botvote",
             group: "meta",
             memberName: "botvote",
-            description: "Bot Vote"
+            description: "Bot Vote",
+            guildOnly: true
         }
         let props = {
             caption: {

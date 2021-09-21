@@ -14,6 +14,7 @@ module.exports = class FightCommand extends GameCommand {
                 group: 'game',
                 memberName: 'fight',
                 description: 'Choose your player to fight and get bragging rights',
+                guildOnly: true
             },
             {
               extensions: ["levels", "profile"],

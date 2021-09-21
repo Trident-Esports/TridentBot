@@ -8,7 +8,8 @@ module.exports = class SnakeCommand extends VillainsCommand {
             name: "upupdowndownleftrightleftrightbastart",
             group: "eastereggs",
             memberName: "upupdowndownleftrightleftrightbastart",
-            description: ""
+            description: "",
+            hidden: true
         }
         let props = {
             caption: {

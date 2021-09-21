@@ -11,7 +11,9 @@ module.exports = class ShutDownCommand extends AdminCommand {
             group: "meta",
             aliases: [ "sh" ],
             memberName: "shutdown",
-            description: "Bot Shutdown"
+            description: "Bot Shutdown",
+            guildOnly: true,
+            ownerOnly: true
         }
         let props = {
             caption: {
@@ -25,7 +27,7 @@ module.exports = class ShutDownCommand extends AdminCommand {
         )
     }
 
-    async run(message, args, util, cmd) {
+    async run(message, args) {
         console.log(`!!! Bot Shutdown by: ${message.author.tag} !!!`)
         try {
             // @ts-ignore
@@ -45,7 +47,7 @@ module.exports = class ShutDownCommand extends AdminCommand {
 
                     for(let [, procItem] of Object.entries(list)) {
                         if (procItem.name == "run") {
-                            props.description = `Restarting <@${client.user.id}>.`
+                            props.description = `Restarting <@${message.client.user.id}>.`
                             //FIXME: BAD BAD HACK!
                             await new VillainsCommand({name:""}).send(message, new VillainsEmbed({...props}))
                             console.log(`!!! RESTART`)
@@ -57,7 +59,7 @@ module.exports = class ShutDownCommand extends AdminCommand {
                 })
             })
         } catch (err) {
-            this.props.description = `Shutting down <@${client.user.id}>.`
+            this.props.description = `Shutting down <@${message.client.user.id}>.`
             this.pages.push(new VillainsEmbed({...this.props}))
             await this.send(message, this.pages)
             console.log(`!!! SHUTDOWN`)

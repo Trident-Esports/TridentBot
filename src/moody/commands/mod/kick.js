@@ -8,10 +8,18 @@ module.exports = class KickCommand extends ModCommand {
             name: "kick",
             group: "admin",
             memberName: "kick",
-            description: "Kick user"
+            description: "Kick user",
+            guildOnly: true,
+            clientPermissions: [
+                "KICK_MEMBERS"
+            ],
+            userPermissions: [
+                "KICK_MEMBERS"
+            ]
         }
         super(
             client,
+            //@ts-ignore
             {...comprops},
             {
                 flags: {

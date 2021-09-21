@@ -11,7 +11,8 @@ module.exports = class BotHelpCommand extends HelpListingCommand {
                 group: "info",
                 aliases: [ "h", "bh" ],
                 memberName: "bothelp",
-                description: "Bot Help"
+                description: "Bot Help",
+                guildOnly: true
             },
             {
                 helpslug: "dbs/help"

@@ -9,7 +9,9 @@ module.exports = class RulesCommand extends VillainsCommand {
             name: "rules",
             group: "meta",
             memberName: "rules",
-            description: "Rules to follow"
+            description: "Rules to follow",
+            guildOnly: true,
+            ownerOnly: true
         }
         super(
             client,

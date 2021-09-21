@@ -10,7 +10,8 @@ module.exports = class StoreCommand extends GameCommand {
             aliases: ["shop"],
             group: 'game',
             memberName: 'store',
-            description: 'View the Store'
+            description: 'View the Store',
+            guildOnly: true
         }
         super(
             client,

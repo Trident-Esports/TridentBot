@@ -8,7 +8,8 @@ module.exports = class SurveyCommand extends QuestionnaireCommand {
             name: "survey",
             group: "meta",
             memberName: "survey",
-            description: "Survey"
+            description: "Survey",
+            guildOnly: true
         }
         super(
             client,

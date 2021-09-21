@@ -9,7 +9,9 @@ module.exports = class BalanceCommand extends GameCommand {
             aliases: ['bal'],
             group: 'game/premium',
             memberName: 'balance',
-            description: 'Checks the Users Balance'
+            description: 'Checks the Users Balance',
+            guildOnly: true,
+            ownerOnly: true
         }
         super(
             client,

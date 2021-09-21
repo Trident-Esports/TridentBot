@@ -10,7 +10,8 @@ module.exports = class TestCommand extends VillainsCommand {
                 name: "test",
                 group: "diag",
                 memberName: "test",
-                description: "This is a test command"
+                description: "This is a test command",
+                hidden: true
             }
         )
     }

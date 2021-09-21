@@ -16,7 +16,9 @@ module.exports = class ClearCommand extends VillainsCommand {
                 aliases: [ "cls" ],
                 group: "mod",
                 memberName: "clear",
-                description: "Clear messages"
+                description: "Clear messages",
+                guildOnly: true,
+                ownerOnly: true
             }
         )
     }

@@ -11,7 +11,8 @@ module.exports = class EventHelpCommand extends HelpListingCommand {
                 aliases: [ 'evh' ],
                 group: "info",
                 memberName: "eventhelp",
-                description: "Bot Event Help"
+                description: "Bot Event Help",
+                guildOnly: true
             },
             {
                 helpslug: "dbs/eventhelp"

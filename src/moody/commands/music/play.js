@@ -38,6 +38,8 @@ module.exports = class PlayCommand extends VillainsCommand {
             group: 'music',
             memberName: 'play',
             description: 'Manages music',
+            guildOnly: true,
+            hidden: true
         }
         super(
             client,

@@ -14,10 +14,19 @@ module.exports = class RemoveLongestWarnCommand extends ModCommand {
             ],
             group: "admin",
             memberName: "removelongestwarn",
-            description: "Warns user"
+            description: "Warns user",
+            guildOnly: true,
+            clientPermissions: [
+                "KICK_MEMBERS"
+            ],
+            userPermissions: [
+                "KICK_MEMBERS"
+            ]
+
         }
         super(
             client,
+            //@ts-ignore
             {...comprops}
         )
     }

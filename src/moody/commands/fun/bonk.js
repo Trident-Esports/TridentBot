@@ -9,15 +9,26 @@ module.exports = class BonkCommand extends VillainsCommand {
             group: "fun",
             memberName: "bonk",
             description: "Bonk!",
-            flags: {
-                user: "invalid",
-                target: "required",
-                bot: "invalid"
-            }
+            guildOnly: true,
+            args: [
+                {
+                    key: "target",
+                    label: "target",
+                    prompt: "User to Bonk?",
+                    type: "member|user"
+                }
+            ]
         }
         super(
             client,
-            {...comprops}
+            {...comprops},
+            {
+                flags: {
+                    user: "invalid",
+                    target: "required",
+                    bot: "invalid"
+                }
+            }
         )
     }
 

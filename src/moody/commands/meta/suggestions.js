@@ -9,7 +9,8 @@ module.exports = class SuggestionsCommand extends QuestionnaireCommand {
             aliases: [ "suggest", "suggestion" ],
             group: "meta",
             memberName: "suggestions",
-            description: "Suggestions"
+            description: "Suggestions",
+            guildOnly: true
         }
         super(
             client,

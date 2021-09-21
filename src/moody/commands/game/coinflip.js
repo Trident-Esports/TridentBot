@@ -11,7 +11,8 @@ module.exports = class CoinFlipCommand extends GameCommand {
             aliases: [ "cf" ],
             memberName: 'coinflip',
             group: 'game',
-            description: 'Flip a coin!'
+            description: 'Flip a coin!',
+            guildOnly: true
         }
         let props = {
             extensions: [ "profile" ],

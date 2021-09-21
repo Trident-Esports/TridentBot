@@ -12,7 +12,8 @@ module.exports = class LeagueCommand extends VillainsCommand {
                 name: "league",
                 group: "info",
                 memberName: "league",
-                description: "Call league listings"
+                description: "Call league listings",
+                guildOnly: true
             }
         )
     }

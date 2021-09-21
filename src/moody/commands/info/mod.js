@@ -10,7 +10,8 @@ module.exports = class ModHelpCommand extends HelpListingCommand {
                 name: "mod",
                 group: "info",
                 memberName: "mod",
-                description: "Mod Help"
+                description: "Mod Help",
+                guildOnly: true
             },
             {
                 flags: {

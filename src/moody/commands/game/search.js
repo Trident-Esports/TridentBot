@@ -10,7 +10,8 @@ module.exports = class SearchCommand extends GameCommand {
             name: 'search',
             group: 'game',
             memberName: 'search',
-            description: 'Choose your search location and have a chance at some Gold!'
+            description: 'Choose your search location and have a chance at some Gold!',
+            guildOnly: true
         }
         super(
             client,

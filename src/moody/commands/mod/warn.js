@@ -10,10 +10,19 @@ module.exports = class WarnCommand extends ModCommand {
             aliases: [],
             group: "admin",
             memberName: "warn",
-            description: "Warns user"
+            description: "Warns user",
+            guildOnly: true,
+            clientPermissions: [
+                "KICK_MEMBERS"
+            ],
+            userPermissions: [
+                "KICK_MEMBERS"
+            ]
+
         }
         super(
             client,
+            //@ts-ignore
             {...comprops}
         )
     }

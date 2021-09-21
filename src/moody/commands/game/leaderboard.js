@@ -15,7 +15,8 @@ module.exports = class LeaderboardCommand extends GameCommand {
             aliases: ['lb', 'leader'],
             group: 'game',
             memberName: 'leaderboard',
-            description: 'Check the Global Leaderboard'
+            description: 'Check the Global Leaderboard',
+            guildOnly: true
         }
         super(
             client,

@@ -10,15 +10,18 @@ module.exports = class WithdrawCommand extends ATMCommand {
             group: 'game',
             memberName: 'withdraw',
             description: 'Withdraw Gold from your bank',
-            flags: {
-                user: "default",
-                target: "invalid",
-                bot: "invalid"
-            }
+            guildOnly: true
         }
         super(
             client,
-            {...comprops}
+            {...comprops},
+            {
+                flags: {
+                    user: "default",
+                    target: "invalid",
+                    bot: "invalid"
+                }
+            }
         )
     }
 

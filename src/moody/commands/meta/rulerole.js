@@ -10,7 +10,9 @@ module.exports = class RulesRoleCommand extends VillainsCommand {
             aliases: [ "rulerole", "rr" ],
             group: "meta",
             memberName: "rulesrole",
-            description: "Rules Role"
+            description: "Rules Role",
+            guildOnly: true,
+            ownerOnly: true
         }
         let props = {
             caption: {

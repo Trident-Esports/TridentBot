@@ -16,7 +16,8 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
             name: "discord",
             group: "meta",
             memberName: "discord",
-            description: "Discord Invite"
+            description: "Discord Invite",
+            guildOnly: true
         }
         let props = {
             caption: {

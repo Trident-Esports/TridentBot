@@ -10,6 +10,7 @@
   "main": "./src/main.js",
   "dependencies": {
     "a-djs-handler": "^1.1.1",
+    "common-tags": "^1.8.0",
     "dasu": "^0.4.2",
     "discord-xp": "^1.1.16",
     "discord.js": "<=12.5.3",

@@ -8,7 +8,8 @@ module.exports = class QueensTicketCommand extends TicketCommand {
             name: "qbticket",
             group: "meta",
             memberName: "qbticket",
-            description: "Queen's Babies Ticket"
+            description: "Queen's Babies Ticket",
+            guildOnly: true
         }
         super(
             client,

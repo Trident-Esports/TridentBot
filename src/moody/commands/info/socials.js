@@ -17,6 +17,7 @@ module.exports = class SocialsCommand extends VillainsCommand {
             group: "info",
             memberName: "socials",
             description: "Socials for Trident",
+            guildOnly: true
         }
         super(
             client,

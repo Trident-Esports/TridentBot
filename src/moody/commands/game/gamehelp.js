@@ -9,7 +9,8 @@ module.exports = class GameHelpCommand extends HelpListingCommand {
             aliases: ['gh'],
             group: 'game',
             memberName: 'gamehelp',
-            description: 'Game Help'
+            description: 'Game Help',
+            guildOnly: true
         }
         let props = {
             helpslug: 'game/dbs/help',

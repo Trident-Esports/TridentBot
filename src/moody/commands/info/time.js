@@ -9,7 +9,8 @@ module.exports = class TimeCommand extends VillainsCommand {
             name: "time",
             group: "meta",
             memberName: "time",
-            description: "Time"
+            description: "Time",
+            guildOnly: true
         }
         let props = {
             caption: {

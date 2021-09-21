@@ -8,7 +8,8 @@ module.exports = class MatchCommand extends TeamListingCommand {
                 name: "match",
                 group: "info",
                 memberName: "match",
-                description: "Call single match listing"
+                description: "Call single match listing",
+                guildOnly: true
             }
         )
     }

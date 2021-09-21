@@ -8,7 +8,8 @@ module.exports = class DailyCommand extends GameCommand {
             name: 'daily',
             group: 'game',
             memberName: 'daily',
-            description: 'Gain some Gold'
+            description: 'Gain some Gold',
+            guildOnly: true
         }
         super(
             client,

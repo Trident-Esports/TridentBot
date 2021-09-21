@@ -10,7 +10,9 @@ module.exports = class BotActivityCommand extends AdminCommand {
             aliases: [ "ba" ],
             group: "admin",
             memberName: "botactivity",
-            description: "Bot Activity setter"
+            description: "Bot Activity setter",
+            guildOnly: true,
+            ownerOnly: true
         }
         props = {
             ...props,

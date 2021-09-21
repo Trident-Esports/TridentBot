@@ -8,7 +8,8 @@ module.exports = class StealCommand extends ATMCommand {
             name: 'steal',
             group: 'game',
             memberName: 'steal',
-            description: 'Steal Gold from a user'
+            description: 'Steal Gold from a user',
+            guildOnly: true
         }
         super(
             client,

@@ -18,7 +18,8 @@ module.exports = class BotGuildsCommand extends AdminCommand {
             name: "botguilds",
             group: "meta",
             memberName: "botguilds",
-            description: "List Bot Guilds"
+            description: "List Bot Guilds",
+            guildOnly: true
         }
         let props = {
             flags: {

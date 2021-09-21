@@ -8,7 +8,9 @@ module.exports = class BotAvatarCommand extends AdminCommand {
             name: "botavatar",
             group: "meta",
             memberName: "botavatar",
-            description: "Bot Avatar"
+            description: "Bot Avatar",
+            guildOnly: true,
+            ownerOnly: true
         }
         let props = {
             flags: {

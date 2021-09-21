@@ -8,7 +8,8 @@ module.exports = class UptimeCommand extends VillainsCommand {
             name: "uptime",
             group: "meta",
             memberName: "uptime",
-            description: "Bot Uptime"
+            description: "Bot Uptime",
+            guildOnly: true
         }
         let props = {
             caption: {

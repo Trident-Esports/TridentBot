@@ -11,7 +11,8 @@ module.exports = class WeatherCommand extends VillainsCommand {
             aliases: [ "w" ],
             group: "info",
             memberName: "weather",
-            description: "Check your weather!"
+            description: "Check your weather!",
+            guildOnly: true
         }
         super(
             client,

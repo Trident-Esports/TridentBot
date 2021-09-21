@@ -653,7 +653,8 @@ module.exports = class VillainsCommand extends Command {
      */
     // @ts-ignore
     async run(message, args) {
-        let client = message.client
+        // @ts-ignore
+        let client = typeof message === Client ? message : message.client
         // Process arguments
         await this.processArgs(message, args, this.flags)
 

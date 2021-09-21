@@ -9,7 +9,9 @@ module.exports = class BotLiveCommand extends AdminCommand {
             name: "botlive",
             group: "admin",
             memberName: "botlive",
-            description: "Make bot Go Live"
+            description: "Make bot Go Live",
+            guildOnly: true,
+            ownerOnly: true
         }
         super(
             client,

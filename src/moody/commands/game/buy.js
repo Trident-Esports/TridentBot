@@ -9,7 +9,8 @@ module.exports = class BuyCommand extends ShopCommand {
             name: 'buy',
             group: 'game',
             memberName: 'buy',
-            description: 'Buy an Item from the Store'
+            description: 'Buy an Item from the Store',
+            guildOnly: true
         }
         let props = {
             extensions: [ "inventory", "profile" ]

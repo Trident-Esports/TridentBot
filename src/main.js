@@ -1,7 +1,6 @@
 //@ts-check
 
 const { Client, Intents, Collection } = require('discord.js'); // Base Discord module
-const BotActivityCommand = require('./moody/commands/mod/botactivity'); // Bot Activity module
 const Commando = require('discord.js-commando');
 const Levels = require('discord-xp') // Discord Game XP
 const path = require('path');
@@ -32,22 +31,19 @@ try {
 }
 
 (async () => {
-    // console.log("---")
-    // console.log("DiscordClient: Create")
-    // // Create Client Object
-    // const dClient = new Client();  // Discord Client object
-
-    // console.log("DiscordClient: Buckets")
-    // // Create a bucket for discord.js-style Commands
-    // //@ts-ignore
-    // dClient.commands = new Collection();
-
     console.log("---")
     console.log("CommandoClient: Create")
     //FIXME: Get proper Intents and such sent
     const cClient = new Commando.Client(
         {
-            owner: "263968998645956608",
+            owner: [
+                "263968998645956608", // Mike
+                "532192409757679618", // PokerFace
+                "692180465242603591", // Prime
+                "828317713256415252", // TridentBot
+                "884000283838013480"  // API
+            ],
+            invite: "http://discord.gg/invite/KKYdRbZcPT",
             commandPrefix: prefix
         }
     )
@@ -55,6 +51,7 @@ try {
     // Connect to MongoDB
     const mongoConnect = require('./mongo/commands/connect.js')
 
+    // Commando Groups
     console.log("---")
     console.log("Commando-style Loaders:")
     const commandGroups = [
@@ -74,8 +71,23 @@ try {
     cClient.registry.registerGroups(commandGroups)
     console.log("Registered Groups.")
 
-    // cClient.registry.registerDefaults()
-    // console.log("Registered Defaults.")
+    // Default Data Types
+    cClient.registry.registerDefaultTypes()
+    console.log("Registered Default Types.")
+
+    // Default Groups
+    cClient.registry.registerDefaultGroups()
+    console.log("Registered Default Groups.")
+
+    // Default Commands
+    cClient.registry.registerDefaultCommands(
+        {
+            help: false,
+            ping: false,
+            eval: false
+        }
+    )
+    console.log("Registered Default Commands.")
 
     // Load discord.js-style Handlers
     console.log("---");
@@ -89,11 +101,13 @@ try {
         require(`./handlers/${handler}`)(cClient);
     })
 
+    // Custom Commands
     let fullDir = ""
     fullDir = path.join(__dirname, "moody/commands")
     cClient.registry.registerCommandsIn(fullDir)
     console.log(`Registered Commands.`)
 
+    // Custom Events
     for(const cat of ["client", "guild"]) {
         if(fs.existsSync(`./src/moody/events/${cat}`)) {
             const files = fs.readdirSync(`./src/moody/events/${cat}`).filter(file => file.endsWith(".js"))
@@ -129,6 +143,7 @@ try {
         console.log(`Registered ${cat.charAt(0).toUpperCase() + cat.slice(1)} Events.`)
     }
 
+    // Log In
     console.log("---")
     console.log("CommandoClient: Logged in.")
     await cClient.login(process.env.client_login)
@@ -137,11 +152,4 @@ try {
     cClient.on("commandError", (cmd, err, msg, s, b) => {
         console.log(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
     })
-
-    if(false) {
-        // Set Bot Activity Status
-        console.log("---");
-        let ba = new BotActivityCommand({ null: true })
-        await ba.run(new Commando.CommandoMessage(cClient, {}, null), [ "" ])
-    }
 })();

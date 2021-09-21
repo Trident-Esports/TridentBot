@@ -10,7 +10,9 @@ module.exports = class RefundCommand extends ATMCommand {
                 name: 'refund',
                 group: 'game',
                 memberName: 'refund',
-                description: 'Refund Gold to a user'
+                description: 'Refund Gold to a user',
+                guildOnly: true,
+                ownerOnly: true
             }
         );
     }

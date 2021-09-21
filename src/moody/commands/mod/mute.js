@@ -11,10 +11,18 @@ module.exports = class MuteCommand extends IRCVoiceCommand {
             aliases: [ "silence" ],
             group: "admin",
             memberName: "mute",
-            description: "Mute user"
+            description: "Mute user",
+            guildOnly: true,
+            clientPermissions: [
+                "MUTE_MEMBERS"
+            ],
+            userPermissions: [
+                "MUTE_MEMBERS"
+            ]
         }
         super(
             client,
+            //@ts-ignore
             {...comprops}
         )
     }

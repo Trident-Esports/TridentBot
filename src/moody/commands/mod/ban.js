@@ -8,7 +8,14 @@ module.exports = class BanCommand extends ModCommand {
             name: "ban",
             group: "admin",
             memberName: "ban",
-            description: "Ban user"
+            description: "Ban user",
+            guildOnly: true,
+            clientPermissions: [
+                "BAN_MEMBERS"
+            ],
+            userPermissions: [
+                "BAN_MEMBERS"
+            ]
         }
         super(
             client,

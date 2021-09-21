@@ -11,7 +11,8 @@ module.exports = class ESEACommand extends VillainsCommand {
                 name: "esea",
                 group: "info",
                 memberName: "esea",
-                description: "Get info about an ESEA game from a specified database"
+                description: "Get info about an ESEA game from a specified database",
+                guildOnly: true
             }
         )
     }

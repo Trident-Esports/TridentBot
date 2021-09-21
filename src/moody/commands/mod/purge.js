@@ -14,7 +14,9 @@ module.exports = class PurgeCommand extends VillainsCommand {
                 name: "purge",
                 group: "mod",
                 memberName: "purge",
-                description: "Purge messages"
+                description: "Purge messages",
+                guildOnly: true,
+                ownerOnly: true
             }
         )
     }

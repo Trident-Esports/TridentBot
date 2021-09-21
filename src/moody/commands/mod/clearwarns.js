@@ -14,10 +14,18 @@ module.exports = class ClearWarnsCommand extends ModCommand {
             ],
             group: "admin",
             memberName: "removewarns",
-            description: "Clears all warns in server for user"
+            description: "Clears all warns in server for user",
+            guildOnly: true,
+            clientPermissions: [
+                "KICK_MEMBERS"
+            ],
+            userPermissions: [
+                "KICK_MEMBERS"
+            ]
         }
         super(
             client,
+            //@ts-ignore
             {...comprops}
         )
     }

@@ -9,7 +9,8 @@ module.exports = class DepositCommand extends ATMCommand {
             aliases: ['dep'],
             group: 'game',
             memberName: 'deposit',
-            description: 'Deposit Gold into your Bank'
+            description: 'Deposit Gold into your Bank',
+            guildOnly: true
         }
         let props = {
             flags: {

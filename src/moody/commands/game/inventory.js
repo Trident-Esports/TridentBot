@@ -10,7 +10,8 @@ module.exports = class InventoryCommand extends GameCommand {
             aliases: ['i', 'inv'],
             group: 'game',
             memberName: 'inventory',
-            description: 'Check a user\'s Inventory'
+            description: 'Check a user\'s Inventory',
+            guildOnly: true
         }
         let props = {
             extensions: ["inventory"]

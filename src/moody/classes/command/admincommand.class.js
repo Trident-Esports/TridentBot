@@ -84,6 +84,6 @@ module.exports = class AdminCommand extends VillainsCommand {
             }
         }
 
-        await this.action(client, message, "")
+        await this.action(client, message)
     }
 }

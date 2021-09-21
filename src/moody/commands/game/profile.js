@@ -9,7 +9,8 @@ module.exports = class ProfileCommand extends GameCommand {
             aliases: ["pr", "acc"],
             group: 'game',
             memberName: 'profile',
-            description: 'Check a user\'s Profile'
+            description: 'Check a user\'s Profile',
+            guildOnly: true
         }
         super(
             client,

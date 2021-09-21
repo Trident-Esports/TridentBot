@@ -10,7 +10,8 @@ module.exports = class EseaHelpCommand extends HelpListingCommand {
                 name: "eseahelp",
                 group: "info",
                 memberName: "eseahelp",
-                description: "ESEA Help"
+                description: "ESEA Help",
+                guildOnly: true
             },
             {
                 helpslug: "dbs/eseahelp"

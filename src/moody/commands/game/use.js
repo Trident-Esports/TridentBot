@@ -12,6 +12,7 @@ module.exports = class UseCommand extends ShopCommand {
                 group: 'game',
                 memberName: 'use',
                 description: 'Use your Inventory',
+                guildOnly: true
             },
             {
                 extensions: ["levels", "profile", "inventory", "xpboost", "health"]

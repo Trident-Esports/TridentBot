@@ -12,6 +12,8 @@ module.exports = class BlackjackCommand extends GameCommand {
                 aliases: ['bj'],
                 memberName: 'blackjack',
                 description: 'Play some BlackJack',
+                guildOnly: true,
+                hidden: true
             }
         );
     }

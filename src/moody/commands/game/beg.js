@@ -8,7 +8,8 @@ module.exports = class BegCommand extends GameCommand {
             name: 'beg',
             group: 'game',
             memberName: 'beg',
-            description: 'Beg for Gold'
+            description: 'Beg for Gold',
+            guildOnly: true
         }
         super(
             client,

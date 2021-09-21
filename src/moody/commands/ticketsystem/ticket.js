@@ -8,7 +8,8 @@ module.exports = class GenericTicketCommand extends TicketCommand {
             name: "ticket",
             group: "meta",
             memberName: "ticket",
-            description: "Generic Ticket"
+            description: "Generic Ticket",
+            guildOnly: true
         }
         super(
             client,

@@ -32,7 +32,8 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 name: "matches",
                 group: "info",
                 memberName: "matches",
-                description: "Call match listings"
+                description: "Call match listings",
+                guildOnly: true
             }
         )
     }

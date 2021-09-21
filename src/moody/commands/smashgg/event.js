@@ -12,6 +12,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             group: "smashgg",
             memberName: "smashevent",
             description: "SmashGG Event Listing",
+            guildOnly: true
         }
         super(
             client,

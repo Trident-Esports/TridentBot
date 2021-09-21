@@ -16,7 +16,9 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
             name: "helpline",
             group: "meta",
             memberName: "helpline",
-            description: ""
+            description: "",
+            guildOnly: true,
+            ownerOnly: true
         }
         let props = {
             caption: {

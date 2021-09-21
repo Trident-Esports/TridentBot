@@ -10,10 +10,19 @@ module.exports = class UnmuteCommand extends IRCVoiceCommand {
             name: "unmute",
             group: "admin",
             memberName: "unmute",
-            description: "Unmute user"
+            description: "Unmute user",
+            guildOnly: true,
+            clientPermissions: [
+                "MUTE_MEMBERS"
+            ],
+            userPermissions: [
+                "MUTE_MEMBERS"
+            ]
+
         }
         super(
             client,
+            //@ts-ignore
             {...comprops}
         )
     }
