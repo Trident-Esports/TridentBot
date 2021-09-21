@@ -2,6 +2,7 @@
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const SlimEmbed = require('../../classes/embed/vslimbed.class');
+const BotActivityCommand = require('./botactivity');
 const fs = require('fs');
 const ms = require('ms');
 
@@ -60,5 +61,10 @@ module.exports = class ClearCommand extends VillainsCommand {
                 setTimeout(() => msg.delete(), ms(duration))
             })
 
+        let dummy = new BotActivityCommand(message.client)
+        await dummy.run(message, [])
+            .then(msg => {
+                setTimeout(() => msg.delete(), ms(duration))
+            })
     }
 }

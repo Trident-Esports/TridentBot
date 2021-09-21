@@ -14,6 +14,6 @@ module.exports = (client) => {
             const mongo_file = `../mongo/${srcType}/${file}`
             const command = require(mongo_file)(client);
         }
-        console.log("Registered Mongo " + srcType.substr(0,1).toUpperCase() + srcType.slice(1) + '.')
+        console.log("Registered Mongo " + srcType.charAt(0).toUpperCase() + srcType.slice(1) + '.')
     }
 }

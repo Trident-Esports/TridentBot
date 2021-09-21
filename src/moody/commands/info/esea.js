@@ -16,7 +16,7 @@ module.exports = class ESEACommand extends VillainsCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const apiKey = process.env.google_apiKey
 
         // Load workbook
@@ -294,6 +294,26 @@ module.exports = class ESEACommand extends VillainsCommand {
             let embed = new VillainsEmbed({...this.props})
             this.send(message, embed)
             this.null = true
+        }
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "1e7j3aQC8iwhoxs5J7okAUoBSU7_xnueYJ87EPhSWtZs", // ARCTIC
+          "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU", // STORM
+          "1e7j3aQC8iwhoxs5J7okAUoBSU7_xnueYJ87EPhSWtZs 16732716", // ARCTIC
+          "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU 16708389", // STORM
+          "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU 16712616" // STORM
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new ESEACommand(client)
+            dummy.props.footer.msg = args.join(" | ")
+            await dummy.run(message, args)
         }
     }
 }

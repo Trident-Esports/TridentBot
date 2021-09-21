@@ -2,4 +2,8 @@ const shell = require('shelljs')
 
 shell.echo("NPM Audit")
 shell.echo("---------")
-shell.exec("npm audit")
+try {
+    shell.exec("better-npm-audit audit")
+} catch {
+    shell.exec("npm audit")
+}

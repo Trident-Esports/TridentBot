@@ -19,7 +19,7 @@ module.exports = class DailyCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
@@ -40,9 +40,9 @@ module.exports = class DailyCommand extends GameCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new DailyCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new DailyCommand(client)
+        dummy.run(message, [])
     }
 }

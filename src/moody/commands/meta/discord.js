@@ -30,7 +30,7 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         let GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         GLOBALS = (
@@ -60,9 +60,9 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new DiscordInviteCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new DiscordInviteCommand(client)
+        dummy.run(message, [])
     }
 }

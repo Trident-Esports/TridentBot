@@ -28,8 +28,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
         )
     }
 
-    async action(message) {
-        console.log(client)
+    async action(client, message) {
         // Default supported activities
         let activityNames = [
             "playing",
@@ -132,7 +131,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -152,9 +151,9 @@ module.exports = class BotActivityCommand extends AdminCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new BotActivityCommand()
+            dummy = new BotActivityCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args)
+            await dummy.run(message, args)
         }
     }
 }

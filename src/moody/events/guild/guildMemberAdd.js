@@ -14,7 +14,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
         this.channelName = "welcome"
     }
 
-    async run(handler, member) {
+    async run(client, member) {
         if (!(fs.existsSync("./src/dbs/" + member.guild.id))) {
             console.log("Guild Member Add: Guild ID: Profiles",member.guild.id,"not found!")
             return

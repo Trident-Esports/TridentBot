@@ -79,7 +79,7 @@ module.exports = class TicketCommand extends VillainsCommand {
         }
     }
 
-    async action(message) {
+    async action(client, message) {
         // Create Ticket Channel
         const parent = message.guild.channels.cache.find(c => c.id == this.parentID)
         const channel = await message.guild.channels.create(`ticket: ${message.author.tag}`, { parent: parent.id })

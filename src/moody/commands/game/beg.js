@@ -19,7 +19,7 @@ module.exports = class BegCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
@@ -70,9 +70,9 @@ module.exports = class BegCommand extends GameCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new BegCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new BegCommand(client)
+        dummy.run(message, [])
     }
 }

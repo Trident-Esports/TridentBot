@@ -24,14 +24,14 @@ module.exports = class SocialsCommand extends VillainsCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         let url = "https://linktr.ee/TridentEsports"
         this.props.description = `***[Follow Trident Esports Socials!](${url} '${url}')***`
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new SocialsCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new SocialsCommand(client)
+        dummy.run(message, [])
     }
 }

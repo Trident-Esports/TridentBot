@@ -20,7 +20,7 @@ module.exports = class ProfileCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
@@ -93,6 +93,25 @@ module.exports = class ProfileCommand extends GameCommand {
                     inline: true
                 }
             ]
+        }
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          message.author.username,
+          message.author.id,
+          client.user.username,
+          "Wanrae"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new ProfileCommand(client)
+            dummy.props.footer.msg = args.join(" | ")
+            await dummy.run(message, args)
         }
     }
 }

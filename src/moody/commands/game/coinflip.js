@@ -28,7 +28,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const loaded = this.inputData.loaded
 
         if(!(this?.props?.title?.text)) {

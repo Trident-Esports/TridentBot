@@ -21,13 +21,13 @@ module.exports = class BonkCommand extends VillainsCommand {
         )
     }
 
-    async action(message, args) {
+    async action(client, message, args) {
         const loaded = this.inputData.loaded
 
         this.props.description = `<@${message.author.id}> just bonked <@${loaded.id}>🔨`
     }
 
-    async test(message, args) {
+    async test(client, message, args) {
         let dummy = null
         const baseArgs = []
         const varArgs = [

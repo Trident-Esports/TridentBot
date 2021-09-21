@@ -16,15 +16,15 @@ module.exports = class BlackjackCommand extends GameCommand {
         );
     }
 
-    async action(message) {
+    async action(client, message) {
         this.props.description = [
             "`Coming Soon!`"
         ].join("\n")
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new BlackjackCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new BlackjackCommand(client)
+        dummy.run(message, [])
     }
 }

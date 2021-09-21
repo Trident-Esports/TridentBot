@@ -35,7 +35,7 @@ module.exports = class BotGuildsCommand extends AdminCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         let guilds = client.guilds.cache
         let locale = this.inputData.args && this.inputData.args[0] ? this.inputData.args[0] : "en-AU"
         let sorted = []
@@ -76,9 +76,9 @@ module.exports = class BotGuildsCommand extends AdminCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new BotGuildsCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new BotGuildsCommand(client)
+        dummy.run(message, [])
     }
 }

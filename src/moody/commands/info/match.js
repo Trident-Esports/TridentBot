@@ -65,7 +65,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
         super.send(message, pages, [], "", true)
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -76,9 +76,9 @@ module.exports = class MatchCommand extends TeamListingCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new MatchCommand()
+            dummy = new MatchCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args)
+            await dummy.run(message, args)
         }
     }
 }

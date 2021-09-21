@@ -26,7 +26,7 @@ module.exports = class RobCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const user = message.author
         const target = this.inputData.loaded
 

@@ -25,7 +25,7 @@ module.exports = class DepositCommand extends ATMCommand {
         )
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -37,9 +37,9 @@ module.exports = class DepositCommand extends ATMCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new DepositCommand()
+            dummy = new DepositCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args)
+            await dummy.run(message, args)
         }
     }
 }

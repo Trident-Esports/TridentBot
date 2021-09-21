@@ -19,7 +19,7 @@ module.exports = class LevelCommand extends GameCommand {
             }
         )
     }
-    async action(message) {
+    async action(client, message) {
         const loaded = this.inputData.loaded
 
         const levelData = await this.db_query(loaded.id, "levels");
@@ -53,7 +53,7 @@ module.exports = class LevelCommand extends GameCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -66,7 +66,7 @@ module.exports = class LevelCommand extends GameCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new LevelCommand()
+            dummy = new LevelCommand(client)
             dummy.props.footer.msg = args.join(" | ")
             dummy.run(message, args)
         }

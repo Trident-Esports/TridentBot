@@ -1,7 +1,6 @@
 //@ts-check
 
-const { Intents, Collection } = require('discord.js'); // Base Discord module
-const { MoodyClient, Handler } = require('a-djs-handler');  // Base Moody module
+const { Client, Intents, Collection } = require('discord.js'); // Base Discord module
 const BotActivityCommand = require('./moody/commands/mod/botactivity'); // Bot Activity module
 const Commando = require('discord.js-commando');
 const Levels = require('discord-xp') // Discord Game XP
@@ -33,33 +32,19 @@ try {
 }
 
 (async () => {
-    console.log("---")
-    console.log("MoodyClient: Create")
-    // Create Client Object
-    const mClient = new MoodyClient({
-        partials: [ "MESSAGE", "CHANNEL", "REACTION" ],
-        ws: {
-            intents: [
-                Intents.FLAGS.GUILDS,
-                Intents.FLAGS.GUILD_MESSAGES,
-                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-                Intents.FLAGS.DIRECT_MESSAGES,
-                Intents.FLAGS.DIRECT_MESSAGE_REACTIONS
-            ]
-        },
-        allowedMentions: {
-            parse: [ "users", "roles" ]
-        }
-    });  // Discord Client object
+    // console.log("---")
+    // console.log("DiscordClient: Create")
+    // // Create Client Object
+    // const dClient = new Client();  // Discord Client object
 
-    console.log("MoodyClient: Buckets")
-    // Create a bucket for discord.js-style Commands
-    mClient.commands = new Collection();
-    // Create a bucket for discord.js-style Events
-    mClient.events = new Collection();
+    // console.log("DiscordClient: Buckets")
+    // // Create a bucket for discord.js-style Commands
+    // //@ts-ignore
+    // dClient.commands = new Collection();
 
     console.log("---")
     console.log("CommandoClient: Create")
+    //FIXME: Get proper Intents and such sent
     const cClient = new Commando.Client(
         {
             owner: "263968998645956608",
@@ -67,43 +52,11 @@ try {
         }
     )
 
-    // Load discord.js-style Handlers
-    console.log("---");
-    console.log("D.JS-style");
-    [
-        // 'event_handler',
-        'game_handler',
-        'mongo_handler',
-        'rosters_handler'
-    ].forEach(handler => {
-        require(`./handlers/${handler}`)(mClient);
-    })
-
     // Connect to MongoDB
-    console.log("---");
-    // @ts-ignore
-    await mClient.mongoConnect();
-
-    if(false) {
-        console.log("---");
-        console.log("a-djs-style");
-        // Load a-djs-style Handlers
-        const handler = new Handler(mClient, {
-            prefix: prefix,
-            token: process.env.client_login,
-            commandsPath: __dirname + "/images",
-            eventsPath: __dirname + "/moody/events",
-            owners: [
-                "532192409757679618", // PokerFace
-                "263968998645956608", // Mike
-                "692180465242603591"  // Prime
-            ]
-        });
-        await handler.start();
-    }
+    const mongoConnect = require('./mongo/commands/connect.js')
 
     console.log("---")
-    console.log("Commando-style")
+    console.log("Commando-style Loaders:")
     const commandGroups = [
         [ "admin",        "Administration" ],
         [ "diag",         "Diagnostic" ],
@@ -118,32 +71,71 @@ try {
         [ "smashgg",      "Smash.GG" ],
         [ "ticketsystem", "Ticket System" ]
     ]
-    cClient.registry
-        .registerGroups(commandGroups)
-        .registerDefaults()
+    cClient.registry.registerGroups(commandGroups)
     console.log("Registered Groups.")
-    console.log("Registered Defaults.")
 
-    let fullDir = path.join(__dirname, "moody/commands")
-    console.log(`Registered Commands.`)
+    // cClient.registry.registerDefaults()
+    // console.log("Registered Defaults.")
+
+    // Load discord.js-style Handlers
+    console.log("---");
+    console.log("D.JS-style Loaders:");
+    [
+        // 'event_handler',
+        // 'game_handler',
+        'mongo_handler',
+        'rosters_handler'
+    ].forEach(handler => {
+        require(`./handlers/${handler}`)(cClient);
+    })
+
+    let fullDir = ""
+    fullDir = path.join(__dirname, "moody/commands")
     cClient.registry.registerCommandsIn(fullDir)
+    console.log(`Registered Commands.`)
+
+    for(const cat of ["client", "guild"]) {
+        if(fs.existsSync(`./src/moody/events/${cat}`)) {
+            const files = fs.readdirSync(`./src/moody/events/${cat}`).filter(file => file.endsWith(".js"))
+            for(const file of files) {
+                let eventName = file.replace(".js","")
+                // Client
+                if(["ready"].includes(eventName)) {
+                    //@ts-ignore
+                    cClient.on(eventName, async () => {
+                        const eventClass = require(`./moody/events/${cat}/${file}`)
+                        const eventObj = new eventClass()
+                        await eventObj.run(cClient)
+                    })
+                } else if(["messageReactionAdd","messageReactionRemove"].includes(eventName)) {
+                    //@ts-ignore
+                    cClient.on(eventName, async (reaction, user) => {
+                        const eventClass = require(`./moody/events/${cat}/${file}`)
+                        const eventObj = new eventClass()
+                        await eventObj.run(cClient, reaction, user)
+                    })
+
+                // Guild
+                } else if(["guildMemberAdd","guildMemberRemove","message"].includes(eventName)) {
+                    //@ts-ignore
+                    cClient.on(eventName, async (item) => {
+                        const eventClass = require(`./moody/events/${cat}/${file}`)
+                        const eventObj = new eventClass()
+                        await eventObj.run(cClient, item)
+                    })
+                }
+            }
+        }
+        console.log(`Registered ${cat.charAt(0).toUpperCase() + cat.slice(1)} Events.`)
+    }
 
     console.log("---")
     console.log("CommandoClient: Logged in.")
     await cClient.login(process.env.client_login)
 
-    cClient.on("ready", () => {
-        const eReady = require('./moody/events/client/ready')
-        const event = new eReady()
-        event.run(cClient)
-    })
+    // Register commandError Event
     cClient.on("commandError", (cmd, err, msg, s, b) => {
         console.log(`Error in command ${cmd.groupID}:${cmd.memberName}`, err);
-    })
-    cClient.on("message", (msg) => {
-        const eMessage = require('./moody/events/guild/message')
-        const event = new eMessage()
-        event.run(cClient, msg)
     })
 
     if(false) {

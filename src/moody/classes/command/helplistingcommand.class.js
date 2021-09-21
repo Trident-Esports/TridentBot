@@ -46,7 +46,7 @@ module.exports = class HelpListingCommand extends VillainsCommand {
         }
     }
 
-    async action(message) {
+    async action(client, message) {
         let scope = "all"
         let search = {
             "term": null,

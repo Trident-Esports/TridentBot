@@ -31,7 +31,7 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         let texts = {}
         try {
             texts = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/tickets.json", "utf8"))

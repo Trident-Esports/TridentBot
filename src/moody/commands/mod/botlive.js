@@ -17,19 +17,25 @@ module.exports = class BotLiveCommand extends AdminCommand {
         )
     }
 
-    async run(client, message, args) {
+    async run(message, args) {
         await this.processArgs(message, args, this.flags)
         let twitchID = this.inputData.args.shift()
-        args = [
-            "watching",
-            `https://twitch.tv/${twitchID}`,
-            this.inputData.args.join(" ")
-        ]
-        let botActivity = new BotActivityCommand()
-        botActivity.run(client, message, args, null, "")
+        if(twitchID) {
+            args = [
+                "watching",
+                `https://twitch.tv/${twitchID}`,
+                this.inputData.args.join(" ")
+            ]
+            let botActivity = new BotActivityCommand(message.client)
+            botActivity.run(message, args)
+        } else {
+            this.error = true
+            this.props.description = "No Twitch ID sent!"
+            return
+        }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -42,9 +48,9 @@ module.exports = class BotLiveCommand extends AdminCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new BotLiveCommand()
+            dummy = new BotLiveCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args)
+            await dummy.run(message, args)
         }
     }
 }

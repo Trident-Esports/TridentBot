@@ -2,34 +2,35 @@
 
 const HelpListingCommand = require('../../classes/command/helplistingcommand.class')
 
-module.exports = class EventHelpCommand extends HelpListingCommand {
+module.exports = class BotHelpCommand extends HelpListingCommand {
     constructor(client) {
         super(
             client,
             {
-                name: "eventhelp",
-                aliases: [ 'evh' ],
+                name: "bothelp",
                 group: "info",
-                memberName: "eventhelp",
-                description: "Bot Event Help"
+                aliases: [ "h", "bh" ],
+                memberName: "bothelp",
+                description: "Bot Help"
             },
             {
-                helpslug: "dbs/eventhelp"
+                helpslug: "dbs/help"
             }
         )
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
           "",
-          "help"
+          "invite",
+          "giveaway"
         ]
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new EventHelpCommand()
+            dummy = new BotHelpCommand(client)
             dummy.props.footer.msg = args.join(" | ")
             dummy.run(message, args)
         }

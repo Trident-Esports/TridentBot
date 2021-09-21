@@ -24,7 +24,7 @@ module.exports = class FightCommand extends GameCommand {
         );
     }
 
-    async action(message) {
+    async action(client, message) {
         /*
         User:   Invalid
         Target: Valid

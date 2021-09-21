@@ -25,7 +25,7 @@ module.exports = class ShutDownCommand extends AdminCommand {
         )
     }
 
-    async run(client, message, args, util, cmd) {
+    async run(message, args, util, cmd) {
         console.log(`!!! Bot Shutdown by: ${message.author.tag} !!!`)
         try {
             // @ts-ignore

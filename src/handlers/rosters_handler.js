@@ -2,10 +2,12 @@
 //FIXME: Move toward a-djs-style loading
 
 const fs = require('fs');
+const VillainsCommand = require('../moody/classes/command/vcommand.class')
 const MatchesCommand = require('../moody/commands/info/matches')
 const LeagueCommand = require('../moody/commands/info/league')
 const RosterCommand = require('../moody/commands/info/roster')
 const VillainsEmbed = require('../moody/classes/embed/vembed.class');
+const { Command } = require('discord.js-commando')
 
 let walk = function (dir) {
     let results = [];
@@ -57,23 +59,24 @@ module.exports = (client) => {
                 league: "league" in profile
             }
 
-            let rosterCommand = {
+            let comprops = {
                 name: profile.aliases[0],
                 title: profile.title,
-                aliases: profile.aliases,
+                group: "info",
+                memberName: profile.aliases[0],
+                description: `Display ${profile.title}`
+            }
+            let thisRosterCommand = class NewCommand extends RosterCommand {
+                constructor(client) {
+                    super(client, {...comprops})
+                }
 
-                async execute(message) {
-                    let command = new RosterCommand().run(
-                        client,
-                        message,
-                        [
-                            gameID,
-                            filename
-                        ]
-                    )
+                async run(message, args) {
+                    super.run(message, [gameID, filename])
                 }
             }
-            client.commands.set(rosterCommand.name, rosterCommand);
+            Object.defineProperty(thisRosterCommand, "name", { value: comprops.title.replace(/\s+/g, '') + "TeamCommand" })
+            client.registry.registerCommand(thisRosterCommand);
 
             if(file.includes("teams")) {
                 let matchIDs = []
@@ -89,19 +92,29 @@ module.exports = (client) => {
                 if (profile.team?.lpl?.teamID) {
                     matchIDs.push(profile.team.lpl.teamID)
                 }
-                let scheduleCommand = {
+
+                comprops = {
                     name: profile.aliases[0] + 's',
                     title: profile.title.replace("Roster","Schedule"),
-                    aliases: [ profile.aliases[0] + 's' ],
-                    async execute(message) {
-                        let command = new MatchesCommand().run(
+                    group: "info",
+                    memberName: profile.aliases[0] + 's',
+                    description: `Display ${profile.title.replace("Roster","Schedule")}`
+                }
+                let thisScheduleCommand = class NewCommand extends VillainsCommand {
+                    constructor(client) {
+                        super(client, {...comprops})
+                    }
+
+                    async run(message, args) {
+                        let command = new MatchesCommand(
                             client,
                             message,
                             matchIDs
                         )
                     }
                 }
-                client.commands.set(scheduleCommand.name, scheduleCommand);
+                Object.defineProperty(thisScheduleCommand, "name", { value: comprops.title.replace(/\s+/g, '') + "TeamCommand" })
+                client.registry.registerCommand(thisScheduleCommand);
 
                 if ((profile?.team?.teamID || profile?.team?.lpl?.teamID) && profile?.league?.game && profile?.league?.level) {
                     let teamID = 0
@@ -111,35 +124,50 @@ module.exports = (client) => {
                     if (profile?.team?.lpl?.teamID) {
                         teamID = profile.team.lpl.teamID
                     }
-                    let leagueCommand = {
+
+                    let comprops = {
                         name: profile.aliases[0] + 'l',
                         title: profile.title.replace("Roster", "League Schedule"),
-                        async execute(message) {
-                            let command = new LeagueCommand().run(
+                        group: "info",
+                        memberName: profile.aliases[0] + 'l',
+                        description: `Display ${profile.title}`
+                    }
+                    let thisLeagueCommand = class NewCommand extends VillainsCommand {
+                        constructor(client) {
+                            super(client, {...comprops})
+                        }
+
+                        async run(message, args) {
+                            let command = new LeagueCommand(client).run(
                                 client,
                                 message,
                                 [ profile.league.game, profile.league.level, teamID ]
                             )
                         }
                     }
-                    client.commands.set(leagueCommand.name, leagueCommand);
+                    Object.defineProperty(thisLeagueCommand, "name", { value: comprops.title.replace(/\s+/g, '') + "TeamCommand" })
+                    client.registry.registerCommand(thisLeagueCommand);
                 }
             }
         }
     }
 
     if (roster_aliases) {
-        let profile = {
+        let comprops = {
+          name: "teams",
           title: "Team Lists",
-          aliases: [ "teams" ]
+          group: "info",
+          memberName: "teams",
+          description: "Team Lists"
         }
-        let teamsCommand = {
-            name: profile.aliases[0],
-            aliases: profile.aliases,
-            description: profile.title,
-            async execute(message) {
+        let TeamsCommand = class TeamsCommand extends VillainsCommand {
+            constructor(client) {
+                super(client, {...comprops})
+            }
+
+            async run(message, args) {
                 let props = {
-                    title: { text: profile.title }
+                    title: { text: "Team Lists" }
                 }
                 let desc = "";
                 for (let [gameID, teams] of Object.entries(roster_aliases)) {
@@ -180,7 +208,7 @@ module.exports = (client) => {
                 message.channel.send(embed);
             }
         }
-        client.commands.set(teamsCommand.name, teamsCommand);
+        client.registry.registerCommand(TeamsCommand);
     }
     console.log("Registered Roster Commands.")
 }

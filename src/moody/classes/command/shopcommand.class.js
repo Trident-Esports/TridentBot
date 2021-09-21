@@ -38,7 +38,7 @@ module.exports = class ShopCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         // Get loaded target
         const loaded = this.inputData.loaded
 

@@ -38,7 +38,6 @@ module.exports = class ATMCommand extends GameCommand {
         // Use target flags conditionally based on used command
         switch (this.props.caption.text) {
             case "Refund":
-                this.flags.user = "invalid";
                 this.flags.search = "invalid";
             case "Give":
             case "Steal":
@@ -48,7 +47,7 @@ module.exports = class ATMCommand extends GameCommand {
         }
     }
 
-    async action(message) {
+    async action(client, message) {
         // Get loaded target
         const loaded = this.inputData.loaded
 
@@ -64,7 +63,7 @@ module.exports = class ATMCommand extends GameCommand {
         if (["Refund", "Steal"].includes(this.props.caption.text)) {
             // Get botdev-defined list of roles groupings
 
-            let ROLES = JSON.parse(fs.readFileSync("./src/" + message.guild.id + "/dbs/roles.json", "utf8"))
+            let ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
             // Bail if we fail to get Roles information
             if (!ROLES) {
                 this.error = true

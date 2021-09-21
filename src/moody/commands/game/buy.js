@@ -21,19 +21,19 @@ module.exports = class BuyCommand extends ShopCommand {
         )
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
 
-        dummy = new RefundCommand()
-        dummy.run(client, message, [
-          "miketrethewey",
+        dummy = new RefundCommand(client)
+        dummy.run(message, [
+          message.author.id,
           ((
             500 +
             2000000 +
             200 +
             2000
-          ) * 3) + ""
-        ], null, "")
+          ) * 3)
+        ])
 
         const baseArgs = []
         const varArgs = [
@@ -56,9 +56,9 @@ module.exports = class BuyCommand extends ShopCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new BuyCommand()
+            dummy = new BuyCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args)
+            await dummy.run(message, args)
         }
     }
 }

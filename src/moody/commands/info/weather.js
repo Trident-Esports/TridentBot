@@ -19,7 +19,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         let degreeType = "C"
         if (["C","F"].includes(this.inputData.args[this.inputData.args.length - 1].toUpperCase())) {
             degreeType = this.inputData.args.pop().toUpperCase()
@@ -98,7 +98,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
         this.null = true
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -111,7 +111,7 @@ module.exports = class WeatherCommand extends VillainsCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new WeatherCommand()
+            dummy = new WeatherCommand(client)
             dummy.props.footer.msg = args.join(" | ")
             dummy.run(message, args)
         }

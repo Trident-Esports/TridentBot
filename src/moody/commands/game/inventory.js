@@ -22,7 +22,7 @@ module.exports = class InventoryCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const loaded = this.inputData.loaded
 
         if (!(this.error)) {
@@ -127,7 +127,7 @@ module.exports = class InventoryCommand extends GameCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -140,9 +140,9 @@ module.exports = class InventoryCommand extends GameCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new InventoryCommand()
+            dummy = new InventoryCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args)
+            await dummy.run(message, args)
         }
     }
 }

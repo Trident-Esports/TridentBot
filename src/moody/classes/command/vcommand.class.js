@@ -1,7 +1,6 @@
 // @ts-check
 
 const { Channel, Client, MessageEmbed } = require('discord.js');
-const { BaseCommand, ClientUtil } = require('a-djs-handler');
 const { Command, CommandInfo, CommandoMessage } = require('discord.js-commando');
 const VillainsEmbed = require('../embed/vembed.class');
 const SlimEmbed = require('../embed/vslimbed.class');
@@ -28,7 +27,7 @@ module.exports = class VillainsCommand extends Command {
      */
     #props;     // Private: Props to send to VillainsEmbed
     /**
-     * @type {Array.<MessageEmbed>} Array of embeds to print as pages or singly
+     * @type {Array.<VillainsEmbed>} Array of embeds to print as pages or singly
      * @private
      */
     #pages;     // Private: Pages to print
@@ -181,7 +180,7 @@ module.exports = class VillainsCommand extends Command {
 
         /**
          * List of pages of Embeds
-         * @type {Array.<(VillainsEmbed | SlimEmbed)>}
+         * @type {Array.<(VillainsEmbed)>}
          */
         this.pages = []
 
@@ -568,7 +567,7 @@ module.exports = class VillainsCommand extends Command {
      *
      * @param {CommandoMessage} message Message that called the command
      */
-    async action(message) {
+    async action(client, message) {
         // Do nothing; command overrides this
         // If the thing doesn't modify anything, don't worry about DEV flag
         // If the thing does modify stuff, use DEV flag to describe action instead of performing it
@@ -584,9 +583,9 @@ module.exports = class VillainsCommand extends Command {
      *
      * @param {CommandoMessage} message Message that called the command
      */
-    async build(message) {
+    async build(client, message) {
         if(!(this.error)) {
-            await this.action(message)
+            await this.action(client, message)
         }
     }
 
@@ -654,11 +653,12 @@ module.exports = class VillainsCommand extends Command {
      */
     // @ts-ignore
     async run(message, args) {
+        let client = message.client
         // Process arguments
         await this.processArgs(message, args, this.flags)
 
         // Build the thing
-        await this.build(message)
+        await this.build(client, message)
 
         // If we have an error, make it errortastic
         if (this.error) {
@@ -682,7 +682,11 @@ module.exports = class VillainsCommand extends Command {
         // this.null is to be set if we've already sent the page(s) somewhere else
         // Not setting this.null after sending the page(s) will send the page(s) again
         if ((!(this?.null)) || (this?.null && (!(this.null)))) {
-            await message.embed(this.pages[0])
+            return await this.send(message, this.pages)
         }
+    }
+
+    async test(client, message) {
+        console.log(`No test for ${message.content}`)
     }
 }

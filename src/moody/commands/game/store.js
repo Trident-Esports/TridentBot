@@ -21,7 +21,7 @@ module.exports = class StoreCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         let STOCKDATA = JSON.parse(fs.readFileSync("./src/game/dbs/items.json", "utf8"))
 
         this.props.fields = []
@@ -58,9 +58,9 @@ module.exports = class StoreCommand extends GameCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new StoreCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new StoreCommand(client)
+        dummy.run(message, [])
     }
 }

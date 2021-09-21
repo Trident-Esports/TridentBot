@@ -100,7 +100,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
         this.action(client, message)
     }
 
-    async action(message) {
+    async action(client, message) {
         this.null = true
         //TODO: Add a .then() to VillainsCommand's run()
         await this.send(message, new VillainsEmbed({...this.props})).then(async (msg) => {

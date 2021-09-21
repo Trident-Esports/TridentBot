@@ -28,15 +28,10 @@ function walk(dir, filext = ".json") {
 }
 
 module.exports = class RosterCommand extends VillainsCommand {
-    constructor(client) {
+    constructor(client, comprops = { name: "roster", group: "info", memberName: "roster", description: "Display a Roster" }) {
         super(
             client,
-            {
-                name: "roster",
-                group: "info",
-                memberName: "roster",
-                description: "Display a roster"
-            }
+            {...comprops}
         )
     }
 
@@ -247,7 +242,7 @@ module.exports = class RosterCommand extends VillainsCommand {
         this.send(message, pages)
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -258,9 +253,9 @@ module.exports = class RosterCommand extends VillainsCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new RosterCommand()
+            dummy = new RosterCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args)
+            await dummy.run(message, args)
         }
     }
 }

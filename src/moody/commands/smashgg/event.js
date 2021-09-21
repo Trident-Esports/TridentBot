@@ -154,7 +154,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         return await gqlclient.request(query)
     }
 
-    async action(message) {
+    async action(client, message) {
         // Connect to SmashGG API
         const endpoint = "https://api.smash.gg/gql/alpha"
         const GQLClient = new GraphQLClient(endpoint, {
@@ -343,64 +343,68 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         if (teamsByPlacement.length == 0) {
             this.props.description.push("No teams found!")
         }
-        this.send(message, new VillainsEmbed(this.props))
+        await this.send(message, new VillainsEmbed(this.props))
 
-        this.props.description = []
-        this.props.description.push("***Sets***")
-        let lastRoundText = ""
-        let i = 0
-        for (let [setID, set] of Object.entries(event.sets)) {
-            let teams = set?.identifier ? `\`${set.identifier}\` ` : ""
-            let scores = set?.completedAt ? "Final Score: " : "Score: "
-            let toggle = 0
-            for (let [slotID, teamID] of Object.entries(set.slots)) {
-                let team = event.teams[teamID]
-                let score = teamID in set.score ? set.score[teamID] : 0
-                let url = "https://smash.gg/tournament/" + event.slug.tournament + "/event/0/entrant/" + team.id
-                teams += `[${team.name}](${url} '${url}')`
-                scores += `${score}`
-                if (toggle % 2 == 0) {
-                    teams += " 🆚 "
-                    scores += '-'
+        if (teamsByPlacement.length > 0) {
+            this.props.description = []
+            this.props.description.push("***Sets***")
+            let lastRoundText = ""
+            let i = 0
+            for (let [setID, set] of Object.entries(event.sets)) {
+                let teams = set?.identifier ? `\`${set.identifier}\` ` : ""
+                let scores = set?.completedAt ? "Final Score: " : "Score: "
+                let toggle = 0
+                for (let [slotID, teamID] of Object.entries(set.slots)) {
+                    let team = event.teams[teamID]
+                    if (team?.id) {
+                        let score = teamID in set.score ? set.score[teamID] : 0
+                        let url = "https://smash.gg/tournament/" + event.slug.tournament + "/event/0/entrant/" + team.id
+                        teams += `[${team.name}](${url} '${url}')`
+                        scores += `${score}`
+                        if (toggle % 2 == 0) {
+                            teams += " 🆚 "
+                            scores += '-'
+                        }
+                        i++
+                        toggle++
+                    }
                 }
-                i++
-                toggle++
-            }
 
-            if (set?.fullRoundText) {
-                if (lastRoundText != set.fullRoundText) {
-                    this.props.description.push(`__*${set.fullRoundText}*__`)
+                if (set?.fullRoundText) {
+                    if (lastRoundText != set.fullRoundText) {
+                        this.props.description.push(`__*${set.fullRoundText}*__`)
+                    }
+                    lastRoundText = set.fullRoundText
                 }
-                lastRoundText = set.fullRoundText
-            }
 
-            this.props.description.push(teams)
+                this.props.description.push(teams)
 
-            if (set?.startedAt) {
-                let url = "https://smash.gg/" + event.slug.event + "/set/" + set.id
-                scores = `[${scores}](${url} '${url}')`
-            }
+                if (set?.startedAt) {
+                    let url = "https://smash.gg/" + event.slug.event + "/set/" + set.id
+                    scores = `[${scores}](${url} '${url}')`
+                }
 
-            this.props.description.push(`${scores}`)
+                this.props.description.push(`${scores}`)
 
-            if (set?.startedAt) {
-                this.props.description.push(`<t:${set.startedAt}:f>`)
-            }
+                if (set?.startedAt) {
+                    this.props.description.push(`<t:${set.startedAt}:f>`)
+                }
 
-            this.props.description.push("")
+                this.props.description.push("")
 
-            if (i % (5 * 2) == 0) {
-                this.pages.push(new VillainsEmbed(this.props))
-                this.props.description = ["***Sets***"]
+                if (i % (5 * 2) == 0) {
+                    this.pages.push(new VillainsEmbed(this.props))
+                    this.props.description = ["***Sets***"]
+                }
             }
         }
         if (this.pages.length > 0) {
-            this.send(message, this.pages)
+            await this.send(message, this.pages)
         }
         this.null = true
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -412,9 +416,9 @@ module.exports = class SmashGGEvent extends VillainsCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new SmashGGEvent()
+            dummy = new SmashGGEvent(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args)
+            await dummy.run(message, args)
         }
     }
 }

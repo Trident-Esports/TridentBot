@@ -17,7 +17,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message, cmd) {
+    async action(client, message) {
         let profile = {
             "team": {}
         }
@@ -169,7 +169,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -181,9 +181,9 @@ module.exports = class LeagueCommand extends VillainsCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new LeagueCommand()
+            dummy = new LeagueCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args)
+            await dummy.run(message, args)
         }
     }
 }

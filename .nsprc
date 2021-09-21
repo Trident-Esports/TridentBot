@@ -1,0 +1,6 @@
+{
+  "1784": {
+    "active": true,
+    "notes": "After discussions with the maintainer,\nand added safety warnings to the package for users-\nthis was deemed not a vulnerability.\n(https://snyk.io/vuln/npm:shelljs:20140723)"
+  }
+}

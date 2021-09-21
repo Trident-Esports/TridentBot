@@ -20,7 +20,7 @@ module.exports = class BalanceCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         // Get loaded target
         const loaded = this.inputData.loaded
 
@@ -47,7 +47,7 @@ module.exports = class BalanceCommand extends GameCommand {
         ]
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -60,7 +60,7 @@ module.exports = class BalanceCommand extends GameCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new BalanceCommand()
+            dummy = new BalanceCommand(client)
             dummy.props.footer.msg = args.join(" | ")
             dummy.run(message, args)
         }

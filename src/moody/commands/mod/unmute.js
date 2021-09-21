@@ -18,7 +18,7 @@ module.exports = class UnmuteCommand extends IRCVoiceCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const member = this.inputData.loaded
         let MEMBER_ROLE = this.ROLES["member"]
         let MUTED_ROLE = this.ROLES["muted"]
@@ -60,6 +60,25 @@ module.exports = class UnmuteCommand extends IRCVoiceCommand {
         } else {
             // Describe the thing
             this.props.description = `<@${member.id}> *would be* **unmuted** if this wasn't in DEV Mode`
+        }
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          message.author.username,
+          message.author.id,
+          client.user.username,
+          "Wanrae"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new UnmuteCommand(client)
+            dummy.props.footer.msg = args.join(" | ")
+            await dummy.run(message, args)
         }
     }
 }

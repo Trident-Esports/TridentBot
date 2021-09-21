@@ -144,7 +144,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 }
                 if (activityType != "streaming") {
                     let ba = new BotActivityCommand({ null: true })
-                    ba.run(client, message, [], null, "")
+                    ba.run(message, [])
                 }
 
                 // Nuke Bot
@@ -179,7 +179,7 @@ module.exports = class PlayCommand extends VillainsCommand {
                 }
                 if (activityType != "streaming") {
                     let ba = new BotActivityCommand({ null: true })
-                    ba.run(client, message, [ "listening", song.title ], null, "")
+                    ba.run(message, [ "listening", song.title ])
                 }
 
                 if (this.now_playing && (!(this.now_playing.deleted))) {

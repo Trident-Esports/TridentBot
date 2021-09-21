@@ -54,7 +54,7 @@ module.exports = class UptimeCommand extends VillainsCommand {
         return portions.join(' ')
     }
 
-    async action(message) {
+    async action(client, message) {
         const uptime = client.uptime
         this.props.description = [
           `<@${client.user.id}> has been online for:`,
@@ -62,9 +62,9 @@ module.exports = class UptimeCommand extends VillainsCommand {
         ]
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new UptimeCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new UptimeCommand(client)
+        dummy.run(message, [])
     }
 }

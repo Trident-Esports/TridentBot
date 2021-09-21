@@ -22,7 +22,7 @@ module.exports = class ClearWarnsCommand extends ModCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
 
         const user = this.inputData.loaded
 
@@ -53,6 +53,25 @@ module.exports = class ClearWarnsCommand extends ModCommand {
                 message.channel.send(embed)
             })
             this.null = true
+        }
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          message.author.username,
+          message.author.id,
+          client.user.username,
+          "Wanrae"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new ClearWarnsCommand(client)
+            dummy.props.footer.msg = args.join(" | ")
+            await dummy.run(message, args)
         }
     }
 }

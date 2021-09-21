@@ -25,7 +25,7 @@ module.exports = class RulesRoleCommand extends VillainsCommand {
         this.channelName = "rules"
     }
 
-    async action(message) {
+    async action(client, message) {
         let RULES_EMOJI = "✅"
         this.channel = await this.getChannel(message, "rules")
 

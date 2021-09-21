@@ -9,7 +9,7 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
         this.channelName = "rules"
     }
 
-    async run(handler, reaction, user) {
+    async run(client, reaction, user) {
         if (reaction.message.partial) await reaction.message.fetch()
         if (reaction.partial) await reaction.fetch()
         if (user.bot) return

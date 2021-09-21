@@ -21,7 +21,7 @@ module.exports = class BanCommand extends ModCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         // Convert to Guild Member
         const member = message.guild.members.cache.get(this.inputData.loaded.id)
 
@@ -44,6 +44,25 @@ module.exports = class BanCommand extends ModCommand {
         } else {
             // Describe the thing
             this.props.description = `<@${member.id}> *would be* **banned** if this wasn't in DEV Mode`
+        }
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          message.author.username,
+          message.author.id,
+          client.user.username,
+          "Wanrae"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new BanCommand(client)
+            dummy.props.footer.msg = args.join(" | ")
+            await dummy.run(message, args)
         }
     }
 }

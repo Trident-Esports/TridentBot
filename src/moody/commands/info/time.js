@@ -23,7 +23,7 @@ module.exports = class TimeCommand extends VillainsCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         const now = Date.now()
         const tzs = [
             "Australia/Perth",    // + 8
@@ -55,9 +55,9 @@ module.exports = class TimeCommand extends VillainsCommand {
         console.log(tmp)
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new TimeCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new TimeCommand(client)
+        dummy.run(message, [])
     }
 }

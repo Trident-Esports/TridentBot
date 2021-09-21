@@ -26,7 +26,7 @@ module.exports = class LeaderboardCommand extends GameCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         // @ts-ignore
         // Get leaderboard
         const rawLeaderboard = await this.Levels.fetchLeaderboard(1,10); // We grab top 10 users with most xp in the current server.
@@ -38,8 +38,15 @@ module.exports = class LeaderboardCommand extends GameCommand {
             return
         }
 
-        // @ts-ignore
-        const leaderboard = await this.Levels.computeLeaderboard(client, rawLeaderboard, true); // We process the leaderboard.
+        let leaderboard = null
+        try {
+            // @ts-ignore
+            leaderboard = await this.Levels.computeLeaderboard(client, rawLeaderboard, true); // We process the leaderboard.
+        } catch (err) {
+            this.error = true
+            this.props.description = "Failed to load Leaderboard"
+            return
+        }
 
         let props = this.props
         props.fields = []
@@ -78,9 +85,9 @@ module.exports = class LeaderboardCommand extends GameCommand {
         }
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
-        dummy = new LeaderboardCommand()
-        dummy.run(client, message, [], null, "")
+        dummy = new LeaderboardCommand(client)
+        dummy.run(message, [])
     }
 }

@@ -53,7 +53,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         return channel
     }
 
-    async action(message) {
+    async action(client, message) {
         let ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
         let APPROVED_ROLES = ROLES["admin"].concat(ROLES["mod"])
 

@@ -22,12 +22,12 @@ module.exports = class SnakeCommand extends VillainsCommand {
         )
     }
 
-    async action(message) {
+    async action(client, message) {
         this.props.description = `You must be on a windows computer for this to work.`
         this.props.image = 'https://itsmattkc.com/etc/snakeqr/code.png'
     }
 
-    async test(client, message, args) {
-        this.run(client, message, args, null, "")
+    async test(message, args) {
+        this.run(message, args)
     }
 }

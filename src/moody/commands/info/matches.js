@@ -261,7 +261,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             )
                         }
                     } catch(e) {
-                        if (data.substring(0,1) === '<') {
+                        if (data.charAt(0) === '<') {
                             console.log(`Matches: Malformed JSON: ${url}`)
                         } else {
                             console.log(e)
@@ -274,7 +274,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
         super.send(message, pages, [], 0, true)
     }
 
-    async test(message) {
+    async test(client, message) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -286,9 +286,9 @@ module.exports = class MatchesCommand extends VillainsCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new MatchesCommand()
+            dummy = new MatchesCommand(client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args)
+            await dummy.run(message, args)
         }
     }
 }
