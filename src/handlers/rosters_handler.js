@@ -139,7 +139,6 @@ module.exports = (client) => {
 
                         async run(message, args) {
                             let command = new LeagueCommand(client).run(
-                                client,
                                 message,
                                 [ profile.league.game, profile.league.level, teamID ]
                             )

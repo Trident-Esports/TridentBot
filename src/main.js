@@ -82,7 +82,7 @@ try {
     // Default Commands
     cClient.registry.registerDefaultCommands(
         {
-            help: false,
+            // help: false,
             ping: false,
             eval: false
         }
