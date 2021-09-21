@@ -13,7 +13,6 @@ module.exports = class BonkCommand extends VillainsCommand {
             args: [
                 {
                     key: "target",
-                    label: "target",
                     prompt: "User to Bonk?",
                     type: "member|user"
                 }

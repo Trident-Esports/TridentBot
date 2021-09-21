@@ -11,7 +11,14 @@ module.exports = class BalanceCommand extends GameCommand {
             memberName: 'balance',
             description: 'Checks the Users Balance',
             guildOnly: true,
-            ownerOnly: true
+            ownerOnly: true,
+            args: [
+                {
+                    key: "target",
+                    prompt: "Who's balance do you want to view?",
+                    type: "member|user"
+                }
+            ]
         }
         super(
             client,

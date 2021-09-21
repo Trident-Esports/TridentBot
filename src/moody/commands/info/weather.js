@@ -12,7 +12,14 @@ module.exports = class WeatherCommand extends VillainsCommand {
             group: "info",
             memberName: "weather",
             description: "Check your weather!",
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "searchTerm",
+                    prompt: "Search",
+                    type: "string"
+                }
+            ]
         }
         super(
             client,

@@ -32,7 +32,15 @@ module.exports = class TestSuiteCommand extends VillainsCommand {
             memberName: "testsuite",
             description: "This is a filler for Test Suite",
             guildOnly: true,
-            ownerOnly: true
+            ownerOnly: true,
+            args: [
+                {
+                    key: "commandName",
+                    label: "commandName",
+                    prompt: "Command to run?",
+                    type: "string"
+                }
+            ]
         }
         super(
             client,

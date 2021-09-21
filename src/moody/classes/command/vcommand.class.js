@@ -92,7 +92,7 @@ module.exports = class VillainsCommand extends Command {
 
     /**
      * Constructor
-     * @param {CommandInfo} comprops List of command properties from child class
+     * @param {CommandInfo | Object} comprops List of command properties from child class
      * @param {EmbedProps} props              Local list of command properties
      */
     constructor(client, comprops = { name: "", group: "", memberName: "", description: "" }, props = {}) {
@@ -317,6 +317,10 @@ module.exports = class VillainsCommand extends Command {
         } else {
             // Else, search for a numbered channel
             channel = message.guild.channels.cache.find(c => c.id === channelID);
+        }
+
+        if (channel?.deleted && channel.deleted) {
+            channel = null
         }
 
         return channel
@@ -583,9 +587,9 @@ module.exports = class VillainsCommand extends Command {
      *
      * @param {CommandoMessage} message Message that called the command
      */
-    async build(client, message) {
+    async build(client, message, args) {
         if(!(this.error)) {
-            await this.action(client, message)
+            await this.action(message, args)
         }
     }
 

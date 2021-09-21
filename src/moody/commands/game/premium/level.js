@@ -9,9 +9,16 @@ module.exports = class LevelCommand extends GameCommand {
             aliases: ['lvl'],
             group: 'game/premium',
             memberName: 'level',
-            description: 'Checks the Users Level',
+            description: 'Checks the User\'s Level',
             guildOnly: true,
-            ownerOnly: true
+            ownerOnly: true,
+            args: [
+                {
+                    key: "target",
+                    prompt: "Who's level do you want to view?",
+                    type: "member|user"
+                }
+            ]
         }
         super(
             client,

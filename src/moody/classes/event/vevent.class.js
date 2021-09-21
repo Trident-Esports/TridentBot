@@ -41,6 +41,10 @@ module.exports = class VillainsEvent extends BaseEvent {
             channel = message.guild.channels.cache.find(c => (c.id + "") === (channelID + ""));
         }
 
+        if (channel?.deleted && channel.deleted) {
+            channel = null
+        }
+
         return channel
     }
 

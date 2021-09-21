@@ -9,7 +9,14 @@ module.exports = class MatchCommand extends TeamListingCommand {
                 group: "info",
                 memberName: "match",
                 description: "Call single match listing",
-                guildOnly: true
+                guildOnly: true,
+                args: [
+                    {
+                        key: "matchID",
+                        prompt: "Match ID",
+                        type: "string"
+                    }
+                ]
             }
         )
     }

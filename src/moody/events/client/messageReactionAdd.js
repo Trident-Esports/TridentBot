@@ -16,7 +16,10 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
         if (!reaction.message.guild) return
 
         if (!(fs.existsSync("./src/dbs/" + reaction.message.guild.id))) {
-            console.log("Message Reaction Add: Guild ID Profiles:",reaction.message.guild.id,"not found!")
+            console.log(
+                `Message Reaction Add:`.padEnd(25, " ") +
+                `Guild Profile for '${reaction.message.guild.name}' (ID:${reaction.message.guild.id}) not found!`
+            )
             return
         }
 
@@ -24,7 +27,10 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
         let RULES_CHANNEL = await this.getChannel(reaction.message, "rules")
 
         if (!(RULES_CHANNEL)) {
-            console.log("Message Reaction Add: Guild ID Rules Channel:",reaction.message.guild.id,"not found!")
+            console.log(
+                `Message Reaction Add:`.padEnd(25, " ") +
+                `Guild ID Rules Channel for '${reaction.message.guild.name}' (ID:${reaction.message.guild.id}) not found!`
+            )
             return
         }
 
@@ -33,13 +39,19 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
                 let RULES_ROLE = JSON.parse(fs.readFileSync("./src/dbs/" + reaction.message.guild.id + "/roles.json","utf8"))["rules"]
 
                 if (!(RULES_ROLE)) {
-                    console.log("Message Reaction Add: Guild ID Roles:",reaction.message.guild.id,"not found!")
+                    console.log(
+                        `Message Reaction Add:`.padEnd(25, " ") +
+                        `Guild ID Roles for '${reaction.message.guild.name}' (ID:${reaction.message.guild.id}) not found!`
+                    )
                     return
                 }
 
                 RULES_ROLE = reaction.message.guild.roles.cache.find(role => role.name === RULES_ROLE)
                 if (!(RULES_ROLE)) {
-                    console.log("Message Reaction Add: Guild Rules Role:",reaction.message.guild.id,"not found!")
+                    console.log(
+                        `Message Reaction Add:`.padEnd(25, " ") +
+                        `Guild Rules Role for '${reaction.message.guild.name}' (ID:${reaction.message.guild.id}) not found!`
+                    )
                     return
                 }
 
@@ -47,19 +59,28 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
                 try {
                     member = await reaction.message.guild.members.cache.get(user.id)
                 } catch (err) {
-                    console.log(`Message Reaction Add: User: '${user.username}#${user.discriminator}' [ID:${user.id}] not found!`)
+                    console.log(
+                        `Message Reaction Add:`.padEnd(25, " ") +
+                        `User: '${user.username}#${user.discriminator}' (ID:${user.id}) not found!`
+                    )
                     console.log(err)
                     return
                 }
                 try {
                     member.roles.add(RULES_ROLE)
                 } catch (err) {
-                    console.log(`Message Reaction Add: Failed to add Role to User: '${user.username}#${user.discriminator}' [ID:${user.id}!`)
+                    console.log(
+                        `Message Reaction Add:`.padEnd(25, " ") +
+                        `Failed to add Role to User: '${user.username}#${user.discriminator}' (ID:${user.id})!`
+                    )
                     console.log(err)
                     return
                 }
             } else {
-                console.log("Message Reaction Add: Guild ID Rules Channel:",reaction.emoji.name,"!=",RULES_EMOJI)
+                console.log(
+                    `Message Reaction Add:`.padEnd(25, " ") +
+                    `Guild ID Rules Channel: ${reaction.emoji.name}' != ${RULES_EMOJI}`
+                )
             }
         }
     }

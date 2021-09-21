@@ -11,7 +11,20 @@ module.exports = class RobCommand extends GameCommand {
             group: 'game',
             memberName: 'rob',
             description: 'Rob someone for Gold',
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "amount",
+                    prompt: "How much do you want to rob?",
+                    type: "integer",
+                    min: 500
+                },
+                {
+                    key: "target",
+                    prompt: "Who do you want to rob it from?",
+                    type: "member|user"
+                }
+            ]
         }
         super(
             client,

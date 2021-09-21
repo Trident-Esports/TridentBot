@@ -33,7 +33,25 @@ module.exports = class MatchesCommand extends VillainsCommand {
                 group: "info",
                 memberName: "matches",
                 description: "Call match listings",
-                guildOnly: true
+                guildOnly: true,
+                args: [
+                    {
+                        key: "span",
+                        prompt: "Span",
+                        examples: [ "all", "complete", "incomplete",  "next" ],
+                        type: "string"
+                    },
+                    {
+                        key: "teamID",
+                        prompt: "Team ID",
+                        type: "string"
+                    },
+                    {
+                        key: "tourneyID",
+                        prompt: "Tourney ID",
+                        type: "string"
+                    }
+                ]
             }
         )
     }

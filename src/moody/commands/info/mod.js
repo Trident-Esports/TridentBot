@@ -11,7 +11,19 @@ module.exports = class ModHelpCommand extends HelpListingCommand {
                 group: "info",
                 memberName: "mod",
                 description: "Mod Help",
-                guildOnly: true
+                guildOnly: true,
+                args: [
+                    {
+                        key: "searchTerm",
+                        prompt: "Section/Term",
+                        type: "string"
+                    },
+                    {
+                        key: "searchTerm",
+                        prompt: "Term",
+                        type: "string"
+                    }
+                ]
             },
             {
                 flags: {

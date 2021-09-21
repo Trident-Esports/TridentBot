@@ -9,7 +9,19 @@ module.exports = class StealCommand extends ATMCommand {
             group: 'game',
             memberName: 'steal',
             description: 'Steal Gold from a user',
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "amount",
+                    prompt: "How much do you want to steal?",
+                    type: "integer"
+                },
+                {
+                    key: "target",
+                    prompt: "Who do you want to steal it from?",
+                    type: "member|user"
+                }
+            ]
         }
         super(
             client,

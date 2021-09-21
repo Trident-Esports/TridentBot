@@ -10,7 +10,26 @@ module.exports = class BuyCommand extends ShopCommand {
             group: 'game',
             memberName: 'buy',
             description: 'Buy an Item from the Store',
-            guildOnly: true
+            guildOnly: true,
+            examples: [
+                "buy 🍌",
+                "buy 🍌 2",
+                "buy banana",
+                "buy banana 2"
+            ],
+            args: [
+                {
+                    key: "item",
+                    prompt: "What do you want to buy?",
+                    type: "string"
+                },
+                {
+                    key: "quantity",
+                    prompt: "How many do you want to buy?",
+                    type: "integer",
+                    min: 0
+                }
+            ]
         }
         let props = {
             extensions: [ "inventory", "profile" ]

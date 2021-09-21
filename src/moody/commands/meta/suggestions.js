@@ -10,7 +10,14 @@ module.exports = class SuggestionsCommand extends QuestionnaireCommand {
             group: "meta",
             memberName: "suggestions",
             description: "Suggestions",
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "description",
+                    prompt: "What do you want to suggest?",
+                    type: "string"
+                }
+            ]
         }
         super(
             client,

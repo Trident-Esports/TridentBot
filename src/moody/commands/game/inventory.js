@@ -11,7 +11,14 @@ module.exports = class InventoryCommand extends GameCommand {
             group: 'game',
             memberName: 'inventory',
             description: 'Check a user\'s Inventory',
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "target",
+                    prompt: "Who's inventory do you want to view?",
+                    type: "member|user"
+                }
+            ]
         }
         let props = {
             extensions: ["inventory"]

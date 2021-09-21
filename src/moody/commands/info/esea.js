@@ -12,7 +12,14 @@ module.exports = class ESEACommand extends VillainsCommand {
                 group: "info",
                 memberName: "esea",
                 description: "Get info about an ESEA game from a specified database",
-                guildOnly: true
+                guildOnly: true,
+                args: [
+                    {
+                        key: "sheetID",
+                        prompt: "Google Sheet ID",
+                        type: "string"
+                    }
+                ]
             }
         )
     }

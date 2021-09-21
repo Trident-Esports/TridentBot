@@ -10,7 +10,14 @@ module.exports = class ProfileCommand extends GameCommand {
             group: 'game',
             memberName: 'profile',
             description: 'Check a user\'s Profile',
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "target",
+                    prompt: "Who's profile do you want to view?",
+                    type: "member|user"
+                }
+            ]
         }
         super(
             client,

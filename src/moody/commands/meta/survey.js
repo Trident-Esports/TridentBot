@@ -9,7 +9,14 @@ module.exports = class SurveyCommand extends QuestionnaireCommand {
             group: "meta",
             memberName: "survey",
             description: "Survey",
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "description",
+                    prompt: "What's your survey question?",
+                    type: "string"
+                }
+            ]
         }
         super(
             client,

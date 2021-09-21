@@ -9,7 +9,19 @@ module.exports = class GiveCommand extends ATMCommand {
             group: 'game',
             memberName: 'give',
             description: 'Give Gold to another user',
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "amount",
+                    prompt: "How much do you want to give?",
+                    type: "integer"
+                },
+                {
+                    key: "target",
+                    prompt: "Who do you want to give it to?",
+                    type: "member|user"
+                }
+            ]
         }
         let props = {
             flags: {

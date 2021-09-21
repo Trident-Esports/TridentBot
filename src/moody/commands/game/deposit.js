@@ -10,7 +10,15 @@ module.exports = class DepositCommand extends ATMCommand {
             group: 'game',
             memberName: 'deposit',
             description: 'Deposit Gold into your Bank',
-            guildOnly: true
+            guildOnly: true,
+            args: [
+                {
+                    key: "amount",
+                    prompt: "How much do you want to deposit?",
+                    type: "integer",
+                    min: 0
+                }
+            ]
         }
         let props = {
             flags: {

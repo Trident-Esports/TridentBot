@@ -11,7 +11,19 @@ module.exports = class EseaHelpCommand extends HelpListingCommand {
                 group: "info",
                 memberName: "eseahelp",
                 description: "ESEA Help",
-                guildOnly: true
+                guildOnly: true,
+                args: [
+                    {
+                        key: "searchTerm",
+                        prompt: "Section/Term",
+                        type: "string"
+                    },
+                    {
+                        key: "searchTerm",
+                        prompt: "Term",
+                        type: "string"
+                    }
+                ]
             },
             {
                 helpslug: "dbs/eseahelp"
