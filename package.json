@@ -9,7 +9,6 @@
   },
   "main": "./src/main.js",
   "dependencies": {
-    "@discordjs/opus": "^0.6.0",
     "a-djs-handler": "<=1.1.1",
     "better-npm-audit": "^3.3.0",
     "dasu": "^0.4.2",
