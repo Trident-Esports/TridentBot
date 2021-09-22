@@ -1,6 +1,6 @@
+const mongoEventFiles = fs.readdirSync("./src/mongo/events").filter(file => file.endsWith(".js"))
 const mongoose = require('mongoose')
 const fs = require('fs')
-const mongoEventFiles = fs.readdirSync("./src/mongo/events").filter(file => file.endsWith(".js"))
 
 module.exports = async () => {
     for (eventFile of mongoEventFiles) {

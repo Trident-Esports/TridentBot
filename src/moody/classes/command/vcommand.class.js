@@ -1,6 +1,6 @@
 // @ts-check
 
-const { Channel, Client, MessageEmbed } = require('discord.js');
+const { Channel, Client } = require('discord.js');
 const { Command, CommandInfo, CommandoMessage } = require('discord.js-commando');
 const VillainsEmbed = require('../embed/vembed.class');
 const SlimEmbed = require('../embed/vslimbed.class');
@@ -195,9 +195,6 @@ module.exports = class VillainsCommand extends Command {
          * @type {Object.<string, Array.<string>>}
          */
         this.errors = JSON.parse(fs.readFileSync("./src/dbs/errors.json", "utf8"))
-
-        /** @type {Object.<string, any>} Data gathered from input management */
-        this.inputData = {}
 
         // Bail if we fail to get server profile information
         if (!GLOBALS) {
@@ -587,7 +584,7 @@ module.exports = class VillainsCommand extends Command {
      *
      * @param {CommandoMessage} message Message that called the command
      */
-    async build(client, message, args) {
+    async build(message, args) {
         if(!(this.error)) {
             await this.action(message, args)
         }
@@ -657,13 +654,14 @@ module.exports = class VillainsCommand extends Command {
      */
     // @ts-ignore
     async run(message, args) {
-        // @ts-ignore
+        //@ts-ignore
         let client = typeof message === Client ? message : message.client
+
         // Process arguments
-        await this.processArgs(message, args, this.flags)
+        let inputData = await this.processArgs(message, args, this.flags)
 
         // Build the thing
-        await this.build(client, message)
+        await this.build(message, args)
 
         // If we have an error, make it errortastic
         if (this.error) {
@@ -687,8 +685,10 @@ module.exports = class VillainsCommand extends Command {
         // this.null is to be set if we've already sent the page(s) somewhere else
         // Not setting this.null after sending the page(s) will send the page(s) again
         if ((!(this?.null)) || (this?.null && (!(this.null)))) {
-            return await this.send(message, this.pages)
+            await this.send(message, this.pages)
         }
+
+        return message
     }
 
     async test(client, message) {
