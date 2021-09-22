@@ -366,9 +366,7 @@
     "twitch": "roninaus"
   },
   "rotor": {
-    "stylized": "RoTor",
-    "instagram": "",
-    "twitch": ""
+    "stylized": "RoTor"
   },
   "salmon": {
     "stylized": "s a l m o n",
@@ -406,6 +404,10 @@
   "skyanite": {
     "twitch": "skyaniteoce",
     "twitter": "skyaniteaus"
+  },
+  "smash": {
+    "twitch": "smasha5000",
+    "twitter": "smash_oce"
   },
   "smokeyy": {
     "stylized": "Smokeyy",
@@ -482,6 +484,10 @@
   "undreamtspoon": {
     "stylized": "UndreamtSpoon",
     "twitch": "undreamtspoon"
+  },
+  "viictus": {
+    "twitch": "viictusrl",
+    "twitter": "viictusrl"
   },
   "vis": {
     "twitter": "vis_rl"
