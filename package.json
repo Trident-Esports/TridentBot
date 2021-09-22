@@ -9,7 +9,9 @@
   },
   "main": "./src/main.js",
   "dependencies": {
+    "@discordjs/opus": "^0.6.0",
     "a-djs-handler": "<=1.1.1",
+    "better-npm-audit": "^3.3.0",
     "dasu": "^0.4.2",
     "discord-xp": "^1.1.16",
     "discord.js": "<=12.5.3",
@@ -18,7 +20,7 @@
     "google-spreadsheet": "^3.1.15",
     "graphql": "^15.5.3",
     "graphql-request": "^3.5.0",
-    "mongoose": "<=5.13.8",
+    "mongoose": "<6.0.0",
     "pm2": "^5.1.1",
     "shelljs": "^0.8.4",
     "spotify-url-info": "^2.2.3",
