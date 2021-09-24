@@ -1,9 +1,9 @@
 const shell = require('shelljs')
 
-shell.echo("Pull")
-shell.echo("----")
+console.log("Pull")
+console.log("----")
 shell.exec("node ./src/resources/ci/common/ver.js")
-shell.echo()
+console.log()
 
 shell.exec("git checkout main")
 shell.exec("git pull origin main")

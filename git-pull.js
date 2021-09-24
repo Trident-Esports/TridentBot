@@ -2,14 +2,14 @@ const shell = require('shelljs')
 const fs = require('fs')
 let PACKAGE = JSON.parse(fs.readFileSync("./package.json", "utf8"))
 
-shell.echo("GIT PULL")
-shell.echo("========")
+console.log("GIT PULL")
+console.log("========")
 
 shell.exec("node ./src/resources/ci/common/ver.js")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/git/pull.js")
-shell.echo()
+console.log()
 
-shell.echo(`Remember to reset ${PACKAGE.name} by running 'sh' in Discord!`)
-shell.echo()
+console.log(`Remember to reset ${PACKAGE.name} by running 'sh' in Discord!`)
+console.log()

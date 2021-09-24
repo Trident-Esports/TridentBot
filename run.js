@@ -1,10 +1,10 @@
 const shell = require('shelljs')
 
 shell.exec("node ./src/resources/ci/common/ver.js")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/audit.js")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/outdated.js")
 

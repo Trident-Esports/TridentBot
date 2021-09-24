@@ -1,18 +1,18 @@
 const shell = require('shelljs')
 
-shell.echo("AUDIT")
-shell.echo("=====")
+console.log("AUDIT")
+console.log("=====")
 
 shell.exec("node ./src/resources/ci/common/ver.js")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/audit.js")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/install-dry.js")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/update-dry.js")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/outdated.js")

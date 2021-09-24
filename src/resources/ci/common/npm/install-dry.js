@@ -1,5 +1,5 @@
 const shell = require('shelljs')
 
-shell.echo("NPM Install")
-shell.echo("-----------")
+console.log("NPM Install (dry run)")
+console.log("---------------------")
 shell.exec("npm install --dry-run")
