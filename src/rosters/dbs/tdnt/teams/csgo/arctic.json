@@ -4,10 +4,12 @@
   "aliases": ["csar"],
   "team": {
     "esea": {
-      "teamID": "8772583"
+      "teamID": "8772583",
+      "avatar": "https://static.esea.net/global/images/teams/8772583.1630826741.png"
     },
     "lpl": {
-      "teamID": "262890"
+      "teamID": "262890",
+      "avatar": "https://static.esea.net/global/images/teams/8772583.1630826741.png"
     }
   },
   "members": {
