@@ -59,7 +59,12 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 if (span == "completed") {
                                     span = "complete"
                                 }
-                                profiles[span] = [ handlerpath + filepath + '-' + span + ".json" ]
+                                profiles[span] = [
+                                    {
+                                        url: handlerpath + filepath + '-' + span + ".json",
+                                        lpl: { teamID: profile.team.teamID }
+                                    }
+                                ]
                                 validSpan = true
                             } else { // invalid span
                                 // return all spans
@@ -73,7 +78,12 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 if (span == "completed") {
                                     span = "complete"
                                 }
-                                profiles[span] = [ handlerpath + filepath + '-' + span + ".json" ]
+                                profiles[span] = [
+                                    {
+                                        url: handlerpath + filepath + '-' + span + ".json",
+                                        lpl: { teamID: profile.team.teamID }
+                                    }
+                                ]
                                 validSpan = true
                             } else { // invalid span
                                 // return all spans
@@ -87,7 +97,12 @@ module.exports = class MatchesCommand extends VillainsCommand {
                     }
                     if (!validSpan) {
                         for (let span of [ "all", "complete", "incomplete", "next" ]) {
-                            profiles[span] = [ handlerpath + filepath + '-' + span + ".json" ]
+                            profiles[span] = [
+                                {
+                                    url: handlerpath + filepath + '-' + span + ".json",
+                                    lpl: { teamID: args[0] }
+                                }
+                            ]
                         }
                     }
                 } else {  // first arg is text
@@ -107,6 +122,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         let files = walk(locPath)
                         for (let file of files) {
                             let fData = JSON.parse(fs.readFileSync(file, "utf8"))
+                            let thisFile = {}
                             if (fData?.team?.lpl?.teamID) {
                                 let handlerpath = "/team/"
                                 let filepath = fData.team.lpl.teamID
@@ -114,9 +130,14 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                     handlerpath = "/tourney/"
                                     filepath = fData.team.lpl.tourneyID + '/' + filepath
                                 }
-                                profiles[span].push(
-                                    handlerpath + filepath + '-' + span + ".json"
-                                )
+                                thisFile["url"] = handlerpath + filepath + '-' + span + ".json"
+                                thisFile["lpl"] = { teamID: fData.team.lpl.teamID }
+                            }
+                            if (fData?.team?.esea?.teamID) {
+                                thisFile["esea"] = { teamID: fData.team.esea.teamID }
+                            }
+                            if (Object.keys(thisFile).length > 0) {
+                                profiles[span].push(thisFile)
                             }
                         }
                     }
@@ -136,7 +157,8 @@ module.exports = class MatchesCommand extends VillainsCommand {
         let pages = []
 
         for (let [span, files] of Object.entries(profiles)) {
-            for (let filepath of files) {
+            for (let fileData of files) {
+                let filepath = fileData.url
                 let req = dasu.req
 
                 let url = new URL("http://tridentoce.mymm1.com:80" + filepath)
@@ -182,19 +204,31 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             }
                             props.description += header
 
-                            let teamName = "LPL Team #"
-                            let teamURL = "https://letsplay.live/"
+                            let lplName = "LPL Team #"
+                            let lplURL = "https://letsplay.live/"
 
                             if (json?.tournament_id) {
-                                teamName += json.tournament_id + '/'
-                                teamURL += "tournaments/" + json.tournament_id + '/'
+                                lplName += json.tournament_id + '/'
+                                lplURL += "tournaments/" + json.tournament_id + '/'
                             }
                             if (json?.team_id) {
-                                teamName += json.team_id
-                                teamURL += "team/" + json.team_id
+                                lplName += json.team_id
+                                lplURL += "team/" + json.team_id
                             }
-                            props.description += ` *([${teamName}](${teamURL} '${teamURL}'))*`
+                            props.description += ` *([${lplName}](${lplURL} '${lplURL}'))*`
 
+                            if (fileData?.esea?.teamID) {
+                                let eseaName = "ESEA Team #"
+                                let eseaURL = "https://play.esea.net/"
+                                eseaName += fileData.esea.teamID
+                                eseaURL += "teams/" + fileData.esea.teamID
+                                props.description += "\n"
+                                let emojiKey = "esea"
+                                let emoji = await new VillainsCommand({name:""}).getEmoji(emojiKey, message.guild.emojis)
+                                props.description += ` *(${emoji}[${eseaName}](${eseaURL} '${eseaURL}'))*`
+                            }
+
+                            props.description += "\n"
                             embed.setDescription(props.description)
                         }
 
@@ -234,27 +268,37 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
 
                         if (noMatches) {
-                            let teamName = "LPL Team #"
-                            let teamURL = "https://letsplay.live/"
+                            let lplName = "LPL Team #"
+                            let lplURL = "https://letsplay.live/"
 
                             if (json?.tournament_id) {
-                                teamName += json.tournament_id + '/'
-                                teamURL += "tournaments/" + json.tournament_id + '/'
+                                lplName += json.tournament_id + '/'
+                                lplURL += "tournaments/" + json.tournament_id + '/'
                             }
                             if (json?.team_id) {
-                                teamName += json.team_id
-                                teamURL += "team/" + json.team_id
+                                lplName += json.team_id
+                                lplURL += "team/" + json.team_id
                             }
                             if (json?.team) {
-                                teamName = json.team + " (" + teamName + ')'
+                                lplName = json.team + " (" + lplName + ')'
                             }
 
-                            embed.setDescription(
-                                [
-                                    "__***" + emoji + teamName + "***__",
-                                    `No selected matches found for [${teamName}](${teamURL} '${teamURL}').`
-                                ].join("\n")
-                            )
+                            props.description = "__***" + emoji + lplName + "***__"
+
+                            if (fileData?.esea?.teamID) {
+                                let eseaName = "ESEA Team #"
+                                let eseaURL = "https://play.esea.net/"
+                                eseaName += fileData.esea.teamID
+                                eseaURL += "teams/" + fileData.esea.teamID
+                                let emojiKey = "esea"
+                                let emoji = await new VillainsCommand({name:""}).getEmoji(emojiKey, message.guild.emojis)
+                                props.description += ` *(${emoji}[${eseaName}](${eseaURL} '${eseaURL}'))*`
+                            }
+
+                            props.description += "\n"
+                            props.description += `No selected matches found for [${lplName}](${lplURL} '${lplURL}')` + "\n"
+
+                            embed.setDescription(props.description)
                         }
                     } catch(e) {
                         if (data.substring(0,1) === '<') {
