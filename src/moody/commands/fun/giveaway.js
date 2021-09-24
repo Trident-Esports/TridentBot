@@ -31,10 +31,8 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                 {
                     key: "winners",
                     prompt: "Number of winners?",
-                    type: "string",
-                    examples: [
-                        "1w"
-                    ]
+                    type: "number",
+                    min: 1
                 },
                 {
                     key: "description",
@@ -55,7 +53,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args) {
         let ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
         let APPROVED_ROLES = ROLES["admin"].concat(ROLES["mod"])
 
@@ -77,33 +75,36 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
             //     `\`Input: ${this.inputData.args}`
             // )
 
-            let duration = ms(this.inputData.args.shift()) // In Milliseconds
+            let duration = ms(args.duration) // In Milliseconds
 
             // this.props.description.push(`Duration: ${duration} ms`)
 
-            if ((!(duration)) || typeof duration == "string") {
-                this.error = true
-                this.props.description = `Please enter an amount of time for the Giveaway to go for. '${duration}' given.`
-            }
+            // Validation is handled
+            // if ((!(duration)) || typeof duration == "string") {
+            //     this.error = true
+            //     this.props.description = `Please enter an amount of time for the Giveaway to go for. '${duration}' given.`
+            // }
 
             if (!(this.error)) {
-                let winnersnum = parseInt(this.inputData.args.shift().replace("w", ""))
+                let winnersnum = parseInt(args.winners)
                 this.props.description.push(`Winners: ${winnersnum}`)
 
-                if ((!(winnersnum)) || isNaN(winnersnum)) {
-                    this.error = true
-                    this.props.description = `Please enter a maximum number of winners. '${winnersnum}' given.`
-                }
+                // Validation is handled
+                // if ((!(winnersnum)) || isNaN(winnersnum)) {
+                //     this.error = true
+                //     this.props.description = `Please enter a maximum number of winners. '${winnersnum}' given.`
+                // }
 
                 if (!(this.error)) {
-                    let product = this.inputData.args.join(" ")
+                    let product = args.description
 
                     // this.props.description.push(`Product: ${product}`)
 
-                    if (!(product)) {
-                        this.error = true
-                        this.props.description = "What are you giving away?"
-                    }
+                    // Validation is handled
+                    // if (!(product)) {
+                    //     this.error = true
+                    //     this.props.description = "What are you giving away?"
+                    // }
 
                     if (!(this.error)) {
                         // this.props.description.push(`Duration: ${duration} ms`)
@@ -152,7 +153,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                         reactors[reaction] = []
                                     }
                                     for (let [userID, ] of reactionData.users.cache) {
-                                        if (userID !== client.user.id) {
+                                        if (userID !== message.client.user.id) {
                                             reactors[reaction].push(userID)
                                         }
                                     }
@@ -208,7 +209,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                     fields: fields
                                 });
                                 for (let winner of winners) {
-                                    client.users.fetch(winner, false).then((user) => {
+                                    message.client.users.fetch(winner, false).then((user) => {
                                         if (!(user.bot)) {
                                             try {
                                                 user.send(embed)
@@ -221,7 +222,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                     })
                                 }
                                 // msg.channel.send({ embeds: [embed] }); // discord.js v13
-                                msg.channel.send(embed);
+                                msg.embed(embed);
                             });
                         })
                     }

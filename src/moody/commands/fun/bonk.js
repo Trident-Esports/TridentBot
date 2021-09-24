@@ -35,4 +35,23 @@ module.exports = class BonkCommand extends VillainsCommand {
         const target = args.target
         this.props.description = `<@${message.author.id}> just bonked <@${target.id}>🔨`
     }
+
+    async test(message, args) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          message.author.username,
+          message.author.id,
+          message.client.user.username,
+          "Wanrae"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new BonkCommand(message.client)
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(message, args)
+        }
+    }
 }

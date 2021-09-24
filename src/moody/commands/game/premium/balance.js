@@ -29,9 +29,9 @@ module.exports = class BalanceCommand extends GameCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args) {
         // Get loaded target
-        const loaded = this.inputData.loaded
+        const loaded = args.target
 
         // Get loaded profile data
         const profileData = await this.db_query(loaded.id, "profile")
@@ -56,20 +56,20 @@ module.exports = class BalanceCommand extends GameCommand {
         ]
     }
 
-    async test(client, message) {
+    async test(message, args) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
           "",
           message.author.username,
           message.author.id,
-          client.user.username,
+          message.client.user.username,
           "Wanrae"
         ]
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new BalanceCommand(client)
+            dummy = new BalanceCommand(message.client)
             dummy.props.footer.msg = args.join(" | ")
             dummy.run(message, args)
         }
