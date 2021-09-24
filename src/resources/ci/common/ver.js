@@ -7,8 +7,8 @@ let PACKAGE = JSON.parse(fs.readFileSync("./package.json", "utf8"))
 
 let pad = `${PACKAGE.name} Version:`.length + 1
 
-shell.echo(`${PACKAGE.name}`)
-shell.echo(``.padEnd(`${PACKAGE.name}`.length,'='))
-shell.echo(`Node Version:`.padEnd(pad) + `${Nodever}`)
-shell.echo(`NPM Version:`.padEnd(pad) + `v${NPMver}`)
-shell.echo(`${PACKAGE.name} Version:`.padEnd(pad) + `v${PACKAGE.version}`)
+console.log(`${PACKAGE.name}`)
+console.log(``.padEnd(`${PACKAGE.name}`.length,'='))
+console.log(`Node Version:`.padEnd(pad) + `${Nodever}`)
+console.log(`NPM Version:`.padEnd(pad) + `v${NPMver}`)
+console.log(`${PACKAGE.name} Version:`.padEnd(pad) + `v${PACKAGE.version}`)

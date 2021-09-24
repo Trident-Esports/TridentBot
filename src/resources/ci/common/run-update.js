@@ -1,17 +1,17 @@
 const shell = require('shelljs')
 
-shell.echo("UPDATE")
-shell.echo("======")
+console.log("UPDATE")
+console.log("======")
 
 shell.exec("node ./src/resources/ci/common/ver.js")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/outdated.js")
-shell.echo()
+console.log()
 
-shell.echo("NPM Update")
-shell.echo("----------")
+console.log("NPM Update")
+console.log("----------")
 shell.exec("npm update")
-shell.echo()
+console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/outdated.js")

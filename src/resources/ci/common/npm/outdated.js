@@ -1,5 +1,5 @@
 const shell = require('shelljs')
 
-shell.echo("NPM Outdated")
-shell.echo("------------")
+console.log("NPM Outdated")
+console.log("------------")
 shell.exec("npm outdated")
