@@ -46,4 +46,23 @@ module.exports = class LevelCommand extends GameCommand {
             ]
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          message.author.username,
+          message.author.id,
+          client.user.username,
+          "Wanrae"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new LevelCommand()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args, null, "")
+        }
+    }
 }

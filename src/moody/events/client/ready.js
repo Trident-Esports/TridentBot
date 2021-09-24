@@ -10,8 +10,16 @@ module.exports = class ReadyEvent extends VillainsEvent {
 
     async run(handler) {
         let GLOBALS = null
+        const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         try {
             GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            GLOBALS = (
+                GLOBALS?.profile &&
+                GLOBALS?.profiles &&
+                GLOBALS.profile in GLOBALS.profiles
+            ) ?
+                GLOBALS.profiles[GLOBALS.profile]:
+                defaults
         } catch(err) {
             console.log("Ready Event: PROFILE manifest not found!")
             process.exit(1)

@@ -57,4 +57,10 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
             return
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new DiscordInviteCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

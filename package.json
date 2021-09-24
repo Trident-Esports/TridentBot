@@ -1,6 +1,6 @@
 {
   "name": "tridentbot",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "private": true,
   "repository": {
@@ -10,6 +10,7 @@
   "main": "./src/main.js",
   "dependencies": {
     "a-djs-handler": "<=1.1.1",
+    "better-npm-audit": "^3.3.0",
     "dasu": "^0.4.2",
     "discord-xp": "^1.1.16",
     "discord.js": "<=12.5.3",
@@ -18,20 +19,22 @@
     "google-spreadsheet": "^3.1.15",
     "graphql": "^15.5.3",
     "graphql-request": "^3.5.0",
-    "mongoose": "<=5.13.8",
+    "mongoose": "<6.0.0",
+    "pm2": "^5.1.1",
+    "shelljs": "^0.8.4",
     "spotify-url-info": "^2.2.3",
+    "timezone": "^1.0.23",
     "weather-js": "^2.0.0",
     "yt-search": "^2.10.1",
     "ytdl-core": "^4.9.1",
     "ytpl": "^2.2.3"
   },
-  "devDependencies": {},
   "scripts": {
-    "audit": "npm --version && node --version && npm audit && npm outdated",
-    "install": "npm --version && node --version && npm audit && npm update && npm audit",
-    "run": "npm --version && node --version && npm audit && npm outdated && node --unhandled-rejections=strict ./src/main.js",
-    "update": "npm --version && node --version && npm audit && npm update && npm audit",
-    "test": "npm --version && node --version && npm audit && npm outdated && node --unhandled-rejections=strict ./src/main.js"
+    "audit": "node ./src/resources/ci/common/run-audit.js",
+    "local-install": "node ./src/resources/ci/common/run-install.js",
+    "run": "node ./run.js",
+    "update": "node ./src/resources/ci/common/run-update.js",
+    "ver": "node ./src/resources/ci/common/ver.js"
   },
   "author": "Trident Esports (https://github.com/Trident-Esports/)",
   "license": "ISC"

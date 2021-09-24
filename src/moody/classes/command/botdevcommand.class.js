@@ -80,7 +80,7 @@ module.exports = class BotDevCommand extends VillainsCommand {
 
     async build(client, message) {
         // Bail if not valid UserID
-        if(this.USERIDS.indexOf(message.author.id) == -1) {
+        if(!(this.USERIDS.includes(message.author.id))) {
             this.error = true
             // @ts-ignore
             this.props.description = this.errors.botDevOnly.join("\n")

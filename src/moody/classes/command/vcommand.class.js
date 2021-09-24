@@ -145,7 +145,7 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
 
         for (let [player, setting] of Object.entries({user:"default",target:"optional",bot:"invalid",search:"valid"})) {
-            if (Object.keys(this.flags).indexOf(player) == -1) {
+            if (!(Object.keys(this.flags).includes(player))) {
                 this.flags[player] = setting
             }
         }
@@ -155,20 +155,27 @@ module.exports = class VillainsCommand extends BaseCommand {
         }
 
         let GLOBALS = null
+        const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         try {
             GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            GLOBALS = (
+                GLOBALS?.profile &&
+                GLOBALS?.profiles &&
+                GLOBALS.profile in GLOBALS.profiles
+            ) ?
+                GLOBALS.profiles[GLOBALS.profile]:
+                defaults
         } catch(err) {
             console.log("VCommand: PROFILE manifest not found!")
             process.exit(1)
         }
-        const DEFAULTS = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         this.DEV = GLOBALS.DEV
 
         /**
          * Command prefix
          * @type {string}
          */
-        this.prefix = DEFAULTS.prefix
+        this.prefix = defaults.prefix
 
         /**
          * List of pages of Embeds
@@ -198,7 +205,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             return
         }
         // Bail if we fail to get bot default information
-        if (!DEFAULTS) {
+        if (!defaults) {
             this.error = true
             this.props.description = "Failed to get bot default information."
             return
@@ -451,7 +458,7 @@ module.exports = class VillainsCommand extends BaseCommand {
             }
             if (["default","required","optional"].includes(this.flags.bot)) {
                 // Do... something?
-            } else if (loaded?.bot && loaded.bot && (USERIDS?.botWhite.indexOf(loaded.id) == -1)) {
+            } else if (loaded?.bot && loaded.bot && (!(USERIDS?.botWhite.includes(loaded.id)))) {
                 // If Bot has been specified as in Invalid source
                 // Set Invalid because Bot
                 foundHandles.invalid = "bot"

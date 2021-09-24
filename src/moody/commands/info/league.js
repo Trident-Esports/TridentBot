@@ -68,10 +68,15 @@ module.exports = class LeagueCommand extends VillainsCommand {
                         let emoji = await new VillainsCommand({name:""}).getEmoji(emojiKey, message.guild.emojis)
 
                         if (!noMatches) {
-                            props.description = "__***" + emoji + json.team + "***__"
-                            if (json?.team_url) {
-                                props.description = `[${props.description}](${json.team_url} '${json.team_url}')`
+                            props.description = ""
+                            if (json?.league_name) {
+                                props.description = "***" + json.league_name + "***" + "\n"
                             }
+                            let header = "__***" + emoji + json.team + "***__"
+                            if (json?.team_url) {
+                                header = `[${header}](${json.team_url} '${json.team_url}')`
+                            }
+                            props.description += header
 
                             let teamName = ""
                             let teamURL = "https://letsplay.live/"
@@ -100,9 +105,11 @@ module.exports = class LeagueCommand extends VillainsCommand {
                         }
 
                         for (let [timestamp, match] of Object.entries(game_details)) {
-                            if (!match) {
+                            if (!match || !match.discord.team || !match.discord.opponent) {
                                 noMatches = true
                                 continue
+                            } else {
+                                noMatches = false
                             }
 
                             let name = ""
@@ -117,7 +124,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
                             name += match.discord.team + " 🆚 " + match.discord.opponent
                             value += ": <t:" + match.discord.timestamp + ":f>" + "\n";
                             if(match.discord.timestamp < (60 * 60 * 24 * 5)) {
-                              value = ""
+                              value = "???"
                             }
                             embed.addField(name, value)
                         }
@@ -157,6 +164,24 @@ module.exports = class LeagueCommand extends VillainsCommand {
         if (pages.length) {
             await this.send(message, pages, [], "", true)
             this.null = true
+        }
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "valorant",
+          "valorant open",
+          "valorant evolution 262656"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new LeagueCommand()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args, null, "")
         }
     }
 }

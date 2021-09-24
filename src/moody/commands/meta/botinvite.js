@@ -47,4 +47,10 @@ module.exports = class BotInviteCommand extends VillainsCommand {
             return
         }
     }
+
+    async test(client, message) {
+        let dummy = null
+        dummy = new BotInviteCommand()
+        dummy.run(client, message, [], null, "")
+    }
 }

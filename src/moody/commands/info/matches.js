@@ -101,16 +101,18 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         if (!profiles[span]) {
                             profiles[span] = []
                         }
-                        let locPath = "./rosters/dbs/teams"
+                        let guilds = JSON.parse(fs.readFileSync("./src/dbs/guilds.json","utf8"))
+                        let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "tdnt"
+                        let locPath = "./src/rosters/dbs/" + org + "/teams"
                         let files = walk(locPath)
                         for (let file of files) {
                             let fData = JSON.parse(fs.readFileSync(file, "utf8"))
-                            if (fData?.team?.teamID) {
+                            if (fData?.team?.lpl?.teamID) {
                                 let handlerpath = "/team/"
-                                let filepath = fData.team.teamID
-                                if (fData?.team?.tourneyID) {
+                                let filepath = fData.team.lpl.teamID
+                                if (fData?.team?.lpl?.tourneyID) {
                                     handlerpath = "/tourney/"
-                                    filepath = fData.team.tourneyID + '/' + filepath
+                                    filepath = fData.team.lpl.tourneyID + '/' + filepath
                                 }
                                 profiles[span].push(
                                     handlerpath + filepath + '-' + span + ".json"
@@ -170,10 +172,15 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         let emoji = await new VillainsCommand({name:""}).getEmoji(emojiKey, message.guild.emojis)
 
                         if (!noMatches) {
-                            props.description = "__***" + emoji + json.team + "***__"
-                            if (json?.team_url) {
-                                props.description = `[${props.description}](${json.team_url} '${json.team_url}')`
+                            props.description = ""
+                            if (json?.league_name) {
+                                props.description = "***" + json.league_name + "***" + "\n"
                             }
+                            let header = "__***" + emoji + json.team + "***__"
+                            if (json?.team_url) {
+                                header = `[${header}](${json.team_url} '${json.team_url}')`
+                            }
+                            props.description += header
 
                             let teamName = "LPL Team #"
                             let teamURL = "https://letsplay.live/"
@@ -261,5 +268,23 @@ module.exports = class MatchesCommand extends VillainsCommand {
             }
         }
         super.send(message, pages, [], 0, true)
+    }
+
+    async test(client, message) {
+        let dummy = null
+        const baseArgs = []
+        const varArgs = [
+          "",
+          "262890",
+          "262377",
+          "261418"
+        ]
+
+        for(let added of varArgs) {
+            let args = baseArgs.concat([ ...added.split(" ") ])
+            dummy = new MatchesCommand()
+            dummy.props.footer.msg = args.join(" | ")
+            dummy.run(client, message, args)
+        }
     }
 }
