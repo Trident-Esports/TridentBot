@@ -8,7 +8,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
         let comprops = {
             name: "botactivity",
             aliases: [ "ba" ],
-            group: "admin",
+            group: "mod",
             memberName: "botactivity",
             description: "Bot Activity setter",
             guildOnly: true,

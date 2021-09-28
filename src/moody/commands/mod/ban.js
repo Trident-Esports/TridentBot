@@ -6,7 +6,7 @@ module.exports = class BanCommand extends ModCommand {
     constructor(client) {
         let comprops = {
             name: "ban",
-            group: "admin",
+            group: "mod",
             memberName: "ban",
             description: "Ban user",
             guildOnly: true,

@@ -8,7 +8,7 @@ module.exports = class WarnCommand extends ModCommand {
         let comprops = {
             name: "warn",
             aliases: [],
-            group: "admin",
+            group: "mod",
             memberName: "warn",
             description: "Warns user",
             guildOnly: true,

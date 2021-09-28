@@ -7,7 +7,7 @@ module.exports = class BotLiveCommand extends AdminCommand {
     constructor(client) {
         let comprops = {
             name: "botlive",
-            group: "admin",
+            group: "mod",
             memberName: "botlive",
             description: "Make bot Go Live",
             guildOnly: true,

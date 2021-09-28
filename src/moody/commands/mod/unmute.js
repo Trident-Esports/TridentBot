@@ -8,7 +8,7 @@ module.exports = class UnmuteCommand extends IRCVoiceCommand {
     constructor(client) {
         let comprops = {
             name: "unmute",
-            group: "admin",
+            group: "mod",
             memberName: "unmute",
             description: "Unmute user",
             guildOnly: true,

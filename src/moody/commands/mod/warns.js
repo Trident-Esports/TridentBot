@@ -9,7 +9,7 @@ module.exports = class WarnsCommand extends ModCommand {
         let comprops = {
             name: "warns",
             aliases: [],
-            group: "admin",
+            group: "mod",
             memberName: "warns",
             description: "Shows all warns in server for user",
             guildOnly: true,

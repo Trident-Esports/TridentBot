@@ -9,7 +9,7 @@ module.exports = class MuteCommand extends IRCVoiceCommand {
         let comprops = {
             name: "mute",
             aliases: [ "silence" ],
-            group: "admin",
+            group: "mod",
             memberName: "mute",
             description: "Mute user",
             guildOnly: true,

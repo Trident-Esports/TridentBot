@@ -6,7 +6,7 @@ module.exports = class KickCommand extends ModCommand {
     constructor(client) {
         let comprops = {
             name: "kick",
-            group: "admin",
+            group: "mod",
             memberName: "kick",
             description: "Kick user",
             guildOnly: true,

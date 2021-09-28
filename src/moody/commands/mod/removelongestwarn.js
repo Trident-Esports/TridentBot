@@ -12,7 +12,7 @@ module.exports = class RemoveLongestWarnCommand extends ModCommand {
                 'rmvlongestwarn',
                 'rmvlngstwrn'
             ],
-            group: "admin",
+            group: "mod",
             memberName: "removelongestwarn",
             description: "Warns user",
             guildOnly: true,
