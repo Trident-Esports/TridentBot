@@ -24,7 +24,7 @@ module.exports = class BotInviteCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args) {
         let url = ""
         let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
 
@@ -35,12 +35,12 @@ module.exports = class BotInviteCommand extends VillainsCommand {
         }
 
         if(
-          client?.user?.id &&
+          message?.client?.user?.id &&
           defaults?.bot?.scope &&
           defaults?.bot?.permissions
         ) {
             url += "https://discord.com/oauth2/authorize"
-            url += "?client_id=" + client.user.id
+            url += "?client_id=" + message.client.user.id
             url += "&scope=" + defaults.bot.scope
             url += "&permissions=" + defaults.bot.permissions
             this.props.description = `***[Invite @TridentBot to your Discord!](${url} '${url}')***`

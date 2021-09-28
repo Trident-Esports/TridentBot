@@ -36,8 +36,8 @@ module.exports = class BotGuildsCommand extends AdminCommand {
         )
     }
 
-    async action(client, message) {
-        let guilds = client.guilds.cache
+    async action(message, args) {
+        let guilds = message.client.guilds.cache
         let locale = this.inputData.args && this.inputData.args[0] ? this.inputData.args[0] : "en-AU"
         let sorted = []
         for (let [guildID, guildData] of guilds) {
@@ -45,7 +45,7 @@ module.exports = class BotGuildsCommand extends AdminCommand {
             if (owner?.user) {
                 owner = owner.user
             }
-            let bot = guildData.members.cache.get(client.user.id)
+            let bot = await guildData.members.fetch(message.client.user.id)
             sorted[bot.joinedTimestamp] = {
                 guild: {
                     name: guildData.name,
@@ -61,7 +61,7 @@ module.exports = class BotGuildsCommand extends AdminCommand {
         }
         console.log("")
         console.log("---")
-        console.log(`${client.user.username}#${client.user.discriminator} (ID:${client.user.id}) is on ${Object.keys(sorted).length} servers!`)
+        console.log(`${message.client.user.username}#${message.client.user.discriminator} (ID:${message.client.user.id}) is on ${Object.keys(sorted).length} servers!`)
         this.props.description = []
         for (let [guildID, guildData] of Object.entries(ksort(sorted))) {
             console.log("---")

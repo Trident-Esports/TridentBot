@@ -26,7 +26,7 @@ module.exports = class ModCommand extends AdminCommand {
         )
     }
 
-    async build(client, message) {
+    async build(message, args) {
         this.ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
         let APPROVED_ROLES = this.ROLES["admin"].concat(this.ROLES["mod"])
 
@@ -37,6 +37,6 @@ module.exports = class ModCommand extends AdminCommand {
             return
         }
 
-        this.action(client, message)
+        this.action(message, args)
     }
 }

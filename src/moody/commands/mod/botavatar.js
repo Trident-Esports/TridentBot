@@ -10,7 +10,14 @@ module.exports = class BotAvatarCommand extends AdminCommand {
             memberName: "botavatar",
             description: "Bot Avatar",
             guildOnly: true,
-            ownerOnly: true
+            ownerOnly: true,
+            args: [
+                {
+                    key: "avatarURL",
+                    prompt: "Avatar URL",
+                    type: "string"
+                }
+            ]
         }
         let props = {
             flags: {
@@ -27,11 +34,11 @@ module.exports = class BotAvatarCommand extends AdminCommand {
         )
     }
 
-    async action(client, message) {
-        let url = this.inputData.args[0].replace("<","").replace(">","")
+    async action(message, args) {
+        let url = args.avatarURL.replace("<","").replace(">","")
         this.props.image = url
         try {
-            client.user.setAvatar(url)
+            message.client.user.setAvatar(url)
             this.props.description = "Succeeded in setting avatar"
         } catch {
             this.error = true

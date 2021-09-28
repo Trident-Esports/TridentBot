@@ -27,30 +27,35 @@ module.exports = class WeatherCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args) {
         let degreeType = "C"
-        if (["C","F"].includes(this.inputData.args[this.inputData.args.length - 1].toUpperCase())) {
-            degreeType = this.inputData.args.pop().toUpperCase()
+        let search = ""
+        if (args?.searchTerm) {
+            args.searchTerm = args.searchTerm.split(" ")
+            if (["C","F"].includes(args.searchTerm[args.searchTerm.length - 1].toUpperCase())) {
+                degreeType = args.searchTerm.pop().toUpperCase()
+            }
+            search = args.searchTerm.join(" ").trim()
         }
-        let args = this.inputData.args
-        let props = { caption: {}, players: { user: {}, bot: {} } }
-        let search = this.inputData.args.join(" ").trim()
         if (search == "") {
             this.error = true
             this.props.description = "Please specify a location."
             return
         }
+
+        let props = { caption: {}, players: { user: {}, bot: {} } }
+
         weather.find({
             search: search,
             degreeType: degreeType
         }, await function(error, result) {
-            if(error || !args[0] || result === undefined || result.length === 0) {
+            if(error || !args.searchTerm || result === undefined || result.length === 0) {
                 props.error = true
                 props.caption.text = "Error"
                 props.color = "RED"
                 if(error) {
                     props.description = error
-                } else if(!args[0]) {
+                } else if(!args.searchTerm) {
                     props.description = "Please specify a location"
                 } else if(result === undefined || result.length === 0) {
                     props.description = "**Invalid** Location"
@@ -111,16 +116,16 @@ module.exports = class WeatherCommand extends VillainsCommand {
         const baseArgs = []
         const varArgs = [
           "",
-          "Sydney, Australia",
-          "Sydney, Australia F",
-          "97202",
-          "97202 F"
+          { searchTerm: "Sydney, Australia" },
+          { searchTerm: "Sydney, Australia F" },
+          { searchTerm: "97202" },
+          { searchTerm: "97202 F" }
         ]
 
         for(let added of varArgs) {
-            let args = baseArgs.concat([ ...added.split(" ") ])
+            let args = added
             dummy = new WeatherCommand(client)
-            dummy.props.footer.msg = args.join(" | ")
+            dummy.props.footer.msg = typeof args === "object" && typeof args.join === "function" ? args.join(" | ") : '```' + JSON.stringify(args) + '```'
             dummy.run(message, args)
         }
     }

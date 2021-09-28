@@ -2,16 +2,15 @@
 
 const ShopCommand = require('../../classes/command/shopcommand.class');
 
-module.exports = class UseCommand extends ShopCommand {
+module.exports = class DropCommand extends ShopCommand {
     constructor(client) {
         super(
             client,
             {
-                name: 'use',
-                aliases: [ 'u' ],
+                name: 'drop',
                 group: 'game',
-                memberName: 'use',
-                description: 'Use your Inventory',
+                memberName: 'drop',
+                description: 'Drop a piece of Inventory',
                 guildOnly: true
             },
             {

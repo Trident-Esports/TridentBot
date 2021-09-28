@@ -63,10 +63,10 @@ module.exports = class ClearCommand extends VillainsCommand {
                 setTimeout(() => msg.delete(), ms(duration))
             })
 
-        let dummy = new BotActivityCommand(message.client)
-        await dummy.run(message, [])
-            .then(msg => {
-                setTimeout(() => msg.delete(), ms(duration))
-            })
+        // let dummy = new BotActivityCommand(message.client)
+        // await dummy.run(message, [])
+        //     .then(msg => {
+        //         setTimeout(() => msg.delete(), ms(duration))
+        //     })
     }
 }

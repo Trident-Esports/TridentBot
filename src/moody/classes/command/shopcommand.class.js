@@ -24,8 +24,20 @@ module.exports = class ShopCommand extends GameCommand {
         super(
             client,
             {
-                group: 'game',
-                ...comprops
+                ...comprops,
+                args: [
+                    {
+                        key: "quantity",
+                        prompt: "Quantity",
+                        type: "integer",
+                        min: 1
+                    },
+                    {
+                        key: "item",
+                        prompt: "Item?",
+                        type: "string"
+                    }
+                ]
             },
             {
                 ...props,
@@ -38,9 +50,9 @@ module.exports = class ShopCommand extends GameCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args) {
         // Get loaded target
-        const loaded = this.inputData.loaded
+        const loaded = message.author
 
         // Get target's inventory data
         const inventoryData = await this.db_query(loaded.id, "inventory")
@@ -101,51 +113,37 @@ module.exports = class ShopCommand extends GameCommand {
         let gold = profileData.gold //Players gold
 
         // Figure out what and how much is being asked for
-        let re = /^([a-z ]*)([\d]*)$/
-        let selected_item = ""
-        let quantity = -1
-        if (this?.inputData?.args && this.inputData.args[0] && this.inputData.args[0].trim().length > 0) {
-            let matches = this.inputData.args.join(" ").toLowerCase().match(re)
-            if (matches) {
-                selected_item = matches[1].trim().replace(/\s/g, '')
-                quantity = ((!isNaN(matches[2])) && (matches[2] != "")) ? parseInt(matches[2]) : 1
-            } else if (this.inputData.args[0].toLowerCase() in emojiItems) {
-                selected_item = emojiItems[this.inputData.args[0].toLowerCase()]
-                re = /([\d]*)/
-                let tmp = this.inputData.args
-                tmp.shift()
-                matches = tmp.join(" ").toLowerCase().match(re)
-                quantity = ((!isNaN(matches[1])) && (matches[1] != "")) ? parseInt(matches[1]) : 1
-            }
-        }
+        let selected_item = args?.item ? args.item.toLowerCase() : false
+        let quantity = args?.quantity ? args.quantity : 1
 
         // Sanity check for title
         if (!(this?.props?.title)) {
             this.props.title = {}
         }
 
-        // Bail if no item selected
-        if (selected_item == "") {
-            this.error = true
-            this.props.description = "No item name given."
-            return
-        }
-        // Bail if invalid quantity
-        if (quantity == -1) {
-            this.error = true
-            this.props.description = `Invalid quantity. '${quantity}' given.`
-            return
+        if (selected_item) {
+            selected_item = selected_item.replace(/[:\s]/g,"")
+            switch(selected_item) {
+                case "banana":
+                    selected_item = "bananas";
+                    break;
+            }
+            if (Object.keys(emojiItems).includes(selected_item)) {
+                selected_item = emojiItems[selected_item]
+            }
         }
 
+        console.log(`Searching StockItems for '${selected_item}'`)
+
         // Get item object
-        let [cat, items] = [null, null]
-        let item = null
+        let [cat, items] = ["", []]
+        let foundItem = {}
         for ([cat, items] of Object.entries(STOCKDATA)) {
             if (selected_item in items) {
-                item = items[selected_item]
-                item.name = selected_item
-                if (!("stylized" in item)) {
-                    item.stylized = item.name.charAt(0).toUpperCase() + item.name.slice(1)
+                foundItem = items[selected_item]
+                foundItem.name = selected_item
+                if (!("stylized" in foundItem)) {
+                    foundItem.stylized = foundItem.name.charAt(0).toUpperCase() + foundItem.name.slice(1)
                 }
                 break
             }
@@ -177,10 +175,14 @@ module.exports = class ShopCommand extends GameCommand {
         }
 
         // If we've got an item object
-        if (item) {
+        if (foundItem?.emoji) {
+            console.log(`We determined a specified Shop Item! '${foundItem.emoji}' given!`)
             if (["Buy"].includes(this.props.caption.text)) {
+                console.log("We're gonna Buy!")
                 // Buy
-                let cost = parseInt(item.value) * quantity
+                let cost = parseInt(foundItem.value) * quantity
+
+                console.log(`We're gonna buy ${quantity}${foundItem.emoji} for ${this.emojis.gold}${cost}!`)
 
                 // Bail if we can't afford it
                 if (gold < cost) {
@@ -193,36 +195,37 @@ module.exports = class ShopCommand extends GameCommand {
                 await this.db_transform(loaded.id, "gold", -cost)
 
                 // Push what we bought
-                let selected_items = new Array(quantity).fill(item.emoji);
+                let selected_items = new Array(quantity).fill(foundItem.emoji);
                 await this.db_transform(loaded.id, "$push", { items: selected_items })
 
                 this.props.description = `<@${loaded.id}> just bought `
                 this.props.description += `${quantity} `
-                this.props.description += `${item.emoji}`
-                this.props.description += (item?.stylized ? item.stylized : (selected_item.charAt(0).toUpperCase() + selected_item.slice(1)))
+                this.props.description += `${foundItem.emoji}`
+                this.props.description += (foundItem?.stylized ? foundItem.stylized : (selected_item.charAt(0).toUpperCase() + selected_item.slice(1)))
                 this.props.description += "!"
             } else if (["Use"].includes(this.props.caption.text)) {
+                console.log("We're gonna Use!")
                 // Use
                 this.props.fields = []
-                let haveEnough = inventorySorts.flat[item.emoji] >= quantity
+                let haveEnough = inventorySorts.flat[foundItem.emoji] >= quantity
                 if (haveEnough) {
                     this.props.description = []
-                    if (item.name == "bananas") {
+                    if (foundItem.name == "bananas") {
                         // Bananas
                         let q = quantity
 
                         // Pull All
                         let pull = {}
-                        pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
+                        pull[inventorySorts.conversions.emojiToCat[foundItem.emoji]] = foundItem.emoji
                         await this.db_transform(loaded.id, "$pull", pull)
 
                         // Put back minus q
                         let push = {}
-                        push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
+                        push[inventorySorts.conversions.emojiToCat[foundItem.emoji]] = new Array(inventorySorts.flat[foundItem.emoji] - q).fill(foundItem.emoji)
                         await this.db_transform(loaded.id, "$push", push)
 
                         this.props.description = [
-                            `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
+                            `<@${loaded.id}> just used ${q} ${foundItem.emoji}${foundItem.stylized}.`,
                             "Their minions are now happily satisfied."
                         ]
 
@@ -253,24 +256,24 @@ module.exports = class ShopCommand extends GameCommand {
                                 value: "Minions"
                             })
                         }
-                    } else if (item.name == "lifepotion") {
+                    } else if (foundItem.name == "lifepotion") {
                         // Life Potion
                         let q = quantity
 
                         // Pull All
                         let pull = {}
-                        pull[inventorySorts.conversions.emojiToCat[item.emoji]] = item.emoji
+                        pull[inventorySorts.conversions.emojiToCat[foundItem.emoji]] = foundItem.emoji
                         await this.db_transform(loaded.id, "$pull", pull)
 
                         // Put back minus q
                         let push = {}
-                        push[inventorySorts.conversions.emojiToCat[item.emoji]] = new Array(inventorySorts.flat[item.emoji] - q).fill(item.emoji)
+                        push[inventorySorts.conversions.emojiToCat[foundItem.emoji]] = new Array(inventorySorts.flat[foundItem.emoji] - q).fill(foundItem.emoji)
                         await this.db_transform(loaded.id, "$push", push)
 
                         // Restore Health
                         await this.db_transform(loaded.id, "$set:health", 100)
                         this.props.description = [
-                            `<@${loaded.id}> just used ${q} ${item.emoji}${item.stylized}.`,
+                            `<@${loaded.id}> just used ${q} ${foundItem.emoji}${foundItem.stylized}.`,
                             "Their health has been restored."
                         ]
                     } else {
@@ -278,7 +281,7 @@ module.exports = class ShopCommand extends GameCommand {
                         //FIXME: Implement NYI items
                         this.error = true
                         this.props.description = [
-                            `${item.stylized} not yet implemented.`
+                            `${foundItem.stylized} not yet implemented.`
                         ].join("\n")
                         return
                     }
@@ -287,12 +290,48 @@ module.exports = class ShopCommand extends GameCommand {
                     // Bail if we don't have enough of requested item
                     this.error = true
                     this.props.description = [
-                        `Yes, you have no ${item.emoji}${item.stylized}.`,
-                        `'${inventorySorts.flat[item.emoji]}' in inventory.`,
+                        `Yes, you have no ${foundItem.emoji}${foundItem.stylized}.`,
+                        `'${inventorySorts.flat[foundItem.emoji]}' in inventory.`,
                         `'${quantity}' requested to use.`
                     ].join("\n")
                     return
                 }
+            } else if (["Drop"].includes(this.props.caption.text)) {
+                console.log("We're gonna Drop!")
+                // Drop
+                this.props.fields = []
+                let haveEnough = inventorySorts.flat[foundItem.emoji] >= quantity
+                console.log(`We have ${inventorySorts.flat[foundItem.emoji]} to drop ${quantity}!`)
+                if (haveEnough) {
+                    this.props.description = []
+
+                    let q = quantity
+
+                    // Pull All
+                    let pull = {}
+                    pull[inventorySorts.conversions.emojiToCat[foundItem.emoji]] = foundItem.emoji
+                    await this.db_transform(loaded.id, "$pull", pull)
+
+                    // Put back minus q
+                    let push = {}
+                    push[inventorySorts.conversions.emojiToCat[foundItem.emoji]] = new Array(inventorySorts.flat[foundItem.emoji] - q).fill(foundItem.emoji)
+                    await this.db_transform(loaded.id, "$push", push)
+
+                    this.props.description = [
+                        `<@${loaded.id}> just dropped ${q} ${foundItem.emoji}${foundItem.stylized}.`
+                    ]
+                } else {
+                    // Bail if we don't have enough of requested item
+                    this.error = true
+                    this.props.description = [
+                        `Yes, you have no ${foundItem.emoji}${foundItem.stylized}.`,
+                        `'${inventorySorts.flat[foundItem.emoji]}' in inventory.`,
+                        `'${quantity}' requested to drop.`
+                    ].join("\n")
+                    return
+                }
+            } else {
+                console.log("I dunno what we're gonna do!")
             }
         }
 

@@ -17,10 +17,24 @@ module.exports = class ATMCommand extends GameCommand {
      * Constructor
      * @param {CommandInfo} comprops - List of command properties from child class
      */
-    constructor(client, comprops, props) {
+    constructor(client, comprops, props = {}) {
         super(
             client,
-            {...comprops},
+            {
+                ...comprops,
+                args: [
+                    {
+                        key: "target",
+                        prompt: "Target?",
+                        type: "member|user"
+                    },
+                    {
+                        key: "amount",
+                        prompt: "Amount?",
+                        type: "string"
+                    }
+                ]
+            },
             {
                 ...props,
                 extensions: [ "profile" ],
@@ -47,9 +61,9 @@ module.exports = class ATMCommand extends GameCommand {
         }
     }
 
-    async action(client, message) {
+    async action(message, args) {
         // Get loaded target
-        const loaded = this.inputData.loaded
+        const loaded = args?.target ? args.target : message.author
 
         // Sanity check for title text
         if(!(this?.props?.title?.text)) {
@@ -89,20 +103,18 @@ module.exports = class ATMCommand extends GameCommand {
         }
 
         // Get transfer amount
-        let amount = (this.inputData.args && this.inputData.args[0]) ?
-            this.inputData.args[0].replace(/[\,\.*]/g,'').toLowerCase() :
-            -1
+        let amount = args?.amount && args.amount ? args.amount : -1
 
         // Bail if invalid amount
         // Amount needs to be positive number, "all" or "half"
-        if ((isNaN(amount) && (!(["all","half"].includes(amount)))) || (parseInt(amount) <= 0)) {
+        if (((typeof amount === "undefined") || (!amount) || (isNaN(amount)) && (!(["all","half"].includes(amount)))) || (parseInt(amount) <= 0)) {
             this.error = true
             this.props.description = `Amount must be a positive whole number, "all" or "half". '${amount}' given.`
             return
         }
 
         // Get user's profile data
-        const profileData = await this.db_query(this.inputData.user.id, "profile")
+        const profileData = await this.db_query(loaded.id, "profile")
 
         // Bail if can't get user data
         if (!profileData) {
@@ -146,6 +158,7 @@ module.exports = class ATMCommand extends GameCommand {
         // Figure out source for gold
         let reserve = 0
         switch (this.props.caption.text) {
+            case "Burn":
             case "Deposit":
             case "Give":
                 reserve = profileData.gold
@@ -166,9 +179,9 @@ module.exports = class ATMCommand extends GameCommand {
         } else {
             amount = parseInt(amount)
         }
-        // Deposit/Give/Withdraw: Can't transfer more than you've got
+        // Burn/Deposit/Give/Withdraw: Can't transfer more than you've got
         // Bail if not enough gold
-        if (["Deposit","Give","Withdraw"].includes(this.props.caption.text)) {
+        if (["Burn","Deposit","Give","Withdraw"].includes(this.props.caption.text)) {
             if (parseInt(amount) > reserve) {
                 this.error = true
                 this.props.description = `You only have ${this.emojis.gold}${reserve.toLocaleString("en-AU")}. '${amount.toLocaleString("en-AU")}' given.`
@@ -181,6 +194,11 @@ module.exports = class ATMCommand extends GameCommand {
         let targetInc = { gold: 0 }
         let [verb, direction, container] = ["", "", ""]
         switch (this.props.caption.text) {
+            case "Burn":
+                // User to Ether
+                userInc = { gold: -amount };
+                [verb, direction, container] = ["Burned", "from", "their Wallet"];
+                break;
             case "Deposit":
                 // User to User
                 userInc = { gold: -amount, bank: amount };

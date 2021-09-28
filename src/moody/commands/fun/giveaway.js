@@ -31,7 +31,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                 {
                     key: "winners",
                     prompt: "Number of winners?",
-                    type: "number",
+                    type: "integer",
                     min: 1
                 },
                 {

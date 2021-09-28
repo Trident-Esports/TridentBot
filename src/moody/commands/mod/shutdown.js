@@ -9,7 +9,7 @@ module.exports = class ShutDownCommand extends AdminCommand {
         let comprops = {
             name: "shutdown",
             group: "meta",
-            aliases: [ "sh" ],
+            aliases: [ "sh", "restart" ],
             memberName: "shutdown",
             description: "Bot Shutdown",
             guildOnly: true,

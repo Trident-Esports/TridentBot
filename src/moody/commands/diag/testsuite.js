@@ -53,7 +53,7 @@ module.exports = class TestSuiteCommand extends VillainsCommand {
         // do nothing
     }
 
-    async test(message, args) {
+    async test(client, message, args) {
         // do nothing
     }
 }

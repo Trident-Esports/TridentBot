@@ -18,35 +18,37 @@ module.exports = class ESEACommand extends VillainsCommand {
                         key: "sheetID",
                         prompt: "Google Sheet ID",
                         type: "string"
+                    },
+                    {
+                        key: "matchID",
+                        prompt: "Match ID?",
+                        type: "string"
+                    },
+                    {
+                        key: "span",
+                        prompt: "Span?",
+                        type: "string"
                     }
                 ]
             }
         )
     }
 
-    async action(client, message) {
-        const apiKey = process.env.google_apiKey
+    async action(message, args) {
+        const apiKey = process?.env?.google_apiKey
 
         // Load workbook
-        let docID = process.env.google_sheets_vln_csgo_esea
+        let docID = args?.docID ? args.docID : process.env.google_sheets_vln_csgo_esea
 
-        let wantedMatch = 0
-        let wantedSpan = "all"
-        for (let arg of this.inputData.args) {
-            if(["all","complete","incomplete","next"].includes(arg)) {
-                wantedSpan = arg
-                console.log("ESEA Span:",arg)
-            } else if(!(isNaN(arg))) {
-                wantedMatch = arg
-                console.log("ESEA Match:",arg)
-            } else if(arg.length > 10) {
-                docID = arg
-                console.log("ESEA Sheet:",arg)
-            }
+        let wantedMatch = args?.matchID ? args.matchID : 0
+        let wantedSpan = args?.span ? args.span : ""
+
+        if (!["all","complete","completed","incomplete","next"].includes(wantedSpan)) {
+            wantedSpan = "all"
         }
 
         // Check for API Key
-        if (apiKey == "") {
+        if (!(apiKey)) {
             this.error = true
             this.props.description = "No Google API Key found!"
             return
@@ -310,17 +312,17 @@ module.exports = class ESEACommand extends VillainsCommand {
         const baseArgs = []
         const varArgs = [
           "",
-          "1e7j3aQC8iwhoxs5J7okAUoBSU7_xnueYJ87EPhSWtZs", // ARCTIC
-          "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU", // STORM
-          "1e7j3aQC8iwhoxs5J7okAUoBSU7_xnueYJ87EPhSWtZs 16732716", // ARCTIC
-          "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU 16708389", // STORM
-          "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU 16712616" // STORM
+          { docID: "1e7j3aQC8iwhoxs5J7okAUoBSU7_xnueYJ87EPhSWtZs" }, // ARCTIC
+          { docID: "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU" }, // STORM
+          { docID: "1e7j3aQC8iwhoxs5J7okAUoBSU7_xnueYJ87EPhSWtZs", matchID: "16732716" }, // ARCTIC
+          { docID: "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU", matchID: "16708389" }, // STORM
+          { docID: "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU", matchID: "16712616" } // STORM
         ]
 
         for(let added of varArgs) {
-            let args = baseArgs.concat([ ...added.split(" ") ])
+            let args = added
             dummy = new ESEACommand(client)
-            dummy.props.footer.msg = args.join(" | ")
+            dummy.props.footer.msg = typeof args === "object" && typeof args.join === "function" ? args.join(" | ") : '```' + JSON.stringify(args) + '```'
             await dummy.run(message, args)
         }
     }

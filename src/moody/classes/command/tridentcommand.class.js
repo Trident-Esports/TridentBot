@@ -18,9 +18,7 @@ module.exports = class TridentCommand extends Command {
         if(!(this?.props?.description) || (this?.props?.description.trim() == "")) {
             this.props.description = ""
         }
-        if(this?.props?.null) {
-            this.null = true
-        }
+        this.null = this?.props?.null
 
         let GLOBALS = null
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
@@ -60,7 +58,7 @@ module.exports = class TridentCommand extends Command {
         await this.processArgs(msg, args, this.flags)
         await this.build(msg, args)
         let page = null
-        if(this.props?.full && this.props.full) {
+        if(this.props?.full) {
             page = new TridentEmbed({...this.props})
         } else {
             page = new TridentSlimbed({...this.props})

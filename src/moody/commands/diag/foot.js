@@ -50,7 +50,7 @@ module.exports = class FootCommand extends VillainsCommand {
         )
     }
 
-    async test(message, args) {
+    async test(client, message, args) {
         this.run(message, args)
     }
 }

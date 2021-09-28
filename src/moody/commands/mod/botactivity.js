@@ -12,7 +12,24 @@ module.exports = class BotActivityCommand extends AdminCommand {
             memberName: "botactivity",
             description: "Bot Activity setter",
             guildOnly: true,
-            ownerOnly: true
+            ownerOnly: true,
+            args: [
+                {
+                    key: "activityName",
+                    prompt: "Activity Name",
+                    type: "string"
+                },
+                {
+                    key: "activityText",
+                    prompt: "Activity Text",
+                    type: "string"
+                },
+                {
+                    key: "streamURL",
+                    prompt: "Stream URL",
+                    type: "string"
+                }
+            ]
         }
         props = {
             ...props,
@@ -30,7 +47,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args) {
         // Default supported activities
         let activityNames = [
             "playing",
@@ -53,36 +70,39 @@ module.exports = class BotActivityCommand extends AdminCommand {
             console.log("Default activity:".padEnd(padding),activity)
             console.log("Sent activity:".padEnd(padding),'[' + this.inputData.args[0] + ']')
         }
-        if(this.inputData.args.length > 1) {
+        if(args.streamURL) {
             try {
-                let tryURL = this.inputData.args[1].replace("<","").replace(">","")
+                let tryURL = args.streamURL.replace("<","").replace(">","")
                 if(new URL(tryURL)) {
                     url = tryURL
-                    if(this.inputData.args.length > 2)  {
-                        msg = this.inputData.args.slice(2).join(" ")
+                    if(args.activityText)  {
+                        msg = args.activityText
                     }
                     if(this.DEV) {
                         console.log("Sent URL:".padEnd(padding),url)
                     }
                 }
             } catch {
-                msg = this.inputData.args.slice(1).join(" ")
+                // do nothing
             }
+        }
+        if(args.activityText) {
+            msg = args.activityText
         }
         if(this.DEV) {
             console.log("Sent msg:".padEnd(padding),msg)
         }
 
-        if(this.inputData.args && this.inputData.args[0]) {
+        if(args.activityName) {
             // If arg[0] sent, if it's a number, set it to one of the defined ones
-            if(!(isNaN(this.inputData.args[0].trim()))) {
-                let activityID = this.inputData.args[0].trim()
+            if(!(isNaN(args.activityName.trim()))) {
+                let activityID = args.activityName.trim()
                 if(activityID < activityNames.length) {
                     activity = activityNames[activityID]
                 }
-            } else if(this.inputData.args[0].trim() != "") {
+            } else if(args.activityName.trim() != "") {
                 // If arg[0] sent, if it's not a number, check to see if it's in the list
-                let activityName = this.inputData.args[0].trim()
+                let activityName = args.activityName.trim()
                 if(!(activityNames.includes(activityName.toLowerCase()))) {
                     // If it's not in the list, set to default
                     activity = defaultActivity
@@ -113,7 +133,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
             if(url != "") {
                 args.url = url
             }
-            client.user.setActivity(args) //you can change that to whatever you like
+            message.client.user.setActivity(args) //you can change that to whatever you like
             let desc = "Status changed succesfully: "
             desc += activity.charAt(0).toUpperCase() + activity.slice(1)
             if(activity == "listening") {
@@ -138,23 +158,23 @@ module.exports = class BotActivityCommand extends AdminCommand {
         const baseArgs = []
         const varArgs = [
           "",
-          "0",
-          "2",
-          "playing",
-          "listening",
-          "0 VALORANT",
-          "5 eSports",
-          "playing VALORANT",
-          "competing eSports",
-          "watching https://twitch.tv/tridentesports VALORANT",
-          "streaming https://twitch.tv/tridentesports VALORANT",
-          ""
+          { activityName: "0" },
+          { activityName: "2" },
+          { activityName: "playing" },
+          { activityName: "listening" },
+          { activityName: "0", activityText: "VALORANT" },
+          { activityName: "5", activityText: "eSports" },
+          { activityName: "playing", activityText: "VALORANT" },
+          { activityName: "competing", activityText: "eSports" },
+          { activityName: "watching", streamURL: "https://twitch.tv/tridentesports", activityText: "VALORANT" },
+          { activityName: "streaming", streamURL: "https://twitch.tv/tridentesports", activityText: "VALORANT" },
+          { activityName: "" }
         ]
 
         for(let added of varArgs) {
-            let args = baseArgs.concat([ ...added.split(" ") ])
+            let args = added
             dummy = new BotActivityCommand(client)
-            dummy.props.footer.msg = args.join(" | ")
+            dummy.props.footer.msg = typeof args === "object" && typeof args.join === "function" ? args.join(" | ") : '```' + JSON.stringify(args) + '```'
             await dummy.run(message, args)
         }
     }

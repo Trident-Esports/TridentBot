@@ -38,16 +38,19 @@ module.exports = class DepositCommand extends ATMCommand {
         let dummy = null
         const baseArgs = []
         const varArgs = [
-          "",
-          "0",
-          "-1",
-          "1"
+          {},
+          { amount:  "0" },
+          { amount: "-1" },
+          { amount:  "1" },
+          { amount:   0 },
+          { amount:  -1 },
+          { amount:   1 }
         ]
 
         for(let added of varArgs) {
-            let args = baseArgs.concat([ ...added.split(" ") ])
+            let args = added
             dummy = new DepositCommand(client)
-            dummy.props.footer.msg = args.join(" | ")
+            dummy.props.footer.msg = typeof args === "object" && typeof args.join === "function" ? args.join(" | ") : '```' + JSON.stringify(args) + '```'
             await dummy.run(message, args)
         }
     }

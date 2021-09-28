@@ -16,7 +16,7 @@ module.exports = class TestCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action() {
         if (this.inputData.loaded) {
             this.props.description = `<@${this.inputData.loaded.id}>`
         }

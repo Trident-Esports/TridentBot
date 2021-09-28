@@ -35,15 +35,15 @@ module.exports = class LeagueCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args) {
         let profile = {
             "team": {}
         }
         let handlerpath = "/league"
         let profiles = {}
-        let leagueGame = this.inputData.args[0] ? this.inputData.args[0]  : "valorant" // valorant
-        let leagueLevel = this.inputData.args[1] ? this.inputData.args[1] : "challenger" // challenger
-        let teamID = this.inputData.args[2] ? this.inputData.args[2]      : 262205 // 262205
+        let leagueGame  = args?.leagueGame  ? args.leagueGame   : "valorant" // valorant
+        let leagueLevel = args?.leagueLevel ? args.leagueLevel  : "challenger" // challenger
+        let teamID      = args?.teamID      ? args.teamID       : 262205 // 262205
 
         profiles.league = [ handlerpath + '/' + leagueGame + '/' + leagueLevel + '/' + teamID + '.json' ]
 
@@ -192,15 +192,15 @@ module.exports = class LeagueCommand extends VillainsCommand {
         const baseArgs = []
         const varArgs = [
           "",
-          "valorant",
-          "valorant open",
-          "valorant evolution 262656"
+          { leagueGame: "valorant" },
+          { leagueGame: "valorant", leagueLevel: "open" },
+          { leagueGame: "valorant", leagueLevel: "evolution", teamID: "262656" }
         ]
 
         for(let added of varArgs) {
-            let args = baseArgs.concat([ ...added.split(" ") ])
+            let args = added
             dummy = new LeagueCommand(client)
-            dummy.props.footer.msg = args.join(" | ")
+            dummy.props.footer.msg = typeof args === "object" && typeof args.join === "function" ? args.join(" | ") : '```' + JSON.stringify(args) + '```'
             await dummy.run(message, args)
         }
     }

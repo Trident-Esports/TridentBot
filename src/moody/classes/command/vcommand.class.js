@@ -151,9 +151,7 @@ module.exports = class VillainsCommand extends Command {
             }
         }
 
-        if (this?.props?.null && this.props.null) {
-            this.null = true
-        }
+        this.null = this?.props?.null
 
         let GLOBALS = null
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
@@ -289,7 +287,7 @@ module.exports = class VillainsCommand extends Command {
      * Get Channel object based on general key name
      * @param {CommandoMessage} message Message that called the command
      * @param {string} channelType Key for channel to get from database
-     * @returns {Promise.<Channel>} Found channel object
+     * @returns {Promise.<(Channel|null|undefined)>} Found channel object
      */
     async getChannel(message, channelType) {
         // Get botdev-defined list of channelIDs/channelNames
@@ -316,7 +314,7 @@ module.exports = class VillainsCommand extends Command {
             channel = message.guild.channels.cache.find(c => c.id === channelID);
         }
 
-        if (channel?.deleted && channel.deleted) {
+        if (channel?.deleted) {
             channel = null
         }
 
@@ -338,7 +336,7 @@ module.exports = class VillainsCommand extends Command {
 
         let foundEmoji = false
 
-        let cachedEmoji = emojis.cache.find(emoji => emoji.name === emojiName)
+        let cachedEmoji = emojis.cache.find(emoji => emoji.name.toLowerCase() === emojiName.toLowerCase())
         if (cachedEmoji?.available) {
             foundEmoji = true
             ret += `${cachedEmoji}`;
@@ -365,17 +363,20 @@ module.exports = class VillainsCommand extends Command {
 
     /**
      * Sanitizes input for Markdown
-     * @param {Array.<string>|string} input String to sanitize
-     * @returns {string}
+     * @param {(Array.<string> | Object.<string, string> | string)} input String to sanitize
+     * @returns {(Array.<string> | Object.<string, string> | string)}
      */
     checkJoin(input) {
-        return typeof input === "object" ? input.join(" ") : input
+        if (typeof input === "object" && typeof input.join === "function") {
+            input = input.join(" ")
+        }
+        return input
     }
 
     /**
      *
      * @param {CommandoMessage} message Message that called the command
-     * @param {Array.<string>} args Command-line args
+     * @param {(Array.<string> | Object.<string, string>)} args Command-line args
      * @param {Object.<string, string>} flags Flags for user management
      */
     async processArgs(message, args, flags = { user: "default", target: "invalid", bot: "invalid", search: "valid" }) {
@@ -469,7 +470,7 @@ module.exports = class VillainsCommand extends Command {
             }
             if (["default","required","optional"].includes(this.flags.bot)) {
                 // Do... something?
-            } else if (loaded?.bot && loaded.bot && (!(USERIDS?.botWhite.includes(loaded.id)))) {
+            } else if (loaded?.bot && (!(USERIDS?.botWhite.includes(loaded.id)))) {
                 // If Bot has been specified as in Invalid source
                 // Set Invalid because Bot
                 foundHandles.invalid = "bot"
@@ -533,7 +534,7 @@ module.exports = class VillainsCommand extends Command {
         }
 
         // Errors based on Invalid Source
-        if (foundHandles?.invalid && foundHandles.invalid != "") {
+        if (foundHandles?.invalid) {
             this.error = true
             foundHandles.title = { text: "Error" };
             switch (foundHandles.invalid) {
@@ -649,14 +650,11 @@ module.exports = class VillainsCommand extends Command {
      * Run the command
      *
      * @param {CommandoMessage} message Message that called the command
-     * @param {Array.<string>} args Command-line args
+     * @param {(Array.<string> | Object.<string, string>)} args Command-line args
      * @returns {Promise.<any>}
      */
     // @ts-ignore
     async run(message, args) {
-        //@ts-ignore
-        let client = typeof message === Client ? message : message.client
-
         // Process arguments
         let inputData = await this.processArgs(message, args, this.flags)
 
@@ -675,7 +673,7 @@ module.exports = class VillainsCommand extends Command {
         // If we just got an embed, let's check to see if it's a full page or slim page
         // Toss it in pages as a single page
         if(this.pages.length == 0) {
-            if(this.props?.full && this.props.full) {
+            if(this.props?.full) {
                 this.pages.push(new VillainsEmbed({...this.props}))
             } else {
                 this.pages.push(new SlimEmbed({...this.props}))
@@ -691,7 +689,7 @@ module.exports = class VillainsCommand extends Command {
         return message
     }
 
-    async test(client, message) {
+    async test(client, message, args) {
         console.log(`No test for ${message.content}`)
     }
 }

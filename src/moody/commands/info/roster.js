@@ -101,7 +101,7 @@ module.exports = class RosterCommand extends VillainsCommand {
             props.description = emoji
 
             // LPL Team URL
-            if (profile?.url && profile.url != "") {
+            if (profile?.url) {
                 props.caption.url = profile.url
             }
             let tourneyID = 0

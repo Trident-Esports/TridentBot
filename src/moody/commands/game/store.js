@@ -33,11 +33,7 @@ module.exports = class StoreCommand extends GameCommand {
             for (let [item, itemAttr] of Object.entries(value)) {
                 let names = [];
 
-                if (itemAttr?.stylized) {
-                    names.push(itemAttr.stylized)
-                } else {
-                    names.push(item.charAt(0).toUpperCase() + item.slice(1))
-                }
+                names.push(itemAttr?.stylized ? itemAttr.stylized : item.charAt(0).toUpperCase() + item.slice(1))
 
                 let items = [];
                 items.push(itemAttr.emoji);

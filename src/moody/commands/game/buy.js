@@ -16,19 +16,6 @@ module.exports = class BuyCommand extends ShopCommand {
                 "buy 🍌 2",
                 "buy banana",
                 "buy banana 2"
-            ],
-            args: [
-                {
-                    key: "item",
-                    prompt: "What do you want to buy?",
-                    type: "string"
-                },
-                {
-                    key: "quantity",
-                    prompt: "How many do you want to buy?",
-                    type: "integer",
-                    min: 0
-                }
             ]
         }
         let props = {
@@ -41,43 +28,46 @@ module.exports = class BuyCommand extends ShopCommand {
         )
     }
 
-    async test(client, message) {
+    async test(client, message, args) {
         let dummy = null
 
         dummy = new RefundCommand(client)
-        dummy.run(message, [
-          message.author.id,
-          ((
-            500 +
-            2000000 +
-            200 +
-            2000
-          ) * 3)
-        ])
+        dummy.run(message,
+          {
+            target: message.author,
+            amount:
+              ((
+                500 +
+                2000000 +
+                200 +
+                2000
+              ) * 3) + ""
+          }
+        )
 
         const baseArgs = []
         const varArgs = [
-          "",
-          "🍌",
-          "🚗",
-          "🧪",
-          "💉",
-          "0",
-          "1",
-          "2 🍌",
-          "2 🚗",
-          "2 🧪",
-          "2 💉",
-          "🍌 2",
-          "🚗 2",
-          "🧪 2",
-          "💉 2"
+          {item: ""},
+          {item: "🍌"},
+          {item: "🚗"},
+          {item: "🧪"},
+          {item: "💉"},
+          {quantity: "0"},
+          {quantity: "1"},
+          {quantity: "2", item: "🍌"},
+          {quantity: "2", item: "🚗"},
+          {quantity: "2", item: "🧪"},
+          {quantity: "2", item: "💉"},
+          {item: "🍌", quantity: "2"},
+          {item: "🚗", quantity: "2"},
+          {item: "🧪", quantity: "2"},
+          {item: "💉", quantity: "2"}
         ]
 
         for(let added of varArgs) {
-            let args = baseArgs.concat([ ...added.split(" ") ])
+            let args = added
             dummy = new BuyCommand(client)
-            dummy.props.footer.msg = args.join(" | ")
+            dummy.props.footer.msg = typeof args === "object" && typeof args.join === "function" ? args.join(" | ") : '```' + JSON.stringify(args) + '```'
             await dummy.run(message, args)
         }
     }

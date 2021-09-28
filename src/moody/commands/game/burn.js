@@ -2,33 +2,34 @@
 
 const ATMCommand = require('../../classes/command/atmcommand.class');
 
-module.exports = class WithdrawCommand extends ATMCommand {
+module.exports = class BurnCommand extends ATMCommand {
     constructor(client) {
         let comprops = {
-            name: 'withdraw',
-            aliases: ['wd','with'],
+            name: 'burn',
             group: 'game',
-            memberName: 'withdraw',
-            description: 'Withdraw Gold from your bank',
+            memberName: 'burn',
+            description: 'Burn Gold from your Wallet',
             guildOnly: true,
             args: [
                 {
                     key: "amount",
-                    prompt: "How much do you want to withdraw?",
-                    type: "integer"
+                    prompt: "How much do you want to burn?",
+                    type: "integer",
+                    min: 0
                 }
             ]
+        }
+        let props = {
+            flags: {
+                user: "default",
+                target: "invalid",
+                bot: "invalid"
+            }
         }
         super(
             client,
             {...comprops},
-            {
-                flags: {
-                    user: "default",
-                    target: "invalid",
-                    bot: "invalid"
-                }
-            }
+            {...props}
         )
     }
 
@@ -47,7 +48,7 @@ module.exports = class WithdrawCommand extends ATMCommand {
 
         for(let added of varArgs) {
             let args = added
-            dummy = new WithdrawCommand(client)
+            dummy = new BurnCommand(client)
             dummy.props.footer.msg = typeof args === "object" && typeof args.join === "function" ? args.join(" | ") : '```' + JSON.stringify(args) + '```'
             await dummy.run(message, args)
         }

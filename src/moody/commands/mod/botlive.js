@@ -11,23 +11,35 @@ module.exports = class BotLiveCommand extends AdminCommand {
             memberName: "botlive",
             description: "Make bot Go Live",
             guildOnly: true,
-            ownerOnly: true
+            ownerOnly: true,
+            args: [
+                {
+                    key: "twitchID",
+                    prompt: "Twitch Username",
+                    type: "string"
+                },
+                {
+                    key: "activityText",
+                    prompt: "Activity Text",
+                    type: "string"
+                }
+            ]
         }
         super(
             client,
-            {...comprops}
+            {...comprops},
+            {}
         )
     }
 
     async run(message, args) {
-        await this.processArgs(message, args, this.flags)
-        let twitchID = this.inputData.args.shift()
+        let twitchID = args.twitchID
         if(twitchID) {
-            args = [
-                "watching",
-                `https://twitch.tv/${twitchID}`,
-                this.inputData.args.join(" ")
-            ]
+            args = {
+                activityName: "watching",
+                streamURL: `https://twitch.tv/${twitchID}`,
+                activityText: args.activityText
+            }
             let botActivity = new BotActivityCommand(message.client)
             botActivity.run(message, args)
         } else {
@@ -42,16 +54,16 @@ module.exports = class BotLiveCommand extends AdminCommand {
         const baseArgs = []
         const varArgs = [
           "",
-          "villains_esc",
-          "tridentesports",
-          "villains_esc Rocket League",
-          "tridentesports VALORANT"
+          { twitchID: "villains_esc" },
+          { twitchID: "tridentesports" },
+          { twitchID: "villains_esc", activityText: "Rocket League" },
+          { twitchID: "tridentesports", activityText: "VALORANT" }
         ]
 
         for(let added of varArgs) {
-            let args = baseArgs.concat([ ...added.split(" ") ])
+            let args = added
             dummy = new BotLiveCommand(client)
-            dummy.props.footer.msg = args.join(" | ")
+            dummy.props.footer.msg = typeof args === "object" && typeof args.join === "function" ? args.join(" | ") : '```' + JSON.stringify(args) + '```'
             await dummy.run(message, args)
         }
     }

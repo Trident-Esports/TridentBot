@@ -65,7 +65,7 @@ module.exports = class AdminCommand extends VillainsCommand {
         this.#ROLES = ROLES
     }
 
-    async build(client, message) {
+    async build(message, args) {
         if (message) {
             this.ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
             let APPROVED_ROLES = this.ROLES["admin"]
@@ -84,6 +84,6 @@ module.exports = class AdminCommand extends VillainsCommand {
             }
         }
 
-        await this.action(client, message)
+        await this.action(message, args)
     }
 }

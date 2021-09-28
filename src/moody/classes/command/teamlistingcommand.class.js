@@ -20,6 +20,7 @@ module.exports = class TeamListingCommand extends VillainsCommand {
     async makeReq(emojis, props, params) {
         let req = dasu.req
         let embed = new VillainsEmbed({...props})
+        let command = this
 
         await req(params, async function (err, res, data) {
             try {
@@ -28,7 +29,7 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                 let noMatches = Object.entries(game_details).length == 0
 
                 let emojiKey = json?.gameID?.detected ? json.gameID.detected : json.game
-                let emoji = this ? await this.getEmoji(emojiKey, emojis) : ('[' + emojiKey + "] ")
+                let emoji = await command.getEmoji(emojiKey, emojis)
 
                 if (!noMatches) {
                     props.description = ""
@@ -69,11 +70,12 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                     embed.setDescription(props.description)
                 }
 
-                if (json?.team_avatar && json.team_avatar != "") {
+                if (json?.team_avatar) {
                     embed.setAuthor(props.title.text, "", props.title.url)
                     embed.setThumbnail(json.team_avatar)
                 } else {
-                    embed.setTitle(props.title.text, props.title.url)
+                    embed.setTitle(props.title.text)
+                    embed.setURL(props.title.url)
                 }
 
                 for (let [timestamp, match] of Object.entries(game_details)) {
@@ -97,10 +99,9 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                       value = ""
                     }
                     if (
-                        match?.discord?.status &&
                         match?.discord?.scoreKeys?.bySide &&
                         (
-                            match.discord.status == "incomplete" ||
+                            match?.discord?.status == "incomplete" ||
                             (
                                 match.discord.scoreKeys.bySide.home != 0 ||
                                 match.discord.scoreKeys.bySide.opponent != 0

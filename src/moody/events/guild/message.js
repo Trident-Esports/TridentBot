@@ -108,10 +108,11 @@ module.exports = class MessageEvent extends VillainsEvent {
                         // If it's a discord.js-style func, execute it
                         command.execute(message, args, cmd)
                     // Handled by Commando
-                    // } else if (typeof command.run === "function") {
-                    //     // If it's a a-djs-style func, run it
-                    //     let adjs = new command.constructor(client)
-                    //     adjs.run(message, args)
+                    } else if (typeof command.run === "function") {
+                        // If it's a a-djs-style func, reload it
+                        let reload = client.registry.commands.get("reload")
+                        reload = new reload.constructor(client)
+                        reload.run(message, { cmdOrGrp: command })
                     }
                 } else {
                     if (typeof command.test === "function") {

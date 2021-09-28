@@ -57,7 +57,7 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
 
                 let member = null
                 try {
-                    member = await reaction.message.guild.members.cache.get(user.id)
+                    member = await reaction.message.guild.members.find(user.id)
                 } catch (err) {
                     console.log(
                         `Message Reaction Add:`.padEnd(25, " ") +

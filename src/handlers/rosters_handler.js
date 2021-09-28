@@ -80,16 +80,16 @@ module.exports = (client) => {
 
             if(file.includes("teams")) {
                 let matchIDs = []
-                if (profile.team?.tourneyID) {
+                if (profile?.team?.tourneyID) {
                     matchIDs.push(profile.team.tourneyID)
                 }
-                if (profile.team?.teamID) {
+                if (profile?.team?.teamID) {
                     matchIDs.push(profile.team.teamID)
                 }
-                if (profile.team?.lpl?.tourneyID) {
+                if (profile?.team?.lpl?.tourneyID) {
                     matchIDs.push(profile.team.lpl.tourneyID)
                 }
-                if (profile.team?.lpl?.teamID) {
+                if (profile?.team?.lpl?.teamID) {
                     matchIDs.push(profile.team.lpl.teamID)
                 }
 

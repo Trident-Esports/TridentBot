@@ -20,8 +20,8 @@ module.exports = class BegCommand extends GameCommand {
         )
     }
 
-    async action(client, message) {
-        const loaded = this.inputData.loaded
+    async action(message, args) {
+        const loaded = message.author
 
         if (!(this.error)) {
             // Gold Reward: 1 - 50
