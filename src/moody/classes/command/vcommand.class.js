@@ -289,7 +289,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
     /**
      * Get Channel object based on general key name
-     * @param {Message} message Message that called the command
+     * @param {Message | any} message Message that called the command
      * @param {string} channelType Key for channel to get from database
      * @returns {Promise.<Channel>} Found channel object
      */
@@ -584,14 +584,14 @@ module.exports = class VillainsCommand extends BaseCommand {
     /**
      * Send pages to Discord Client
      *
-     * @param {Message} message Message that called the command
+     * @param {Message | any} message Message that called the command
      * @param {Array.<(VillainsEmbed | MessageEmbed)> | VillainsEmbed} pages Pages to send to client
      * @param {Array.<string>} emojis Emoji for pagination
      * @param {number} timeout Timeout for disabling pagination
      * @param {boolean} forcepages Force pagination
      */
     async send(message, pages = [new VillainsEmbed({"description":"No pages sent!"})], emojis = ["◀️", "▶️"], timeout = 600000, forcepages = false) {
-        if (!this.channel) {
+        if ((!this.channel) && message) {
             this.channel = message.channel
         }
         // If pages are being forced, set defaults
