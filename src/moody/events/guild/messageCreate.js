@@ -4,9 +4,9 @@ const VillainsEmbed = require('../../classes/embed/vembed.class')
 const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
 
-module.exports = class MessageEvent extends VillainsEvent {
+module.exports = class MessageCreateEvent extends VillainsEvent {
     constructor() {
-        super('message')
+        super('messageCreate')
     }
 
     async run(handler, message) {

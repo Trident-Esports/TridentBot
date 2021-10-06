@@ -26,7 +26,7 @@ module.exports = class PurgeCommand extends BaseCommand {
         let [ min, max ] = [ 1, 100 ]
         let duration = ""
 
-        if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
+        if(!(await message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name))) ) {
             this.error = true
             props.title.text = "Error"
             props.description = "Sorry, only admins can run this command. 😔"

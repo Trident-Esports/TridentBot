@@ -22,7 +22,7 @@ module.exports = {
         try {
             GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
         } catch(err) {
-            console.log("Cooldowns: PROFILE manifest not found!")
+            console.log("🔴Cooldowns: PROFILE manifest not found!")
             process.exit(1)
         }
         let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))

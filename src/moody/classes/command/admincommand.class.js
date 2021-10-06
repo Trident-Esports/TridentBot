@@ -74,7 +74,7 @@ module.exports = class AdminCommand extends VillainsCommand {
             }
 
             // Bail if member doesn't have Approved Roles
-            if(!message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name)) ) {
+            if(!(await message.member.roles.cache.some(r=>APPROVED_ROLES.includes(r.name))) ) {
                 this.error = true
                 this.props.description = this.errors.adminOnly
                 return

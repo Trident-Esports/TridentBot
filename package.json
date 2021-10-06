@@ -10,6 +10,7 @@
   "main": "./src/main.js",
   "dependencies": {
     "a-djs-handler": "<1.1.0",
+    "ascii-table": "^0.0.9",
     "better-npm-audit": "^3.3.0",
     "dasu": "^0.4.2",
     "discord-xp": "^1.1.16",
@@ -20,7 +21,9 @@
     "graphql": "^15.5.3",
     "graphql-request": "^3.5.0",
     "mongoose": "<6.0.0",
+    "node": "^16.10.0",
     "pm2": "^5.1.1",
+    "replace-in-file": "^6.2.0",
     "shelljs": "^0.8.4",
     "spotify-url-info": "^2.2.3",
     "timezone": "^1.0.23",

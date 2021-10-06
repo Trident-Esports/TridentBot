@@ -31,14 +31,14 @@ module.exports = class ShutDownCommand extends AdminCommand {
             let props = this.props
             pm2.connect(function(err) {
                 if (err) {
-                    console.log("PM2: Error Connecting!")
+                    console.log("🔴PM2: Error Connecting!")
                     console.log(err)
                     process.exit(2)
                 }
 
                 pm2.list(async (err, list) => {
                     if (err) {
-                        console.log("PM2: Error Listing Processes!")
+                        console.log("🔴PM2: Error Listing Processes!")
                     }
 
                     for(let [, procItem] of Object.entries(list)) {

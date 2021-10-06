@@ -21,5 +21,4 @@ module.exports = (client) => {
             continue;
         }
     }
-    console.log("Registered Game Commands.")
 }

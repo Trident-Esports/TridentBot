@@ -166,7 +166,7 @@ module.exports = class VillainsCommand extends BaseCommand {
                 GLOBALS.profiles[GLOBALS.profile]:
                 defaults
         } catch(err) {
-            console.log("VCommand: PROFILE manifest not found!")
+            console.log("🔴VCommand: PROFILE manifest not found!")
             process.exit(1)
         }
         this.DEV = GLOBALS.DEV
@@ -289,7 +289,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
     /**
      * Get Channel object based on general key name
-     * @param {Message} message Message that called the command
+     * @param {Message | any} message Message that called the command
      * @param {string} channelType Key for channel to get from database
      * @returns {Promise.<Channel>} Found channel object
      */
@@ -312,10 +312,10 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         // If the ID is not a number, search for a named channel
         if (typeof channelID == "string") {
-            channel = message.guild.channels.cache.find(c => c.name === channelID);
+            channel = await message.guild.channels.cache.find(c => c.name === channelID);
         } else {
             // Else, search for a numbered channel
-            channel = message.guild.channels.cache.find(c => c.id === channelID);
+            channel = await message.guild.channels.cache.find(c => c.id === channelID);
         }
 
         return channel
@@ -336,7 +336,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         let foundEmoji = false
 
-        let cachedEmoji = emojis.cache.find(emoji => emoji.name === emojiName)
+        let cachedEmoji = await emojis.cache.find(emoji => emoji.name === emojiName)
         if (cachedEmoji?.available) {
             foundEmoji = true
             ret += `${cachedEmoji}`;
@@ -584,14 +584,14 @@ module.exports = class VillainsCommand extends BaseCommand {
     /**
      * Send pages to Discord Client
      *
-     * @param {Message} message Message that called the command
+     * @param {Message | any} message Message that called the command
      * @param {Array.<(VillainsEmbed | MessageEmbed)> | VillainsEmbed} pages Pages to send to client
      * @param {Array.<string>} emojis Emoji for pagination
      * @param {number} timeout Timeout for disabling pagination
      * @param {boolean} forcepages Force pagination
      */
     async send(message, pages = [new VillainsEmbed({"description":"No pages sent!"})], emojis = ["◀️", "▶️"], timeout = 600000, forcepages = false) {
-        if (!this.channel) {
+        if ((!this.channel) && message) {
             this.channel = message.channel
         }
         // If pages are being forced, set defaults

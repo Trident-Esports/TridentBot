@@ -1,6 +1,7 @@
 //@ts-check
 
 const AdminCommand = require('../../classes/command/admincommand.class');
+const AsciiTable = require('ascii-table');
 
 // AdminCommand
 module.exports = class BotActivityCommand extends AdminCommand {
@@ -45,9 +46,11 @@ module.exports = class BotActivityCommand extends AdminCommand {
 
         let padding = 20
 
+        const Table = new AsciiTable("", {})
+
         if(this.DEV) {
-            console.log("Default activity:".padEnd(padding),activity)
-            console.log("Sent activity:".padEnd(padding),'[' + this.inputData.args[0] + ']')
+            Table.addRow("Default activity",activity)
+            Table.addRow("Sent activity",'[' + this.inputData.args[0] + ']')
         }
         if(this.inputData.args.length > 1) {
             try {
@@ -58,7 +61,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
                         msg = this.inputData.args.slice(2).join(" ")
                     }
                     if(this.DEV) {
-                        console.log("Sent URL:".padEnd(padding),url)
+                        Table.addRow("Sent URL",url)
                     }
                 }
             } catch {
@@ -66,7 +69,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
             }
         }
         if(this.DEV) {
-            console.log("Sent msg:".padEnd(padding),msg)
+            Table.addRow("Sent msg",msg)
         }
 
         if(this.inputData.args && this.inputData.args[0]) {
@@ -98,7 +101,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
         }
 
         if(this.DEV) {
-            console.log("New activity:".padEnd(padding),activity.toUpperCase())
+            Table.addRow("New activity",activity.toUpperCase())
         }
 
         if (activity !== "") {
@@ -118,8 +121,8 @@ module.exports = class BotActivityCommand extends AdminCommand {
                 desc += " in"
             }
             if(this.DEV) {
-                console.log("New Message:".padEnd(padding),desc.substr(desc.indexOf(':') + 1).trim() + " " + args.name)
-                console.log()
+                Table.addRow("New Message",desc.substr(desc.indexOf(':') + 1).trim() + " " + args.name)
+                console.log(Table.toString())
             }
             desc += " "
             desc += "**"

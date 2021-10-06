@@ -1,6 +1,7 @@
 //@ts-check
 
 const VillainsEvent = require('../../classes/event/vevent.class')
+const AsciiTable = require('ascii-table')
 const fs = require('fs')
 
 // Member Join
@@ -9,34 +10,46 @@ module.exports = class GuildMemberRemoveEvent extends VillainsEvent {
         super('guildMemberRemove')
     }
 
-    async run(handler, member) {
+    async run(client, member) {
+        const Table = new AsciiTable("", {})
         if (!(fs.existsSync("./src/dbs/" + member.guild.id))) {
-            console.log("Guild Member Remove: Guild ID Profiles:",member.guild.id,"not found!")
+            Table.addRow(
+                `Guild Member Remove`,
+                `Guild Profile for '${member.guild.name}' (ID:${member.guild.id}) not found!`
+            )
+            console.log(Table.toString())
             return
         }
 
         const channel = await this.getChannel(member, "welcome")
 
-        let consolePad = 20
-        console.log("---")
-        console.log("<<-MEMBER LEAVE---")
-        console.log(
-            "Guild:".padEnd(consolePad),
-            `${member.guild.name} (ID:${member.guild.id})`
+        Table.setTitle("<<-MEMBER LEAVE---🔴").setTitleAlignLeft()
+            .addRow(
+                "Guild",
+                `${member.guild.name}`,
+                `(ID:${member.guild.id})`
         )
-        console.log(
-            "Member:".padEnd(consolePad),
-            `${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`
+            .addRow(
+                "Member",
+                `${member.user.username}#${member.user.discriminator}`,
+                `(ID:${member.user.id})`
         )
-        console.log(
-            "Leave Channel:".padEnd(consolePad),
-            (
-              channel
-              ?
-                `Yes (ID:${channel.id})` :
-                "No"
-            )
+            .addRow(
+                "Leave Channel",
+                (
+                  channel
+                  ?
+                    `Yes` :
+                    "No"
+                ),
+                (
+                  channel
+                  ?
+                    `(ID:${channel.id})` :
+                    ""
+                )
         )
+        console.log(Table.toString())
 
         if (channel) {
             try {
