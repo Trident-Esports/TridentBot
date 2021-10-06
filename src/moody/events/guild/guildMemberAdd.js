@@ -2,10 +2,8 @@
 
 const VillainsEmbed = require('../../classes/embed/vembed.class')
 const VillainsEvent = require('../../classes/event/vevent.class')
+const AsciiTable = require('ascii-table')
 const fs = require('fs')
-
-//TODO: Move getChannel() to VillainsEvent
-//TODO: Copy getChannel() to VillainsCommand
 
 // Member Join
 module.exports = class GuildMemberAddEvent extends VillainsEvent {
@@ -14,9 +12,14 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
         this.channelName = "welcome"
     }
 
-    async run(handler, member) {
+    async run(client, member) {
+        const Table = new AsciiTable("", {})
         if (!(fs.existsSync("./src/dbs/" + member.guild.id))) {
-            console.log("Guild Member Add: Guild ID: Profiles",member.guild.id,"not found!")
+            Table.addRow(
+                `Guild Member Add`,
+                `Guild Profile for '${member.guild.name}' (ID:${member.guild.id}) not found!`
+            )
+            console.log(Table.toString())
             return
         }
         const channel = await this.getChannel(member, "welcome")
@@ -25,24 +28,24 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
         let ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + member.guild.id + "/roles.json", "utf8"))
         // Add Minion Role
         let welcomeRole = ROLES.member;
-        welcomeRole = member.guild.roles.cache.find(role => role.name === welcomeRole);
+        welcomeRole = await member.guild.roles.cache.find(role => role.name === welcomeRole);
         if (welcomeRole?.id) {
             member.roles.add(welcomeRole.id);
         }
 
-        let consolePad = 20
-        console.log("---")
-        console.log("---MEMBER JOIN->>")
-        console.log(
-            "Guild:".padEnd(consolePad),
-            `${member.guild.name} (ID:${member.guild.id})`
+        Table.setTitle("---MEMBER JOIN->>🟢").setTitleAlignLeft()
+            .addRow(
+                "Guild",
+                `${member.guild.name}`,
+                `(ID:${member.guild.id})`
         )
-        console.log(
-            "Member:".padEnd(consolePad),
-            `${member.user.username}#${member.user.discriminator} (ID:${member.user.id})`
+            .addRow(
+                "Member",
+                `${member.user.username}#${member.user.discriminator}`,
+                `(ID:${member.user.id})`
         )
-        console.log(
-            "Member Role:".padEnd(consolePad),
+            .addRow(
+            "Member Role",
             (
               welcomeRole?.id ?
                 "Exists" :
@@ -50,40 +53,72 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
             ),
             `(Str:${ROLES.member}, ID:${welcomeRole?.id ? welcomeRole.id : "???"})`
         )
-        console.log(
-            "Welcome Channel:".padEnd(consolePad),
+            .addRow(
+                "Welcome Channel",
+                (
+                  channel
+                  ?
+                    `Yes` :
+                    "No"
+                ),
+                (
+                  channel
+                  ?
+                    `(ID:${channel.id})` :
+                    ""
+                )
+        )
+
+        if (!(channel)) {
+            console.log(Table.toString())
+            return
+        }
+
+        let RULES_CHANNEL = await this.getChannel(member, "rules")
+
+        Table.addRow(
+            "Rules Channel",
             (
-              channel
+              RULES_CHANNEL
               ?
-                `Yes (ID:${channel.id})` :
+                `Yes` :
                 "No"
+            ),
+            (
+              RULES_CHANNEL
+              ?
+                `(ID:${RULES_CHANNEL.id})` :
+                ""
             )
         )
 
-        if (channel) {
-            let RULES_CHANNEL = await this.getChannel(member, "rules")
+        if (!(RULES_CHANNEL)) {
+            console.log(Table.toString())
+            return
+        }
 
-            try {
-                let rules = [
-                    // Put into guild profile document
-                    // <@${member.user.id}> -> %%user%%
-                    // ${member.guild.name} -> %%guild%%
-                    // ${RULES_CHANNEL.toString()} -> %%rulesChannel%%
-                    `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
-                    "",
-                    `Please Read and Accept our ${RULES_CHANNEL.toString()}. This will provide access to the server.`,
-                ]
-                let props = {
-                    title: `Welcome to ${member.guild.name}`,
-                    description: rules.join("\n")
-                }
+        console.log(Table.toString())
 
-                // @ts-ignore
-                // await channel.send({ embeds: [embed] }); // discord.js v13
-                await channel.send(new VillainsEmbed({...props}));
-            } catch (err) {
-                console.log(err);
+        try {
+            let rules = [
+                // Put into guild profile document
+                // <@${member.user.id}> -> %%user%%
+                // ${member.guild.name} -> %%guild%%
+                // ${RULES_CHANNEL.toString()} -> %%rulesChannel%%
+                `Welcome <@${member.user.id}> to **${member.guild.name}**.`,
+                "",
+                `Please Read and Accept our ${RULES_CHANNEL.toString()}. This will provide access to the server.`,
+            ]
+            let props = {
+                title: `Welcome to ${member.guild.name}`,
+                description: rules.join("\n")
             }
+
+            // @ts-ignore
+            // await channel.send({ embeds: [embed] }); // discord.js v13
+            await channel.send(new VillainsEmbed({...props}));
+        } catch (err) {
+            console.log(err);
         }
     }
 }

@@ -23,10 +23,22 @@ module.exports = class ReadyEvent extends VillainsEvent {
                 GLOBALS.profiles[GLOBALS.profile]:
                 defaults
         } catch(err) {
-            console.log("Ready Event: PROFILE manifest not found!")
+            console.log("🔴Ready Event: PROFILE manifest not found!")
             process.exit(1)
         }
         let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
+        let BRANCH = ""
+        try {
+            // @ts-ignore
+            BRANCH = fs.readFileSync("./.git/HEAD","utf8").trim().match(/(?:\/)([^\/]*)$/)
+            if (BRANCH && (BRANCH.length > 0)) {
+                // @ts-ignore
+                BRANCH = BRANCH[1]
+            }
+        } catch (err) {
+            console.log(err)
+        }
+
         let DEV = GLOBALS.DEV
 
         let props = {}
@@ -36,12 +48,14 @@ module.exports = class ReadyEvent extends VillainsEvent {
             `${handler.client.user.username} v${PACKAGE.version} is Online!`
         ]
         if (DEV) {
+            let profileName = `${GLOBALS.name}-<${BRANCH}>`
             output.push(
-                `!!! DEV MODE (${GLOBALS.name}) ENABLED !!!`
+                `!!! DEV MODE (${profileName}) ENABLED !!!`
             )
         } else {
+            let profileName = `${handler.client.user.username}-<${BRANCH}>`
             output.push(
-                `\*\*\* PRODUCTION MODE (${handler.client.user.username}) ENABLED \*\*\*`
+                `\*\*\* PRODUCTION MODE (${profileName}) ENABLED \*\*\*`
             )
         }
         output.push("Mongoose warning about collection.ensureIndex will be thrown.")
@@ -57,7 +71,8 @@ module.exports = class ReadyEvent extends VillainsEvent {
                     GLOBALS.name
             )
             .replace(/\*/g, "🟩")
-            .replace(/!/g, "🟧"),
+            .replace(/!/g, "🟧")
+            .replace(`<${BRANCH}>`,`\`${BRANCH}\``),
             output[4].replace(
                 "Bot",
                 `<@${handler.client.user.id}>`

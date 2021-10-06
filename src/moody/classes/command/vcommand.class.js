@@ -166,7 +166,7 @@ module.exports = class VillainsCommand extends BaseCommand {
                 GLOBALS.profiles[GLOBALS.profile]:
                 defaults
         } catch(err) {
-            console.log("VCommand: PROFILE manifest not found!")
+            console.log("🔴VCommand: PROFILE manifest not found!")
             process.exit(1)
         }
         this.DEV = GLOBALS.DEV
@@ -312,10 +312,10 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         // If the ID is not a number, search for a named channel
         if (typeof channelID == "string") {
-            channel = message.guild.channels.cache.find(c => c.name === channelID);
+            channel = await message.guild.channels.cache.find(c => c.name === channelID);
         } else {
             // Else, search for a numbered channel
-            channel = message.guild.channels.cache.find(c => c.id === channelID);
+            channel = await message.guild.channels.cache.find(c => c.id === channelID);
         }
 
         return channel
@@ -336,7 +336,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         let foundEmoji = false
 
-        let cachedEmoji = emojis.cache.find(emoji => emoji.name === emojiName)
+        let cachedEmoji = await emojis.cache.find(emoji => emoji.name === emojiName)
         if (cachedEmoji?.available) {
             foundEmoji = true
             ret += `${cachedEmoji}`;

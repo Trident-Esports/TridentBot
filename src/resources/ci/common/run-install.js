@@ -17,7 +17,7 @@ console.log()
 
 console.log("NPM Install")
 console.log("-----------")
-shell.exec("npm install")
+shell.exec("npm i")
 console.log()
 
 shell.exec("node ./src/resources/ci/common/npm/outdated.js")

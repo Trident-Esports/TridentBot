@@ -37,10 +37,10 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
 
         // If the ID is not a number, search for a named channel
         if (isNaN(channelID)) {
-            channel = message.guild.channels.cache.find(c => c.name === channelID);
+            channel = await message.guild.channels.cache.find(c => c.name === channelID);
         } else {
             // Else, search for a numbered channel
-            channel = message.guild.channels.cache.find(c => c.id === channelID);
+            channel = await message.guild.channels.cache.find(c => c.id === channelID);
         }
 
         return channel
@@ -50,7 +50,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
         let ROLES = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/roles.json", "utf8"))
         let APPROVED_ROLES = ROLES["admin"].concat(ROLES["mod"])
 
-        if (!message.member.roles.cache.some(r => APPROVED_ROLES.includes(r.name))) {
+        if (!(await message.member.roles.cache.some(r => APPROVED_ROLES.includes(r.name)))) {
             this.error = true
             this.props.title.text = "Error"
             this.props.description = this.errors.modOnly
@@ -205,7 +205,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                                                 user.send(embed)
                                             } catch (e) {
                                                 if (e instanceof DiscordAPIError) {
-                                                    console.log(`Can't send message to ${user.username}#${user.discriminator} (ID:${user.id})`)
+                                                    console.log(`🟡Can't send message to ${user.username}#${user.discriminator} (ID:${user.id})`)
                                                 }
                                             }
                                         }

@@ -6,7 +6,7 @@ let GLOBALS = null
 try {
     GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
 } catch(err) {
-    console.log("Discord Invite: PROFILE manifest not found!")
+    console.log("🔴Discord Invite: PROFILE manifest not found!")
     process.exit(1)
 }
 

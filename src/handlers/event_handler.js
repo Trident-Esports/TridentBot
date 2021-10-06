@@ -17,7 +17,6 @@ module.exports = (client, Discord) => {
                 // Register Event
                 client.on(event_name, event.bind(null, Discord, client));
             }
-            console.log("Registered " + dirs.substr(0,1).toUpperCase() + dirs.slice(1) + " Events.")
         }
     }
 

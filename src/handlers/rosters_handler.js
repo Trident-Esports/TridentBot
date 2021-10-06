@@ -40,7 +40,7 @@ module.exports = (client) => {
         let profile = JSON.parse(fs.readFileSync(file, "utf8"))
 
         if (!profile) {
-            console.log(`Failed to get roster: ${file}`)
+            console.log(`🟡Failed to get roster: ${file}`)
         }
 
         if (profile?.aliases) {
@@ -152,7 +152,7 @@ module.exports = (client) => {
                     for (let teamID in teams) {
                         if (teams.hasOwnProperty(teamID)) {
                             let teamName = teams[teamID].name;
-                            let cachedEmoji = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+                            let cachedEmoji = await message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
                             if (cachedEmoji?.available) {
                                 desc += `${cachedEmoji}`;
                             }
@@ -182,5 +182,4 @@ module.exports = (client) => {
         }
         client.commands.set(teamsCommand.name, teamsCommand);
     }
-    console.log("Registered Roster Commands.")
 }

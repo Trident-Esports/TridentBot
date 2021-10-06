@@ -38,8 +38,8 @@ module.exports = class UnmuteCommand extends IRCVoiceCommand {
 
         if(! this.DEV) {
             // Do the thing
-            let mainRole = message.guild.roles.cache.find(role => role.name === MEMBER_ROLE);
-            let muteRole = message.guild.roles.cache.find(role => role.name === MUTED_ROLE);
+            let mainRole = await message.guild.roles.cache.find(role => role.name === MEMBER_ROLE);
+            let muteRole = await message.guild.roles.cache.find(role => role.name === MUTED_ROLE);
 
             if (!mainRole) {
                 this.error = true

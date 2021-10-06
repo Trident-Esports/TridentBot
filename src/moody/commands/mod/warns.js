@@ -36,7 +36,7 @@ module.exports = class WarnsCommand extends ModCommand {
                     props.description.push(`***<@${user.id}>'s warns***`)
                     for (let [i, warn] of Object.entries(data.content)) {
                         props.description.push(
-                            `\`${i + 1}\` | Moderator: <@${message.guild.members.cache.get(warn.moderator).user.id}>`,
+                            `\`${i + 1}\` | Moderator: <@${await message.guild.members.cache.get(warn.moderator).user.id}>`,
                             `Reason: ${warn.reason}`
                         )
                     }
