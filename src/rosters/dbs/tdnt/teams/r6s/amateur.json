@@ -1,6 +1,6 @@
 {
   "stripe": "default",
-  "title": "R6S Amateur Roster",
+  "title": "R6S Evolution Roster",
   "aliases": ["r6ar"],
   "team": {
     "lpl": {
@@ -8,7 +8,7 @@
       "avatar": "https://e19fe790184bd05485e1-f6e625d8c52aaa8372503c72fea94fbb.ssl.cf1.rackcdn.com/321085_t1_cgau-19k-o9-logo1wox-thumb.png"
     }
   },
-  "#url": "#rosters: R6S Amateur",
+  "#url": "#rosters: R6S Evolution",
   "members": {
     "captain": {
       "title": "Captain",
