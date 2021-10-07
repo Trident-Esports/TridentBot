@@ -95,7 +95,11 @@ module.exports = class MessageReactionRemoveEvent extends VillainsEvent {
                 )
                 console.log(Table.toString())
             }
-        } else if (reaction.message.channel.name.includes("test") && user.tag) {
+        } else if (
+            reaction.message.channel.name.includes("test") &&
+            user.tag &&
+            (!(["◀️","▶️"].includes(reaction.emoji)))
+        ) {
             const Table = new AsciiTable(
                     `🔴Message Reaction Remove🔴`,
                     {}
