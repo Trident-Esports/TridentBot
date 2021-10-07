@@ -1,7 +1,7 @@
 {
   "stripe": "default",
   "title": "R6S Evolution Roster",
-  "aliases": ["r6ar"],
+  "aliases": ["r6er"],
   "team": {
     "lpl": {
       "teamID": "262468",
