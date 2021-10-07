@@ -1,5 +1,5 @@
 {
-  "prefix": "vln ",
+  "prefix": "mln ",
   "stripe": "#007FFF",
   "discord": {
       "invites": {
@@ -13,8 +13,8 @@
       "permissions": "8589934591"
   },
   "footer": {
-    "image": "https://cdn.discordapp.com/icons/745409743593406634/76ca5aead5a6fcf3dc8b82f2fd8cdc72.png?size=2048",
+    "image": "https://cdn.discordapp.com/avatars/884010683723837440/de87f34bf8187845aa490233e08b89bc.png?size=2048",
     "msg": "This bot was Created by Trident Dev Team"
   },
-  "thumbnail": "https://cdn.discordapp.com/icons/745409743593406634/76ca5aead5a6fcf3dc8b82f2fd8cdc72.png?size=2048"
+  "thumbnail": "https://cdn.discordapp.com/avatars/884010683723837440/de87f34bf8187845aa490233e08b89bc.png?size=2048"
 }
