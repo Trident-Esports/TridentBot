@@ -97,7 +97,11 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
                 )
                 console.log(Table.toString())
             }
-        } else if (reaction.message.channel.name.includes("test") && user.tag) {
+        } else if (
+            reaction.message.channel.name.includes("test") &&
+            user.tag &&
+            (!(reaction.emoji.includes("◀️","▶️")))
+        ) {
             const Table = new AsciiTable(
                     `🟢Message Reaction Add🟢`,
                     {}
