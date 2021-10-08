@@ -21,6 +21,7 @@
   "scripts": {
     "audit": "node ./src/resources/ci/common/run-audit.js",
     "local-install": "node ./src/resources/ci/common/run-install.js",
+    "menu": "node ./src/resources/ci/common/menu.js",
     "run": "node ./run.js",
     "update": "node ./src/resources/ci/common/run-update.js",
     "ver": "node ./src/resources/ci/common/ver.js"

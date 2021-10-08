@@ -11,7 +11,7 @@ module.exports = class GuildMemberRemoveEvent extends VillainsEvent {
         super(context)
     }
 
-    async run(client, member) {
+    async run(member) {
         const Table = new AsciiTable("", {})
         if (!(fs.existsSync("./src/dbs/" + member.guild.id))) {
             Table.addRow(

@@ -3,7 +3,7 @@
 const VillainsCommand = require('../../classes/command/vcommand.class');
 
 module.exports = class EmitterCommand extends VillainsCommand {
-    constructor() {
+    constructor(context) {
         let comprops = {
             name: "emitter",
             category: "diagnostic",
@@ -12,12 +12,14 @@ module.exports = class EmitterCommand extends VillainsCommand {
         let props = {
         }
         super(
+            context,
             {...comprops},
             {...props}
         )
     }
 
-    async action(client, message) {
+    async action(message, args) {
+        const client = message. client
         const event = this.inputData.args[0]
         const member = await message.guild.members.fetch(message.author.id)
 

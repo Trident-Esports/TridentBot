@@ -6,7 +6,7 @@ const VillainsEvent = require('../../classes/event/vevent.class')
 const fs = require('fs')
 
 module.exports = class ReadyEvent extends VillainsEvent {
-    // messageReactionReady
+    // ready
     constructor(context) {
         super(
             context,
@@ -56,16 +56,17 @@ module.exports = class ReadyEvent extends VillainsEvent {
         if (DEV) {
             let profileName = `${GLOBALS.name}-<${BRANCH}>`
             output.push(
-                `!!! DEV MODE (${profileName}) ENABLED !!!`
+                `🟧🟧🟧 [${client.options.defaultPrefix.trim()}] DEV MODE (${profileName}) ENABLED [${client.options.defaultPrefix.trim()}] 🟧🟧🟧`
             )
         } else {
             let profileName = `${client.user.username}-<${BRANCH}>`
             output.push(
-                `\*\*\* PRODUCTION MODE (${profileName}) ENABLED \*\*\*`
+                `🟩🟩🟩 [${client.options.defaultPrefix.trim()}] PRODUCTION MODE (${profileName}) ENABLED [${client.options.defaultPrefix.trim()}] 🟩🟩🟩`
             )
         }
-        output.push("Mongoose warning about collection.ensureIndex will be thrown.")
-        output.push("Bot is Ready!")
+        // output.push("Mongoose warning about 'collection.ensureIndex' will be thrown.")
+        output.push("Discord.js warning about 'message' event will be thrown.")
+        output.push("🔱 Bot is Ready! 🔱")
         output.push("")
 
         props.title = { text: output[1], url: "https://github.com/Trident-Esports/TridentBot" }
@@ -76,9 +77,11 @@ module.exports = class ReadyEvent extends VillainsEvent {
                     `<@${GLOBALS.discord.user.id}>` :
                     GLOBALS.name
             )
-            .replace(/\*/g, "🟩")
-            .replace(/!/g, "🟧")
-            .replace(`<${BRANCH}>`,`\`${BRANCH}\``),
+            // .replace(/\*/g, "🟩")
+            // .replace(/!/g, "🟧")
+            .replace(`<${BRANCH}>`,`\`${BRANCH}\``)
+            // @ts-ignore
+            .replaceAll(`[${client.options.defaultPrefix.trim()}]`, `[\`${client.options.defaultPrefix.trim()}\`]`),
             output[4].replace(
                 "Bot",
                 `<@${client.user.id}>`
@@ -89,6 +92,18 @@ module.exports = class ReadyEvent extends VillainsEvent {
 
         let embed = null
         for (let [ guildID, guildData ] of client.guilds.cache) {
+            let clientMember = await guildData.members.fetch(client.user.id)
+
+            if (clientMember) {
+                let nick = clientMember?.nickname || clientMember.user.username
+                if (!(nick.includes(`[${client.options.defaultPrefix.trim()}]`))) {
+                    nick = `[${client.options.defaultPrefix.trim()}] ${nick}`
+                }
+                if (nick != (clientMember?.nickname || clientMember.user.username)) {
+                    clientMember.setNickname(nick)
+                }
+            }
+
             let dummyMsg = { "guild": guildData }
             const channel = await this.getChannel(dummyMsg, "bot-console")
             if (channel) {

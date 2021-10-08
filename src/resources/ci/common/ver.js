@@ -18,7 +18,7 @@ let data = {
     }
 }
 
-const Table = new AsciiTable(`${PACKAGE.name}`, {})
+const Table = new AsciiTable(`🔱 ${PACKAGE.name} 🔱`, {})
     .setHeading(
         "App",
         "Current",

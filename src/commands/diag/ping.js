@@ -20,7 +20,7 @@ module.exports = class PingCommand extends VillainsCommand {
         )
     }
 
-    async test(client, message, args) {
-        this.run(client, message, args)
+    async test(message, cmd) {
+        this.run(message, [], cmd)
     }
 }

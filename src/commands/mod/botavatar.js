@@ -24,7 +24,7 @@ module.exports = class BotAvatarCommand extends AdminCommand {
         )
     }
 
-    async action(message, args) {
+    async action(message, cmd) {
         let url = this.inputData.args[0].replace("<","").replace(">","")
         this.props.image = url
         try {

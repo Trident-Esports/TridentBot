@@ -98,9 +98,7 @@ module.exports = class GuildStatusCommand extends VillainsCommand {
         )
     }
 
-    async test(client, message) {
-        let dummy = null
-        dummy = new GuildStatusCommand()
-        dummy.run(client, message, [])
+    async test(message, cmd) {
+        this.run(message, [], cmd)
     }
 }

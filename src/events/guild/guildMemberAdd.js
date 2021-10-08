@@ -13,7 +13,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
         this.channelName = "welcome"
     }
 
-    async run(client, member) {
+    async run(member) {
         const Table = new AsciiTable("", {})
         if (!(fs.existsSync("./src/dbs/" + member.guild.id))) {
             Table.addRow(
@@ -117,8 +117,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
             }
 
             // @ts-ignore
-            // await channel.send({ embeds: [embed] }); // discord.js v13
-            await channel.send(new VillainsEmbed({...props}));
+            await channel.send({ embeds: [ new VillainsEmbed({...props}) ] });
         } catch (err) {
             console.log(err);
         }

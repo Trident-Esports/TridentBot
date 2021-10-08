@@ -62,9 +62,7 @@ module.exports = class UptimeCommand extends VillainsCommand {
         ]
     }
 
-    async test(client, message) {
-        let dummy = null
-        dummy = new UptimeCommand()
-        dummy.run(client, message, [])
+    async test(message, cmd) {
+        this.run(message, [], cmd)
     }
 }

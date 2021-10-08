@@ -133,7 +133,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -153,9 +153,9 @@ module.exports = class BotActivityCommand extends AdminCommand {
 
         for(let added of varArgs) {
             let args = baseArgs.concat([ ...added.split(" ") ])
-            dummy = new BotActivityCommand()
+            dummy = new BotActivityCommand(message.client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args)
+            dummy.run(message, args, cmd)
         }
     }
 }

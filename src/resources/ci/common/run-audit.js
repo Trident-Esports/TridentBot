@@ -1,7 +1,7 @@
 const shell = require('shelljs')
 
-console.log("AUDIT")
-console.log("=====")
+console.log("AUDIT 💊")
+console.log("========")
 
 shell.exec("node ./src/resources/ci/common/ver.js")
 console.log()

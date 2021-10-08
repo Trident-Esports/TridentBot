@@ -30,7 +30,7 @@ module.exports = class BotLiveCommand extends AdminCommand {
         botActivity.run(message, args, "")
     }
 
-    async test(message, args) {
+    async test(message, cmd) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -45,7 +45,7 @@ module.exports = class BotLiveCommand extends AdminCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new BotLiveCommand(message.client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args, "")
+            dummy.run(message, args, cmd)
         }
     }
 }

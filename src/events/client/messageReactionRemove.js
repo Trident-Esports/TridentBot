@@ -11,7 +11,7 @@ module.exports = class MessageReactionRemoveEvent extends VillainsEvent {
         this.channelName = "rules"
     }
 
-    async run(client, reaction, user) {
+    async run(reaction, user) {
         if (reaction.message.partial) await reaction.message.fetch()
         if (reaction.partial) await reaction.fetch()
         if (user.bot) return
