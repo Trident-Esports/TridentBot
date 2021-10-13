@@ -1,0 +1,14 @@
+{
+  "stripe": "default",
+  "title": "Social Media",
+  "aliases": ["socialmedia"],
+  "members": {
+    "social media": {
+      "title": "Social Media",
+      "users": [
+        "wanrae",
+        "sotto"
+      ]
+    }
+  }
+}

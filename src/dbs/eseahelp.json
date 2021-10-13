@@ -1,0 +1,30 @@
+{
+    "preamble": [
+        "This is a list of the commands and help for TridentBot Events.",
+        "If you would like General or MiniGame Help, use `%%prefix%%help` or `%%prefix%%gamehelp`"
+    ],
+    "commands": {
+        "section": "COMMANDS",
+        "help": "List of commands",
+        "commands": {
+            "eseahelp": {
+                "aliases": [ "eseah" ],
+                "help": [
+                    "Brings up this menu."
+                ]
+            },
+            "esea": {
+                "help": [
+                    "Shows all CSGO matches on ESEA. This includes scores and times."
+                ]
+            },
+            "gamestats": {
+                "aliases": [ "esea <gameid>" ],
+                "syntax": "esea <gameid>",
+                "help": [
+                    "Shows players stats for whatever game id used for played matches."
+                ]
+            }
+        }
+    }
+}

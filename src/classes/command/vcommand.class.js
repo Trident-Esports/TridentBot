@@ -4,6 +4,8 @@ const { Message, MessageEmbed, TextChannel } = require('discord.js');
 const { Args, Command } = require('@sapphire/framework');
 const VillainsEmbed = require('../embed/vembed.class');
 const SlimEmbed = require('../embed/vslimbed.class');
+const semver = require('semver');
+const shell = require('shelljs');
 
 const pagination = require('discord.js-pagination');
 const fs = require('fs');
@@ -224,6 +226,10 @@ module.exports = class VillainsCommand extends Command {
             this.props.description = "Failed to get error message information."
             return
         }
+
+        this.props.npm = {}
+        this.props.npm.discordjs = {}
+        this.props.npm.discordjs.ver = JSON.parse(fs.readFileSync("./package-lock.json","utf8")).packages["node_modules/discord.js"].version
     }
 
     get DEV() {
@@ -607,7 +613,13 @@ module.exports = class VillainsCommand extends Command {
         if (Array.isArray(pages)) {
             // If it's just one and we're not forcing pages, just send the embed
             if ((pages.length <= 1) && !forcepages) {
-                return this.channel.send({ embeds: [ pages[0] ] })
+                let payload = {}
+                if (semver.lt(this.props.npm.discordjs.ver, "13.0.0")) {
+                    payload = pages[0]
+                } else {
+                    payload = { embeds: [ pages[0] ] }
+                }
+                return await this.channel.send(payload)
             } else {
                 // Else, set up for pagination
                 // Sanity check for emoji pageturners
@@ -627,11 +639,21 @@ module.exports = class VillainsCommand extends Command {
                 // return await pagination(message, pages, emojis, timeout) // discord.js v13
                 //FIXME: discord-pagination doesn't support discord.js v13 yet
                 //TODO: Check on discord-pagination and see if it supports discord.js v13 yet
-                return await pagination(message, pages, emojis, timeout)
+                if (semver.lt(this.props.npm.discordjs.ver, "13.0.0")) {
+                    return await pagination(message, pages, emojis, timeout)
+                } else {
+                    return await this.channel.send(new VillainsEmbed({ "description": "Can't send page!" }))
+                }
             }
         } else {
             // Else, it's just an embed, send it
-            return this.channel.send({ embeds: [ pages ] })
+            let payload = {}
+            if (semver.lt(this.props.npm.discordjs.ver, "13.0.0")) {
+                payload = pages
+            } else {
+                payload = { embeds: [ pages ] }
+            }
+            return await this.channel.send(payload)
         }
     }
 
@@ -679,5 +701,9 @@ module.exports = class VillainsCommand extends Command {
         if ((!(this?.null)) || (this?.null && (!(this.null)))) {
             await this.send(message, this.pages)
         }
+    }
+
+    async test(message, cmd) {
+        throw new Error(`'${cmd}' does not have a test command.`)
     }
 }

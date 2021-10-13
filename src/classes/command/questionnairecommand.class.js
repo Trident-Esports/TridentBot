@@ -70,7 +70,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
         this.#channelName = channelName
     }
 
-    async build(client, message) {
+    async build(message, args, cmd) {
         // Delete user-sent message
         message.delete()
 
@@ -94,10 +94,10 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
             return
         }
 
-        this.action(client, message)
+        this.action(message, args, cmd)
     }
 
-    async action(client, message) {
+    async action(message, args, cmd) {
         this.null = true
         //TODO: Add a .then() to VillainsCommand's run()
         await this.send(message, new VillainsEmbed({...this.props})).then(async (msg) => {

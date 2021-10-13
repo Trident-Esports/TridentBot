@@ -16,7 +16,8 @@ module.exports = class ReadyEvent extends VillainsEvent {
         )
     }
 
-    async run(client) {
+    async run() {
+        const client = this.emitter
         let GLOBALS = null
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         try {
@@ -65,9 +66,11 @@ module.exports = class ReadyEvent extends VillainsEvent {
             )
         }
         // output.push("Mongoose warning about 'collection.ensureIndex' will be thrown.")
-        output.push("Discord.js warning about 'message' event will be thrown.")
-        output.push("🔱 Bot is Ready! 🔱")
-        output.push("")
+        output.push(
+          "Discord.js warning about 'message' event will be thrown.",
+          "🔱 Bot is Ready! 🔱",
+          ""
+        )
 
         props.title = { text: output[1], url: "https://github.com/Trident-Esports/TridentBot" }
         props.description = [
@@ -96,8 +99,13 @@ module.exports = class ReadyEvent extends VillainsEvent {
 
             if (clientMember) {
                 let nick = clientMember?.nickname || clientMember.user.username
-                if (!(nick.includes(`[${client.options.defaultPrefix.trim()}]`))) {
-                    nick = `[${client.options.defaultPrefix.trim()}] ${nick}`
+                if (!(nick.includes(`[${client.options.defaultPrefix.trim()}] `))) {
+                    let regexp = /^[\[\(\{]([\S]+)[\}\)\]] /
+                    if (nick.match(regexp)) {
+                        nick = nick.replace(regexp,`[${client.options.defaultPrefix.trim()}] `)
+                    } else {
+                        nick = `[${client.options.defaultPrefix.trim()}] ${nick}`
+                    }
                 }
                 if (nick != (clientMember?.nickname || clientMember.user.username)) {
                     clientMember.setNickname(nick)

@@ -1,0 +1,11 @@
+{
+  "admin": [
+    "Management"
+  ],
+  "mod": [
+    "Staff"
+  ],
+  "rules": "Accepted Values",
+  "member": "Fishy",
+  "muted": "Flounder"
+}

@@ -8,6 +8,12 @@
       "🐭Update - Dry run",
       "⏰Outdated"
     ],
+    "djsv13": [
+      "npm i discord.js@13.2.0"
+    ],
+    "djsv12": [
+      "npm i discord.js@12.5.3"
+    ],
     "local-install": [
       "✏️node ./src/resources/ci/common/run-install.js",
       "📊Version",

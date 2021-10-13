@@ -1,0 +1,17 @@
+{
+  "stripe": "default",
+  "title": "Rocket League Roster",
+  "aliases": ["rlr"],
+  "team": {
+  },
+  "members": {
+    "main": {
+      "title": "Main",
+      "users": [
+        "rotor",
+        "smash",
+        "viictus"
+      ]
+    }
+  }
+}

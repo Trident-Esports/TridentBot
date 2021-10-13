@@ -1,0 +1,24 @@
+{
+    "preamble": [
+        "This is a list of the commands and help for TridentBot Events.",
+        "If you would like General or MiniGame Help, use `%%prefix%%help` or `%%prefix%%gamehelp`"
+    ],
+    "commands": {
+        "section": "COMMANDS",
+        "help": "List of commands",
+        "commands": {
+            "help": {
+                "aliases": [ "evh" ],
+                "help": [
+                    "Brings up this menu."
+                ]
+            },
+            "smashevent": {
+                "aliases": [ "smash" ],
+                "help": [
+                    "Shows the current event on smash.gg including teams and games."
+                ]
+            }
+        }
+    }
+}
