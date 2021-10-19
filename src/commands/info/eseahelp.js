@@ -14,9 +14,9 @@ module.exports = class EseaHelpCommand extends HelpListingCommand {
         )
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         dummy = new EseaHelpCommand()
-        dummy.run(client, message, [], null, "")
+        await dummy.run(message, [], cmd)
     }
 }

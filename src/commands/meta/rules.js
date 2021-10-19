@@ -15,7 +15,7 @@ module.exports = class RulesCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args, cmd) {
         this.props.fields = []
         let rules = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/rules.json", "utf8"))
 

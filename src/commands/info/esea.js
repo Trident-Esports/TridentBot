@@ -91,7 +91,7 @@ module.exports = class ESEACommand extends VillainsCommand {
             }
         }
 
-        console.log(cellData)
+        // console.log(cellData)
 
         const headings = {
             match: cellData[0],
@@ -109,7 +109,7 @@ module.exports = class ESEACommand extends VillainsCommand {
             if(record.length >= 9) {
                 // @ts-ignore
                 match = {}
-                matchID = record[headings.match.toString().indexOf("Match ID")]
+                matchID = record[headings.match.indexOf("Match ID")]
                 if(!(isNaN(matchID))) {
                     matchData.overall.ct = matchData.overall.ct + parseInt(record[headings.match.indexOf("Us CT")])
                     matchData.overall.t = matchData.overall.t + parseInt(record[headings.match.indexOf("Us T")])
@@ -186,8 +186,6 @@ module.exports = class ESEACommand extends VillainsCommand {
                 }
             }
         }
-
-        console.log(`ESEA Sheet: ${docID}; Match? ${matchData}`)
 
         this.props.description = []
 
@@ -295,7 +293,6 @@ module.exports = class ESEACommand extends VillainsCommand {
                 }
             )
             let embed = new VillainsEmbed({...this.props})
-            console.log(`ESEA Sheet: ${docID}; Data? ${cellData.length}; Embed? ${embed ? "Yes" : "No"}`)
             this.send(message, embed)
             this.null = true
         }
@@ -313,7 +310,7 @@ module.exports = class ESEACommand extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new ESEACommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args, cmd)
+            await dummy.run(message, args, cmd)
         }
     }
 }

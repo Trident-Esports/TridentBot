@@ -1,12 +1,13 @@
 //@ts-check
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
+const chalk = require('chalk');
 const fs = require('fs');
 let GLOBALS = null
 try {
     GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
 } catch(err) {
-    console.log("🔴Helpline: PROFILE manifest not found!")
+    console.log(chalk.red("🔴Helpline: PROFILE manifest not found!"))
     process.exit(1)
 }
 
@@ -29,7 +30,7 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args, cmd) {
         let texts = {}
         try {
             texts = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/tickets.json", "utf8"))

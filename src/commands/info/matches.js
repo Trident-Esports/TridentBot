@@ -2,6 +2,7 @@
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
+const chalk = require('chalk');
 const dasu = require('dasu');
 const fs = require('fs');
 
@@ -302,9 +303,9 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
                     } catch(e) {
                         if (data.substring(0,1) === '<') {
-                            console.log(`Matches: Malformed JSON: ${url}`)
+                            console.log(chalk.red(`Matches: Malformed JSON: ${url}`))
                         } else {
-                            console.log(e)
+                            console.log(chalk.red(e))
                         }
                     }
                 });
@@ -328,7 +329,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new MatchesCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args, cmd)
+            await dummy.run(message, args, cmd)
         }
     }
 }

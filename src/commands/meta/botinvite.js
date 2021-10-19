@@ -21,7 +21,8 @@ module.exports = class BotInviteCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args, cmd) {
+        let client = message.client
         let url = ""
         let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
 
@@ -48,9 +49,9 @@ module.exports = class BotInviteCommand extends VillainsCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         dummy = new BotInviteCommand()
-        dummy.run(client, message, [], null, "")
+        await dummy.run(message, [], cmd)
     }
 }

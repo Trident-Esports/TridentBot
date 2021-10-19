@@ -38,7 +38,7 @@ module.exports = class RosterCommand extends VillainsCommand {
         )
     }
 
-    async run(client, message, args) {
+    async action(message, args, cmd) {
         let guilds = JSON.parse(fs.readFileSync("./src/dbs/guilds.json","utf8"))
         let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "tdnt"
         let gameID = args[0] ? args[0].toLowerCase() : ""
@@ -245,7 +245,7 @@ module.exports = class RosterCommand extends VillainsCommand {
         this.send(message, pages)
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -258,7 +258,7 @@ module.exports = class RosterCommand extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new RosterCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args)
+            await dummy.run(message, args, cmd)
         }
     }
 }

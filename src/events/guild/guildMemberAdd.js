@@ -3,6 +3,7 @@
 const VillainsEmbed = require('../../classes/embed/vembed.class')
 const VillainsEvent = require('../../classes/event/vevent.class')
 const AsciiTable = require('ascii-table')
+const chalk = require('chalk')
 const fs = require('fs')
 
 // Member Join
@@ -119,7 +120,7 @@ module.exports = class GuildMemberAddEvent extends VillainsEvent {
             // @ts-ignore
             await channel.send({ embeds: [ new VillainsEmbed({...props}) ] });
         } catch (err) {
-            console.log(err);
+            console.log(chalk.red(err));
         }
     }
 }

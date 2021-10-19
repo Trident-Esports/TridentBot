@@ -9,12 +9,13 @@ BaseCommand
 */
 const VillainsCommand = require('./vcommand.class');
 const VillainsEmbed = require('../embed/vembed.class');
+const chalk = require('chalk');
 const dasu = require('dasu');
 
 module.exports = class TeamListingCommand extends VillainsCommand {
-    constructor(...args) {
+    constructor(context) {
         // Create a parent object
-        super(...args)
+        super(context)
     }
 
     async makeReq(emojis, props, params) {
@@ -73,7 +74,8 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                     embed.setAuthor(props.title.text, "", props.title.url)
                     embed.setThumbnail(json.team_avatar)
                 } else {
-                    embed.setTitle(props.title.text, props.title.url)
+                    embed.setTitle(props.title.text)
+                    embed.setURL(props.title.url)
                 }
 
                 for (let [timestamp, match] of Object.entries(game_details)) {
@@ -152,7 +154,7 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                     )
                 }
             } catch(e) {
-                console.log(e)
+                console.log(chalk.red(e))
                 // console.log(`Malformed JSON: ${params[2]}`)
             }
         });

@@ -15,7 +15,7 @@ module.exports = class HelpCommand extends HelpListingCommand {
         )
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -28,7 +28,7 @@ module.exports = class HelpCommand extends HelpListingCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new HelpCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            await dummy.run(message, args, cmd)
         }
     }
 }

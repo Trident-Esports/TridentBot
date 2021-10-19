@@ -99,7 +99,7 @@ module.exports = class QuestionnaireCommand extends VillainsCommand {
 
     async action(message, args, cmd) {
         this.null = true
-        //TODO: Add a .then() to VillainsCommand's run()
+        //TODO: Add a .then() to VillainsCommand's messageRun()
         await this.send(message, new VillainsEmbed({...this.props})).then(async (msg) => {
             for (let emoji of this.emojis) {
                 await msg.react(emoji)

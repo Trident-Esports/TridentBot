@@ -21,7 +21,7 @@ module.exports = class GuildStatusCommand extends VillainsCommand {
         )
     }
 
-    async action(message, args) {
+    async action(message, args, cmd) {
         let serverBoostEmoji = await message.guild.emojis.cache.find(emoji => emoji.name === "serverboost2")
         if (!(serverBoostEmoji)) {
             serverBoostEmoji = "[*]"

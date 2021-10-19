@@ -9,7 +9,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
         })
     }
 
-    async run(client, message, args) {
+    async action(message, args, cmd) {
         let profile = {
             "team": {}
         }
@@ -49,7 +49,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
                 //     console.log(`Fetching:${url.toString()}`)
                 // }
 
-                let props = []
+                let props = {}
                 props.description = ""
                 props.title = { text: (span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule").trim(), url: "" }
                 props.url = url.toString().includes('-') ? url.toString().substr(0,url.toString().indexOf('-')) : url
@@ -58,10 +58,10 @@ module.exports = class MatchCommand extends TeamListingCommand {
                 pages.push(embed)
             }
         }
-        super.send(message, pages, [], "", true)
+        super.send(message, pages, [], undefined, true)
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -74,7 +74,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new MatchCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args)
+            await dummy.run(message, args, cmd)
         }
     }
 }

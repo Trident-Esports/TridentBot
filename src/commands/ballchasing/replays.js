@@ -1,6 +1,7 @@
 //@ts-check
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
+const chalk = require('chalk');
 const dasu = require('dasu');
 
 module.exports = class BallChasingReplaysCommand extends VillainsCommand {
@@ -56,11 +57,32 @@ module.exports = class BallChasingReplaysCommand extends VillainsCommand {
 
         await req(params, async function(err, res, data) {
             try {
-               let json = JSON.parse(data)
-               console.log(json)
+                let json = JSON.parse(data)
+                for (const [, match] of Object.entries(json.list)) {
+                    console.log(match.replay_title)
+                    console.log(match.link.replace("/api/replays/","/replay/"))
+                    console.log(`🟦 ${match.blue.goals} - ${match.orange.goals} 🟧`)
+                    for (const team of ["blue", "orange"]) {
+                        console.log(
+                            (team == "blue" ? "🟦" : "🟧") + " " +
+                            `${match[team].name || (`Team ${team.charAt(0).toUpperCase() + team.slice(1)}`)}: ` +
+                            `${match[team].players.map(player => player.name.replace('.',''))
+                                .sort(
+                                    function(a, b) {
+                                        let nameA = a.toUpperCase()
+                                        let nameB = b.toUpperCase()
+                                        if (nameA < nameB) return -1
+                                        if (nameA > nameB) return 1
+                                        return 0
+                                    }
+                                ).join(", ")}`
+                        )
+                    }
+                    console.log()
+                }
             } catch (e) {
-                console.log(e)
-                console.log(data)
+                // console.log(chalk.red(e))
+                // console.log(chalk.red(data))
             }
         })
     }

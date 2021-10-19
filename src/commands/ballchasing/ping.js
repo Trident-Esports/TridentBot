@@ -2,6 +2,7 @@
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
+const chalk = require('chalk');
 const dasu = require('dasu');
 
 module.exports = class BallChasingPingCommand extends VillainsCommand {
@@ -35,7 +36,7 @@ module.exports = class BallChasingPingCommand extends VillainsCommand {
         }
 
         let props = {
-            title: { text: "Pong!" },
+            title: { text: "Ballchasing Pong!" },
             description: "",
             image: "https://thumbs.gfycat.com/CreativeSafeGrayreefshark-size_restricted.gif"
         }
@@ -49,9 +50,9 @@ module.exports = class BallChasingPingCommand extends VillainsCommand {
                     embed.addField(name, value, true)
                 }
             } catch (e) {
-                console.log("BallChasing Ping Error")
-                console.log(e)
-                console.log(data)
+                console.log(chalk.red("BallChasing Ping Error"))
+                console.log(chalk.red(e))
+                console.log(chalk.red(data))
             }
         });
         pages.push(embed)

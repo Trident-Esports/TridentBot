@@ -152,7 +152,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         return await gqlclient.request(query)
     }
 
-    async action(client, message) {
+    async action(message, args, cmd) {
         // Connect to SmashGG API
         const endpoint = "https://api.smash.gg/gql/alpha"
         const GQLClient = new GraphQLClient(endpoint, {
@@ -185,18 +185,18 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         }
 
         let tourneyData = ""
-        if (this.inputData.args[0]) {
-            tourneyData = this.inputData.args[0]
+        if (args[0]) {
+            tourneyData = args[0]
         } else if ("tourney" in guildSGGdata) {
             tourneyData = guildSGGdata.tourney.slug
         }
         let eventData = ""
-        if (this.inputData.args[1]) {
-            eventData = this.inputData.args[1]
+        if (args[1]) {
+            eventData = args[1]
         } else if ("event" in guildSGGdata) {
             eventData = guildSGGdata.event.idx
         } else {
-            eventData = 0
+            eventData = "0"
         }
 
         if (tourneyData == "") {
@@ -212,7 +212,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         // Get Event ID
         let tourneySlug = tourneyData
         let eventIDX = eventData
-        let data = ""
+        let data = {}
         try {
             data = await this.getTournamentBySlug(GQLClient, tourneySlug)
         } catch (err) {
@@ -287,7 +287,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
                     }
                 }
                 if (Object.keys(event.sets[keyID]["slots"]).length > 0) {
-                    let set = ""
+                    let set = {}
                     try {
                         set = await this.getSetStats(GQLClient, setID)
                     } catch (err) {
@@ -353,7 +353,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             let toggle = 0
             for (let [slotID, teamID] of Object.entries(set.slots)) {
                 let team = event.teams[teamID]
-                let score = teamID in set.score ? set.score[teamID] : 0
+                let score = ((teamID in set.score) && set.score[teamID]) ? set.score[teamID] : 0
                 let url = "https://smash.gg/tournament/" + event.slug.tournament + "/event/0/entrant/" + team.id
                 teams += `[${team.name}](${url} '${url}')`
                 scores += `${score}`
@@ -398,7 +398,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         this.null = true
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -412,7 +412,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new SmashGGEvent()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            await dummy.run(message, args, cmd)
         }
     }
 }

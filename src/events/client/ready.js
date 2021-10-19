@@ -3,6 +3,7 @@
 const VillainsCommand = require('../../classes/command/vcommand.class')
 const VillainsEmbed = require('../../classes/embed/vembed.class')
 const VillainsEvent = require('../../classes/event/vevent.class')
+const chalk = require('chalk')
 const fs = require('fs')
 
 module.exports = class ReadyEvent extends VillainsEvent {
@@ -30,7 +31,7 @@ module.exports = class ReadyEvent extends VillainsEvent {
                 GLOBALS.profiles[GLOBALS.profile]:
                 defaults
         } catch(err) {
-            console.log("🔴Ready Event: PROFILE manifest not found!")
+            console.log(chalk.red("🔴Ready Event: PROFILE manifest not found!"))
             process.exit(1)
         }
         let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
@@ -43,32 +44,41 @@ module.exports = class ReadyEvent extends VillainsEvent {
                 BRANCH = BRANCH[1]
             }
         } catch (err) {
-            console.log(err)
+            console.log(chalk.red(err))
         }
 
         let DEV = GLOBALS.DEV
 
         let props = {}
 
-        let output = [
-            "---",
-            `${client.user.username} v${PACKAGE.version} is Online!`
-        ]
+        let output = []
+
+        if (client) {
+            output.push(
+                "---",
+                `${client.user.username} v${PACKAGE.version} is Online!`
+            )
+        }
         if (DEV) {
             let profileName = `${GLOBALS.name}-<${BRANCH}>`
-            output.push(
-                `🟧🟧🟧 [${client.options.defaultPrefix.trim()}] DEV MODE (${profileName}) ENABLED [${client.options.defaultPrefix.trim()}] 🟧🟧🟧`
-            )
+            if (client) {
+                output.push(
+                    chalk.yellow(`🟧🟧🟧 [${client.options.defaultPrefix.trim()}] DEV MODE (${profileName}) ENABLED [${client.options.defaultPrefix.trim()}] 🟧🟧🟧`)
+                )
+            }
         } else {
-            let profileName = `${client.user.username}-<${BRANCH}>`
-            output.push(
-                `🟩🟩🟩 [${client.options.defaultPrefix.trim()}] PRODUCTION MODE (${profileName}) ENABLED [${client.options.defaultPrefix.trim()}] 🟩🟩🟩`
-            )
+            let profileName = `<${BRANCH}>`
+            if (client) {
+                profileName = `${client.user.username}${profileName}`
+                output.push(
+                    chalk.green(`🟩🟩🟩 [${client.options.defaultPrefix.trim()}] PRODUCTION MODE (${profileName}) ENABLED [${client.options.defaultPrefix.trim()}] 🟩🟩🟩`)
+                )
+              }
         }
         // output.push("Mongoose warning about 'collection.ensureIndex' will be thrown.")
         output.push(
-          "Discord.js warning about 'message' event will be thrown.",
-          "🔱 Bot is Ready! 🔱",
+          chalk.yellow("Discord.js warning about 'message' event will be thrown."),
+          chalk.green("🔱 Bot is Ready! 🔱"),
           ""
         )
 
@@ -94,6 +104,11 @@ module.exports = class ReadyEvent extends VillainsEvent {
         console.log(output.join("\n"))
 
         let embed = null
+
+        if (!(client)) {
+            return
+        }
+
         for (let [ guildID, guildData ] of client.guilds.cache) {
             let clientMember = await guildData.members.fetch(client.user.id)
 

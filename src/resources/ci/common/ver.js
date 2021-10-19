@@ -1,5 +1,6 @@
 const AsciiTable = require('ascii-table')
 const semver = require('semver')
+const chalk = require('chalk')
 const shell = require('shelljs')
 const fs = require('fs')
 
@@ -13,15 +14,10 @@ for(let module of [ "node", "npm", "discord.js" ]) {
         data[module].current = shell.exec(`${module} -v`, { silent: true }).stdout.trim()
     } else {
         let tmp = shell.exec(
-            `npm list ${module} --depth=0` + ' | ' +
-            `grep -Po '${module}@(.*)$'`,
+            `npm list ${module} --depth=0`,
             { silent: true }
-        ).stdout.trim()
-        data[module].current = shell.exec(
-            `echo ${tmp}` + ' | ' +
-            `cut -c ${tmp.indexOf('@') + 2}-${tmp.length}`,
-            { silent: true}
-        ).stdout.trim()
+        ).grep(`${module}@(.*)$`)
+        data[module].current = tmp.stdout.slice(tmp.indexOf('@') + 1).trim()
     }
     data[module].latest = shell.exec(`npm v ${module} version`, { silent: true }).stdout.trim()
 }
@@ -40,39 +36,30 @@ for(let [module, mData] of Object.entries(data)) {
     } else {
         mName = mName.charAt(0).toUpperCase() + mName.slice(1)
     }
+    let cur = data[module].current
+    let lat = data[module].latest
+
+    if (cur && cur.charAt(0).toLowerCase() !== 'v') {
+        cur = 'v' + cur
+    }
+    if (lat && lat.charAt(0).toLowerCase() !== 'v') {
+        lat = 'v' + lat
+    }
+
     Table.addRow(
         mName,
-        (
-            (
-                data[module].current.charAt(0).toLowerCase() == 'v' ?
-                "" :
-                'v'
-            ) +
-            data[module].current
-        ),
-        (
-            data[module]?.latest ?
-            (
-                (
-                    data[module].latest.charAt(0).toLowerCase() == 'v' ?
-                    "" :
-                    'v'
-                ) +
-                data[module].latest
-            )
-            : ""
-        )
+        cur,
+        lat
     )
 }
 console.log(Table.toString())
 
 Table = new AsciiTable("Functionality", {})
-Table.addRow(
-    "Pagination",
-    semver.lt(data["discord.js"].current, "13.0.0") ? "🟩" : "🟥"
-)
-.addRow(
-    "Collectors",
-    semver.lt(data["discord.js"].current, "13.0.0") ? "🟩" : "🟥"
-)
+for (let func of ["Pagination","Collectors"]) {
+    let validVer = semver.lt(data["discord.js"].current, "13.0.0")
+    Table.addRow(
+        func,
+        validVer ? "🟩" : "🟥"
+    )
+}
 console.log(Table.toString())

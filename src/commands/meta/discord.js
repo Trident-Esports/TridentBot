@@ -1,12 +1,13 @@
 //@ts-check
 
 const VillainsCommand = require('../../classes/command/vcommand.class');
+const chalk = require('chalk');
 const fs = require('fs');
 let GLOBALS = null
 try {
     GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
 } catch(err) {
-    console.log("🔴Discord Invite: PROFILE manifest not found!")
+    console.log(chalk.red("🔴Discord Invite: PROFILE manifest not found!"))
     process.exit(1)
 }
 
@@ -28,7 +29,7 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args, cmd) {
         let GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         GLOBALS = (
@@ -58,9 +59,9 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         dummy = new DiscordInviteCommand()
-        dummy.run(client, message, [], null, "")
+        await dummy.run(message, [], cmd)
     }
 }

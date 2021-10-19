@@ -20,7 +20,8 @@ module.exports = class BotVoteCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args, cmd) {
+        let client = message.client
         let url = `https://top.gg/bot/${client.user.id}/vote`
         this.props.description = `***[Vote for @TridentBot on top.gg!](${url} '${url}')***`
 
@@ -29,9 +30,9 @@ module.exports = class BotVoteCommand extends VillainsCommand {
         }
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         dummy = new BotVoteCommand()
-        dummy.run(client, message, [], null, "")
+        await dummy.run(message, [], cmd)
     }
 }

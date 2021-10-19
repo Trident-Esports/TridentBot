@@ -4,6 +4,7 @@ const QuestionnaireCommand = require('../../classes/command/questionnairecommand
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 const { DiscordAPIError } = require('discord.js');
 
+const chalk = require('chalk');
 const fs = require('fs');
 const ms = require('ms');
 
@@ -203,15 +204,18 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                     message.client.users.fetch(winner, false).then((user) => {
                         if (!(user.bot)) {
                             try {
+                                this.null = true
                                 user.send(embed)
                             } catch (e) {
                                 if (e instanceof DiscordAPIError) {
-                                    console.log(`🟡Can't send message to ${user.username}#${user.discriminator} (ID:${user.id})`)
+                                    console.log(chalk.yellow(`🟡Can't send message to ${user.username}#${user.discriminator} (ID:${user.id})`))
                                 }
                             }
                         }
                     })
                 }
+
+                this.null = true
                 // msg.channel.send({ embeds: [embed] }); // discord.js v13
                 msg.channel.send(embed);
             });
@@ -229,7 +233,7 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new GiveawayCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args, cmd)
+            await dummy.run(message, args, cmd)
         }
     }
 }

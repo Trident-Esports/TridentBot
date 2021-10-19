@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const chalk = require('chalk');
 const fs = require('fs');
 
 /**
@@ -57,7 +58,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         let noDesc = (!(props?.description))
         let undefDesc = (typeof props.description === "undefined")
         let nullDesc = (!(noDesc || undefDesc)) && (props.description == null)
-        let emptyDesc = (!(noDesc || undefDesc)) && (props.description.trim() === "")
+        let emptyDesc = (!(noDesc || undefDesc)) && props?.description && props?.description?.trim && (props.description.trim() === "")
         if (noDesc || undefDesc || nullDesc || emptyDesc) {
             props.description = "** **"
         }
@@ -82,7 +83,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
                 this.GLOBALS.profiles[this.GLOBALS.profile]:
                 defaults
         } catch(err) {
-            console.log("🔴VEmbed: PROFILE manifest not found!")
+            console.log(chalk.red("🔴VEmbed: PROFILE manifest not found!"))
             process.exit(1)
         }
 
@@ -93,7 +94,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
              */
             this.PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
         } catch(err) {
-            console.log("🔴VEmbed: PACKAGE manifest not found!")
+            console.log(chalk.red("🔴VEmbed: PACKAGE manifest not found!"))
             process.exit(1)
         }
 
@@ -104,7 +105,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
              */
             this.defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         } catch(err) {
-            console.log("🔴VEmbed: DEFAULTS manifest not found!")
+            console.log(chalk.red("🔴VEmbed: DEFAULTS manifest not found!"))
             process.exit(1)
         }
 

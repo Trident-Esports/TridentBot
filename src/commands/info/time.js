@@ -21,7 +21,7 @@ module.exports = class TimeCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message) {
+    async action(message, args, cmd) {
         const now = Date.now()
         const tzs = [
             "Australia/Perth",    // + 8
@@ -43,19 +43,17 @@ module.exports = class TimeCommand extends VillainsCommand {
         for(let zone of tzs) {
             let locale = zone.includes("America") ? "en_US" : "en_AU"
             let tmp = mytz(now, locale, "%Z: %x %T", zone)
-            console.log(tmp)
             this.props.description += tmp + "\n"
         }
         this.props.description += "```" + "\n"
 
         let tmp = "Local: <t:" + Math.floor(now / 1000) + ":f>"
         this.props.description += tmp
-        console.log(tmp)
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         dummy = new TimeCommand()
-        dummy.run(client, message, [], null, "")
+        await dummy.run(message, [], cmd)
     }
 }

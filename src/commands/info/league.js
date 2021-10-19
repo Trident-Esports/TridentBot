@@ -1,6 +1,7 @@
 const VillainsCommand = require('../../classes/command/vcommand.class');
 const VillainsEmbed = require('../../classes/embed/vembed.class');
 
+const chalk = require('chalk');
 const dasu = require('dasu');
 const fs = require('fs');
 
@@ -15,7 +16,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
         )
     }
 
-    async action(client, message, cmd) {
+    async action(message, args, cmd) {
         let profile = {
             "team": {}
         }
@@ -49,7 +50,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
                 //     console.log(`Fetching:${url.toString()}`)
                 // }
 
-                let props = []
+                let props = {}
                 props.description = ""
 
                 let title = (span.charAt(0).toUpperCase() + span.slice(1) + " Matches Schedule").trim()
@@ -98,7 +99,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
                         }
 
                         if (json?.team_avatar && json.team_avatar != "") {
-                            embed.setAuthor(title, defaults.thumbnail, url)
+                            embed.setAuthor(title, defaults.thumbnail, url.toString())
                             embed.setThumbnail(json.team_avatar)
                         } else {
                             embed.setTitle(title)
@@ -153,8 +154,8 @@ module.exports = class LeagueCommand extends VillainsCommand {
                             )
                         }
                     } catch(e) {
-                        console.log(e)
-                        console.log(`Malformed JSON:${url}`)
+                        console.log(chalk.red(e))
+                        console.log(chalk.red(`Malformed JSON:${url}`))
                     }
                 });
                 pages.push(embed)
@@ -162,12 +163,12 @@ module.exports = class LeagueCommand extends VillainsCommand {
         }
 
         if (pages.length) {
-            await this.send(message, pages, [], "", true)
-            this.null = true
+          this.null = true
+          await this.send(message, pages, [], 0, true)
         }
     }
 
-    async test(client, message) {
+    async test(message, cmd) {
         let dummy = null
         const baseArgs = []
         const varArgs = [
@@ -181,7 +182,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new LeagueCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(client, message, args, null, "")
+            await dummy.run(message, args, cmd)
         }
     }
 }

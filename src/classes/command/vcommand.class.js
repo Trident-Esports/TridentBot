@@ -5,6 +5,7 @@ const { Args, Command } = require('@sapphire/framework');
 const VillainsEmbed = require('../embed/vembed.class');
 const SlimEmbed = require('../embed/vslimbed.class');
 const semver = require('semver');
+const chalk = require('chalk');
 const shell = require('shelljs');
 
 const pagination = require('discord.js-pagination');
@@ -170,7 +171,7 @@ module.exports = class VillainsCommand extends Command {
                 GLOBALS.profiles[GLOBALS.profile]:
                 defaults
         } catch(err) {
-            console.log("🔴VCommand: PROFILE manifest not found!")
+            console.log(chalk.red("🔴VCommand: PROFILE manifest not found!"))
             process.exit(1)
         }
         this.DEV = GLOBALS.DEV
@@ -517,15 +518,15 @@ module.exports = class VillainsCommand extends Command {
                 foundHandles.args = [ "" ]
             }
         } catch(e) {
-            console.log("---")
-            console.log(e)
-            console.log("---")
-            console.log(debugout.join("\n"))
+            console.log(chalk.red("---"))
+            console.log(chalk.red(e))
+            console.log(chalk.red("---"))
+            console.log(chalk.red(debugout.join("\n")))
         }
 
         if (this.DEV && false) {
-            console.log("---")
-            console.log(debugout.join("\n"))
+            console.log(chalk.red("---"))
+            console.log(chalk.red(debugout.join("\n")))
         }
 
         // Errors based on Invalid Source
@@ -612,7 +613,7 @@ module.exports = class VillainsCommand extends Command {
         // If we have an array of page(s)
         if (Array.isArray(pages)) {
             // If it's just one and we're not forcing pages, just send the embed
-            if ((pages.length <= 1) && !forcepages) {
+            if ((pages.length <= 1) && (!(forcepages))) {
                 let payload = {}
                 if (semver.lt(this.props.npm.discordjs.ver, "13.0.0")) {
                     payload = pages[0]
@@ -704,6 +705,10 @@ module.exports = class VillainsCommand extends Command {
     }
 
     async test(message, cmd) {
-        throw new Error(`'${cmd}' does not have a test command.`)
+        try {
+            throw new Error(`'${cmd}' does not have a test command.`)
+        } catch (e) {
+            console.log(chalk.red(e))
+        }
     }
 }

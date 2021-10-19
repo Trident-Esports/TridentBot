@@ -155,7 +155,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new BotActivityCommand(message.client)
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args, cmd)
+            await dummy.run(message, args, cmd)
         }
     }
 }

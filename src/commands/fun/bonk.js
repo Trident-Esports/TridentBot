@@ -40,7 +40,7 @@ module.exports = class BonkCommand extends VillainsCommand {
             let args = baseArgs.concat([ ...added.split(" ") ])
             dummy = new BonkCommand()
             dummy.props.footer.msg = args.join(" | ")
-            dummy.run(message, args, cmd)
+            await dummy.run(message, args, cmd)
         }
     }
 }

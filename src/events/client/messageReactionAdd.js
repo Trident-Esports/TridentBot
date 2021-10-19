@@ -2,6 +2,7 @@
 
 const VillainsEvent = require('../../classes/event/vevent.class')
 const AsciiTable = require('ascii-table')
+const chalk = require('chalk')
 const fs = require('fs')
 
 module.exports = class MessageReactionAddEvent extends VillainsEvent {
@@ -75,7 +76,7 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
                             `User: '${user.username}#${user.discriminator}' (ID:${user.id}) not found!`
                     )
                     console.log(Table.toString())
-                    console.log(err)
+                    console.log(chalk.red(err))
                     return
                 }
                 try {
@@ -87,7 +88,7 @@ module.exports = class MessageReactionAddEvent extends VillainsEvent {
                             `Failed to add Role to User: '${user.username}#${user.discriminator}' (ID:${user.id})!`
                     )
                     console.log(Table.toString())
-                    console.log(err)
+                    console.log(chalk.red(err))
                     return
                 }
             } else {
