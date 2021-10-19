@@ -5,6 +5,9 @@ SENSITIVE.json
 # no pycache
 __pycache__/
 
+# no v12
+v12/
+
 # Logs
 logs
 *.log
