@@ -18,10 +18,10 @@
     "main": {
       "title": "Main",
       "users": [
-        "garfield",
         "jam",
         "millah",
-        "snow"
+        "snow",
+        "tiger"
       ]
     },
     "sub": {

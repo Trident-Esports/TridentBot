@@ -10,6 +10,12 @@
   },
   "#url": "#rosters: R6S Evolution",
   "members": {
+    "coach": {
+      "title": "Coach",
+      "users": [
+        "briefcase"
+      ]
+    },
     "captain": {
       "title": "Captain",
       "users": [
@@ -20,11 +26,11 @@
       "title": "Main",
       "users": [
         "cloudfulla",
-        "freezzy",
         "fxulty",
         "kingerss",
         "linxx",
         "salvo",
+        "shootz",
         "voon"
       ]
     },

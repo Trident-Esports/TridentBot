@@ -5,6 +5,12 @@
   "team": {
   },
   "members": {
+    "captain": {
+      "title": "Captain",
+      "users": [
+        "smash"
+      ]
+    },
     "main": {
       "title": "Main",
       "users": [
