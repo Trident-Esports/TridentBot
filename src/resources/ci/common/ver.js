@@ -7,7 +7,7 @@ const fs = require('fs')
 let PACKAGE = JSON.parse(fs.readFileSync("./package.json", "utf8"))
 
 let data = {}
-for(let module of [ "node", "npm", "discord.js" ]) {
+for(let module of [ "node", "npm", "discord.js", "@sapphire/framework" ]) {
     data[module] = {}
     data[module].current = ""
     if ([ "node", "npm" ].includes(module)) {
@@ -17,7 +17,7 @@ for(let module of [ "node", "npm", "discord.js" ]) {
             `npm list ${module} --depth=0`,
             { silent: true }
         ).grep(`${module}@(.*)$`)
-        data[module].current = tmp.stdout.slice(tmp.indexOf('@') + 1).trim()
+        data[module].current = tmp.stdout.slice(tmp.lastIndexOf('@') + 1).trim()
     }
     data[module].latest = shell.exec(`npm v ${module} version`, { silent: true }).stdout.trim()
 }

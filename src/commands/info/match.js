@@ -61,6 +61,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
         super.send(message, pages, [], undefined, true)
     }
 
+    //FIXME: Double message at beginning
     async test(message, cmd) {
         let dummy = null
         const baseArgs = []

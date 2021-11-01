@@ -315,6 +315,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
         super.send(message, pages, [], 0, true)
     }
 
+    //FIXME: Double message at beginning
     async test(message, cmd) {
         let dummy = null
         const baseArgs = []
@@ -322,7 +323,8 @@ module.exports = class MatchesCommand extends VillainsCommand {
           "",
           "262890",
           "262377",
-          "261418"
+          "261418",
+          "incomplete"
         ]
 
         for(let added of varArgs) {

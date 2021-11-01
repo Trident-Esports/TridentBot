@@ -303,7 +303,8 @@ module.exports = class ESEACommand extends VillainsCommand {
         const baseArgs = []
         const varArgs = [
             "1e7j3aQC8iwhoxs5J7okAUoBSU7_xnueYJ87EPhSWtZs",
-            "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU"
+            "1OchV-UdQ2E1uEuiug-_F9FUC5si1jAuTqCOWFO2BmmU",
+            "1e7j3aQC8iwhoxs5J7okAUoBSU7_xnueYJ87EPhSWtZs 16726599"
         ]
 
         for(let added of varArgs) {

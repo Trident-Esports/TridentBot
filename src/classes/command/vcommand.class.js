@@ -699,7 +699,8 @@ module.exports = class VillainsCommand extends Command {
 
         // this.null is to be set if we've already sent the page(s) somewhere else
         // Not setting this.null after sending the page(s) will send the page(s) again
-        if ((!(this?.null)) || (this?.null && (!(this.null)))) {
+        let doSend = ((!(this?.null)) || (this?.null && (!(this.null))))
+        if (doSend) {
             await this.send(message, this.pages)
         }
     }

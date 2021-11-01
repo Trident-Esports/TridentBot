@@ -245,6 +245,7 @@ module.exports = class RosterCommand extends VillainsCommand {
         this.send(message, pages)
     }
 
+    //FIXME: Double message at beginning
     async test(message, cmd) {
         let dummy = null
         const baseArgs = []

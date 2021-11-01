@@ -220,8 +220,10 @@ module.exports = class GiveawayCommand extends QuestionnaireCommand {
                 msg.channel.send(embed);
             });
         })
+        this.null = true
     }
 
+    //FIXME: Double message at beginning
     async test(message, cmd) {
         let dummy = null
         const baseArgs = []
