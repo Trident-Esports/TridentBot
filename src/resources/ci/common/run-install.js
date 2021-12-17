@@ -1,7 +1,7 @@
 const shell = require('shelljs')
 
-console.log("INSTALL")
-console.log("=======")
+console.log("INSTALL 🔨")
+console.log("==========")
 
 shell.exec("node ./src/resources/ci/common/ver.js")
 console.log()
@@ -15,8 +15,8 @@ console.log()
 shell.exec("node ./src/resources/ci/common/npm/get-npm.js")
 console.log()
 
-console.log("NPM Install")
-console.log("-----------")
+console.log("NPM Install 🔨")
+console.log("--------------")
 shell.exec("npm i")
 console.log()
 

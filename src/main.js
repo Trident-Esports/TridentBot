@@ -7,6 +7,7 @@ const replace = require('replace-in-file')
 const Levels = require('discord-xp') // Discord Game XP
 const Ascii = require('ascii-table')
 const fs = require('fs');
+const keep_alive = require("./httpd.js")
 require('dotenv').config()
 
 let guildEventsPath = "./src/moody/events/guild"
@@ -99,7 +100,7 @@ try {
     const handler = new Handler(client, {
         prefix: prefix,
         // @ts-ignore
-        token: process.env.client_login,
+        token: process.env.client_login_production,
         commandsPath: __dirname + "/moody/commands",
         eventsPath: __dirname + "/moody/events",
         owners: [
