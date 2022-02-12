@@ -13,30 +13,27 @@
     "coach": {
       "title": "Coach",
       "users": [
-        "briefcase"
       ]
     },
     "captain": {
       "title": "Captain",
       "users": [
-        "kingerss"
+        "fxulty"
       ]
     },
     "main": {
       "title": "Main",
       "users": [
-        "cloudfulla",
+        "freezzy",
         "fxulty",
-        "kingerss",
         "linxx",
-        "shootz",
+        "namni",
         "voon"
       ]
     },
     "sub": {
       "title": "Sub",
       "users": [
-        "error"
       ]
     }
   }
