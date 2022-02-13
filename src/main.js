@@ -96,6 +96,7 @@ try {
 
     console.log("---");
     console.log("a-djs-style");
+    const botDevs = JSON.parse(fs.readFileSync("./src/dbs/userids.json", "utf8")).botDevs
     // Load a-djs-style Handlers
     const handler = new Handler(client, {
         prefix: prefix,
@@ -103,11 +104,7 @@ try {
         token: process.env.client_login_production,
         commandsPath: __dirname + "/moody/commands",
         eventsPath: __dirname + "/moody/events",
-        owners: [
-            "532192409757679618", // PokerFace
-            "263968998645956608", // Mike
-            "692180465242603591"  // Prime
-        ]
+        owners: botDevs
     });
     await handler.start();
 
