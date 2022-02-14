@@ -95,12 +95,16 @@ module.exports = class ReadyEvent extends VillainsEvent {
 
             if (clientMember) {
                 let nick = clientMember?.nickname || clientMember.user.username
-                if (!(nick.includes(`[${handler.client.options.defaultPrefix.trim()}] `))) {
+                let prefix = handler.client?.options?.defaultPrefix ||
+                    handler.client?.options?.prefix ||
+                    handler.client?.prefix ||
+                    "vln "
+                if (!(nick.includes(`[${prefix.trim()}] `))) {
                     let regexp = /^[\[\(\{]([\S]+)[\}\)\]] /
                     if (nick.match(regexp)) {
-                        nick = nick.replace(regexp,`[${handler.client.options.defaultPrefix.trim()}] `)
+                        nick = nick.replace(regexp,`[${prefix.trim()}] `)
                     } else {
-                        nick = `[${handler.client.options.defaultPrefix.trim()}] ${nick}`
+                        nick = `[${prefix.trim()}] ${nick}`
                     }
                 }
                 if (nick != (clientMember?.nickname || clientMember.user.username)) {
