@@ -91,6 +91,22 @@ module.exports = class ReadyEvent extends VillainsEvent {
 
         let embed = null
         for (let [ guildID, guildData ] of handler.client.guilds.cache) {
+            let clientMember = await guildData.members.fetch(handler.client.user.id)
+
+            if (clientMember) {
+                let nick = clientMember?.nickname || clientMember.user.username
+                if (!(nick.includes(`[${handler.client.options.defaultPrefix.trim()}] `))) {
+                    let regexp = /^[\[\(\{]([\S]+)[\}\)\]] /
+                    if (nick.match(regexp)) {
+                        nick = nick.replace(regexp,`[${handler.client.options.defaultPrefix.trim()}] `)
+                    } else {
+                        nick = `[${handler.client.options.defaultPrefix.trim()}] ${nick}`
+                    }
+                }
+                if (nick != (clientMember?.nickname || clientMember.user.username)) {
+                    clientMember.setNickname(nick)
+                }
+            }
             let dummyMsg = { "guild": guildData }
             const channel = await this.getChannel(dummyMsg, "bot-console")
             if (channel) {
