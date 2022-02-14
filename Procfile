@@ -1,1 +1,1 @@
-npm run-script run
+worker: npm run-script run
