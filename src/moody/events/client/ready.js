@@ -14,7 +14,11 @@ module.exports = class ReadyEvent extends VillainsEvent {
         let GLOBALS = null
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         try {
-            GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            if (fs.existsSync("./src/PROFILE.json")) {
+              GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            } else {
+                console.log("🟡Ready Event: PROFILE manifest not found! Using defaults!")
+            }
             GLOBALS = (
                 GLOBALS?.profile &&
                 GLOBALS?.profiles &&
