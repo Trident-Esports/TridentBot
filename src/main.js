@@ -7,6 +7,7 @@ const replace = require('replace-in-file')
 const Levels = require('discord-xp') // Discord Game XP
 const Ascii = require('ascii-table')
 const fs = require('fs');
+const keep_alive = require("./httpd.js")
 require('dotenv').config()
 
 let guildEventsPath = "./src/moody/events/guild"
@@ -95,18 +96,15 @@ try {
 
     console.log("---");
     console.log("a-djs-style");
+    const botDevs = JSON.parse(fs.readFileSync("./src/dbs/userids.json", "utf8")).botDevs
     // Load a-djs-style Handlers
     const handler = new Handler(client, {
         prefix: prefix,
         // @ts-ignore
-        token: process.env.client_login,
+        token: process.env.client_login_production,
         commandsPath: __dirname + "/moody/commands",
         eventsPath: __dirname + "/moody/events",
-        owners: [
-            "532192409757679618", // PokerFace
-            "263968998645956608", // Mike
-            "692180465242603591"  // Prime
-        ]
+        owners: botDevs
     });
     await handler.start();
 

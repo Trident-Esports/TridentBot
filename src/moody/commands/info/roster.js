@@ -183,7 +183,7 @@ module.exports = class RosterCommand extends VillainsCommand {
             // Team Members
             if (profile?.members) {
                 let management = JSON.parse(fs.readFileSync("./src/rosters/dbs/" + org + "/staff/management.json","utf8"))
-                if (management?.members) {
+                if (management?.members && management?.title.toLowerCase() != "management") {
                     for (let groupName of (Object.keys(profile.members).concat([emojiKey]))) {
                         if (Object.keys(management.members).includes(groupName)) {
                             if (management.members[groupName]?.users) {

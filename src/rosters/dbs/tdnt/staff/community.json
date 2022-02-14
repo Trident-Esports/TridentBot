@@ -3,11 +3,10 @@
   "title": "Community Engagement",
   "aliases": ["cem"],
   "members": {
-    "crm": {
+    "cem": {
       "title": "Community Engagement",
       "users": [
-        "avalon",
-        "pokerface"
+        "avalon"
       ]
     }
   }

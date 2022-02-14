@@ -25,6 +25,10 @@
     "twitch": "benstrorl",
     "twitter": "benstro_"
   },
+  "biggy": {
+    "twitch": "i3iggy_",
+    "twitter": "i3iggy1"
+  },
   "blackjackfx": {
     "stylized": "BlackJackFx",
     "twitch": "blackjackfx",
@@ -65,6 +69,10 @@
     "twitch": "cloudfulla",
     "twitter": "cloudfulla"
   },
+  "cnqrz": {
+    "twitch": "cnqrz",
+    "twitter": "cnqrz"
+  },
   "codes": {
     "twitter": "codyjaymedia"
   },
@@ -79,11 +87,18 @@
     "twitch": "crenux",
     "twitter": "crenuxe"
   },
+  "crim": {
+    "twitch": "cr1msonk",
+    "twitter": "k16crimson"
+  },
   "crima": {
     "twitter": "kiliancrima"
   },
   "cry": {
     "twitter": "cry_cs"
+  },
+  "cxrsed": {
+    "twitch": "cxrsed_val"
   },
   "damien": {
     "twitch": "damienzsr1"
@@ -191,6 +206,8 @@
     "twitch": "nvy___23",
     "twitter": "hbt_cs"
   },
+  "howie": {
+  },
   "jackay": {
     "twitter": "jackayoce"
   },
@@ -199,6 +216,9 @@
   },
   "jam": {
     "twitter": "gucci_jam"
+  },
+  "jarod": {
+    "twitch": "jarodcreatess"
   },
   "jinxie": {
     "twitch": "jinxdarling_",
@@ -262,6 +282,8 @@
     "twitch": "maxiwatermelon",
     "twitter": "_maxxe"
   },
+  "mazuong2k4": {
+  },
   "miketrethewey": {
     "stylized": "MikeTrethewey",
     "instagram": "kunzite1",
@@ -292,6 +314,9 @@
     "instagram": "mattyt__",
     "twitch": "mythoce",
     "twitter": "ocemyth"
+  },
+  "namni": {
+    "twitch": "namni"
   },
   "nhelvyy": {
     "twitch": "nhelvyy",
@@ -339,6 +364,8 @@
     "instagram": "chriscelenzave",
     "twitch": "noongar1800",
     "twitter": "chrisc237"
+  },
+  "poonye": {
   },
   "prime": {
     "stylized": "PrimeWarGamer",
@@ -405,6 +432,9 @@
     "twitch": "scubasteve835",
     "twitter": "scubasteve835"
   },
+  "scout": {
+    "twitter": "derienmesamis"
+  },
   "sha": {
     "twitter": "shaa_cs"
   },
@@ -414,6 +444,9 @@
   "shootz": {
     "twitch": "shootzr6__",
     "twitter": "krs_shootz"
+  },
+  "siqo": {
+    "stylized": "Paaien"
   },
   "skyanite": {
     "twitch": "skyaniteoce",
@@ -514,11 +547,15 @@
     "instagram": "_wanrae_",
     "twitter": "wanrae_"
   },
+  "wauly": {
+  },
   "winnieeeee": {
     "twitch": "winnieeeee"
   },
   "wolfyee": {
     "twitter": "wolfyeedoo"
+  },
+  "yoitsmealex": {
   },
   "yung": {
     "twitch": "yungoce"
