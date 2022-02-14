@@ -33,11 +33,15 @@ module.exports = class ReadyEvent extends VillainsEvent {
         let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
         let BRANCH = ""
         try {
-            // @ts-ignore
-            BRANCH = fs.readFileSync("./.git/HEAD","utf8").trim().match(/(?:\/)([^\/]*)$/)
-            if (BRANCH && (BRANCH.length > 0)) {
+            if (fs.existsSync("./.git/HEAD")) {
                 // @ts-ignore
-                BRANCH = BRANCH[1]
+                BRANCH = fs.readFileSync("./.git/HEAD","utf8").trim().match(/(?:\/)([^\/]*)$/)
+                if (BRANCH && (BRANCH.length > 0)) {
+                    // @ts-ignore
+                    BRANCH = BRANCH[1]
+                }
+            } else if (process.env?.HOME == "/app") {
+                BRANCH = "heroku"
             }
         } catch (err) {
             console.log(err)
@@ -62,7 +66,7 @@ module.exports = class ReadyEvent extends VillainsEvent {
                 `\*\*\* PRODUCTION MODE (${profileName}) ENABLED \*\*\*`
             )
         }
-        output.push("Mongoose warning about collection.ensureIndex will be thrown.")
+        // output.push("Mongoose warning about collection.ensureIndex will be thrown.")
         output.push("Bot is Ready!")
         output.push("")
 
