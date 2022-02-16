@@ -25,8 +25,8 @@ module.exports = class MatchCommand extends TeamListingCommand {
                 }
             } else {
                 // something got stuffed up
-                let msg = `${message.author}, the correct usage is:` + "\n"
-                msg += "`" + this.prefix + "match <LPL matchID>`" + "\n"
+                let msg = `${message.author}, the correct usage is:\n`
+                msg += `\`${this.prefix}match <LPL matchID>\`\n`
                 return message.channel.send(msg)
             }
         }
@@ -35,7 +35,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
 
         for (let [span, files] of Object.entries(profiles)) {
             for (let filepath of files) {
-                let url = new URL("http://tridentoce.mymm1.com:80" + filepath)
+                let url = new URL(`http://tridentoce.mymm1.com:80${filepath}`)
 
                 let params = {
                     method: 'GET',
@@ -58,7 +58,7 @@ module.exports = class MatchCommand extends TeamListingCommand {
                 pages.push(embed)
             }
         }
-        super.send(message, pages, [], "", true)
+        super.send(message, pages, [], 0, true)
     }
 
     async test(client, message) {

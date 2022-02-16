@@ -154,33 +154,11 @@ module.exports = class VillainsCommand extends BaseCommand {
             this.null = true
         }
 
-        let GLOBALS = null
-        const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
-        try {
-            if (fs.existsSync("./src/PROFILE.json")) {
-                GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
-                GLOBALS = (
-                    GLOBALS?.profile &&
-                    GLOBALS?.profiles &&
-                    GLOBALS.profile in GLOBALS.profiles
-                ) ?
-                    GLOBALS.profiles[GLOBALS.profile]:
-                    defaults
-            } else {
-              console.log("🟡VCommand: PROFILE manifest not found! Using defaults!")
-              GLOBALS = defaults
-            }
-        } catch(err) {
-            console.log("🔴VCommand: PROFILE manifest not found!")
-            process.exit(1)
-        }
-        this.DEV = GLOBALS.DEV
-
         /**
          * Command prefix
          * @type {string}
          */
-        this.prefix = defaults.prefix
+        this.prefix = ""
 
         /**
          * List of pages of Embeds
@@ -203,24 +181,6 @@ module.exports = class VillainsCommand extends BaseCommand {
         /** @type {Object.<string, any>} Data gathered from input management */
         this.inputData = {}
 
-        // Bail if we fail to get server profile information
-        if (!GLOBALS) {
-            this.error = true
-            this.props.description = "Failed to get server profile information."
-            return
-        }
-        // Bail if we fail to get bot default information
-        if (!defaults) {
-            this.error = true
-            this.props.description = "Failed to get bot default information."
-            return
-        }
-        // Bail if we fail to get command prefix
-        if (!this.prefix) {
-            this.error = true
-            this.props.description = "Failed to get command prefix."
-            return
-        }
         // Bail if we fail to get error message information
         if (!(this.errors)) {
             this.error = true
@@ -293,6 +253,55 @@ module.exports = class VillainsCommand extends BaseCommand {
     }
 
     /**
+     * Get Profile data from loaded profile
+     */
+    async getProfile() {
+        let GLOBALS = null
+        const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
+        try {
+            if (fs.existsSync("./src/PROFILE.json")) {
+                GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+                GLOBALS = (
+                    GLOBALS?.profile &&
+                    GLOBALS?.profiles &&
+                    GLOBALS.profile in GLOBALS.profiles
+                ) ?
+                    GLOBALS.profiles[GLOBALS.profile]:
+                    defaults
+            } else {
+                console.log("🟡VCommand: PROFILE manifest not found! Using defaults!")
+                GLOBALS = defaults
+            }
+        } catch(err) {
+            console.log("🔴VCommand: PROFILE manifest not found!")
+            process.exit(1)
+        }
+        this.DEV = GLOBALS.DEV
+
+        // Bail if we fail to get server profile information
+        if (!GLOBALS) {
+            this.error = true
+            this.props.description = "Failed to get server profile information."
+            return
+        }
+        // Bail if we fail to get bot default information
+        if (!defaults) {
+            this.error = true
+            this.props.description = "Failed to get bot default information."
+            return
+        }
+
+        this.prefix = GLOBALS.prefix
+
+        // Bail if we fail to get command prefix
+        if (!this.prefix) {
+          this.error = true
+          this.props.description = "Failed to get command prefix."
+          return
+        }
+    }
+
+    /**
      * Get Channel object based on general key name
      * @param {Message | any} message Message that called the command
      * @param {string} channelType Key for channel to get from database
@@ -300,7 +309,7 @@ module.exports = class VillainsCommand extends BaseCommand {
      */
     async getChannel(message, channelType) {
         // Get botdev-defined list of channelIDs/channelNames
-        let channelIDs = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/channels.json","utf8"))
+        let channelIDs = JSON.parse(fs.readFileSync(`./src/dbs/${message.guild.id}/channels.json`,"utf8"))
         let channelID = this.channelName
         let channel = null
 
@@ -376,8 +385,8 @@ module.exports = class VillainsCommand extends BaseCommand {
         let foundHandles = { players: {}, invalid: "", flags: flags }
 
         let user = message?.author ? message.author : null
-        let mention = message?.mentions ? message.mentions.members.first() : null
-        let search = (args && (args.length > 0) && (!(mention))) ? await message.guild.members.fetch({ query: args.join(" "), limit: 1 }) : undefined
+        let mention = message?.mentions ? message?.mentions?.members?.first() : null
+        let search = (args && (args.length > 0) && (!(mention))) ? await message?.guild?.members.fetch({ query: args.join(" "), limit: 1 }) : undefined
         let loaded = undefined
         let padding = 9
         let debugout = [ `Flags:`.padEnd(padding) + JSON.stringify(flags) ]
@@ -441,7 +450,7 @@ module.exports = class VillainsCommand extends BaseCommand {
                     foundHandles.invalid = handleType
                 }
             }
-            if (this.flags.user == "invalid" && loaded.id == user.id) {
+            if (this.flags.user == "invalid" && loaded.id == user?.id) {
                 foundHandles.invalid = "user"
             }
 
@@ -647,12 +656,15 @@ module.exports = class VillainsCommand extends BaseCommand {
      * @param {Client} client Discord Client object
      * @param {Message} message Message that called the command
      * @param {Array.<string>} args Command-line args
-     * @param {ClientUtil} util
+     * @param {ClientUtil|null} util
      * @param {string} cmd Actual command name used (alias here if alias used)
      * @returns {Promise.<any>}
      */
     // @ts-ignore
     async run(client, message, args, util, cmd) {
+        // Load profile
+        await this.getProfile()
+
         // Process arguments
         await this.processArgs(message, args, this.flags)
 

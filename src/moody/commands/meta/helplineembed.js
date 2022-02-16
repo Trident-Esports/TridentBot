@@ -25,7 +25,7 @@ module.exports = class HelplineEmbedCommand extends VillainsCommand {
     async action(client, message) {
         let texts = {}
         try {
-            texts = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/tickets.json", "utf8"))
+            texts = JSON.parse(fs.readFileSync(`./src/dbs/${message.guild.id}/tickets.json`, "utf8"))
         } catch (err) {
             this.error = true
             this.props.description = `Ticket system information not found for Guild ID ${message.guild.id}!`

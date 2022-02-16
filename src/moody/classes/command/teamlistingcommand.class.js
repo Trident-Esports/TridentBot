@@ -73,7 +73,8 @@ module.exports = class TeamListingCommand extends VillainsCommand {
                     embed.setAuthor(props.title.text, "", props.title.url)
                     embed.setThumbnail(json.team_avatar)
                 } else {
-                    embed.setTitle(props.title.text, props.title.url)
+                    embed.setTitle(props.title.text)
+                    embed.setURL(props.title.url)
                 }
 
                 for (let [timestamp, match] of Object.entries(game_details)) {

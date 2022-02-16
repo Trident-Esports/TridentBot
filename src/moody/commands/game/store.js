@@ -45,8 +45,8 @@ module.exports = class StoreCommand extends GameCommand {
 
                 this.props.fields.push(
                     {
-                        name: items + " " + names + "   " + this.emojis.gold + values.toLocaleString(),
-                        value: "`" + descriptions + "`",
+                        name: `${items} ${names}   ${this.emojis.gold}${values.toLocaleString()}`,
+                        value: `\`${descriptions}\``,
                         inline: false
                     }
                 )

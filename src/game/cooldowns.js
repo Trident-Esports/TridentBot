@@ -82,7 +82,7 @@ module.exports = {
             let icon = ((cd === 0) ? "🕐" : "✅")
             cooldownEmbed.addField(
                 icon,
-                "**" + cdType + "**",
+                `**${cdType}**`,
                 true
             )
             console.log(cd)

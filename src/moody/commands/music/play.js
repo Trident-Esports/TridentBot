@@ -302,7 +302,9 @@ module.exports = class PlayCommand extends VillainsCommand {
                         }
 
                         queue.set(message.guild.id, queue_constructor);
-                        queue_constructor.songs.push(song);
+                        if (song) {
+                            queue_constructor.songs.push(song);
+                        }
 
                         try {
                             await callBot(message);

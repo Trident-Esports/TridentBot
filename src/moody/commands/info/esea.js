@@ -14,7 +14,7 @@ module.exports = class ESEACommand extends VillainsCommand {
     }
 
     async action(client, message) {
-        const apiKey = process.env.google_apiKey
+        const apiKey = process.env.google_apiKey || ""
 
         // Load workbook
         let docID = process.env.google_sheets_vln_csgo_esea
@@ -80,7 +80,7 @@ module.exports = class ESEACommand extends VillainsCommand {
                     cols = (col + 1)
                 } else if(cell.formattedValue) {
                     // Store it
-                    cellData[row - 2].push(cell.formattedValue)
+                    cellData[row - 2].push(cell?.formattedValue)
                 }
                 // If first cell of row is empty, stop
                 if ((col == 1) && ((!(Boolean(cell.formattedValue))) || (cell.formattedValue === null))) {
@@ -190,19 +190,19 @@ module.exports = class ESEACommand extends VillainsCommand {
             let show = mData?.us?.name
             let singleMatch = (wantedMatch > 0)
             if(wantedSpan != "") {
-                if((wantedSpan == "next") && (matchID > 0) && (mData.status == "incomplete")) {
+                if((wantedSpan == "next") && (parseInt(matchID) > 0) && (mData.status == "incomplete")) {
                     show = !(haveShownValidMatch)
                 } else if((wantedSpan != "all") && (wantedSpan != mData.status)) {
                     show = false
                 }
             }
-            if(singleMatch && (matchID != wantedMatch)) {
+            if(singleMatch && (parseInt(matchID) != wantedMatch)) {
                 show = false
             }
             if(!(show)) {
                 continue
             }
-            if(matchID > 0) {
+            if(parseInt(matchID) > 0) {
                 haveShownValidMatch = true
             }
 
@@ -210,7 +210,7 @@ module.exports = class ESEACommand extends VillainsCommand {
             this.props.description = []
             let siteRoot = "https://play.esea.net"
             let matchRoot = `${siteRoot}/match`
-            this.props.description.push(`__***${emoji} Match List***__ ` + ((matchID > 0) ? `*([ESEA #${matchID}](${matchRoot}/${matchID} '${matchRoot}/${matchID}'))*` : ""))
+            this.props.description.push(`__***${emoji} Match List***__ ` + ((parseInt(matchID) > 0) ? `*([ESEA #${matchID}](${matchRoot}/${matchID} '${matchRoot}/${matchID}'))*` : ""))
             let teamRoot = `${siteRoot}/teams`
             this.props.description.push(
                 "***" +
@@ -231,7 +231,7 @@ module.exports = class ESEACommand extends VillainsCommand {
                 if(mData?.map) {
                     let mapName = mData.map.substr(mData.map.indexOf('_') + 1)
                     mapName = mapName.charAt(0).toUpperCase() + mapName.slice(1)
-                    let mapURL = "https://counterstrike.fandom.com/wiki/" + mapName
+                    let mapURL = `https://counterstrike.fandom.com/wiki/${mapName}`
                     this.props.description.push(`Map: [${mapName}](${mapURL} '${mapURL}')`)
                 }
                 if(mData.players.length > 0) {

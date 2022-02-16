@@ -39,7 +39,7 @@ module.exports = class SearchCommand extends GameCommand {
         let chosenLocations = LOCATIONS.sort(() => Math.random() - Math.random()).slice(0, 3);
 
         this.props.title = { text: "Which location would you like to search? 🔍" }
-        this.props.description = `\`${chosenLocations.join("`" + "\n" + "`")}\``
+        this.props.description = `\`${chosenLocations.join(`\`\n\``)}\``
 
         // Gold Reward: 100 - 1000
         const RANDOM_NUMBER = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
@@ -51,7 +51,7 @@ module.exports = class SearchCommand extends GameCommand {
         // Match answer
         const FILTER = (m) => {
             return chosenLocations.some(
-                (answer) => answer.split(" ").pop().toLowerCase() === m.content.split(" ").pop().toLowerCase()
+                (answer) => answer?.split(" ")?.pop()?.toLowerCase() === m.content.split(" ").pop().toLowerCase()
             ) &&
             m.author.id === loaded.id;
         };

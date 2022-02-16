@@ -19,7 +19,7 @@ module.exports = class VillainsEvent extends BaseEvent {
      * @returns {Promise.<Channel>}
      */
     async getChannel(message, channelType) {
-        let channelIDPath = "./src/dbs/" + message.guild.id + "/channels.json"
+        let channelIDPath = `./src/dbs/${message.guild.id}/channels.json`
         let channel = null
 
         if (fs.existsSync(channelIDPath)) {

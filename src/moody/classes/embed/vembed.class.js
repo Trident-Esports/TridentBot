@@ -147,7 +147,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
                 if(props.description != "") {
                     props.description += "\n\n"
                 }
-                props.description += ">>" + props.footer.msg
+                props.description += `>>${props.footer.msg}`
             }
         }
 

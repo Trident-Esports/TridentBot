@@ -98,7 +98,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
                         }
 
                         if (json?.team_avatar && json.team_avatar != "") {
-                            embed.setAuthor(title, defaults.thumbnail, url)
+                            embed.setAuthor(title, defaults.thumbnail, url.toString())
                             embed.setThumbnail(json.team_avatar)
                         } else {
                             embed.setTitle(title)
@@ -162,7 +162,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
         }
 
         if (pages.length) {
-            await this.send(message, pages, [], "", true)
+            await this.send(message, pages, [], 0, true)
             this.null = true
         }
     }

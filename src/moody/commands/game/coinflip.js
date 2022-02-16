@@ -161,7 +161,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                             await this.db_transform(loaded.id, "gold", -1)
 
                             this.props.description = `You forgot to flip the coin and it fell out of your hand and rolled away. You lost 💰1.`
-                            this.props.description = `<@${loaded.id}>` + "\n" + this.props.description
+                            this.props.description = `<@${loaded.id}>\n${this.props.description}`
 
                             let embed = new VillainsEmbed(this.props)
                             await this.send(message, embed)
@@ -169,7 +169,7 @@ module.exports = class CoinFlipCommand extends GameCommand {
                         this.null = true
                     });
 
-                    this.props.description = `<@${loaded.id}>` + "\n" + this.props.description
+                    this.props.description = `<@${loaded.id}>\n${this.props.description}`
                 }
             }
         }

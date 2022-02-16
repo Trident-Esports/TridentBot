@@ -62,7 +62,7 @@ module.exports = class ATMCommand extends GameCommand {
         if (["Refund", "Steal"].includes(this.props.caption.text)) {
             // Get botdev-defined list of roles groupings
 
-            let ROLES = JSON.parse(fs.readFileSync("./src/" + message.guild.id + "/dbs/roles.json", "utf8"))
+            let ROLES = JSON.parse(fs.readFileSync(`./src/${message.guild.id}/dbs/roles.json`, "utf8"))
             // Bail if we fail to get Roles information
             if (!ROLES) {
                 this.error = true
