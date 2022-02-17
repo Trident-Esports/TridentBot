@@ -43,7 +43,7 @@ module.exports = class MessageReactionEvent extends VillainsEvent {
 
         if (reaction.message.channel.id == RULES_CHANNEL.id) {
             if (reaction.emoji.name === RULES_EMOJI) {
-                let RULES_ROLE = JSON.parse(fs.readFileSync("./src/dbs/" + reaction.message.guild.id + "/roles.json","utf8"))["rules"]
+                let RULES_ROLE = JSON.parse(fs.readFileSync(`./src/dbs/${reaction.message.guild.id}/roles.json`,"utf8"))["rules"]
 
                 if (!(RULES_ROLE)) {
                     let msg = "Message Reaction " + (this.name.includes("Add") ? "Add" : "Remove")

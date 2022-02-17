@@ -50,7 +50,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
 
         if(this.DEV) {
             Table.addRow("Default activity",activity)
-            Table.addRow("Sent activity",'[' + this.inputData.args[0] + ']')
+            Table.addRow("Sent activity", `[${this.inputData.args[0]}]`)
         }
         if(this.inputData.args.length > 1) {
             try {
@@ -121,7 +121,7 @@ module.exports = class BotActivityCommand extends AdminCommand {
                 desc += " in"
             }
             if(this.DEV) {
-                Table.addRow("New Message",desc.substr(desc.indexOf(':') + 1).trim() + " " + args.name)
+                Table.addRow("New Message", desc.substr(desc.indexOf(':') + 1).trim() + " " + args.name)
                 console.log(Table.toString())
             }
             desc += " "

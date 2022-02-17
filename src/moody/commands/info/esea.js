@@ -274,17 +274,17 @@ module.exports = class ESEACommand extends VillainsCommand {
             this.props.fields.push(
                 {
                     name: "W🟩",
-                    value: matchData.overall.win + "",
+                    value: `${matchData.overall.win}`,
                     inline: true
                 },
                 {
                     name: "L🟥",
-                    value: matchData.overall.loss + "",
+                    value: `${matchData.overall.loss}`,
                     inline: true
                 },
                 {
                     name: "T🟨",
-                    value: matchData.overall.tie + "",
+                    value: `${matchData.overall.tie}`,
                     inline: true
                 }
             )

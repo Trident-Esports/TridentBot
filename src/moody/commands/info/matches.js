@@ -50,7 +50,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                             handlerpath = "/tourney/"
                             profile.team.tourneyID = args[0]
                             profile.team.teamID = args[1]
-                            filepath += '/' + profile.team.teamID
+                            filepath += `/${profile.team.teamID}`
                             // third arg passed
                             // third arg is not a number
                             // this is a valid span
@@ -118,7 +118,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         }
                         let guilds = JSON.parse(fs.readFileSync("./src/dbs/guilds.json","utf8"))
                         let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "tdnt"
-                        let locPath = "./src/rosters/dbs/" + org + "/teams"
+                        let locPath = `./src/rosters/dbs/${org}/teams`
                         let files = walk(locPath)
                         for (let file of files) {
                             let fData = JSON.parse(fs.readFileSync(file, "utf8"))
@@ -128,7 +128,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 let filepath = fData.team.lpl.teamID
                                 if (fData?.team?.lpl?.tourneyID) {
                                     handlerpath = "/tourney/"
-                                    filepath = fData.team.lpl.tourneyID + '/' + filepath
+                                    filepath = `${fData.team.lpl.tourneyID}/${filepath}`
                                 }
                                 thisFile["url"] = handlerpath + filepath + '-' + span + ".json"
                                 thisFile["lpl"] = { teamID: fData.team.lpl.teamID }
@@ -196,9 +196,9 @@ module.exports = class MatchesCommand extends VillainsCommand {
                         if (!noMatches) {
                             props.description = ""
                             if (json?.league_name) {
-                                props.description = "***" + json.league_name + "***" + "\n"
+                                props.desciription = `***${json.league_name}***\n`
                             }
-                            let header = "__***" + emoji + json.team + "***__"
+                            let header = `__***${emoji}${json.team}***__`
                             if (json?.team_url) {
                                 header = `[${header}](${json.team_url} '${json.team_url}')`
                             }
@@ -209,11 +209,11 @@ module.exports = class MatchesCommand extends VillainsCommand {
 
                             if (json?.tournament_id) {
                                 lplName += json.tournament_id + '/'
-                                lplURL += "tournaments/" + json.tournament_id + '/'
+                                lplURL += `tournaments/${json.tournament_id}/`
                             }
                             if (json?.team_id) {
                                 lplName += json.team_id
-                                lplURL += "team/" + json.team_id
+                                lplURL += `team/${json.team_id}`
                             }
                             props.description += ` *([${lplName}](${lplURL} '${lplURL}'))*`
 
@@ -221,7 +221,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 let eseaName = "ESEA Team #"
                                 let eseaURL = "https://play.esea.net/"
                                 eseaName += fileData.esea.teamID
-                                eseaURL += "teams/" + fileData.esea.teamID
+                                eseaURL += `teams/${fileData.esea.teamID}`
                                 props.description += "\n"
                                 let emojiKey = "esea"
                                 let emoji = await new VillainsCommand({name:""}).getEmoji(emojiKey, message.guild.emojis)
@@ -255,7 +255,7 @@ module.exports = class MatchesCommand extends VillainsCommand {
                                 value += "Starting"
                             }
                             name += match.discord.team + " 🆚 " + match.discord.opponent
-                            value += ": <t:" + match.discord.timestamp + ":f>" + "\n";
+                            value += `: <t:${match.discord.timestamp}:f>\n`
                             if(match.discord.status == "incomplete" || (match.discord.scoreKeys.bySide.home != 0 || match.discord.scoreKeys.bySide.opponent != 0)) {
                                 value += '[';
                                 if(match.discord.status == "complete") {
@@ -273,23 +273,23 @@ module.exports = class MatchesCommand extends VillainsCommand {
 
                             if (json?.tournament_id) {
                                 lplName += json.tournament_id + '/'
-                                lplURL += "tournaments/" + json.tournament_id + '/'
+                                lplURL += `tournaments/${json.tournament_id}/`
                             }
                             if (json?.team_id) {
                                 lplName += json.team_id
-                                lplURL += "team/" + json.team_id
+                                lplURL += `team/${json.team_id}`
                             }
                             if (json?.team) {
-                                lplName = json.team + " (" + lplName + ')'
+                                lplName = `${json.team} (${lplName})`
                             }
 
-                            props.description = "__***" + emoji + lplName + "***__"
+                            props.description = `__***${emoji}${lplName}***__`
 
                             if (fileData?.esea?.teamID) {
                                 let eseaName = "ESEA Team #"
                                 let eseaURL = "https://play.esea.net/"
                                 eseaName += fileData.esea.teamID
-                                eseaURL += "teams/" + fileData.esea.teamID
+                                eseaURL += `teams/${fileData.esea.teamID}`
                                 let emojiKey = "esea"
                                 let emoji = await new VillainsCommand({name:""}).getEmoji(emojiKey, message.guild.emojis)
                                 props.description += ` *(${emoji}[${eseaName}](${eseaURL} '${eseaURL}'))*`

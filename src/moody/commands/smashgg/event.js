@@ -267,7 +267,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             if (node.slots.length > 0) {
                 let setID = node.id
                 let keyID = setID
-                if ((setID + "").includes("preview_")) {
+                if ((`${setID}`).includes("preview_")) {
                     setID = setID.match("preview_([^_]+)")[1]
                     keyID = keyID.match("preview_(.*)")[1]
                 }
@@ -280,7 +280,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
                 for (let slot of node.slots) {
                     if (slot?.id && slot?.entrant?.id) {
                         let slotID = slot.id
-                        if ((slot.id + "").includes("preview_")) {
+                        if ((`${slot.id}`).includes("preview_")) {
                             slotID = slot.id.match("preview_(.*)")[1]
                         }
                         event.sets[keyID]["slots"][slotID] = slot.entrant.id

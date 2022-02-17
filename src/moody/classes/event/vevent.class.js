@@ -40,7 +40,7 @@ module.exports = class VillainsEvent extends BaseEvent {
                 channel = await message.guild.channels.cache.find(c => c.name === channelID);
             } else {
                 // Else, search for a numbered channel
-                channel = await message.guild.channels.cache.find(c => (c.id + "") === (channelID + ""));
+                channel = await message.guild.channels.cache.find(c => (`${c.id}`) === (`${channelID}`));
             }
         }
 

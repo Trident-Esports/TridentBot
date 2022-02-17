@@ -70,9 +70,9 @@ module.exports = class LeagueCommand extends VillainsCommand {
                         if (!noMatches) {
                             props.description = ""
                             if (json?.league_name) {
-                                props.description = "***" + json.league_name + "***" + "\n"
+                                props.description = `***${json.league_name}***\n`
                             }
-                            let header = "__***" + emoji + json.team + "***__"
+                            let header = `__***${emoji}${json.team}***__`
                             if (json?.team_url) {
                                 header = `[${header}](${json.team_url} '${json.team_url}')`
                             }
@@ -83,14 +83,14 @@ module.exports = class LeagueCommand extends VillainsCommand {
 
                             if (json?.tournament_id) {
                                 teamName += json.tournament_id + '/'
-                                teamURL += "tournaments/" + json.tournament_id + '/'
+                                teamURL += `tournaments/${json.tournament_id}/`
                             }
                             if (json?.team_id) {
                                 teamName += json.team_id
-                                teamURL += "team/" + json.team_id
+                                teamURL += `team/${json.team_id}`
                             }
                             if (teamName != "") {
-                                teamName = "LPL Team #" + teamName
+                                teamName = `LPL Team #${teamName}`
                                 props.description += ` *([${teamName}](${teamURL} '${teamURL}'))*`
                             }
 
@@ -122,7 +122,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
                                 value += "Starting"
                             }
                             name += match.discord.team + " 🆚 " + match.discord.opponent
-                            value += ": <t:" + match.discord.timestamp + ":f>" + "\n";
+                            value += `: <t:${match.discord.timestamp}:f>\n`
                             if(match.discord.timestamp < (60 * 60 * 24 * 5)) {
                               value = "???"
                             }
@@ -135,19 +135,19 @@ module.exports = class LeagueCommand extends VillainsCommand {
 
                             if (json?.tournament_id) {
                                 teamName += json.tournament_id + '/'
-                                teamURL += "tournaments/" + json.tournament_id + '/'
+                                teamURL += `tournaments/${json.tournament_id}/`
                             }
                             if (json?.team_id) {
                                 teamName += json.team_id
-                                teamURL += "team/" + json.team_id
+                                teamURL += `team/${json.team_id}`
                             }
                             if (json?.team) {
-                                teamName = json.team + " (" + teamName + ')'
+                                teamName = `${json.team} (${teamName})`
                             }
 
                             embed.setDescription(
                                 [
-                                    "__***" + emoji + teamName + "***__",
+                                    `__***${emoji}${teamName}***__`
                                     `No selected matches found for [${teamName}](${teamURL} '${teamURL}').`
                                 ].join("\n")
                             )

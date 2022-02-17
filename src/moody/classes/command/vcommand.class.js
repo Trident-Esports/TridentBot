@@ -358,7 +358,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         if (!foundEmoji) {
             if (emojiKey) {
-                ret += '[' + emojiKey + ']'
+                ret += `[${emojiKey}]`
             }
         }
 

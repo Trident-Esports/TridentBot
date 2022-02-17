@@ -40,10 +40,10 @@ for(let [module, mData] of Object.entries(data)) {
     let lat = data[module].latest
 
     if (cur && cur.charAt(0).toLowerCase() !== 'v') {
-        cur = 'v' + cur
+        cur = `v${cur}`
     }
     if (lat && lat.charAt(0).toLowerCase() !== 'v') {
-        lat = 'v' + lat
+        lat = `v${lat}`
     }
 
     Table.addRow(

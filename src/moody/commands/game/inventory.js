@@ -109,7 +109,7 @@ module.exports = class InventoryCommand extends GameCommand {
             for (let [cat, items] of Object.entries(inventorySorts.toDB)) {
                 let value = Object.entries(items).length == 0 ? "Nothing" : ""
                 for (let [item, q] of Object.entries(items)) {
-                    value += item + '`x' + (q + "").padStart(3) + "`\n"
+                    value += `${item}\`x${q.padStart(3)}\n`
                 }
                 this.props.fields.push({
                     name: cat.charAt(0).toUpperCase() + cat.slice(1),
