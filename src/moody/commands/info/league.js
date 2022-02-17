@@ -25,7 +25,7 @@ module.exports = class LeagueCommand extends VillainsCommand {
         let leagueLevel = this.inputData.args[1] ? this.inputData.args[1] : "challenger" // challenger
         let teamID = this.inputData.args[2] ? this.inputData.args[2]      : 262205 // 262205
 
-        profiles.league = [ handlerpath + '/' + leagueGame + '/' + leagueLevel + '/' + teamID + '.json' ]
+        profiles.league = [ `${handlerpath}/${leagueGame}/${leagueLevel}/${teamID}.json` ]
 
         let defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json","utf8"))
 

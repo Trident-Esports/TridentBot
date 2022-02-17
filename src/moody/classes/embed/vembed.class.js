@@ -56,9 +56,8 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
         let noDesc = (!(props?.description))
         let undefDesc = (typeof props.description === "undefined")
-        let nullDesc = (!(noDesc || undefDesc)) && (props.description == null)
-        let emptyDesc = (!(noDesc || undefDesc)) && (props.description.trim() === "")
-        if (noDesc || undefDesc || nullDesc || emptyDesc) {
+        let nullDesc = (!(noDesc || undefDesc)) && (! props?.description)
+        if (noDesc || undefDesc || nullDesc) {
             props.description = "** **"
         }
         if (typeof props.timestamp === undefined) {
