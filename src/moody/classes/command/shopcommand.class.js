@@ -135,15 +135,21 @@ module.exports = class ShopCommand extends GameCommand {
         // Get item object
         let [cat, items] = [null, null]
         let item = null
-        for ([cat, items] of Object.entries(STOCKDATA)) {
-            if (selected_item in items) {
+        if (cat) {
+          for ([cat, items] of Object.entries(STOCKDATA)) {
+            if (items) {
+              if (selected_item in items) {
                 item = items[selected_item]
-                item.name = selected_item
-                if (!("stylized" in item)) {
+                if (item) {
+                  item.name = selected_item
+                  if (!("stylized" in item)) {
                     item.stylized = item.name.charAt(0).toUpperCase() + item.name.slice(1)
+                  }
+                  break
                 }
-                break
+              }
             }
+          }
         }
 
         // Get copy of target's inventory

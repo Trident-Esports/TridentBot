@@ -48,7 +48,7 @@ module.exports = class GuildStatusCommand extends VillainsCommand {
         }
 
         if (message?.guild?.vanityURLCode && message.guild.vanityURLCode != "") {
-            let vanityURL = "https://discord.gg/" + message.guild.vanityURLCode
+            let vanityURL = `https://discord.gg/${message.guild.vanityURLCode}`
             this.props.fields.push(
                 {
                     name: "Vanity URL",

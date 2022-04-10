@@ -19,7 +19,7 @@ module.exports = class VillainsEvent extends BaseEvent {
      * @returns {Promise.<Channel>}
      */
     async getChannel(message, channelType) {
-        let channelIDPath = "./src/dbs/" + message.guild.id + "/channels.json"
+        let channelIDPath = `./src/dbs/${message.guild.id}/channels.json`
         let channel = null
 
         if (fs.existsSync(channelIDPath)) {
@@ -40,7 +40,7 @@ module.exports = class VillainsEvent extends BaseEvent {
                 channel = await message.guild.channels.cache.find(c => c.name === channelID);
             } else {
                 // Else, search for a numbered channel
-                channel = await message.guild.channels.cache.find(c => (c.id + "") === (channelID + ""));
+                channel = await message.guild.channels.cache.find(c => (`${c.id}`) === (`${channelID}`));
             }
         }
 

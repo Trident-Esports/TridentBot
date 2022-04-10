@@ -118,7 +118,12 @@ module.exports = class ReadyEvent extends VillainsEvent {
                 embed = new VillainsEmbed(props)
                 let vCommand = new VillainsCommand({ name: "botready"}, { channel: channel })
 
-                if ((!(DEV)) || guildID == "745409743593406634" || false) {
+                if (
+                    (!(DEV)) ||
+                    guildID == "185220229931073538" || // Trident Esports PRIVATE
+                    guildID == "745409743593406634" || // TridentBot
+                    false
+                ) {
                     let message = vCommand.send(dummyMsg, embed)
                 }
             }

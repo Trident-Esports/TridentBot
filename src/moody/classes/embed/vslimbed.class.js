@@ -49,7 +49,7 @@ module.exports = class SlimEmbed extends VillainsEmbed {
             if(Array.isArray(props.description)) {
                 props.description = props.description.join("\n")
             }
-            props.description = "***" + props.title.text + "***" + "\n" + props.description
+            props.description = `***${props.title.text}***\n${props.description}`
         }
         props.title = { text: "<NONE>" }
         props.thumbnail = "<NONE>"

@@ -34,7 +34,7 @@ module.exports = class BotDevCommand extends VillainsCommand {
         if (comprops?.extensions) {
             for (let extension of comprops.extensions) {
                 let key = extension + "Model"
-                let inc = "../../models/" + extension + "Schema"
+                let inc = `../../models/${extension}Schema`
                 if (extension == "levels") {
                     key = "Levels"
                     inc = "discord-xp"

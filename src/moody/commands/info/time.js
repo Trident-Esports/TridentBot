@@ -48,7 +48,7 @@ module.exports = class TimeCommand extends VillainsCommand {
         }
         this.props.description += "```" + "\n"
 
-        let tmp = "Local: <t:" + Math.floor(now / 1000) + ":f>"
+        let tmp = `Local: <t:${Math.floor(now / 1000)}:f>`
         this.props.description += tmp
         console.log(tmp)
     }

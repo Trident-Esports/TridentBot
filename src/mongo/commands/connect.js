@@ -4,7 +4,7 @@ const mongoEventFiles = fs.readdirSync("./src/mongo/events").filter(file => file
 
 module.exports = (client) => {
     client.mongoConnect = async () => {
-        for (eventFile of mongoEventFiles) {
+        for (let eventFile of mongoEventFiles) {
             const event = require(`../events/${eventFile}`)
             if (event.once) {
                 mongoose.connection.once(event.name, (...args) => event.execute(...args))
