@@ -9,6 +9,7 @@
   },
   "main": "./src/main.js",
   "dependencies": {
+    "@types/jquery": "^3.5.14",
     "a-djs-handler": "<1.1.0",
     "ascii-table": "^0.0.9",
     "better-npm-audit": "^3.5.1",

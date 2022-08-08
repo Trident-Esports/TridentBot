@@ -1,0 +1,26 @@
+game/gamehelp
+info/eseahelp
+info/help
+info/mod
+smashgg/help
+rosters/dbs/tdnt/staff
+ casters
+ cc
+ community
+ management
+ socialmedia
+ staff
+ studio
+rosters/dbs/tdnt/teams
+ csgo
+  arctic
+  evo
+ pubg
+  main
+ r6s
+  evo
+ rocketleague
+  main
+ val
+  probies
+  sirens
