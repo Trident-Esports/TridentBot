@@ -1,6 +1,33 @@
 let data
 let prefix = "vln "
 
+// Index Elements
+function index_elements(payload) {
+  for(let [section, sectionData] of Object.entries(payload)) {
+    let sectionEle = $("#section")[0]["content"].cloneNode(true)
+    $(sectionEle).find("h2")
+      .text(section.charAt(0).toUpperCase() + section.slice(1))
+    for(let [linkPath, linkText] of Object.entries(sectionData)) {
+      let linkEle = $("#link")[0]["content"].cloneNode(true)
+      let linkURL = linkPath
+      if(linkURL.includes("dbs/")) {
+        if(linkURL.includes("game/")) {
+          linkURL = linkURL.replace("game/","")
+          linkURL = linkURL.replace("help.html","gamehelp.html")
+        }
+        linkURL = linkURL.replace("dbs/","pages/help/")
+      } else if(linkURL.includes("tdnt/")) {
+        linkURL = linkURL.replace("tdnt/","pages/rosters/tdnt/")
+      }
+      $(linkEle).find("a").attr("href",linkURL)
+      $(linkEle).find("a").text(linkText)
+      $(sectionEle).find("ul")
+        .append(linkEle)
+    }
+    $("#fileindex").append(sectionEle)
+  }
+}
+
 // Help Elements
 function help_elements(payload) {
   let preamble = payload?.preamble
@@ -103,7 +130,7 @@ function roster_elements(payload) {
             let userdata
             if(data?.socials[user]) {
               userdata = data.socials[user]
-              console.log(data.socials[user])
+              // console.log(data.socials[user])
             }
             let userlink = $("<a>")
               .attr("href",
@@ -119,6 +146,7 @@ function roster_elements(payload) {
               .append(userlink)
             $(sectionEle).find(".memberlist").append(tmp)
           }
+          $("body").append(sectionEle)
         }
       }
     }

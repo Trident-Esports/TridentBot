@@ -1,3 +1,11 @@
+function indexPage(path="") {
+  data = {
+    "path": path
+  }
+
+  fetch_and_return(path)
+}
+
 function helpPage(path="") {
   data = {
     "path": path

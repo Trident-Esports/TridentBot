@@ -6,9 +6,12 @@ function fetch_and_return(url) {
     .then(function(payload) {
       // console.log(payload);
       let type = "help"
+      type = (url.includes("filelist.json")) && "index" || type
       type = (url.includes("help")) && "help" || type
       type = (url.includes("roster")) && "roster" || type
-      if(type == "help") {
+      if(type == "index") {
+        index_elements(payload)
+      } else if(type == "help") {
         help_elements(payload)
       } else if(type == "roster") {
         roster_elements(payload)

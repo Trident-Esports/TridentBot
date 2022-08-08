@@ -1,7 +1,7 @@
 import json
 import os
 
-from shutil import copy, copytree, rmtree
+from shutil import copy, copytree, rmtree, move
 
 # File listings
 fileList = {
@@ -53,21 +53,23 @@ if(os.path.exists(os.path.join(".","html"))):
   rmtree(os.path.join(".","html"))
 
 # Copy to HTML dirs
-for srcPath in [
-  os.path.join(
-    ".",
-    "src",
-    "resources",
-    "pages"
-  )
+for [srcPath, destPath] in [
+  [
+    os.path.join(".","src","resources","pages"),
+    os.path.join(".","html","pages")
+  ]
 ]:
-  destPath = srcPath.replace("src","html")
-
-  # Copy from SRC dirs to HTML dirs
+  print(f"Copying: {srcPath} to: {destPath}")
   copytree(
-    os.path.join(srcPath),
-    os.path.join(destPath)
+    srcPath,
+    destPath
   )
+
+# Move Index File
+move(
+  os.path.join(".","html","pages","index.html"),
+  os.path.join(".","html","index.html")
+)
 
 # Make HTML subdirs
 # print("Make HTML subdirs")
@@ -182,6 +184,20 @@ for helpFileName in helpFiles:
       helpFileName
     )
   )
+
+# Copy Roster DBs
+copytree(
+  os.path.join(
+    ".",
+    "src",
+    "rosters"
+  ),
+  os.path.join(
+    ".",
+    "html",
+    "rosters"
+  )
+)
 
 # Write File List
 print("Writing File List")
