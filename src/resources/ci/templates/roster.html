@@ -10,8 +10,8 @@
   </head>
   <body>
     <template id="title"><div class="title"><h1></h1></div></template>
-    <template id="section"><div class="section"><h2></h2></div></template>
-    <template id="member"><div class="member"></div></template>
+    <template id="section"><div class="section"><h2></h2><ul class="memberlist"></ul></div></template>
+    <template id="member"><li class="member"></li></template>
     <script>
       rosterPage("../".repeat(<REPEAT_ROSTER>) + "rosters/<PATH_ROSTER>")
     </script>

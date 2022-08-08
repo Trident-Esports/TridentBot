@@ -87,18 +87,17 @@ function roster_elements(payload) {
   if(title) {
     let tmp = $("#title")[0]["content"].cloneNode(true)
     $("title")
-      .text(title + " Roster")
+      .text(title)
     $(tmp).find("h1")
       .text(title)
     $("body").append(tmp)
     if(members) {
       for(let [section, sectionData] of Object.entries(members)) {
         if(sectionData?.users && sectionData.users.length > 0) {
+          let sectionEle = $("#section")[0]["content"].cloneNode(true)
           if(sectionData?.title) {
-            let tmp = $("#section")[0]["content"].cloneNode(true)
-            $(tmp).find("h2")
+            $(sectionEle).find("h2")
               .text(sectionData.title)
-            $("body").append(tmp)
           }
           for(let user of sectionData.users) {
             let userdata
@@ -118,7 +117,7 @@ function roster_elements(payload) {
             let tmp = $("#member")[0]["content"].cloneNode(true)
             $(tmp).find(".member")
               .append(userlink)
-            $("body").append(tmp)
+            $(sectionEle).find(".memberlist").append(tmp)
           }
         }
       }
