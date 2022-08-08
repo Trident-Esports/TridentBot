@@ -86,6 +86,8 @@ function roster_elements(payload) {
 
   if(title) {
     let tmp = $("#title")[0]["content"].cloneNode(true)
+    $("title")
+      .text(title + " Roster")
     $(tmp).find("h1")
       .text(title)
     $("body").append(tmp)

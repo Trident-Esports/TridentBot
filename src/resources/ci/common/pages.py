@@ -113,7 +113,9 @@ for r,d,f in os.walk(os.path.join(".","src","rosters")):
           os.path.basename(rosterFilePath).replace(".json",".html")
         )
         with open(destFile, "w") as thisOutput:
-          thisTemplate = rosterTemplate.replace("<PATH_ROSTER>", "dbs" + destDir[20:].replace("\\","/") + "/" + rosterFileName)
+          rosterPath = "dbs" + destDir[20:].replace("\\","/") + "/" + rosterFileName
+          thisTemplate = rosterTemplate.replace("<PATH_ROSTER>", rosterPath)
+          thisTemplate = thisTemplate.replace(".repeat(n)",".repeat(" + str(rosterPath.count("/") + 1) + ")")
           print(f"Writing Roster: {destFile}")
           thisOutput.write(thisTemplate)
 
