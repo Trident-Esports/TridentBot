@@ -114,8 +114,10 @@ for r,d,f in os.walk(os.path.join(".","src","rosters")):
         )
         with open(destFile, "w") as thisOutput:
           rosterPath = "dbs" + destDir[20:].replace("\\","/") + "/" + rosterFileName
-          thisTemplate = rosterTemplate.replace("<PATH_ROSTER>", rosterPath)
-          thisTemplate = thisTemplate.replace(".repeat(n)",".repeat(" + str(rosterPath.count("/") + 1) + ")")
+          rosterRepeat = rosterPath.count("/") + 1
+          thisTemplate = rosterTemplate.replace("../../../", ("../" * (rosterRepeat - 1)))
+          thisTemplate = thisTemplate.replace("<PATH_ROSTER>", rosterPath)
+          thisTemplate = thisTemplate.replace("<REPEAT_ROSTER>", str(rosterRepeat))
           print(f"Writing Roster: {destFile}")
           thisOutput.write(thisTemplate)
 
