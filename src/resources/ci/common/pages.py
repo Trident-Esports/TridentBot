@@ -46,6 +46,22 @@ rosterTemplateFile.close()
 if(os.path.exists(os.path.join(".","html"))):
   rmtree(os.path.join(".","html"))
 
+# Copy to HTML dirs
+for srcPath in [
+  os.path.join(
+    ".",
+    "src",
+    "pages"
+  )
+]:
+  destPath = srcPath.replace("src","html")
+
+  # Copy from SRC dirs to HTML dirs
+  copytree(
+    os.path.join(srcPath),
+    os.path.join(destPath)
+  )
+
 # Make HTML dirs
 print("Make HTML dirs")
 for makeDir in [
@@ -114,20 +130,4 @@ for helpFileName in helpFiles:
       "html",
       helpFileName
     )
-  )
-
-# Copy to HTML dirs
-for destPath in [
-  os.path.join(
-    ".",
-    "html",
-    "rosters"
-  )
-]:
-  srcPath = destPath.replace("html","src")
-
-  # Copy from SRC dirs to HTML dirs
-  copytree(
-    os.path.join(srcPath),
-    os.path.join(destPath)
   )
