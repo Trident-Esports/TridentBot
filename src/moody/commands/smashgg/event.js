@@ -157,13 +157,13 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         const endpoint = "https://api.smash.gg/gql/alpha"
         const GQLClient = new GraphQLClient(endpoint, {
             headers: {
-                "Authorization": "Bearer " + process.env.smashGG_apiKey
+                "Authorization": `Bearer ${process.env.smashGG_apiKey}`
             }
         })
 
         let guildSGGdata = null
         try {
-            let guildData = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/data.json","utf8"))
+            let guildData = JSON.parse(fs.readFileSync(`./src/dbs/${message.guild.id}/data.json`,"utf8"))
             if ("smashGG" in guildData) {
                 guildSGGdata = guildData.smashGG
                 if ("fall2021" in guildSGGdata) {
@@ -196,7 +196,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         } else if ("event" in guildSGGdata) {
             eventData = guildSGGdata.event.idx
         } else {
-            eventData = 0
+            eventData = "0"
         }
 
         if (tourneyData == "") {
@@ -212,7 +212,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
         // Get Event ID
         let tourneySlug = tourneyData
         let eventIDX = eventData
-        let data = ""
+        let data = {}
         try {
             data = await this.getTournamentBySlug(GQLClient, tourneySlug)
         } catch (err) {
@@ -245,7 +245,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
 
         this.props.caption = {
             text: event.name,
-            url: "https://smash.gg/" + event.slug.event
+            url: `https://smash.gg/${event.slug.event}`
         }
         this.props.players.author = this.props.caption
 
@@ -267,7 +267,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             if (node.slots.length > 0) {
                 let setID = node.id
                 let keyID = setID
-                if ((setID + "").includes("preview_")) {
+                if ((`${setID}`).includes("preview_")) {
                     setID = setID.match("preview_([^_]+)")[1]
                     keyID = keyID.match("preview_(.*)")[1]
                 }
@@ -280,14 +280,14 @@ module.exports = class SmashGGEvent extends VillainsCommand {
                 for (let slot of node.slots) {
                     if (slot?.id && slot?.entrant?.id) {
                         let slotID = slot.id
-                        if ((slot.id + "").includes("preview_")) {
+                        if ((`${slot.id}`).includes("preview_")) {
                             slotID = slot.id.match("preview_(.*)")[1]
                         }
                         event.sets[keyID]["slots"][slotID] = slot.entrant.id
                     }
                 }
                 if (Object.keys(event.sets[keyID]["slots"]).length > 0) {
-                    let set = ""
+                    let set = {}
                     try {
                         set = await this.getSetStats(GQLClient, setID)
                     } catch (err) {
@@ -335,7 +335,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             }
         })
         for (let team of teamsByPlacement) {
-            let url = "https://smash.gg/tournament/" + event.slug.tournament + "/event/0/entrant/" + team.id
+            let url = `https://smash.gg/tournament/${event.slug.tournament}/event/0/entrant/${team.id}`
             this.props.description.push(`\`${(team.placement + "").padStart(3,' ')}\` [${team.name}](${url} '${url}')`)
         }
         if (teamsByPlacement.length == 0) {
@@ -353,16 +353,18 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             let toggle = 0
             for (let [slotID, teamID] of Object.entries(set.slots)) {
                 let team = event.teams[teamID]
-                let score = teamID in set.score ? set.score[teamID] : 0
-                let url = "https://smash.gg/tournament/" + event.slug.tournament + "/event/0/entrant/" + team.id
-                teams += `[${team.name}](${url} '${url}')`
-                scores += `${score}`
-                if (toggle % 2 == 0) {
-                    teams += " 🆚 "
-                    scores += '-'
+                if (team) {
+                    let score = teamID in set.score ? set.score[teamID] : 0
+                    let url = `https://smash.gg/tournament/${event.slug.tournament}/event/0/entrant/${team?.id}`
+                    teams += `[${team?.name}](${url} '${url}')`
+                    scores += `${score}`
+                    if (toggle % 2 == 0) {
+                        teams += " 🆚 "
+                        scores += '-'
+                    }
+                    i++
+                    toggle++
                 }
-                i++
-                toggle++
             }
 
             if (set?.fullRoundText) {
@@ -375,7 +377,7 @@ module.exports = class SmashGGEvent extends VillainsCommand {
             this.props.description.push(teams)
 
             if (set?.startedAt) {
-                let url = "https://smash.gg/" + event.slug.event + "/set/" + set.id
+                let url = `https://smash.gg/${event.slug.event}/set/${set.id}`
                 scores = `[${scores}](${url} '${url}')`
             }
 

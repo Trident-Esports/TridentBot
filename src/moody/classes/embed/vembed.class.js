@@ -56,9 +56,8 @@ module.exports = class VillainsEmbed extends MessageEmbed {
         }
         let noDesc = (!(props?.description))
         let undefDesc = (typeof props.description === "undefined")
-        let nullDesc = (!(noDesc || undefDesc)) && (props.description == null)
-        let emptyDesc = (!(noDesc || undefDesc)) && (props.description.trim() === "")
-        if (noDesc || undefDesc || nullDesc || emptyDesc) {
+        let nullDesc = (!(noDesc || undefDesc)) && (! props?.description)
+        if (noDesc || undefDesc || nullDesc) {
             props.description = "** **"
         }
         if (typeof props.timestamp === undefined) {
@@ -72,7 +71,12 @@ module.exports = class VillainsEmbed extends MessageEmbed {
              * Global properties
              * @type {Object.<string, any>}
              */
-            this.GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            this.GLOBALS = {}
+            if (fs.existsSync("./src/PROFILE.json")) {
+                this.GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            } else {
+                console.log("🟡VEmbed: PROFILE manifest not found! Using defaults!")
+            }
             const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
             this.GLOBALS = (
                 this.GLOBALS?.profile &&
@@ -142,7 +146,7 @@ module.exports = class VillainsEmbed extends MessageEmbed {
                 if(props.description != "") {
                     props.description += "\n\n"
                 }
-                props.description += ">>" + props.footer.msg
+                props.description += `>>${props.footer.msg}`
             }
         }
 

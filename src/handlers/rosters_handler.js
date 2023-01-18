@@ -118,7 +118,9 @@ module.exports = (client) => {
                             let command = new LeagueCommand().run(
                                 client,
                                 message,
-                                [ profile.league.game, profile.league.level, teamID ]
+                                [ profile.league.game, profile.league.level, teamID ],
+                                null,
+                                ""
                             )
                         }
                     }
@@ -159,15 +161,15 @@ module.exports = (client) => {
 
                             desc += teamName;
                             desc += " (";
-                            desc += "`" + teamID + "`";
+                            desc += `\`${teamID}\``;
                             if (teams[teamID].schedule) {
                                 desc += "/";
-                                desc += "`" + teamID + 's' + "`";
-                            }
+                                desc += `\`${teamID}s\``;
+                              }
                             if (teams[teamID].league) {
                                 desc += "/";
-                                desc += "`" + teamID + 'l' + "`";
-                            }
+                                desc += `\`${teamID}l\``;
+                              }
                             desc += ")";
                             desc += "\n";
                         }

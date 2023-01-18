@@ -62,7 +62,7 @@ module.exports = class TicketCommand extends VillainsCommand {
     }
 
     async build(client, message, cmd) {
-        const tickets = JSON.parse(fs.readFileSync("./src/dbs/" + message.guild.id + "/tickets.json","utf8"))
+        const tickets = JSON.parse(fs.readFileSync(`./src/dbs/${message.guild.id}/tickets.json`,"utf8"))
         if (this.parentID in Object.keys(tickets)) {
             if (tickets[this.parentID]?.parentID) {
                 this.parentID = tickets[this.parentID].parentID

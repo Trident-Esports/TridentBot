@@ -14,7 +14,11 @@ module.exports = class ReadyEvent extends VillainsEvent {
         let GLOBALS = null
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
         try {
-            GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            if (fs.existsSync("./src/PROFILE.json")) {
+              GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+            } else {
+                console.log("🟡Ready Event: PROFILE manifest not found! Using defaults!")
+            }
             GLOBALS = (
                 GLOBALS?.profile &&
                 GLOBALS?.profiles &&
@@ -29,11 +33,15 @@ module.exports = class ReadyEvent extends VillainsEvent {
         let PACKAGE = JSON.parse(fs.readFileSync("./package.json","utf8"))
         let BRANCH = ""
         try {
-            // @ts-ignore
-            BRANCH = fs.readFileSync("./.git/HEAD","utf8").trim().match(/(?:\/)([^\/]*)$/)
-            if (BRANCH && (BRANCH.length > 0)) {
+            if (fs.existsSync("./.git/HEAD")) {
                 // @ts-ignore
-                BRANCH = BRANCH[1]
+                BRANCH = fs.readFileSync("./.git/HEAD","utf8").trim().match(/(?:\/)([^\/]*)$/)
+                if (BRANCH && (BRANCH.length > 0)) {
+                    // @ts-ignore
+                    BRANCH = BRANCH[1]
+                }
+            } else if (process.env?.HOME == "/app") {
+                BRANCH = "heroku"
             }
         } catch (err) {
             console.log(err)
@@ -58,7 +66,7 @@ module.exports = class ReadyEvent extends VillainsEvent {
                 `\*\*\* PRODUCTION MODE (${profileName}) ENABLED \*\*\*`
             )
         }
-        output.push("Mongoose warning about collection.ensureIndex will be thrown.")
+        // output.push("Mongoose warning about collection.ensureIndex will be thrown.")
         output.push("Bot is Ready!")
         output.push("")
 
@@ -83,6 +91,26 @@ module.exports = class ReadyEvent extends VillainsEvent {
 
         let embed = null
         for (let [ guildID, guildData ] of handler.client.guilds.cache) {
+            let clientMember = await guildData.members.fetch(handler.client.user.id)
+
+            if (clientMember) {
+                let nick = clientMember?.nickname || clientMember.user.username
+                let prefix = handler.client?.options?.defaultPrefix ||
+                    handler.client?.options?.prefix ||
+                    handler.client?.prefix ||
+                    "vln "
+                if (!(nick.includes(`[${prefix.trim()}] `))) {
+                    let regexp = /^[\[\(\{]([\S]+)[\}\)\]] /
+                    if (nick.match(regexp)) {
+                        nick = nick.replace(regexp,`[${prefix.trim()}] `)
+                    } else {
+                        nick = `[${prefix.trim()}] ${nick}`
+                    }
+                }
+                if (nick != (clientMember?.nickname || clientMember.user.username)) {
+                    clientMember.setNickname(nick)
+                }
+            }
             let dummyMsg = { "guild": guildData }
             const channel = await this.getChannel(dummyMsg, "bot-console")
             if (channel) {
@@ -90,7 +118,12 @@ module.exports = class ReadyEvent extends VillainsEvent {
                 embed = new VillainsEmbed(props)
                 let vCommand = new VillainsCommand({ name: "botready"}, { channel: channel })
 
-                if ((!(DEV)) || guildID == "745409743593406634" || false) {
+                if (
+                    (!(DEV)) ||
+                    guildID == "185220229931073538" || // Trident Esports PRIVATE
+                    guildID == "745409743593406634" || // TridentBot
+                    false
+                ) {
                     let message = vCommand.send(dummyMsg, embed)
                 }
             }

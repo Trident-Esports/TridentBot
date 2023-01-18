@@ -37,9 +37,9 @@ module.exports = class BotInviteCommand extends VillainsCommand {
           defaults?.bot?.permissions
         ) {
             url += "https://discord.com/oauth2/authorize"
-            url += "?client_id=" + client.user.id
-            url += "&scope=" + defaults.bot.scope
-            url += "&permissions=" + defaults.bot.permissions
+            url += `?client_id=${client.user.id}`
+            url += `&scope=${defaults.bot.scope}`
+            url += `&permissions=${defaults.bot.permissions}`
             this.props.description = `***[Invite @TridentBot to your Discord!](${url} '${url}')***`
         } else {
             this.error = true

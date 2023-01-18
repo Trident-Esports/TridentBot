@@ -125,8 +125,8 @@ module.exports = class RosterCommand extends VillainsCommand {
                 let url = "http://tridentoce.mymm1.com/"
                 let name = "LPL Team #"
                 if(tourneyID > 0) {
-                    url += "tourney/" + tourneyID + '/'
-                    name += tourneyID + '/'
+                    url += `tourney/${tourneyID}/`
+                    name += `${tourneyID}/`
                 }
                 if(tourneyID == 0) {
                     url += "team/"
@@ -182,7 +182,7 @@ module.exports = class RosterCommand extends VillainsCommand {
 
             // Team Members
             if (profile?.members) {
-                let management = JSON.parse(fs.readFileSync("./src/rosters/dbs/" + org + "/staff/management.json","utf8"))
+                let management = JSON.parse(fs.readFileSync(`./src/rosters/dbs/${org}/staff/management.json`,"utf8"))
                 if (management?.members && management?.title.toLowerCase() != "management") {
                     for (let groupName of (Object.keys(profile.members).concat([emojiKey]))) {
                         if (Object.keys(management.members).includes(groupName)) {
@@ -216,11 +216,11 @@ module.exports = class RosterCommand extends VillainsCommand {
                                     name = social.stylized
                                 }
                                 if (social?.twitter && social.twitter.trim() != "") {
-                                    userURL = "https://twitter.com/" + social.twitter
+                                    userURL = `https://twitter.com/${social.twitter}`
                                 } else if (social?.twitch && social.twitch.trim() != "") {
-                                    userURL = "https://twitch.tv/" + social.twitch
+                                    userURL = `https://twitch.tv/${social.twitch}`
                                 } else if (social?.instagram && social.instagram.trim() != "") {
-                                    userURL = "https://instagram.com/" + social.instagram
+                                    userURL = `https://instagram.com/${social.instagram}`
                                 }
                             }
                         }

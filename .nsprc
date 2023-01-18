@@ -1,8 +1,4 @@
 {
-  "1002401": {
-    "active": true,
-    "notes": "Ignored for reasons."
-  },
   "1004946": {
     "active": true,
     "notes": "Ignored because using a lower version of chalk."

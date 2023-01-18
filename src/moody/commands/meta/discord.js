@@ -4,10 +4,13 @@ const VillainsCommand = require('../../classes/command/vcommand.class');
 const fs = require('fs');
 let GLOBALS = null
 try {
-    GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+    if (fs.existsSync("./src/PROFILE.json")) {
+        GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+    } else {
+        console.log("🟡Discord Invite: PROFILE manifest not found! Ignoring command!")
+    }
 } catch(err) {
     console.log("🔴Discord Invite: PROFILE manifest not found!")
-    process.exit(1)
 }
 
 module.exports = class DiscordInviteCommand extends VillainsCommand {
@@ -29,8 +32,14 @@ module.exports = class DiscordInviteCommand extends VillainsCommand {
     }
 
     async action(client, message) {
-        let GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+        let GLOBALS = null
         const defaults = JSON.parse(fs.readFileSync("./src/dbs/defaults.json", "utf8"))
+        if (fs.existsSync("./src/PROFILE.json")) {
+            GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+        } else {
+            console.log("🟡Discord Invite: PROFILE manifest not found! Ignoring command!")
+            return
+        }
         GLOBALS = (
             GLOBALS?.profile &&
             GLOBALS?.profiles &&

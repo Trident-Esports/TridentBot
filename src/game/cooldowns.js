@@ -20,7 +20,12 @@ module.exports = {
 
         let GLOBALS = null
         try {
-            GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+          if (fs.existsSync("./src/PROFILE.json")) {
+              GLOBALS = JSON.parse(fs.readFileSync("./src/PROFILE.json", "utf8"))
+          } else {
+              console.log("🟡Cooldowns: PROFILE manifest not found! Ignoring command!")
+              return
+          }
         } catch(err) {
             console.log("🔴Cooldowns: PROFILE manifest not found!")
             process.exit(1)
@@ -77,7 +82,7 @@ module.exports = {
             let icon = ((cd === 0) ? "🕐" : "✅")
             cooldownEmbed.addField(
                 icon,
-                "**" + cdType + "**",
+                `**${cdType}**`,
                 true
             )
             console.log(cd)
