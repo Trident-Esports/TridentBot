@@ -40,7 +40,7 @@ module.exports = class RosterCommand extends VillainsCommand {
 
     async run(client, message, args) {
         let guilds = JSON.parse(fs.readFileSync("./src/dbs/guilds.json","utf8"))
-        let org = message.guild.id in Object.keys(guilds) ? guilds[message.guild.id] : "tdnt"
+        let org = message?.guild?.id in Object.keys(guilds) ? guilds[message?.guild?.id] : "tdnt"
         let gameID = args[0] ? args[0].toLowerCase() : ""
         let teamType = args[1] ? args[1].toLowerCase() : ""
         let filepath = "./src/rosters/dbs"
@@ -99,7 +99,7 @@ module.exports = class RosterCommand extends VillainsCommand {
 
             let emojiMatch = filepath.match(/(?:\/teams\/)([^\/]*)(.*)/)
             let emojiKey = emojiMatch ? emojiMatch[1] : ""
-            let emoji = await this.getEmoji(emojiKey, message.guild.emojis)
+            let emoji = await this.getEmoji(emojiKey, message?.guild?.emojis)
 
             props.description = emoji
 
@@ -138,7 +138,7 @@ module.exports = class RosterCommand extends VillainsCommand {
             }
 
             // ESEA URL
-            emoji = await this.getEmoji("esea", message.guild.emojis)
+            emoji = await this.getEmoji("esea", message?.guild?.emojis)
             teamID = 0
             if (profile?.team?.esea?.teamID) {
                 teamID = profile.team.esea.teamID

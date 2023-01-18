@@ -21,7 +21,7 @@ module.exports = class BuyCommand extends ShopCommand {
 
         dummy = new RefundCommand()
         dummy.run(client, message, [
-          "miketrethewey",
+          "matrethewey",
           ((
             500 +
             2000000 +

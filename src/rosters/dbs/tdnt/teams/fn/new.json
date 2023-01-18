@@ -1,42 +1,34 @@
 {
   "stripe": "default",
-  "title": "VALORANT Probies Roster",
-  "aliases": ["vsr"],
+  "title": "Fortnite NEW Roster",
+  "aliases": ["fnr"],
   "team": {
     "lpl": {
       "teamID": "",
       "avatar": ""
     }
   },
-  "#url": "#rosters: VALORANT lists",
+  "#url": "#rosters: Fortnite lists",
   "members": {
     "coach": {
       "title": "Coach",
       "users": [
-        "siqo"
       ]
     },
     "captain": {
       "title": "Captain",
       "users": [
-        "howie"
       ]
     },
     "main": {
       "title": "Main",
       "users": [
-        "cxrsed",
-        "howie",
-        "mazuong2k4",
-        "scout",
-        "wauly"
+        "solar"
       ]
     },
     "sub": {
       "title": "Sub",
       "users": [
-        "cnqrz",
-        "yoitsmealex"
       ]
     }
   }

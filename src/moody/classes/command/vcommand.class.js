@@ -309,7 +309,7 @@ module.exports = class VillainsCommand extends BaseCommand {
      */
     async getChannel(message, channelType) {
         // Get botdev-defined list of channelIDs/channelNames
-        let channelIDs = JSON.parse(fs.readFileSync(`./src/dbs/${message.guild.id}/channels.json`,"utf8"))
+        let channelIDs = message?.guild ? JSON.parse(fs.readFileSync(`./src/dbs/${message.guild.id}/channels.json`,"utf8")) : null
         let channelID = this.channelName
         let channel = null
 
@@ -350,7 +350,7 @@ module.exports = class VillainsCommand extends BaseCommand {
 
         let foundEmoji = false
 
-        let cachedEmoji = await emojis.cache.find(emoji => emoji.name === emojiName)
+        let cachedEmoji = await emojis?.cache.find(emoji => emoji.name === emojiName)
         if (cachedEmoji?.available) {
             foundEmoji = true
             ret += `${cachedEmoji}`;

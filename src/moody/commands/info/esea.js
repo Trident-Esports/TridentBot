@@ -96,7 +96,7 @@ module.exports = class ESEACommand extends VillainsCommand {
         }
 
         let emojiKey = "csgo"
-        let emoji = await this.getEmoji(emojiKey, message.guild.emojis)
+        let emoji = await this.getEmoji(emojiKey, message?.guild?.emojis)
 
         let matchData = { overall: { ct: 0, t: 0, win: 0, loss: 0, tie: 0 } }
         let matchID = "NaN"

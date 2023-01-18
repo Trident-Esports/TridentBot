@@ -154,7 +154,7 @@ module.exports = (client) => {
                     for (let teamID in teams) {
                         if (teams.hasOwnProperty(teamID)) {
                             let teamName = teams[teamID].name;
-                            let cachedEmoji = await message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+                            let cachedEmoji = message?.guild ? await message.guild.emojis.cache.find(emoji => emoji.name === emojiName) : null;
                             if (cachedEmoji?.available) {
                                 desc += `${cachedEmoji}`;
                             }

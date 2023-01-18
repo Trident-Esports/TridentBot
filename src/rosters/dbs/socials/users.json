@@ -41,14 +41,19 @@
     "twitch": "gotabriefcase"
   },
   "brew": {
-    "twitch": "brewoce",
-    "twitter": "brewoce"
+    "stylized": "BREW",
+    "twitch": "brew_oce",
+    "twitter": "brewoce",
+    "steam": "BREWOCE"
   },
   "brian": {
     "stylized": "BRIAN",
     "instagram": "_finn_williams__",
     "twitch": "nobones234",
     "twitter": "nobrainslikeveg"
+  },
+  "buddha": {
+    "steam": "theebuddha"
   },
   "capther0": {
     "stylized": "CaptHer0",
@@ -137,6 +142,11 @@
   "error": {
     "twitter": "err0r29351436"
   },
+  "evi": {
+    "twitter": "Evi_OCE",
+    "twitch": "eviau",
+    "steam": "EviAU"
+  },
   "fxulty": {
     "instagram": "steve.biggin",
     "twitch": "crippor6",
@@ -175,6 +185,10 @@
   },
   "glny": {
   },
+  "greips": {
+    "twitter": "greipsHC",
+    "twitch": "greips"
+  },
   "griteo": {
     "twitter": "griteo_r6",
     "twitch": "griteo_r6"
@@ -210,6 +224,10 @@
     "twitch": "howiecs",
     "twitter": "howievalo"
   },
+  "indyworkaholic": {
+    "twitch": "indyworkaholic",
+    "twitter": "indyworkaholic"
+  },
   "jackay": {
     "twitter": "jackayoce"
   },
@@ -221,6 +239,11 @@
   },
   "jarod": {
     "twitch": "jarodcreatess"
+  },
+  "jettos": {
+    "twitter": "Jett0s",
+    "twitch": "jett0s",
+    "steam": "Jett0s"
   },
   "jinxie": {
     "twitch": "jinxdarling_",
@@ -288,11 +311,14 @@
     "twitch": "mazuong2k4",
     "twitter": "mazuongg2k4"
   },
-  "miketrethewey": {
-    "stylized": "MikeTrethewey",
+  "matrethewey": {
+    "stylized": "MinnieTrethewey",
     "instagram": "kunzite1",
-    "twitch": "miketrethewey",
-    "twitter": "miketrethewey"
+    "twitch": "minnietrethewey",
+    "twitter": "matrethewey"
+  },
+  "meesix": {
+    "twitter": "meesixlive"
   },
   "millah": {
     "twitter": "Millah38225519",
@@ -397,6 +423,10 @@
     "twitch": "relliictv",
     "twitter": "relliicr6"
   },
+  "riv": {
+    "twitter": "riv_oce",
+    "steam": "76561198043430195"
+  },
   "robbo": {
     "instagram": "james.robbo03",
     "twitch": "unknownrobbo",
@@ -442,6 +472,9 @@
   "sha": {
     "twitter": "shaa_cs"
   },
+  "shmee": {
+    "twitter": "vshmee"
+  },
   "shmurda": {
     "stylized": "shmurda"
   },
@@ -472,6 +505,9 @@
   },
   "snow": {
     "twitch": "snow_lol"
+  },
+  "solar": {
+    "twitch": "solarfull"
   },
   "sotto" : {
     "twitter": "",
@@ -559,6 +595,9 @@
   },
   "wolfyee": {
     "twitter": "wolfyeedoo"
+  },
+  "xen1x": {
+    "twitter": "xen1x1"
   },
   "yoitsmealex": {
   },

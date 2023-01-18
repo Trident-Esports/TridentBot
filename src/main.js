@@ -47,7 +47,7 @@ if (!prefix) {
 
 try {
     // @ts-ignore
-    Levels.setURL(process.env.client_mongoDB);
+    // Levels.setURL(process.env.client_mongoDB);
 } catch {
     console.log("🔴MongoDB Levels: Failed to connect!")
     process.exit(1)
@@ -92,7 +92,7 @@ try {
     // Connect to MongoDB
     console.log("---");
     // @ts-ignore
-    await client.mongoConnect();
+    // await client.mongoConnect();
 
     console.log("---");
     console.log("a-djs-style");
@@ -101,7 +101,8 @@ try {
     const handler = new Handler(client, {
         prefix: prefix,
         // @ts-ignore
-        token: process.env.client_login_production,
+        // token: process.env.client_login_production,
+        token: process.env.client_login_dev,
         commandsPath: __dirname + "/moody/commands",
         eventsPath: __dirname + "/moody/events",
         owners: botDevs
