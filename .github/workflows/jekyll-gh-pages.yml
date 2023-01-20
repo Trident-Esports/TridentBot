@@ -21,6 +21,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Cleanup Pages Workspace
+        run: |
+          rm -rf *.js
+          rm -rf *.md
+          rm -rf *.py
+          find ./ -empty -type d | wc -l
+          find ./ -empty -type d -delete
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Build with Jekyll
