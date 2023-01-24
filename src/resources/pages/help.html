@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+    <script src="./js/general.js"></script>
+    <script src="./js/elements.js"></script>
+    <script src="./js/templating.js"></script>
+    <script src="./js/guts.js"></script>
+    <link rel="stylesheet" href="./css/global.css" type="text/css" />
+    <link rel="icon" href="../../../src/images/avatars/trident_new.png" type="image/png" sizes="16x16" />
+  </head>
+  <body>
+    <script>
+      help = "dbs/eseahelp.json";
+      if(window.location.search) {
+        help = window.location.search.substr(("?help=").length);
+        console.log(help)
+      }
+      helpPage("../../../src/" + help);
+    </script>
+  </body>
+</html>

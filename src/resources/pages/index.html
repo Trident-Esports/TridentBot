@@ -1,0 +1,104 @@
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+<script src="./js/general.js"></script>
+<script src="./js/elements.js"></script>
+<script src="./js/templating.js"></script>
+<script src="./js/guts.js"></script>
+<link rel="stylesheet" href="./css/global.css" type="text/css" />
+<link rel="icon" href="../../../src/images/avatars/trident_new.png" type="image/png" sizes="16x16" />
+<style type="text/css">
+</style>
+</head>
+<body>
+  <h1>TridentBot</h1>
+  <ul class="listing">
+
+  </ul>
+  <script>
+    sections = {
+      "./src/dbs/*": {
+        "type": "help",
+        "pages": [
+          "dbs/eseahelp.json",
+          "dbs/eventhelp.json",
+          "dbs/help.json",
+          "dbs/mod.json"
+        ]
+      },
+      "./src/game/dbs/*": {
+        "type": "help",
+        "pages": [
+          "game/dbs/help.json"
+        ]
+      },
+      "./src/rosters/dbs/tdnt/staff/*": {
+        "type": "roster",
+        "pages": [
+          "tdnt/staff/casters.json",
+          "tdnt/staff/cc.json",
+          "tdnt/staff/community.json",
+          "tdnt/staff/management.json",
+          "tdnt/staff/socialmedia.json",
+          "tdnt/staff/studio.json"
+        ]
+      },
+      "./src/rosters/dbs/tdnt/teams/*": {
+        "type": "roster",
+        "pages": [
+          "tdnt/teams/csgo/arctic.json",
+          "tdnt/teams/csgo/evo.json",
+          "tdnt/teams/fn/new.json",
+          "tdnt/teams/pubg/main.json",
+          "tdnt/teams/rocketleague/main.json",
+          "tdnt/teams/val/new.json",
+          "tdnt/teams/val/sirens.json"
+        ]
+      }
+    }
+    for(let directory in sections) {
+      let thisLi = $("<li>").append($("<code>").text(directory));
+      let listUl = $("<ul>");
+      for(let page in sections[directory]["pages"]) {
+        let pageURL = sections[directory]["pages"][page];
+        let listA = $("<a>")
+          .attr(
+            "href",
+            "./" +
+            sections[directory]["type"] +
+            ".html?" +
+            sections[directory]["type"] +
+            "=" +
+            pageURL
+        )
+        .text(pageURL);
+        let listLi = $("<li>").append(listA);
+        listUl.append(listLi);
+      }
+      thisLi.append(listUl);
+      $(".listing").append(thisLi);
+    }
+  </script>
+  <h1>TridentBot</h1>
+  <ul>
+    <li>
+      <code>./src/game/dbs/*</code>
+      <ul>
+        <li>emojis.json</li>
+        <li>items.json</li>
+      </ul>
+    </li>
+    <li>
+      <code>./src/images/avatars/*</code>
+      <ul>
+        <li>trident_new.png<br /><img class="avatar" src="../../../src/images/avatars/trident_new.png"/></li>
+        <li>villains_dash.gif<br /><img class="avatar" src="../../../src/images/avatars/villains_dash.gif" /></li>
+        <li>villains_new.gif<br /><img class="avatar" src="../../../src/images/avatars/villains_new.gif" /></li>
+        <li>villains_new.png<br /><img class="avatar" src="../../../src/images/avatars/villains_new.png" /></li>
+        <li>villains_orig.gif<br /><img class="avatar" src="../../../src/images/avatars/villains_orig.gif" /></li>
+        <li>villainsbot.png<br /><img class="avatar" src="../../../src/images/avatars/villainsbot.png" /></li>
+      </ul>
+    </li>
+  </ul>
+</body>
+</html>

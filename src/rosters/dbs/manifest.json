@@ -1,0 +1,32 @@
+{
+  "tdnt": {
+    "staff": [
+      "casters",
+      "cc",
+      "community",
+      "management",
+      "socialmedia",
+      "staff",
+      "studio"
+    ],
+    "teams": {
+      "csgo": [
+        "arctic",
+        "evo"
+      ],
+      "fn": [
+        "new"
+      ],
+      "pubg": [
+        "main"
+      ],
+      "rocketleague": [
+        "main"
+      ],
+      "val": [
+        "new",
+        "sirens"
+      ]
+    }
+  }
+}
