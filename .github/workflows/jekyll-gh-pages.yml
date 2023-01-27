@@ -53,4 +53,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
-        if: contains(github.ref, 'main') or contains(github.ref, 'metadata-updates')
+        if: contains(github.ref, 'main') || contains(github.ref, 'metadata-updates')
