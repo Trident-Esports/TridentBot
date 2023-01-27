@@ -31,29 +31,6 @@
         "pages": [
           "game/dbs/help.json"
         ]
-      },
-      "./src/rosters/dbs/tdnt/staff/*": {
-        "type": "roster",
-        "pages": [
-          "tdnt/staff/casters.json",
-          "tdnt/staff/cc.json",
-          "tdnt/staff/community.json",
-          "tdnt/staff/management.json",
-          "tdnt/staff/socialmedia.json",
-          "tdnt/staff/studio.json"
-        ]
-      },
-      "./src/rosters/dbs/tdnt/teams/*": {
-        "type": "roster",
-        "pages": [
-          "tdnt/teams/csgo/arctic.json",
-          "tdnt/teams/csgo/evo.json",
-          "tdnt/teams/fn/new.json",
-          "tdnt/teams/pubg/main.json",
-          "tdnt/teams/rocketleague/main.json",
-          "tdnt/teams/val/new.json",
-          "tdnt/teams/val/sirens.json"
-        ]
       }
     }
     for(let directory in sections) {
@@ -78,8 +55,34 @@
       thisLi.append(listUl);
       $(".listing").append(thisLi);
     }
+
+    fnames = fetch("../../rosters/dbs/manifest.json")
+      .then(status)
+      .then(parse)
+      .then(function(payload) {
+        fnames = payload;
+        let thisLi = $("<li>").text("Rosters");
+        let listUl = $("<ul>");
+        for(let fname in fnames) {
+          fname = fnames[fname];
+          let listA = $("<a>")
+            .attr(
+              "href",
+              "./" +
+              "roster" +
+              ".html?" +
+              "roster" +
+              "=" +
+              fname
+          )
+          .text(fname);
+          let listLi = $("<li>").append(listA);
+          listUl.append(listLi);
+        }
+        thisLi.append(listUl);
+        $(".listing").append(thisLi);
+      })
   </script>
-  <h1>TridentBot</h1>
   <ul>
     <li>
       <code>./src/game/dbs/*</code>

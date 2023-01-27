@@ -1,32 +1,15 @@
-{
-  "tdnt": {
-    "staff": [
-      "casters",
-      "cc",
-      "community",
-      "management",
-      "socialmedia",
-      "staff",
-      "studio"
-    ],
-    "teams": {
-      "csgo": [
-        "arctic",
-        "evo"
-      ],
-      "fn": [
-        "new"
-      ],
-      "pubg": [
-        "main"
-      ],
-      "rocketleague": [
-        "main"
-      ],
-      "val": [
-        "new",
-        "sirens"
-      ]
-    }
-  }
-}
+[
+  "tdnt\\staff\\casters.json",
+  "tdnt\\staff\\cc.json",
+  "tdnt\\staff\\community.json",
+  "tdnt\\staff\\management.json",
+  "tdnt\\staff\\socialmedia.json",
+  "tdnt\\staff\\staff.json",
+  "tdnt\\staff\\studio.json",
+  "tdnt\\teams\\csgo\\arctic.json",
+  "tdnt\\teams\\csgo\\evo.json",
+  "tdnt\\teams\\fn\\new.json",
+  "tdnt\\teams\\pubg\\main.json",
+  "tdnt\\teams\\rocketleague\\main.json",
+  "tdnt\\teams\\val\\new.json"
+]
