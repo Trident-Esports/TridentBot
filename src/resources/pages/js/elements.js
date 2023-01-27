@@ -60,6 +60,7 @@ function roster_elements(selector, payload, socials) {
     let memberSection = payload["members"][memberType];
     if(memberSection["users"].length) {
       $("body").append($("<h2>").text(memberSection["title"]));
+      memberSection["users"].sort();
       for(let memberKey of memberSection["users"]) {
         let member = memberKey.substring(0,1).toUpperCase() + memberKey.slice(1);
         if(memberKey in socials) {
