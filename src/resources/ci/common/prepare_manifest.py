@@ -15,6 +15,7 @@ for r,d,f in os.walk(
         if fname not in ["guilds.json","manifest.json"]:
             files.append(os.path.join(r,fname).replace(os.path.join(*root, ""), ""))
 
+files.sort()
 json_obj = json.dumps(files, indent=2)
 
 with open(os.path.join(".","src","rosters","dbs","manifest.json"), "w", encoding="utf-8") as manifest:
