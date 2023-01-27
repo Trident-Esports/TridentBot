@@ -28,8 +28,8 @@ jobs:
           python ./src/resources/ci/common/prepare_manifest.py
       - name: Cleanup Pages Workspace
         run: |
-          find . -name "*.js" -type f -delete
-          find . -name "*.md" -type f -delete
+          find . -name "*.js" -not -path "./src/resources/pages/*" -type f -delete
+          find . -name "*.md" -not -path "./src/resources/pages/*" -type f -delete
           find . -name "*.py" -type f -delete
           find . -empty -type d -delete
       - name: Setup Pages
