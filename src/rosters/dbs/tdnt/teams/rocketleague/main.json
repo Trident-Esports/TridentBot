@@ -5,18 +5,24 @@
   "team": {
   },
   "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+        "lordgrim"
+      ]
+    },
     "captain": {
       "title": "Captain",
       "users": [
-        "smash"
       ]
     },
     "main": {
       "title": "Main",
       "users": [
-        "rotor",
-        "smash",
-        "viictus"
+        "aiz",
+        "chrisx888",
+        "granny",
+        "lordgrim"
       ]
     }
   }
