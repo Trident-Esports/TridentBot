@@ -1,0 +1,43 @@
+{
+  "stripe": "default",
+  "title": "Trackmania Roster",
+  "aliases": ["vtr"],
+  "team": {
+    "lpl": {
+      "teamID": "",
+      "avatar": ""
+    }
+  },
+  "#url": "#rosters: Trackmanialists",
+  "members": {
+    "manager": {
+      "title": "Manager",
+      "users": [
+      ]
+    },
+    "coach": {
+      "title": "Coach",
+      "users": [
+      ]
+    },
+    "captain": {
+      "title": "Captain",
+      "users": [
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "baiwack",
+        "divy",
+        "jswag",
+        "noimad"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+      ]
+    }
+  }
+}
