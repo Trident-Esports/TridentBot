@@ -1,15 +1,15 @@
 // Fetch a URL and do stuff
 function fetch_and_insert(url,selector) {
   if(url.includes("roster")) {
-    fetch("../../../src/rosters/dbs/socials/users.json")
-      .then(status)
+    fetch("../../rosters/dbs/socials/users.json")
+      .then(httpstatus)
       .then(parse)
       .then(function(socpayload) {
         let socials = socpayload;
         // Fetch the URL
         fetch(url)
           // Get HTTP status
-          .then(status)
+          .then(httpstatus)
           // Parse data
           .then(parse)
           // Do stuff
@@ -22,7 +22,7 @@ function fetch_and_insert(url,selector) {
     // Fetch the URL
     fetch(url)
       // Get HTTP status
-      .then(status)
+      .then(httpstatus)
       // Parse data
       .then(parse)
       // Do stuff
@@ -103,7 +103,7 @@ function add_template(name,attrs) {
     if(data["game"]["slug"] == "zelda3" && data["sprite"]["slug"] == "link" && attrs["app"].indexOf("GIMP") > -1) {
       // If we're adding Z3R's stuff
       fetch(path_join([data["sprite"]["url"],"linklist.json"]))
-        .then(status)
+        .then(httpstatus)
         .then(parse)
         .then(function(payload) {
           let linklist = payload;

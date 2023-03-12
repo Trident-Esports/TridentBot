@@ -6,7 +6,7 @@
 <script src="./js/templating.js"></script>
 <script src="./js/guts.js"></script>
 <link rel="stylesheet" href="./css/global.css" type="text/css" />
-<link rel="icon" href="../../../src/images/avatars/trident_new.png" type="image/png" sizes="16x16" />
+<link rel="icon" href="../../images/avatars/trident_new.png" type="image/png" sizes="16x16" />
 <style type="text/css">
 </style>
 </head>
@@ -57,7 +57,7 @@
     }
 
     fnames = fetch("../../rosters/dbs/manifest.json")
-      .then(status)
+      .then(httpstatus)
       .then(parse)
       .then(function(payload) {
         fnames = payload;
@@ -94,12 +94,12 @@
     <li>
       <code>./src/images/avatars/*</code>
       <ul>
-        <li>trident_new.png<br /><img class="avatar" src="../../../src/images/avatars/trident_new.png"/></li>
-        <li>villains_dash.gif<br /><img class="avatar" src="../../../src/images/avatars/villains_dash.gif" /></li>
-        <li>villains_new.gif<br /><img class="avatar" src="../../../src/images/avatars/villains_new.gif" /></li>
-        <li>villains_new.png<br /><img class="avatar" src="../../../src/images/avatars/villains_new.png" /></li>
-        <li>villains_orig.gif<br /><img class="avatar" src="../../../src/images/avatars/villains_orig.gif" /></li>
-        <li>villainsbot.png<br /><img class="avatar" src="../../../src/images/avatars/villainsbot.png" /></li>
+        <li>trident_new.png<br /><img class="avatar" src="../../images/avatars/trident_new.png"/></li>
+        <li>villains_dash.gif<br /><img class="avatar" src="../../images/avatars/villains_dash.gif" /></li>
+        <li>villains_new.gif<br /><img class="avatar" src="../../images/avatars/villains_new.gif" /></li>
+        <li>villains_new.png<br /><img class="avatar" src="../../images/avatars/villains_new.png" /></li>
+        <li>villains_orig.gif<br /><img class="avatar" src="../../images/avatars/villains_orig.gif" /></li>
+        <li>villainsbot.png<br /><img class="avatar" src="../../images/avatars/villainsbot.png" /></li>
       </ul>
     </li>
   </ul>

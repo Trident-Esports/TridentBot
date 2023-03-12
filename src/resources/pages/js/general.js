@@ -20,7 +20,7 @@ function forkMe() {
 }
 
 // Sort Fetch response HTTP status code
-function status(response) {
+function httpstatus(response) {
   if(response.status >= 200 && response.status < 300) {
     return Promise.resolve(response);
   } else {
