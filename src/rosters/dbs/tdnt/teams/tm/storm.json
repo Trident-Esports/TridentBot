@@ -1,14 +1,14 @@
 {
   "stripe": "default",
-  "title": "Trackmania Roster",
-  "aliases": ["vtr"],
+  "title": "Trackmania STORM Roster",
+  "aliases": ["vtsr"],
   "team": {
     "lpl": {
       "teamID": "",
       "avatar": ""
     }
   },
-  "#url": "#rosters: Trackmania lists",
+  "#url": "#rosters: Trackmania STORM lists",
   "members": {
     "manager": {
       "title": "Manager",
@@ -28,8 +28,8 @@
     "main": {
       "title": "Main",
       "users": [
-        "baiwack",
-        "jswag"
+        "divy",
+        "noimad"
       ]
     },
     "sub": {
