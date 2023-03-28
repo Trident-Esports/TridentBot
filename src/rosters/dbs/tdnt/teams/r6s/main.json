@@ -1,0 +1,38 @@
+{
+  "stripe": "default",
+  "title": "Rainbow Six Siege Roster",
+  "aliases": ["r6sr"],
+  "team": {
+  },
+  "members": {
+    "coach": {
+      "title": "Coach",
+      "users": [
+        "salee"
+      ]
+    },
+    "captain": {
+      "title": "Captain",
+      "users": [
+        "peu"
+      ]
+    },
+    "main": {
+      "title": "Main",
+      "users": [
+        "papatazz",
+        "peu",
+        "sebi",
+        "shuri",
+        "sweet"
+      ]
+    },
+    "sub": {
+      "title": "Sub",
+      "users": [
+        "frame",
+        "salee"
+      ]
+    }
+  }
+}
