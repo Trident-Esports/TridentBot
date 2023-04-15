@@ -45,6 +45,10 @@
     "twitch": "blackjackfx",
     "twitter": "tridentesports"
   },
+  "blessed": {
+    "twitch": "blessed_oce",
+    "twitter": "blessed_val"
+  },
   "bridledhawk": {
     "twitter": "isaacoce"
   },
@@ -288,6 +292,10 @@
     "twitch": "kairuoce",
     "twitter": "kairuoce"
   },
+  "kayoh": {
+    "twitch": "01kayoh",
+    "twitter": "kkayoh_"
+  },
   "kingerss": {
     "twitter": "kingerrs1"
   },
@@ -320,6 +328,9 @@
   },
   "lordgrim": {
     "twitter": "mistcloudgames"
+  },
+  "mai": {
+    "twitch": "maaaiii"
   },
   "mannygp": {
     "twitter": "mannygp_"
@@ -428,6 +439,9 @@
     "twitter": "peu_r6"
   },
   "phoebe": {
+  },
+  "pien": {
+    "twitter": "04pieno"
   },
   "pocket": {
     "steam": "pocket_sack",
