@@ -102,7 +102,7 @@ try {
         prefix: prefix,
         // @ts-ignore
         // token: process.env.client_login_production,
-        token: process.env.client_login_dev,
+        token: process.env.CLIENT_TOKEN_DEV,
         commandsPath: __dirname + "/moody/commands",
         eventsPath: __dirname + "/moody/events",
         owners: botDevs

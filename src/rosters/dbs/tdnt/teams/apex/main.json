@@ -1,0 +1,38 @@
+{
+    "stripe": "default",
+    "title": "Apex Legends Roster",
+    "aliases": ["alr"],
+    "team": {
+      "lpl": {
+        "teamID": "",
+        "avatar": ""
+      }
+    },
+    "#url": "#rosters: Apex Legends lists",
+    "members": {
+      "coach": {
+        "title": "Coach",
+        "users": [
+        ]
+      },
+      "captain": {
+        "title": "Captain",
+        "users": [
+          "gummi"
+        ]
+      },
+      "main": {
+        "title": "Main",
+        "users": [
+          "bl0f",
+          "gummi",
+          "skuskn"
+        ]
+      },
+      "sub": {
+        "title": "Sub",
+        "users": [
+        ]
+      }
+    }
+  }
