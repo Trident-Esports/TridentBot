@@ -8,30 +8,27 @@
     "coach": {
       "title": "Coach",
       "users": [
-        "salee"
       ]
     },
     "captain": {
       "title": "Captain",
       "users": [
-        "peu"
       ]
     },
     "main": {
       "title": "Main",
       "users": [
-        "papatazz",
-        "peu",
-        "sebi",
-        "shuri",
-        "sweet"
+        "bryce6",
+        "greedy",
+        "kingfluxx",
+        "noraa",
+        "plasma",
+        "sharkie"
       ]
     },
     "sub": {
       "title": "Sub",
       "users": [
-        "frame",
-        "salee"
       ]
     }
   }
