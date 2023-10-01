@@ -69,15 +69,22 @@ function roster_elements(selector, payload, socials) {
             memberName = socials[memberKey]["stylized"];
           }
           let url = "";
-          let icon = $("<img>").attr("style","width:16px;vertical-align:bottom;");
+          let iconStyle = {"style": "width:16px;vertical-align:bottom;"}
+          let icon = $("<span>").attr(iconStyle);
           if("twitch" in socials[memberKey]) {
             url = "http://twitch.tv/" + socials[memberKey]["twitch"];
-            icon.attr("src","http://twitch.tv/favicon.ico");
+            icon = $("<img>").attr("src", "http://twitch.tv/favicon.ico");
+            icon.attr(iconStyle);
           } else if ("twitter" in socials[memberKey]) {
             url = "http://twitter.com/" + socials[memberKey]["twitter"];
-            icon.attr("src","http://twitter.com/favicon.ico");
+            icon = $("<img>").attr("src", "http://twitter.tv/favicon.ico");
+            icon.attr(iconStyle);
           }
-          member = $("<a>").attr("href",url).text(memberName);
+          if(url != "") {
+            member = $("<a>").attr("href",url).text(memberName);
+          } else {
+            member = $("<span>").text(memberName);
+          }
           member.prepend(icon);
         }
         $("body").append($("<h3>").html(member));
