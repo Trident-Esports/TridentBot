@@ -77,7 +77,7 @@ function roster_elements(selector, payload, socials) {
             icon.attr(iconStyle);
           } else if ("twitter" in socials[memberKey]) {
             url = "http://twitter.com/" + socials[memberKey]["twitter"];
-            icon = $("<img>").attr("src", "http://twitter.tv/favicon.ico");
+            icon = $("<img>").attr("src", "https://twitter.com/favicon.ico");
             icon.attr(iconStyle);
           }
           if(url != "") {
