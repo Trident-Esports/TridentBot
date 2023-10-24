@@ -6,11 +6,12 @@
   "tdnt\\staff\\socialmedia.json",
   "tdnt\\staff\\staff.json",
   "tdnt\\staff\\studio.json",
-  "tdnt\\teams\\csgo\\arctic.json",
-  "tdnt\\teams\\csgo\\evo.json",
   "tdnt\\teams\\csgo\\trident.json",
   "tdnt\\teams\\fn\\main.json",
   "tdnt\\teams\\pubg\\main.json",
+  "tdnt\\teams\\r6s\\main.json",
+  "tdnt\\teams\\tm\\main.json",
+  "tdnt\\teams\\tm\\storm.json",
   "tdnt\\teams\\val\\main.json",
   "tdnt\\teams\\val\\powera.json"
 ]
