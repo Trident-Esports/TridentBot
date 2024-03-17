@@ -1,0 +1,31 @@
+{
+    "stripe": "default",
+    "title": "Apex Legends Roster",
+    "aliases": ["alr"],
+    "team": {
+    },
+    "members": {
+      "coach": {
+        "title": "Coach",
+        "users": [
+        ]
+      },
+      "captain": {
+        "title": "Captain",
+        "users": [
+        ]
+      },
+      "main": {
+        "title": "Main",
+        "users": [
+          "nova",
+          "sav"
+        ]
+      },
+      "sub": {
+        "title": "Sub",
+        "users": [
+        ]
+      }
+    }
+  }
