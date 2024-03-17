@@ -16,12 +16,13 @@ jobs:
       matrix:
         # release only on focal/bionic
         os-name: [ubuntu-latest]
-        python-version: [3.8]
 
     steps:
       # checkout commit
       - name: Checkout commit
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.1
+      - name: Install python
+        uses: actions/setup-python@v5.0.0
       - name: Install Dependencies via pip
         run: |
           python -m pip install pytz requests

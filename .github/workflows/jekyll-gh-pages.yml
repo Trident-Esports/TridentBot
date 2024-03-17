@@ -20,9 +20,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: Install python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5.0.0
       - name: Make Rosters Manifest
         run: |
           python ./src/resources/ci/common/prepare_manifest.py
@@ -33,14 +33,14 @@ jobs:
           find . -name "*.py" -type f -delete
           find . -empty -type d -delete
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v4.0.0
       - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1
+        uses: actions/jekyll-build-pages@v1.0.12
         with:
           source: ./
           destination: ./_site
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3.0.1
 
   # Deployment job
   deploy:
@@ -52,5 +52,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4.0.4
         if: contains(github.ref, 'main') || contains(github.ref, 'metadata-updates')
